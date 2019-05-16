@@ -1,3 +1,4 @@
+//こんにちは
 //必要なヘッダーファイルのインクルード
 #include <windows.h>
 #include <d3dx9.h>
