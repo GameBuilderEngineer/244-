@@ -15,8 +15,8 @@ enum VIEW
 {
 	NO_SPLIT,//（通常）分割無し
 	TOP,//（分割有り）上からの視点
-	FRONT,//（分割有り）正面からの視点
-	LEFT,//（分割有り）左からの視点
+	//FRONT,//（分割有り）正面からの視点
+	//LEFT,//（分割有り）左からの視点
 	BIRD//（分割有り）鳥瞰視点　Bird's-Eye View
 };
 //グローバルなインスタンスを宣言
@@ -282,12 +282,12 @@ VOID SetViewMatrix(VIEW vi)
 	case TOP:
 		vEyePt=D3DXVECTOR3(0,4,0.01);
 		break;
-	case FRONT:
-		vEyePt=D3DXVECTOR3(0,0,-4);
-		break;
-	case LEFT:
-		vEyePt=D3DXVECTOR3(-3,0,0);
-		break;
+	//case FRONT:
+	//	vEyePt=D3DXVECTOR3(0,0,-4);
+	//	break;
+	//case LEFT:
+	//	vEyePt=D3DXVECTOR3(-3,0,0);
+	//	break;
 	case BIRD:
 		vEyePt=D3DXVECTOR3(4,4,-4);
 		break;
@@ -303,19 +303,19 @@ VOID Render()
 	if(boQuad)
 	{
 		SetViewMatrix(TOP);
-		ChangeViewport(0,0,g_VP.Width/2,g_VP.Height/2);
+		ChangeViewport(0,0,g_VP.Width/2,g_VP.Height/*/2*/);
 		ViewRender(D3DXCOLOR(1,0,0,1));
 		
-		SetViewMatrix(FRONT);
-		ChangeViewport(0,g_VP.Height/2,g_VP.Width/2,g_VP.Height/2);
-		ViewRender(D3DXCOLOR(0,1,0,1));
+		//SetViewMatrix(FRONT);
+		//ChangeViewport(0,g_VP.Height/2,g_VP.Width/2,g_VP.Height/2);
+		//ViewRender(D3DXCOLOR(0,1,0,1));
 		
-		SetViewMatrix(LEFT);
-		ChangeViewport(g_VP.Width/2,g_VP.Height/2,g_VP.Width/2,g_VP.Height/2);
-		ViewRender(D3DXCOLOR(0,0,1,1));
+		//SetViewMatrix(LEFT);
+		//ChangeViewport(g_VP.Width/2,g_VP.Height/2,g_VP.Width/2,g_VP.Height/2);
+		//ViewRender(D3DXCOLOR(0,0,1,1));
 		
 		SetViewMatrix(BIRD);
-		ChangeViewport(g_VP.Width/2,0,g_VP.Width/2,g_VP.Height/2);
+		ChangeViewport(g_VP.Width/2,0,g_VP.Width/2,g_VP.Height/*/2*/);
 		ViewRender(D3DXCOLOR(1,1,0,1));
 	}
 	else
