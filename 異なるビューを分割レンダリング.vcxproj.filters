@@ -8,6 +8,12 @@
     <ClCompile Include="Collide.cpp">
       <Filter>Collide</Filter>
     </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ColonyHp.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />
@@ -17,6 +23,12 @@
     <ClInclude Include="Collide.h">
       <Filter>Collide</Filter>
     </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ColonyHp.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Object">
@@ -24,6 +36,9 @@
     </Filter>
     <Filter Include="Collide">
       <UniqueIdentifier>{7f043c63-ea35-4bec-b3a9-91d75d6eed84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{baab5071-73ca-4e81-98f4-fe383fe031b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

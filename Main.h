@@ -63,4 +63,4 @@ HRESULT ViewRender(D3DXCOLOR);
 D3DXVECTOR3 Slip(D3DXVECTOR3 L, D3DXVECTOR3 N);
 VOID FreeDx();
 
-// nakagomi
+LPDIRECT3DDEVICE9 GetDevice(void); // デバイス取得
