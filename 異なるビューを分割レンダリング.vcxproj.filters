@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Object.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Collide.cpp">
+      <Filter>Collide</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="Object.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Collide.h">
+      <Filter>Collide</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object">
+      <UniqueIdentifier>{542c8041-8686-447a-854f-3d6e328b7cd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collide">
+      <UniqueIdentifier>{7f043c63-ea35-4bec-b3a9-91d75d6eed84}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

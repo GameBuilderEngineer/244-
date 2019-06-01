@@ -12,7 +12,7 @@
 #define DELTA_ANGLE 0.05f
 #define SAFE_DELETE(p) { if(p) { delete (p);     (p) = NULL; } }
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p) = NULL; } }
-#define THING_AMOUNT 2
+#define THING_AMOUNT 3
 
 //ユーザー定義データ型
 struct THING
@@ -26,8 +26,9 @@ struct THING
 	//FLOAT fYaw;
 
 	D3DXQUATERNION qtnAttitude;
-
+	D3DXQUATERNION quaternionMove;
 	D3DXVECTOR3 vAxisZ;
+	D3DXVECTOR3 vAxisY;
 	D3DXVECTOR3 vAxisX;
 	D3DXVECTOR3 vDir;
 	D3DXMATRIX mPosition;
@@ -43,20 +44,20 @@ struct THING
 		ZeroMemory(this, sizeof(THING));
 		D3DXMatrixIdentity(&mRotation);
 		qtnAttitude = D3DXQUATERNION(0, 0, 0, 1);
+		quaternionMove = D3DXQUATERNION(0, 0, 0, 1);
 		gravity = D3DXVECTOR3(0, 0, 0);
 		vAxisX = D3DXVECTOR3(1, 0, 0);
+		vAxisY = D3DXVECTOR3(1, 0, 0);
 		vAxisZ = D3DXVECTOR3(0, 0, 1);
 	}
 };
 //関数プロトタイプの宣言
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HRESULT InitD3d(HWND);
-HRESULT InitThing(THING *, LPSTR, D3DXVECTOR3*);
+
 VOID Render();
-VOID RenderThing(THING*);
 VOID RenderString(LPSTR, INT, INT);
-BOOL Collide(D3DXVECTOR3, D3DXVECTOR3, THING*, FLOAT*, D3DXVECTOR3*);
-VOID RenderRay(LPDIRECT3DDEVICE9, D3DXVECTOR3, D3DXVECTOR3);
+
 HRESULT ChangeViewport(DWORD, DWORD, DWORD, DWORD);
 HRESULT ViewRender(D3DXCOLOR);
 D3DXVECTOR3 Slip(D3DXVECTOR3 L, D3DXVECTOR3 N);

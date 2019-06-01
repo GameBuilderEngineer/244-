@@ -1,24 +1,26 @@
-#include "Main.h"
+
+#include "Collide.h"
+
 HRESULT FindVerticesOnPoly(LPD3DXMESH pMesh, DWORD dwPolyIndex, D3DXVECTOR3* pvVertices);
 
 //レイによる衝突判定　レイが相手メッシュと交差する場合は、pfDistanceに距離を、pvNormalに衝突面の法線を入れてtrueを返す
-BOOL Collide(D3DXVECTOR3 vStart, D3DXVECTOR3 vDir, THING* pThingB, FLOAT* pfDistance, D3DXVECTOR3* pvNormal)
+BOOL Collide(D3DXVECTOR3 vStart, D3DXVECTOR3 vDir, Object* object, FLOAT* pfDistance, D3DXVECTOR3* pvNormal)
 {
 	BOOL boHit = false;
 	D3DXMATRIX mWorld;
 	D3DXVec3Normalize(&vDir, &vDir);
 
 	// レイを当てるメッシュが動いていたり回転している場合でも対象のワールド行列の逆行列を用いれば正しくレイが当たる
-	D3DXMatrixInverse(&mWorld, NULL, &pThingB->mWorld);
+	D3DXMatrixInverse(&mWorld, NULL, &object->getMatrixWorld());
 	D3DXVec3TransformCoord(&vStart, &vStart, &mWorld);
 
 	DWORD dwPolyIndex;
-	D3DXIntersect(pThingB->pMesh, &vStart, &vDir, &boHit, &dwPolyIndex, NULL, NULL, pfDistance, NULL, NULL);
+	D3DXIntersect(object->getMesh(), &vStart, &vDir, &boHit, &dwPolyIndex, NULL, NULL, pfDistance, NULL, NULL);
 	if (boHit)
 	{
 		//交差しているポリゴンの頂点を見つける
 		D3DXVECTOR3 vVertex[3];
-		FindVerticesOnPoly(pThingB->pMesh, dwPolyIndex, vVertex);
+		FindVerticesOnPoly(object->getMesh(), dwPolyIndex, vVertex);
 		D3DXPLANE p;
 		//その頂点から平面方程式を得る
 		D3DXPlaneFromPoints(&p, &vVertex[0], &vVertex[1], &vVertex[2]);
@@ -73,9 +75,9 @@ HRESULT FindVerticesOnPoly(LPD3DXMESH pMesh, DWORD dwPolyIndex, D3DXVECTOR3* pvV
 
 //VOID RenderRay(LPDIRECT3DDEVICE9 pDevice,D3DXVECTOR3 vStart,D3DXVECTOR3 vDir)
 //レイを視認できるようにレイをレンダリングする
-VOID RenderRay(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 vStart, D3DXVECTOR3 vDir)
+VOID RenderRay(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 vStart, D3DXVECTOR3 vDir)
 {
-	pDevice->SetFVF(D3DFVF_XYZ);
+	device->SetFVF(D3DFVF_XYZ);
 	D3DXVECTOR3 vPnt[2];
 	vPnt[0] = vStart;
 	vPnt[1] = vDir * 100;
@@ -83,7 +85,7 @@ VOID RenderRay(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 vStart, D3DXVECTOR3 vDir)
 
 	D3DXMATRIX mWorld;
 	D3DXMatrixIdentity(&mWorld);
-	pDevice->SetTransform(D3DTS_WORLD, &mWorld);
+	device->SetTransform(D3DTS_WORLD, &mWorld);
 	//レイのマテリアル設定　（白に設定）
 	D3DMATERIAL9 mtrl;
 	ZeroMemory(&mtrl, sizeof(mtrl));
@@ -92,7 +94,7 @@ VOID RenderRay(LPDIRECT3DDEVICE9 pDevice, D3DXVECTOR3 vStart, D3DXVECTOR3 vDir)
 	mtrl.Diffuse.g = 255;
 	mtrl.Diffuse.b = 255;
 	mtrl.Ambient = mtrl.Diffuse;
-	pDevice->SetMaterial(&mtrl);
+	device->SetMaterial(&mtrl);
 	//レイのレンダリング
-	pDevice->DrawPrimitiveUP(D3DPT_LINELIST, 1, vPnt, sizeof(D3DXVECTOR3));
+	device->DrawPrimitiveUP(D3DPT_LINELIST, 1, vPnt, sizeof(D3DXVECTOR3));
 }

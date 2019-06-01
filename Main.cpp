@@ -1,6 +1,8 @@
 //こんにちは
 //必要なヘッダーファイルのインクルード
 #include "Main.h"
+#include "Object.h"
+#include "Collide.h"
 
 enum VIEW
 {
@@ -15,16 +17,13 @@ LPDIRECT3D9 pD3d = NULL;
 LPDIRECT3DDEVICE9 pDevice = NULL;
 LPD3DXFONT pFont = NULL;
 D3DVIEWPORT9 g_VP;
-LPD3DXMESH pMesh = NULL;
-D3DMATERIAL9* pMeshMaterials = NULL;
-LPDIRECT3DTEXTURE9* pMeshTextures  = NULL; 
-DWORD dwNumMaterials = 0;
-D3DXVECTOR3 g_vPosition(0,0,0);
-//FLOAT fYaw=0,fPitch=0,fRoll=0;
-D3DXQUATERNION qtnAttitude(0, 0, 0, 1);
-FLOAT fScale=1;
+
 BOOL boQuad=true;
-THING Thing[THING_AMOUNT + 1];
+//THING Thing[THING_AMOUNT + 1];
+Object object[objectNS::OBJECT_NUM];
+
+void updatePlayer(Object* object);
+
 
 //INT WINAPI WinMain( HINSTANCE hInst,HINSTANCE hPrevInst,LPSTR szStr,INT iCmdShow)
 //アプリケーションのエントリー関数
@@ -187,42 +186,11 @@ HRESULT InitD3d(HWND hWnd)
 		}
 	}
 	// Xファイル毎にメッシュを作成する
-	InitThing(&Thing[0], "planet.x", &D3DXVECTOR3(0, -100, 0));
-	InitThing(&Thing[1], "robotB_still_back.x", &D3DXVECTOR3(0, 3, 0));
+	object[objectNS::PLAYER1].initialize(pDevice, "robotB_still_back.x", &D3DXVECTOR3(10, 3, 0));
+	object[objectNS::PLAYER2].initialize(pDevice, "robotB_still_back.x", &D3DXVECTOR3(-10, 3, 0));
+	object[objectNS::PLANET].initialize(pDevice, "planet.x", &D3DXVECTOR3(0, -100, 0));
 
-	// Xファイルからメッシュをロードする	
-	LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
 
-	if( FAILED( D3DXLoadMeshFromX( "RobotB.x", D3DXMESH_SYSTEMMEM, 
-            pDevice, NULL, &pD3DXMtrlBuffer, NULL,
-			&dwNumMaterials, &pMesh ) ) )
-    {
-            MessageBox(NULL, "Xファイルの読み込みに失敗しました",NULL, MB_OK);
-            return E_FAIL;   
-    }
-	D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
-    pMeshMaterials = new D3DMATERIAL9[dwNumMaterials];
-    pMeshTextures  = new LPDIRECT3DTEXTURE9[dwNumMaterials];
-
-	for( DWORD i=0; i<dwNumMaterials; i++ )
-	{ 
-		pMeshMaterials[i] = d3dxMaterials[i].MatD3D;		
-        pMeshMaterials[i].Ambient = pMeshMaterials[i].Diffuse;
-        pMeshTextures[i] = NULL;
-        if( d3dxMaterials[i].pTextureFilename != NULL && 
-            lstrlen(d3dxMaterials[i].pTextureFilename) > 0 )
-        {       
-            if( FAILED( D3DXCreateTextureFromFile( pDevice, 
-                                                d3dxMaterials[i].pTextureFilename, 
-                                                &pMeshTextures[i] ) ) )
-            {      
-                MessageBox(NULL, "テクスチャの読み込みに失敗しました", NULL, MB_OK);
-			}
-        }
-    }
-	pD3DXMtrlBuffer->Release();
-	pDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );  
-	
 	// Zバッファー処理を有効にする
     pDevice->SetRenderState( D3DRS_ZENABLE, true );  
 	// ライトを有効にする
@@ -242,47 +210,7 @@ HRESULT InitD3d(HWND hWnd)
 
 	return S_OK;
 }
-//HRESULT InitThing(THING *pThing,LPSTR szXFileName,D3DXVECTOR3* pvPosition)
-//
-HRESULT InitThing(THING *pThing, LPSTR szXFileName, D3DXVECTOR3* pvPosition)
-{
-	// メッシュの初期位置
-	memcpy(&pThing->vPosition, pvPosition, sizeof(D3DXVECTOR3));
-	// Xファイルからメッシュをロードする	
-	LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
 
-	if (FAILED(D3DXLoadMeshFromX(szXFileName, D3DXMESH_SYSTEMMEM,
-		pDevice, NULL, &pD3DXMtrlBuffer, NULL,
-		&pThing->dwNumMaterials, &pThing->pMesh)))
-	{
-		MessageBox(NULL, "Xファイルの読み込みに失敗しました", szXFileName, MB_OK);
-		return E_FAIL;
-	}
-	D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
-	pThing->pMeshMaterials = new D3DMATERIAL9[pThing->dwNumMaterials];
-	pThing->pMeshTextures = new LPDIRECT3DTEXTURE9[pThing->dwNumMaterials];
-
-	for (DWORD i = 0; i < pThing->dwNumMaterials; i++)
-	{
-		pThing->pMeshMaterials[i] = d3dxMaterials[i].MatD3D;
-		pThing->pMeshMaterials[i].Ambient = pThing->pMeshMaterials[i].Diffuse;
-		pThing->pMeshTextures[i] = NULL;
-		if (d3dxMaterials[i].pTextureFilename != NULL &&
-			lstrlen(d3dxMaterials[i].pTextureFilename) > 0)
-		{
-			if (FAILED(D3DXCreateTextureFromFile(pDevice,
-				d3dxMaterials[i].pTextureFilename,
-				&pThing->pMeshTextures[i])))
-			{
-				MessageBox(NULL, "テクスチャの読み込みに失敗しました", NULL, MB_OK);
-			}
-		}
-	}
-	pD3DXMtrlBuffer->Release();
-
-	return S_OK;
-}
-//
 //HRESULT ChangeViewport(DWORD dwX,DWORD dwY,DWORD dwWidth,DWORD dwHeight)
 //ビューポート　切り替え
 HRESULT ChangeViewport(DWORD dwX,DWORD dwY,DWORD dwWidth,DWORD dwHeight)
@@ -316,10 +244,13 @@ VOID SetViewMatrix(VIEW vi)
 	switch(vi)
 	{
 	case NO_SPLIT:
-		vEyePt=D3DXVECTOR3(0,0,-4);
+		vEyePt= (-object[objectNS::PLAYER1].getAxisZ()) * 5 + (object[objectNS::PLAYER1].getAxisY()) * 2;
 		break;
 	case TOP:
-		vEyePt=D3DXVECTOR3(0,10,0.01);
+		vEyePt= (-object[objectNS::PLAYER1].getAxisZ())* 5 + (object[objectNS::PLAYER1].getAxisY()) * 2;
+		vEyePt += object[objectNS::PLAYER1].getPosition();
+		vLookatPt = object[objectNS::PLAYER1].getPosition();
+		vUpVec = object[objectNS::PLAYER1].getAxisY();
 		break;
 	//case FRONT:
 	//	vEyePt=D3DXVECTOR3(0,0,-4);
@@ -328,11 +259,12 @@ VOID SetViewMatrix(VIEW vi)
 	//	vEyePt=D3DXVECTOR3(-3,0,0);
 	//	break;
 	case BIRD:
-		vEyePt=D3DXVECTOR3(4,4,-4);
+		vEyePt= (-object[objectNS::PLAYER2].getAxisZ())*5 + (object[objectNS::PLAYER2].getAxisY()) * 2;
+		vEyePt += object[objectNS::PLAYER2].getPosition();
+		vLookatPt = object[objectNS::PLAYER2].getPosition();
+		vUpVec = object[objectNS::PLAYER2].getAxisY();
 		break;
 	}
-	vEyePt += Thing[1].vPosition;
-	vLookatPt = Thing[1].vPosition;
 	D3DXMatrixLookAtLH( &mView, &vEyePt, &vLookatPt, &vUpVec );
 	pDevice->SetTransform( D3DTS_VIEW, &mView );
 }
@@ -342,7 +274,8 @@ VOID SetViewMatrix(VIEW vi)
 VOID Render()
 {
 	//ロボット操作
-	Thing[1].vDir = D3DXVECTOR3(0, 0, 0);
+	object[objectNS::PLAYER1].setDirection(D3DXVECTOR3(0, 0, 0));
+	object[objectNS::PLAYER2].setDirection(D3DXVECTOR3(0, 0, 0));
 
 	if(boQuad)
 	{
@@ -370,107 +303,113 @@ VOID Render()
 	}
 	pDevice->Present( NULL, NULL, NULL, NULL );
 
-	//当たり判定
-	FLOAT fDistance = 0;
-	D3DXVECTOR3 vNormal;
 
-	//星とプレイヤーへの重力線
-	D3DXVECTOR3 toPlanet = Thing[0].vPosition - Thing[1].vPosition;
-	//重力付加と、地面との当たり判定
-	Collide(Thing[1].vPosition, toPlanet, &Thing[0], &fDistance, &vNormal);
-	D3DXVECTOR3 vGrav = -vNormal;
-	D3DXVec3Normalize(&vGrav, &vGrav);
-	Thing[1].gravity = vGrav;
-	vGrav*=0.05;
-	Thing[1].vDir += vGrav;//重力（下方向のベクトルを加算）
 
-	//Thing[1].vPosition.y -= 0.7;
-	if (Collide(Thing[1].vPosition, Thing[1].vDir, &Thing[0], &fDistance, &vNormal))
-	{
-		Thing[1].distance[0] = fDistance;
-		Thing[1].normal[0] = vNormal;
-		if(fDistance <= 1.0)
-		{
-			//当たり状態なので、滑らせる
-			Thing[1].vDir = Slip(Thing[1].vDir, vNormal);//滑りベクトルを計算
+	updatePlayer(&object[objectNS::PLAYER1]);
+	updatePlayer(&object[objectNS::PLAYER2]);
 
-			//滑りベクトル先の地面突起とのレイ判定 ２重に判定	
-			if (Collide(Thing[1].vPosition, Thing[1].vDir, &Thing[0], &fDistance, &vNormal))
-			{
-				Thing[1].distance[1] = fDistance;
-				Thing[1].normal[1] = vNormal;
-				if(fDistance <= 0.7)
-				{//２段目の当たり状態なので、滑らせる おそらく上がる方向		
-					Thing[1].vDir = Slip(Thing[1].vDir, vNormal);//滑りベクトルを計算
-				}
-			}
-		}
-	}
 
-	D3DXVECTOR3 moveDirection;
+	//// 共役クォータニオン
+	//D3DXQUATERNION conjugateQuaternion;
+	//D3DXQuaternionConjugate(&conjugateQuaternion, &rotationQuaternion);
+
+	//// ローカルの方向クォータニオン（Z軸）
+	//D3DXQUATERNION  ObjectDirectionQuaternion(0, 0, 1, 0);
+	//D3DXQUATERNION  ResultQuaternion;
+	//// 共役・ベクトル・回転クォータニオン
+	//D3DXQuaternionMultiply(&ResultQuaternion, &conjugateQuaternion, &ObjectDirectionQuaternion);
+	//D3DXQuaternionMultiply(&ResultQuaternion, &ResultQuaternion, &rotationQuaternion);
+
+	//// 姿勢合わせ回転後方向ベクトル
+	//D3DXVECTOR3 objectDirection;
+	//objectDirection.x = ResultQuaternion.x;
+	//objectDirection.y = ResultQuaternion.y;
+	//objectDirection.z = ResultQuaternion.z;
+
+	////方向合わせの回転角を求める
+	////acos(平面に平行な進行方向ベクトル・姿勢合せ回転後方向ベクトル)
+	//float directionRadian = acosf(D3DXVec3Dot(&Slip(Thing[1].vAxisZ, vNormal), &objectDirection));
+	////方向合わせ回転クォータニオン
+	//D3DXQUATERNION  directionQuaternion(0, 0, 0, 1);
+	//D3DXQuaternionRotationAxis(&directionQuaternion, &vNormal, directionRadian);
+
+	//Thing[1].qtnAttitude *= directionQuaternion;
+	//D3DXQUATERNION synthesisQuaternion;
+	//D3DXQuaternionMultiply(&synthesisQuaternion, &directionQuaternion, &rotationQuaternion);
+
+	//Thing[1].qtnAttitude *= synthesisQuaternion;
+
+	D3DXQUATERNION qtnDelta;
 	if (GetKeyState('W') & 0x80)
 	{
-		Thing[1].vDir += Thing[1].vAxisZ*0.05;
+		object[objectNS::PLAYER1].setDirection(object[objectNS::PLAYER1].getDirection() + object[objectNS::PLAYER1].getAxisZ()*0.05);
 	}
 	if (GetKeyState('S') & 0x80)
 	{
-		Thing[1].vDir += -Thing[1].vAxisZ*0.05;
+		object[objectNS::PLAYER1].getDirection() += -object[objectNS::PLAYER1].getAxisZ()*0.05;
 	}
 	if (GetKeyState('A') & 0x80)
-	{
-		Thing[1].vDir = -Thing[1].vAxisX*0.05;
-	}
-	if (GetKeyState('D') & 0x80)
-	{
-		Thing[1].vDir = Thing[1].vAxisX*0.05;
-	}
-
-	D3DXQUATERNION qtnDelta;
-	if (GetKeyState(VK_LEFT) & 0x80)
-	{
-		//sin(1/2θ)*(0,1,0)
+	{//sin(1/2θ)*(0,1,0)
 		qtnDelta.x = 0;
 		qtnDelta.y = sin(-DELTA_ANGLE / 2.0f);
 		qtnDelta.z = 0;
 		qtnDelta.w = cos(-DELTA_ANGLE / 2.0f);
-		Thing[1].qtnAttitude *= qtnDelta;
-		//Thing[1].fYaw -= 0.05;
+		object[objectNS::PLAYER1].setQuaternion(object[objectNS::PLAYER1].getQuaternion() * qtnDelta);
 	}
-	if (GetKeyState(VK_RIGHT) & 0x80)
-	{
-		//sin(1/2θ)*(0,1,0)
+	if (GetKeyState('D') & 0x80)
+	{//sin(1/2θ)*(0,1,0)
 		qtnDelta.x = 0;
 		qtnDelta.y = sin(DELTA_ANGLE / 2.0f);
 		qtnDelta.z = 0;
 		qtnDelta.w = cos(DELTA_ANGLE / 2.0f);
-		Thing[1].qtnAttitude *= qtnDelta;
-		//Thing[1].fYaw += 0.05;
+		object[objectNS::PLAYER1].setQuaternion(object[objectNS::PLAYER1].getQuaternion() * qtnDelta);
 	}
+
+
+
+	D3DXQUATERNION qtnDelta2;
+	if (GetKeyState(VK_UP) & 0x80)
+	{
+		object[objectNS::PLAYER2].setDirection(object[objectNS::PLAYER2].getDirection() + object[objectNS::PLAYER2].getAxisZ()*0.05);
+	}
+	if (GetKeyState(VK_DOWN) & 0x80)
+	{
+		object[objectNS::PLAYER2].getDirection() += -object[objectNS::PLAYER2].getAxisZ()*0.05;
+	}
+	if (GetKeyState(VK_LEFT) & 0x80)
+	{//sin(1/2θ)*(0,1,0)
+		qtnDelta2.x = 0;
+		qtnDelta2.y = sin(-DELTA_ANGLE / 2.0f);
+		qtnDelta2.z = 0;
+		qtnDelta2.w = cos(-DELTA_ANGLE / 2.0f);
+		object[objectNS::PLAYER2].setQuaternion(object[objectNS::PLAYER2].getQuaternion() * qtnDelta2);
+	}
+	if (GetKeyState(VK_RIGHT) & 0x80)
+	{//sin(1/2θ)*(0,1,0)
+		qtnDelta2.x = 0;
+		qtnDelta2.y = sin(DELTA_ANGLE / 2.0f);
+		qtnDelta2.z = 0;
+		qtnDelta2.w = cos(DELTA_ANGLE / 2.0f);
+		object[objectNS::PLAYER2].setQuaternion(object[objectNS::PLAYER2].getQuaternion() * qtnDelta2);
+	}
+
+	//if (GetKeyState(VK_SPACE) & 0x80)
+	//{
+	//	Thing[1].vDir = Thing[1].vAxisY*0.5f;
+	//}
+
 
 	//Thing[1].vPosition.y += 0.7;
 
 	//ロボット　位置更新
-	Thing[1].vPosition += Thing[1].vDir;
+	object[objectNS::PLAYER1].setPosition(object[objectNS::PLAYER1].getPosition() + object[objectNS::PLAYER1].getDirection());
+	object[objectNS::PLAYER2].setPosition(object[objectNS::PLAYER2].getPosition() + object[objectNS::PLAYER2].getDirection());
 }
 //
 //HHRESULT ViewRender(D3DXCOLOR BGColor)
 //個々のビューポートをレンダリングする
 HRESULT ViewRender(D3DXCOLOR BGColor)
-{	
-	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）
-	D3DXMATRIX mWorld,mScale,mRotation,mPosition;
-	D3DXMatrixScaling(&mScale,fScale,fScale,fScale);//スケーリング（拡大縮小）行列を作成
-	//クォータニオン（qtnAttitude）を回転量パラメーターに使用する
-	{
-		D3DXMatrixRotationQuaternion(&mRotation, &qtnAttitude);
-		//D3DXMatrixRotationYawPitchRoll(&mRotation,fYaw,fPitch,fRoll);//回転行列を作成
-	}
-
-	
-	D3DXMatrixTranslation(&mPosition,g_vPosition.x,g_vPosition.y,g_vPosition.z);//平行移動行列を作成
-	mWorld=mScale*mRotation*mPosition;//スケーリング x 回転 x 平行移動 の順番で合成する（掛ける）
-    pDevice->SetTransform( D3DTS_WORLD, &mWorld );
-	
+{		
 	// プロジェクショントランスフォーム（カメラ座標→スクリーン座標への変換）
 	D3DXMATRIX mProj;
 	D3DXMatrixPerspectiveFovLH( &mProj, D3DX_PI/4,(FLOAT)WINDOW_WIDTH/(FLOAT)WINDOW_HEIGHT, 0.1f, 100000.0f );
@@ -497,29 +436,33 @@ HRESULT ViewRender(D3DXCOLOR BGColor)
 
 	if( SUCCEEDED( pDevice->BeginScene() ) )
 	{		
-		for( DWORD i=0; i<dwNumMaterials; i++ )
-        {
-            pDevice->SetMaterial( &pMeshMaterials[i] );
-            pDevice->SetTexture( 0, pMeshTextures[i] ); 
-            pMesh->DrawSubset( i );
-        }
+		
 		pDevice->SetRenderState(D3DRS_LIGHTING, false);
-		RenderThing(&Thing[0]);
+		object[objectNS::PLANET].render(pDevice);
 		pDevice->SetRenderState(D3DRS_LIGHTING, true);
-		RenderThing(&Thing[1]);
+		object[objectNS::PLAYER1].render(pDevice);
+		object[objectNS::PLAYER2].render(pDevice);
+		
 		//　レイのレンダリング
-		D3DXVECTOR3 vGrav = Thing[0].vPosition - Thing[1].vPosition;
+		D3DXVECTOR3 vGrav = object[objectNS::PLANET].getPosition() - object[objectNS::PLAYER1].getPosition();
 		D3DXVec3Normalize(&vGrav, &vGrav);
-		RenderRay(pDevice, Thing[1].vPosition, Thing[1].gravity);
+		RenderRay(pDevice, object[objectNS::PLAYER1].getPosition(), object[objectNS::PLAYER1].getGravity());
+		RenderRay(pDevice, object[objectNS::PLAYER2].getPosition(), object[objectNS::PLAYER2].getGravity());
 
 		//文字表示
-		TCHAR szStr[MAX_PATH + 1];
-		sprintf(szStr, "一つ目の衝突ポリゴンの法線：(%.1f,%.1f,%.1f)\n距離 %3.1f",
-			Thing[1].normal[0].x, Thing[1].normal[0].y, Thing[1].normal[0].z, Thing[1].distance[0]);
-		RenderString(szStr, 10, 10);
-		sprintf(szStr, "二つ目の衝突ポリゴンの法線：(%.1f,%.1f,%.1f)\n距離 %3.1f",
-			Thing[1].normal[1].x, Thing[1].normal[1].y, Thing[1].normal[1].z, Thing[1].distance[1]);
-		RenderString(szStr, 10, 100);
+//		TCHAR szStr[MAX_PATH + 1];
+//		sprintf(szStr, "一つ目の衝突ポリゴンの法線：(%.1f,%.1f,%.1f)\n距離 %3.1f",
+//			Thing[1].normal[0].x, Thing[1].normal[0].y, Thing[1].normal[0].z, Thing[1].distance[0]);
+//		RenderString(szStr, 10, 10);
+//		sprintf(szStr, "二つ目の衝突ポリゴンの法線：(%.1f,%.1f,%.1f)\n距離 %3.1f",
+//			Thing[1].normal[1].x, Thing[1].normal[1].y, Thing[1].normal[1].z, Thing[1].distance[1]);
+//		RenderString(szStr, 10, 100);
+//		sprintf(szStr, "重力ベクトル：(%.1f,%.1f,%.1f)\n",
+//			Thing[1].gravity.x, Thing[1].gravity.y, Thing[1].gravity.z);
+//		RenderString(szStr, 10, 200);
+//		sprintf(szStr, "位置：(%.1f,%.1f,%.1f)\n",
+//			Thing[1].vPosition.x, Thing[1].vPosition.y, Thing[1].vPosition.z);
+//		RenderString(szStr, 10, 300);
 
 		pDevice->EndScene();
 	}	
@@ -537,37 +480,58 @@ VOID RenderString(LPSTR szStr, INT iX, INT iY)
 	// そのサイズでレンダリング
 	pFont->DrawText(NULL, szStr, -1, &rect, DT_LEFT | DT_BOTTOM, 0xff00ff00);
 }
-//
-//VOID RenderThing(THING* pThing)
-//
-VOID RenderThing(THING* pThing)
+
+void updatePlayer(Object* object)
 {
-	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
-	D3DXMatrixTranslation(&pThing->mPosition, pThing->vPosition.x, pThing->vPosition.y,
-		pThing->vPosition.z);
+	//当たり判定
+	FLOAT fDistance = 0;
+	D3DXVECTOR3 vNormal;
 
-	//クォータニオン（qtnAttitude）を回転量パラメーターに使用する
+	//星とプレイヤーへの重力線
+	D3DXVECTOR3 toPlanet = object[objectNS::PLANET].getPosition() - object->getPosition();
+
+	//重力付加と、地面との当たり判定
+	Collide(object->getPosition(), toPlanet, &object[objectNS::PLANET], &fDistance, &vNormal);
+	D3DXVECTOR3 vGrav = -vNormal;
+	D3DXVec3Normalize(&vGrav, &vGrav);
+	object->setGravity(vGrav);
+	vGrav *= 0.05;
+	object->setDirection(object->getDirection() + vGrav);//重力（下方向のベクトルを加算）
+
+	//Thing[1].vPosition.y -= 0.7;
+	if (Collide(object->getPosition(), object->getDirection(), &object[objectNS::PLANET], &fDistance, &vNormal))
 	{
-		D3DXMatrixRotationQuaternion(&pThing->mRotation, &pThing->qtnAttitude);
-		//D3DXMatrixRotationY(&pThing->mRotation, pThing->fYaw);
-	}
-	D3DXMatrixMultiply(&pThing->mWorld, &pThing->mRotation, &pThing->mPosition);
-	
-	
-	pDevice->SetTransform(D3DTS_WORLD, &pThing->mWorld);
+		if (fDistance <= 1.0)
+		{
+			//当たり状態なので、滑らせる
+			object->setDirection(Slip(object->getDirection(), vNormal));//滑りベクトルを計算
 
-	//回転により、ローカル軸を曲げる
-	D3DXVec3TransformCoord(&pThing->vAxisX, &D3DXVECTOR3(1, 0, 0), &pThing->mRotation);
-	D3DXVec3TransformCoord(&pThing->vAxisZ, &D3DXVECTOR3(0, 0, 1), &pThing->mRotation);
-
-	// レンダリング			
-	for (DWORD i = 0; i < pThing->dwNumMaterials; i++)
-	{
-		pDevice->SetMaterial(&pThing->pMeshMaterials[i]);
-		pDevice->SetTexture(0, pThing->pMeshTextures[i]);
-		pThing->pMesh->DrawSubset(i);
+			//滑りベクトル先の地面突起とのレイ判定 ２重に判定	
+			if (Collide(object->getPosition(), object->getDirection(), &object[objectNS::PLANET], &fDistance, &vNormal))
+			{
+				if (fDistance <= 0.7)
+				{//２段目の当たり状態なので、滑らせる おそらく上がる方向		
+					object->setDirection(Slip(object->getDirection(), vNormal));//滑りベクトルを計算
+				}
+			}
+		}
 	}
+
+
+	//法線とキャラクターとの外積を求める（平面に直立するための回転軸となる）
+	D3DXVECTOR3 rotationAxis;
+	D3DXVec3Cross(&rotationAxis, &object->getAxisY(), &object->getNormal());
+	//回転角を求める
+	//acos(上方向ベクトル・(ドット積)法線ベクトル)
+	float rotationRadian = acosf(D3DXVec3Dot(&object->getAxisY(), &object->getNormal()));
+	//回転クォータニオンを作成
+	D3DXQUATERNION rotationQuaternion(0, 0, 0, 1);
+	D3DXQuaternionRotationAxis(&rotationQuaternion, &rotationAxis, rotationRadian);
+
+	object->setQuaternion(object->getQuaternion() * rotationQuaternion);
+
 }
+
 //
 //D3DXVECTOR3 Slip(D3DXVECTOR3 L,D3DXVECTOR3 N)
 // L:入射ベクトル（レイ） N:ポリゴンの法線
@@ -586,12 +550,6 @@ D3DXVECTOR3 Slip(D3DXVECTOR3 L, D3DXVECTOR3 N)
 VOID FreeDx()
 {	
 	SAFE_RELEASE(pFont);
-	SAFE_DELETE( pMeshMaterials );
-	for(DWORD k=0;k<dwNumMaterials;k++)
-	{		
-		SAFE_RELEASE( pMeshTextures[k] );
-	}
-	SAFE_RELEASE( pMesh );
 	SAFE_RELEASE( pDevice );
 	SAFE_RELEASE( pD3d );
 }
