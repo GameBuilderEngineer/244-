@@ -58,6 +58,7 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device,LPSTR xFileName, D3DXVECTOR3
 	return S_OK;
 }
 
+
 //VOID RenderThing(THING* pThing)
 //
 VOID Object::render(LPDIRECT3DDEVICE9 device)

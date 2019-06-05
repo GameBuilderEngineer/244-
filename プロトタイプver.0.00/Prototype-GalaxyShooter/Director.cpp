@@ -1,5 +1,6 @@
 #include "Director.h"
 #include "Title.h"
+#include "Game.h"
 
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
@@ -88,7 +89,7 @@ void Director::run(HINSTANCE _instance){
 }
 
 void Director::mainLoop(){
-	if (scene->checkChangeOrder() == false)// シーン切替フラグの確認
+	if (scene->checkChangeOrder())// シーン切替フラグの確認
 		changeNextScene();
 
 	update();
@@ -135,9 +136,11 @@ void Director::changeNextScene(){
 	{
 	case SceneList::OPENING:				scene = new Title(); break;
 	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::GAME:					scene = new Game(); break;
 	case SceneList::SELECT_CHARACTER:		scene = new Title(); break;
 	case SceneList::RESULT:					scene = new Title(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
+	scene->initialize(d3d);
 	currentSceneName = scene->getSceneName();
 }

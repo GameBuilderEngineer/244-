@@ -11,6 +11,7 @@ namespace SceneList
 		OPENING,
 		TITLE,
 		SELECT_CHARACTER,
+		GAME,
 		RESULT,
 	};
 }

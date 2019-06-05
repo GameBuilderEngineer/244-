@@ -43,6 +43,8 @@ public:
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
 	VOID render(LPDIRECT3DDEVICE9 device);
 
+	//virtual void update();
+
 	LPD3DXMESH getMesh() { return mesh; }
 	D3DXMATRIX getMatrixWorld() { return matrixWorld; }
 	D3DXVECTOR3 getPosition() { return position; };

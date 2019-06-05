@@ -77,6 +77,10 @@
     <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -128,6 +132,7 @@
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -139,6 +144,7 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Title.h" />
