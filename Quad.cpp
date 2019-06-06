@@ -75,7 +75,7 @@ void Quad::initQuad(int sizeX, int sizeY, D3DXVECTOR3 position, D3DXVECTOR3 rota
 	setVertex();				// 頂点座標の設定
 	setColor(color);			// 頂点カラーの設定
 
-	// テクスチャ座標の設定
+	// テクスチャUV座標の設定
 	setTexture(D3DXVECTOR2(0.0, 0.0), D3DXVECTOR2(1.0, 0.0), D3DXVECTOR2(0.0, 1.0), D3DXVECTOR2(1.0, 1.0));
 
 	// rhwの設定
