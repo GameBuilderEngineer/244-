@@ -181,11 +181,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collide.cpp" />
+    <ClCompile Include="Colony.cpp" />
+    <ClCompile Include="Junk.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collide.h" />
+    <ClInclude Include="Colony.h" />
+    <ClInclude Include="Junk.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Object.h" />
   </ItemGroup>
