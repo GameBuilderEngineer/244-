@@ -37,6 +37,21 @@
     <Filter Include="Scene\Game">
       <UniqueIdentifier>{d95aa518-3c8e-4925-b91f-da9b598e5ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{be3a3183-9cea-4d22-826b-d5a69c2e4a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01 Data File">
+      <UniqueIdentifier>{d3865fcb-9f92-406e-8463-f38c697eb173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02 Visual File">
+      <UniqueIdentifier>{4f78a12d-7159-43b1-84f3-2a9bce9229f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03 Shader File">
+      <UniqueIdentifier>{7522a4c5-38e7-46b8-8de5-68213954921c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04 Sound File">
+      <UniqueIdentifier>{aa274e1b-8a2d-4082-b905-c18138b84eb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -72,6 +87,12 @@
     <ClCompile Include="Game.cpp">
       <Filter>Scene\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInputController.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Director.h">
@@ -104,5 +125,52 @@
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualController.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputController.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="04 Sound File\Chorus.wav">
+      <Filter>04 Sound File</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\HierarchyMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\robotB_still_back.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\SkinnedMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\StaticMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\planet.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="02 Visual File\outline.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\Shade.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\UVグリッド.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="03 Shader File\ToonShader.fx">
+      <Filter>03 Shader File</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

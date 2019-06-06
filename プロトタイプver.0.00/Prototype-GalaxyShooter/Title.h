@@ -4,21 +4,17 @@
 
 namespace titleNS
 {
-	enum {
-		PLAYER1,
-		PLAYER2,
-		NUM_PLAYER,
-	};
+
 }
 
 class Title : public AbstractScene
 {
 private:
-	Object player[titleNS::NUM_PLAYER];
+
 public:
 	Title();
 	~Title();
-	virtual void initialize(Direct3D9* direct3D9) override;
+	virtual void initialize(Direct3D9* direct3D9,Input* _input) override;
 	virtual void update() override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;

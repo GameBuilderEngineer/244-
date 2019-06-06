@@ -2,10 +2,11 @@
 #include "Base.h"
 #include "Window.h"
 #include "Direct3D9.h"
+#include "Input.h"
 #include "Camera.h"
 #include "Sound.h"
 #include "AbstractScene.h"
-
+#include "VirtualController.h"
 //管理クラス
 class Director : public Celement
 {
@@ -15,11 +16,12 @@ public:
 	Window* window;					//ウィンドウクラス・ハンドル
 	HWND wnd;						//ウィンドウハンドル
 	Direct3D9* d3d;					//DirectX9クラス・デバイス
+	Input* input;					//Inputクラス
 	Camera* camera;					//カメラクラス
 	Sound* sound;					//サウンドクラス
 	AbstractScene* scene;			//抽象シーンクラス
 	std::string* currentSceneName;	//現在のシーンの名前
-	
+
 	//Method
 	Director();
 	~Director();
