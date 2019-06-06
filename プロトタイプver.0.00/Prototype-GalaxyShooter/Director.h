@@ -7,6 +7,7 @@
 #include "Sound.h"
 #include "AbstractScene.h"
 #include "VirtualController.h"
+#include "Audio.h"
 //管理クラス
 class Director : public Celement
 {
@@ -18,6 +19,7 @@ public:
 	Direct3D9* d3d;					//DirectX9クラス・デバイス
 	Input* input;					//Inputクラス
 	Camera* camera;					//カメラクラス
+	Audio* audio;					//オーディオクラス
 	Sound* sound;					//サウンドクラス
 	AbstractScene* scene;			//抽象シーンクラス
 	std::string* currentSceneName;	//現在のシーンの名前

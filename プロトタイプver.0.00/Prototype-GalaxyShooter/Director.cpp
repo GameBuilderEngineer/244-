@@ -8,10 +8,13 @@ Director::Director(){
 }
 
 Director::~Director(){
+	SAFE_DELETE(window);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(d3d);
-	SAFE_DELETE(window);
+	SAFE_DELETE(input);
+	SAFE_DELETE(audio);
 	SAFE_DELETE(sound);
+	SAFE_DELETE(scene);
 }
 
 HRESULT Director::initialize(){
@@ -38,18 +41,18 @@ HRESULT Director::initialize(){
 	scene->initialize(d3d,input);
 
 	//メッシュ読み込み
-
+	// Xファイルからメッシュをロードする	
 	//StaticMesh
 	setVisualDirectory();
-
 	//HierarchyMesh
 	setVisualDirectory();
-
 	//SKINMESH
 	setVisualDirectory();
 
-	// Xファイルからメッシュをロードする	
-
+	//Audio(XACTエンジン)
+	setSoundDirectory();
+	audio = new Audio;
+	audio->initialize();
 	//Sound(XAuido2)
 	sound = new Sound;
 	MFAIL(sound->initialize(), "サウンド初期化失敗");
@@ -103,6 +106,7 @@ void Director::mainLoop(){
 
 void Director::update(){
 	input->update(window->windowActivate);
+	audio->run();
 	scene->update();
 }
 
