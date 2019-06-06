@@ -43,8 +43,6 @@ public:
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
 	VOID render(LPDIRECT3DDEVICE9 device);
 
-	//virtual void update();
-
 	LPD3DXMESH getMesh() { return mesh; }
 	D3DXMATRIX getMatrixWorld() { return matrixWorld; }
 	D3DXVECTOR3 getPosition() { return position; };
@@ -57,7 +55,6 @@ public:
 	D3DXVECTOR3 getAxisZ() { return axisZ; };
 	D3DXQUATERNION getQuaternion() { return quaternion; };
 	
-
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setDirection(D3DXVECTOR3 _direction) { direction = _direction; }
 	void setGravity(D3DXVECTOR3 _gravity) { gravity = _gravity; }

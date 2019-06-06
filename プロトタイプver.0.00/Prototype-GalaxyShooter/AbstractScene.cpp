@@ -1,0 +1,8 @@
+#include "AbstractScene.h"
+using namespace SceneList;
+AbstractScene::AbstractScene() {
+	nextScene = NONE_SCENE;
+	sceneName = "none";
+}
+AbstractScene::~AbstractScene() {
+}

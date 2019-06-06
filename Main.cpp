@@ -3,6 +3,8 @@
 #include "Main.h"
 #include "Object.h"
 #include "Collide.h"
+#include "Colony.h"
+#include "Junk.h"
 
 enum VIEW
 {
@@ -21,6 +23,10 @@ D3DVIEWPORT9 g_VP;
 BOOL boQuad=true;
 //THING Thing[THING_AMOUNT + 1];
 Object object[objectNS::OBJECT_NUM];
+
+Colony colony[colonyNS::COLONY_NUM];
+
+Junk junk[JUNK_MAX];
 
 void updatePlayer(Object* object);
 
@@ -190,6 +196,13 @@ HRESULT InitD3d(HWND hWnd)
 	object[objectNS::PLAYER2].initialize(pDevice, "robotB_still_back.x", &D3DXVECTOR3(-10, 3, 0));
 	object[objectNS::PLANET].initialize(pDevice, "planet.x", &D3DXVECTOR3(0, -100, 0));
 
+	colony[colonyNS::COLONY1].initialize(pDevice, "planet.x", &D3DXVECTOR3(-150, 0, 300));
+	colony[colonyNS::COLONY2].initialize(pDevice, "planet.x", &D3DXVECTOR3(150, 0, 300));
+
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].initialize(pDevice, "RobotB.x", &D3DXVECTOR3(10, 1, i));
+	}
 
 	// Zバッファー処理を有効にする
     pDevice->SetRenderState( D3DRS_ZENABLE, true );  
@@ -308,6 +321,13 @@ VOID Render()
 	updatePlayer(&object[objectNS::PLAYER1]);
 	updatePlayer(&object[objectNS::PLAYER2]);
 
+	colony[colonyNS::COLONY1].update();
+	colony[colonyNS::COLONY2].update();
+
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].update();
+	}
 
 	//// 共役クォータニオン
 	//D3DXQUATERNION conjugateQuaternion;
@@ -343,6 +363,7 @@ VOID Render()
 	if (GetKeyState('W') & 0x80)
 	{
 		object[objectNS::PLAYER1].setDirection(object[objectNS::PLAYER1].getDirection() + object[objectNS::PLAYER1].getAxisZ()*0.05);
+
 	}
 	if (GetKeyState('S') & 0x80)
 	{
@@ -439,7 +460,13 @@ HRESULT ViewRender(D3DXCOLOR BGColor)
 		
 		pDevice->SetRenderState(D3DRS_LIGHTING, false);
 		object[objectNS::PLANET].render(pDevice);
+		colony[colonyNS::COLONY1].render(pDevice);
+		colony[colonyNS::COLONY2].render(pDevice);
 		pDevice->SetRenderState(D3DRS_LIGHTING, true);
+		for (int i = 0; i < JUNK_MAX; i++)
+		{
+			junk[i].render(pDevice);
+		}
 		object[objectNS::PLAYER1].render(pDevice);
 		object[objectNS::PLAYER2].render(pDevice);
 		

@@ -8,6 +8,12 @@
     <ClCompile Include="Collide.cpp">
       <Filter>Collide</Filter>
     </ClCompile>
+    <ClCompile Include="Colony.cpp">
+      <Filter>Object\Colony</Filter>
+    </ClCompile>
+    <ClCompile Include="Junk.cpp">
+      <Filter>Object\Junk</Filter>
+    </ClCompile>
     <ClCompile Include="Quad.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -29,6 +35,12 @@
     <ClInclude Include="ColonyHp.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Colony.h">
+      <Filter>Object\Colony</Filter>
+    </ClInclude>
+    <ClInclude Include="Junk.h">
+      <Filter>Object\Junk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Object">
@@ -36,6 +48,12 @@
     </Filter>
     <Filter Include="Collide">
       <UniqueIdentifier>{7f043c63-ea35-4bec-b3a9-91d75d6eed84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Colony">
+      <UniqueIdentifier>{debdbb8d-11b5-4e99-8f56-ccc3231afd06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Junk">
+      <UniqueIdentifier>{f8a12d31-2a14-4e15-9c11-19df68166ea7}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{baab5071-73ca-4e81-98f4-fe383fe031b7}</UniqueIdentifier>

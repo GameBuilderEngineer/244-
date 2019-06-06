@@ -1,7 +1,5 @@
 #include "Object.h"
-
-
-
+#include "Base.h"
 Object::Object()
 {
 	ZeroMemory(this, sizeof(Object));
@@ -13,19 +11,17 @@ Object::Object()
 	axisZ = D3DXVECTOR3(0, 0, 1);
 }
 
-
 Object::~Object()
 {
 }
 
-//HRESULT InitThing(THING *pThing,LPSTR szXFileName,D3DXVECTOR3* pvPosition)
-HRESULT Object::initialize(LPDIRECT3DDEVICE9 device,LPSTR xFileName, D3DXVECTOR3* _position)
+HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
 {
 	// メッシュの初期位置
 	memcpy(position, _position, sizeof(D3DXVECTOR3));
 	// Xファイルからメッシュをロードする	
 	LPD3DXBUFFER materialBuffer = NULL;
-
+	setVisualDirectory();
 	if (FAILED(D3DXLoadMeshFromX(xFileName, D3DXMESH_SYSTEMMEM,
 		device, NULL, &materialBuffer, NULL,
 		&numMaterials, &mesh)))
@@ -58,13 +54,10 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device,LPSTR xFileName, D3DXVECTOR3
 	return S_OK;
 }
 
-
-//VOID RenderThing(THING* pThing)
-//
 VOID Object::render(LPDIRECT3DDEVICE9 device)
 {
 	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
-	D3DXMatrixTranslation(&matrixPosition, position.x, position.y,position.z);
+	D3DXMatrixTranslation(&matrixPosition, position.x, position.y, position.z);
 
 	//クォータニオン（qtnAttitude）を回転量パラメーターに使用する
 	{
