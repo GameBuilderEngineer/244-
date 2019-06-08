@@ -19,7 +19,10 @@ protected:
 	LPD3DXMESH mesh;
 	D3DMATERIAL9* meshMaterials;
 	LPDIRECT3DTEXTURE9* meshTextures;
+	LPDIRECT3DTEXTURE9 textureShade;
+	LPDIRECT3DTEXTURE9 textureLine;
 	DWORD numMaterials;
+	LPD3DXEFFECT effect;
 
 	D3DXVECTOR3 position;
 	D3DXQUATERNION quaternion;
@@ -41,7 +44,7 @@ public:
 	Object();
 	~Object();
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
-	VOID render(LPDIRECT3DDEVICE9 device);
+	VOID render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	LPD3DXMESH getMesh() { return mesh; }
 	D3DXMATRIX getMatrixWorld() { return matrixWorld; }
