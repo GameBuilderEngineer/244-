@@ -29,8 +29,8 @@ private:
 	void release(void);								// テクスチャ解放
 
 public:
-	HRESULT init(int type);							// 初期化処理
-	void uninit(void);								// 終了処理
+	HRESULT initialize(int type);					// 初期化処理
+	void uninitialize(void);						// 終了処理
 	void update(void);								// 更新処理
 	void draw(void);								// 描画処理
 

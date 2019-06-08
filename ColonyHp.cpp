@@ -29,7 +29,7 @@ ColonyHp colonyHp(COLONY_HP_SIZE_X, COLONY_HP_SIZE_Y, D3DXVECTOR3(100.0f, 100.0f
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT ColonyHp::init(int type)
+HRESULT ColonyHp::initialize(int type)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();	// デバイス取得
 	
@@ -52,7 +52,7 @@ HRESULT ColonyHp::init(int type)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void ColonyHp::uninit(void)
+void ColonyHp::uninitialize(void)
 {
 	release();		// テクスチャ解放
 }
