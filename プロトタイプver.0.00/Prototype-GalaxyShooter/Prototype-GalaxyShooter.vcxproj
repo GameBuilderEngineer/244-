@@ -129,32 +129,44 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="MissileUI.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="SkillPointUI.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HitPointUI.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MissileUI.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="SkillPointUI.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="VirtualController.h" />
+    <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +180,11 @@
     <Media Include="04 Sound File\Chorus.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="02 Visual File\ColonyHitPointUI.jpg" />
+    <Image Include="02 Visual File\GaugeBar.png" />
+    <Image Include="02 Visual File\GaugeBase.png" />
+    <Image Include="02 Visual File\GaugeCover.png" />
+    <Image Include="02 Visual File\MissileUI.jpg" />
     <Image Include="02 Visual File\outline.bmp" />
     <Image Include="02 Visual File\Shade.bmp" />
     <Image Include="02 Visual File\UVグリッド.png" />

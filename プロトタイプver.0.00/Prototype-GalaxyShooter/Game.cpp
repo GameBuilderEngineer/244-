@@ -33,7 +33,13 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(0, -100, 0));
+		hp[i].initialize(direct3D9->device, i);
+		sp[i].initialize(direct3D9->device, i);
+		colonyHp[i].initialize(direct3D9->device, i);
+		missileInfomation[i].initialize(direct3D9->device, i);
+		weaponInfomation[i].initialize(direct3D9->device, i);
 	}
+
 	onChange = false;
 }
 
@@ -42,6 +48,15 @@ void Game::update() {
 	for (int i = 0; i < 3; i++)
 	{
 		camera[i].update();
+	}
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		hp[i].update();
+		sp[i].update();
+		colonyHp[i].update();
+		missileInfomation[i].update();
+		weaponInfomation[i].update();
 	}
 }
 
@@ -60,7 +75,7 @@ void Game::render(Direct3D9* direct3D9) {
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
 	direct3D9->changeViewportFullWindow();
-	renderUI();
+	renderUI(direct3D9->device);
 }
 
 void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
@@ -70,8 +85,19 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	}
 }
 
-void Game::renderUI() {
-
+void Game::renderUI(LPDIRECT3DDEVICE9 device){
+	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		hp[i].render(device);
+		sp[i].render(device);
+		colonyHp[i].render(device);
+		missileInfomation[i].render(device);
+		weaponInfomation[i].render(device);
+	}
 }
 
 void Game::collisions() {
@@ -83,5 +109,12 @@ void Game::AI() {
 }
 
 void Game::uninitialize() {
-
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		hp[i].uninitialize();
+		sp[i].uninitialize();
+		colonyHp[i].uninitialize();
+		missileInfomation[i].uninitialize();
+		weaponInfomation[i].uninitialize();
+	}
 }
