@@ -17,7 +17,7 @@ namespace SceneList
 	};
 }
 
-class AbstractScene :public Celement
+class AbstractScene :public Base
 {
 protected:
 	//Data

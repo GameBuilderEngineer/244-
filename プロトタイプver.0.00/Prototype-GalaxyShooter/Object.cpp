@@ -5,10 +5,20 @@ Object::Object()
 	ZeroMemory(this, sizeof(Object));
 	D3DXMatrixIdentity(&matrixRotation);
 	quaternion = D3DXQUATERNION(0, 0, 0, 1);
-	gravity = D3DXVECTOR3(0, 0, 0);
-	axisX = D3DXVECTOR3(1, 0, 0);
-	axisY = D3DXVECTOR3(0, 1, 0);
-	axisZ = D3DXVECTOR3(0, 0, 1);
+	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));
+	axisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 1, 0));
+	axisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, 1));
+	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(-1, 0, 0));
+	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, -1, 0));
+	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, -1));
+#ifdef _DEBUG
+	axisX.color = D3DXCOLOR(255, 0, 0, 255);
+	axisY.color = D3DXCOLOR(0, 255, 0, 255);
+	axisZ.color = D3DXCOLOR(0, 0, 255, 255);
+	reverseAxisX.color = D3DXCOLOR(255, 0, 0, 255);
+	reverseAxisY.color = D3DXCOLOR(0, 255, 0, 255);
+	reverseAxisZ.color = D3DXCOLOR(0, 0, 255, 255);
+#endif // _DEBUG
 }
 
 Object::~Object()
@@ -56,27 +66,69 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR
 	//シェーダーを読み込む
 	setShaderDirectory();
 	MFAIL(D3DXCreateEffectFromFile(device, "ToonShader.fx", NULL, NULL, 0, NULL, &effect, NULL), "シェーダーファイル読み込み失敗");
+	
+	update();
 
 	return S_OK;
 }
 
-VOID Object::render(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
+void Object::update()
 {
 	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
 	D3DXMatrixTranslation(&matrixPosition, position.x, position.y, position.z);
 
-	//クォータニオン（qtnAttitude）を回転量パラメーターに使用する
-	{
-		D3DXMatrixRotationQuaternion(&matrixRotation, &quaternion);
-	}
+	//クォータニオンを回転量パラメーターに使用する
+	D3DXMatrixRotationQuaternion(&matrixRotation, &quaternion);
 	D3DXMatrixMultiply(&matrixWorld, &matrixRotation, &matrixPosition);
+	//ワールド座標から自身の軸レイを更新する
 
-	//device->SetTransform(D3DTS_WORLD, &matrixWorld);
+	axisX.update(position, D3DXVECTOR3(matrixWorld._11,matrixWorld._12,matrixWorld._13));
+	axisY.update(position, D3DXVECTOR3(matrixWorld._21,matrixWorld._22,matrixWorld._23));
+	axisZ.update(position, D3DXVECTOR3(matrixWorld._31,matrixWorld._32,matrixWorld._33));
+	reverseAxisX.update(position, -D3DXVECTOR3(matrixWorld._11, matrixWorld._12, matrixWorld._13));
+	reverseAxisY.update(position, -D3DXVECTOR3(matrixWorld._21, matrixWorld._22, matrixWorld._23));
+	reverseAxisZ.update(position, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
+}
+
+
+VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+{
+
+	device->SetTransform(D3DTS_WORLD, &matrixWorld);
+	device->SetRenderState(D3DRS_LIGHTING, true);
+
+	D3DMATERIAL9 matDef;
+	device->GetMaterial(&matDef);
+	// レンダリング			
+	for (DWORD i = 0; i < numMaterials; i++)
+	{
+		device->SetMaterial(&meshMaterials[i]);
+		device->SetTexture(0, meshTextures[i]);
+		mesh->DrawSubset(i);
+	}
+
+	// マテリアルをデフォルトに戻す
+	device->SetMaterial(&matDef);
+	// テクスチャの設定をNULLにする
+	device->SetTexture(0, NULL);
+
+#ifdef _DEBUG
+	axisX.render(device, 10.0f);
+	axisY.render(device, 10.0f);
+	axisZ.render(device, 10.0f);
+	reverseAxisX.render(device, 10.0f);
+	reverseAxisY.render(device, 10.0f);
+	reverseAxisZ.render(device, 10.0f);
+#endif // _DEBUG
+}
+VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
+{
 
 	//回転により、ローカル軸を曲げる
-	D3DXVec3TransformCoord(&axisX, &D3DXVECTOR3(1, 0, 0), &matrixRotation);
-	D3DXVec3TransformCoord(&axisY, &D3DXVECTOR3(0, 1, 0), &matrixRotation);
-	D3DXVec3TransformCoord(&axisZ, &D3DXVECTOR3(0, 0, 1), &matrixRotation);
+	//D3DXVec3TransformCoord(&axisX, &D3DXVECTOR3(1, 0, 0), &matrixRotation);
+	//D3DXVec3TransformCoord(&axisY, &D3DXVECTOR3(0, 1, 0), &matrixRotation);
+	//D3DXVec3TransformCoord(&axisZ, &D3DXVECTOR3(0, 0, 1), &matrixRotation);
+	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 
 	effect->SetTechnique("ToonShading");
 	effect->SetMatrix("mProj", &projection);
@@ -85,7 +137,7 @@ VOID Object::render(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projecti
 	effect->SetTexture("ShadeTexture", textureShade);
 	effect->SetTexture("LineTexture", textureLine);
 
-	effect->SetVector("LightPos", &D3DXVECTOR4(3, 4, -10, 1));
+	effect->SetVector("LightPos", &D3DXVECTOR4(0, 0, 5, 1));
 	effect->SetVector("EyePos", (D3DXVECTOR4*)&cameraPositon);
 	effect->Begin(NULL, 0);
 
@@ -94,11 +146,31 @@ VOID Object::render(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projecti
 	{
 		effect->BeginPass(0);
 		effect->SetFloatArray("Diffuse", (FLOAT*)&meshMaterials[i].Diffuse, 4);
-		effect->SetTexture("DecalTexture", meshTextures[i]);
+		//effect->SetTexture("DecalTexture", meshTextures[i]);
 		//device->SetMaterial(&meshMaterials[i]);
 		//device->SetTexture(0, meshTextures[i]);
 		mesh->DrawSubset(i);
 		effect->EndPass();
 	}
 	effect->End();
+
+
+#ifdef _DEBUG
+	axisX.render(device, 10.0f);
+	axisY.render(device, 10.0f);
+	axisZ.render(device, 10.0f);
+	reverseAxisX.render(device, 10.0f);
+	reverseAxisY.render(device, 10.0f);
+	reverseAxisZ.render(device, 10.0f);
+#endif // _DEBUG
+
+}
+
+
+
+void Object::setGravity(D3DXVECTOR3 source, float power)
+{
+	D3DXVec3Normalize(&gravity, &(source- position));
+	gravity *= power;
+	if (onGravity)speed += gravity;
 }

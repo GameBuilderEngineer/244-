@@ -136,8 +136,12 @@
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -151,13 +155,18 @@
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Magnet.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="02 Visual File\field001.x" />
     <None Include="02 Visual File\HierarchyMesh.x" />
     <None Include="02 Visual File\planet.x" />
     <None Include="02 Visual File\robotB_still_back.x" />
@@ -180,6 +189,8 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">2.0</ShaderModel>
       <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</DisableOptimizations>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</EnableDebuggingInformation>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">main</EntryPointName>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

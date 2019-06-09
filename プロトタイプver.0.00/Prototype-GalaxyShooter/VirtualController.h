@@ -69,7 +69,7 @@ namespace POV{
 	};
 }
 
-class VirtualController:public Celement
+class VirtualController:public Base
 {
 private:
 	bool recorder[virtualControllerNS::BUTTONS::MAX_BUTTON];

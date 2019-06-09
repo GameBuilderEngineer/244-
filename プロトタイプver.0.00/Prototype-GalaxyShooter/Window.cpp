@@ -45,6 +45,7 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	{
 	case WM_ACTIVATE:
 		windowActivate = wParam != WA_INACTIVE;
+		return 0;
 	case VK_ESCAPE:
 		PostQuitMessage(0);
 		break;

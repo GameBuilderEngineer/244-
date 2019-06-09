@@ -37,8 +37,18 @@
 #define MFALSE(code,string) if(!(code)) {MessageBox(0,string,"error",MB_OK);return E_FAIL;}
 #define MSG(text) MessageBox(0,text,0,MB_OK);
 
-class Celement
+class Base
 {
+public:
+	//p¨§Œä
+	static void postureControl(D3DXQUATERNION* quaternion, D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection, float t);
+	//”CˆÓ²üŒ^•âŠÔ‰ñ“]
+	static void anyAxisRotationSlerp(D3DXQUATERNION* quaternion, D3DXVECTOR3 axis, float radian, float t);
+	//”CˆÓ²‰ñ“]
+	static void anyAxisRotation(D3DXQUATERNION* quaternion,D3DXVECTOR3 axis, float degree);
+	//“ñ‚Â‚ÌƒxƒNƒgƒ‹‚Ì‚È‚·Šp‚ğŒvZ
+	static bool formedRadianAngle(float* out, D3DXVECTOR3 v1, D3DXVECTOR3 v2);
+
 };
 
 //ƒvƒƒgƒ^ƒCƒvéŒ¾

@@ -8,7 +8,7 @@
 
 #define DIDEVICE_BUFFERSIZE 100;		// デバイスに設定するバッファ・サイズ
 
-class DirectInputController:public Celement
+class DirectInputController:public Base
 {
 public:
 	LPDIRECTINPUTDEVICE8 device;	// DirectInputデバイス

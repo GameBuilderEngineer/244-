@@ -102,6 +102,9 @@ void Director::mainLoop(){
 	update();
 	render();
 	fixFPS60();
+
+	
+	input->clear(inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
 }
 
 void Director::update(){
@@ -122,19 +125,26 @@ void Director::render(){
 }
 
 void Director::fixFPS60(){
-	static INT frames = 0, FPS = 0;
-	static LARGE_INTEGER frq = { 0 }, previous = { 0 }, current = { 0 };
-	DOUBLE time = 0;
-	//char sz[11] = { 0 };
+	static LARGE_INTEGER time;
+	LARGE_INTEGER time2, frq;
+	double elaptime = 0;
+	static int frame = 0;
+	QueryPerformanceFrequency(&frq);
+	double microsec = 1000000 / (double)frq.QuadPart;
 
-	while (time < 16.6666)//1100ms / 60frame=16.6666 
+	frame++;
+
+	QueryPerformanceCounter(&time2);
+	elaptime = (time2.QuadPart - time.QuadPart)*microsec;
+	if (elaptime > 1000000)
 	{
-		QueryPerformanceFrequency(&frq);
-		QueryPerformanceCounter(&current);
-		time = current.QuadPart - previous.QuadPart;
-		time *= (DOUBLE)1100.0 / (DOUBLE)frq.QuadPart;
+		QueryPerformanceCounter(&time);
+
+		char str[50];
+		sprintf(str, "fps=%d", frame);
+		SetWindowTextA(wnd, str);
+		frame = 0;
 	}
-	previous = current;
 }
 
 void Director::changeNextScene(){

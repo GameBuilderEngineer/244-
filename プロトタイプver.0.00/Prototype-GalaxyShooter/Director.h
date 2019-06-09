@@ -9,7 +9,7 @@
 #include "VirtualController.h"
 #include "Audio.h"
 //ŠÇ—ƒNƒ‰ƒX
-class Director : public Celement
+class Director : public Base
 {
 public:
 	//Data

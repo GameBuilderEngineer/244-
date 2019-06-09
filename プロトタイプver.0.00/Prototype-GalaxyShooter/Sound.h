@@ -11,7 +11,7 @@
 
 #define MAX_WAV 110 //WAVƒTƒEƒ“ƒhÅ‘å”
 
-class Sound : public Celement
+class Sound : public Base
 {
 public:
 	HWND wnd;

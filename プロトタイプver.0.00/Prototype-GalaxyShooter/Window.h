@@ -2,7 +2,7 @@
 #include "Base.h"
 #include "Input.h"
 
-class Window : public Celement
+class Window : public Base
 {
 public:
 	//Data

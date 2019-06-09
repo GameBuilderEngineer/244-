@@ -27,6 +27,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.Windowed = true;
 	d3dpp.EnableAutoDepthStencil = true;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 
 	if (FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, targetWnd,
@@ -63,6 +64,8 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	device->SetRenderState(D3DRS_SPECULARENABLE, true);
 	// カリングはしない
 	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	//アンチエイリアシングをかける
+	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);
 	//
 	device->GetViewport(&viewPort);
 	return S_OK;

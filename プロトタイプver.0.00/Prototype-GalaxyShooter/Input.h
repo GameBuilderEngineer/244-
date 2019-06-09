@@ -32,7 +32,7 @@ namespace inputNS
 
 }
 
-class Input : public Celement
+class Input : public Base
 {
 private:
 	//-----------------------

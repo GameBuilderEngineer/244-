@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.h"
 
-class Direct3D9:public Celement
+class Direct3D9:public Base
 {
 public:
 	//Data

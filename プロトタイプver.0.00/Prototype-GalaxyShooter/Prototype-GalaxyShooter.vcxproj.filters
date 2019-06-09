@@ -55,6 +55,21 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{4ac8f897-e76a-46fb-bf32-80f619742dc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\ベース">
+      <UniqueIdentifier>{1c726889-d3b4-4cad-ac1a-dc8e30d085fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Player">
+      <UniqueIdentifier>{8880fccc-ba75-4d51-aee0-bd223fadc694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ray">
+      <UniqueIdentifier>{133be285-9b18-4005-b8e7-85eb24818210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{e9126a67-699d-4eca-a754-c0db86e684df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Magnet">
+      <UniqueIdentifier>{53af07e7-3f6c-4177-bffd-31a7384c7560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -84,9 +99,6 @@
     <ClCompile Include="AbstractScene.cpp">
       <Filter>Scene\AbstractScene</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Scene\Game</Filter>
     </ClCompile>
@@ -98,6 +110,21 @@
     </ClCompile>
     <ClCompile Include="Audio.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Object\ベース</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Magnet.cpp">
+      <Filter>Object\Magnet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +152,6 @@
     <ClInclude Include="AbstractScene.h">
       <Filter>Scene\AbstractScene</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
     </ClInclude>
@@ -142,6 +166,21 @@
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object\ベース</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Magnet.h">
+      <Filter>Object\Magnet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +202,9 @@
       <Filter>02 Visual File</Filter>
     </None>
     <None Include="02 Visual File\planet.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\field001.x">
       <Filter>02 Visual File</Filter>
     </None>
   </ItemGroup>
