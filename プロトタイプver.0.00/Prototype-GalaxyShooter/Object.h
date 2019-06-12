@@ -3,15 +3,6 @@
 #include <windows.h>
 #include <d3dx9.h>
 
-namespace objectNS {
-	enum {
-		PLAYER1,
-		PLAYER2,
-		PLANET,
-		OBJECT_NUM,
-	};
-}
-
 
 class Object
 {

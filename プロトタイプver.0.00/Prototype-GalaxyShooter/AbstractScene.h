@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Camera.h"
+#include "Light.h"
 #include <string>
 
 
@@ -21,6 +22,7 @@ class AbstractScene :public Celement
 protected:
 	//Data
 	Camera* camera;
+	Light* light;
 	bool onChange;
 	int nextScene;
 	std::string sceneName;

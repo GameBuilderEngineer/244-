@@ -128,12 +128,17 @@
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Colony.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Junk.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -141,11 +146,16 @@
   <ItemGroup>
     <ClInclude Include="Base.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Colony.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Junk.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Planet.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Window.h" />

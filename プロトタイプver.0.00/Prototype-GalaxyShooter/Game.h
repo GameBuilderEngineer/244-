@@ -1,6 +1,13 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Object.h"
+#include "Planet.h"
+#include "Player.h"
+#include "Colony.h"
+#include "Junk.h"
+
+#define JUNK_MAX (10) //ÉKÉâÉNÉ^ÇÃêî
+#define DELTA_ANGLE 0.05f
 
 namespace gameNS
 {
@@ -9,13 +16,23 @@ namespace gameNS
 		PLAYER2,
 		NUM_PLAYER,
 	};
+
+	enum {
+		COLONY1,
+		COLONY2,
+		NUM_COLONY,
+	};
 }
 
 class Game : public AbstractScene
 {
 private:
 	
-	Object player[gameNS::NUM_PLAYER];
+	Planet planet;
+	Player player[gameNS::NUM_PLAYER];
+	Colony colony[gameNS::NUM_COLONY];
+	Junk junk[JUNK_MAX];
+
 public:
 	Game();
 	~Game();

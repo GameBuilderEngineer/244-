@@ -37,6 +37,24 @@
     <Filter Include="Scene\Game">
       <UniqueIdentifier>{d95aa518-3c8e-4925-b91f-da9b598e5ac9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{f68d5108-32a1-4130-b188-27ff7e1ae59f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Colony">
+      <UniqueIdentifier>{a66d4863-fb7d-4088-ac97-dc6bcdef9edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Junk">
+      <UniqueIdentifier>{ecb54991-8859-4626-b423-57d680de259d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Object">
+      <UniqueIdentifier>{c8f06edf-07f6-4be3-9e13-08edb478f4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Player">
+      <UniqueIdentifier>{2013cd7d-fe3d-4bb8-a5f9-cac60da09291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Planet">
+      <UniqueIdentifier>{6df6050e-b936-47f5-8078-5afacd8991d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -66,11 +84,26 @@
     <ClCompile Include="AbstractScene.cpp">
       <Filter>Scene\AbstractScene</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Colony.cpp">
+      <Filter>Object\Colony</Filter>
+    </ClCompile>
+    <ClCompile Include="Junk.cpp">
+      <Filter>Object\Junk</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Object\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Planet.cpp">
+      <Filter>Object\Planet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,11 +131,26 @@
     <ClInclude Include="AbstractScene.h">
       <Filter>Scene\AbstractScene</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Object</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Colony.h">
+      <Filter>Object\Colony</Filter>
+    </ClInclude>
+    <ClInclude Include="Junk.h">
+      <Filter>Object\Junk</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Planet.h">
+      <Filter>Object\Planet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
