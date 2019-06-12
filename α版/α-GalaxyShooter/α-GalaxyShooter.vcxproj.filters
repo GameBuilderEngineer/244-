@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+<ItemGroup>
+    <Filter Include="Entry">
+      <UniqueIdentifier>{fccd00c6-34ea-4548-98bf-d80129316756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Director">
+      <UniqueIdentifier>{c2855ac2-0321-4876-b7fe-8f2ee780bcc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{01566807-89a4-4f6f-a07d-44c3ec36dfff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{080a8f5b-11bf-457e-8e84-a81b9680f0b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Direct3D9">
+      <UniqueIdentifier>{fb16c361-8e36-40aa-b42c-9ad96910d0fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{37b89136-d3b7-4a31-94cc-5d3da36148f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{59baf1aa-b1b2-4624-97a1-f181b60278bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{e149ef21-d3e1-4d8f-906a-de06f4566977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Title">
+      <UniqueIdentifier>{49618fab-fa26-4ca9-97c4-80705d8903ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\AbstractScene">
+      <UniqueIdentifier>{6a13ee1e-1b67-4ea9-8250-cc22522a1ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{0e14a614-14ab-488d-a105-7be72db5e82c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Game">
+      <UniqueIdentifier>{d95aa518-3c8e-4925-b91f-da9b598e5ac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{be3a3183-9cea-4d22-826b-d5a69c2e4a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01 Data File">
+      <UniqueIdentifier>{d3865fcb-9f92-406e-8463-f38c697eb173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02 Visual File">
+      <UniqueIdentifier>{4f78a12d-7159-43b1-84f3-2a9bce9229f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03 Shader File">
+      <UniqueIdentifier>{7522a4c5-38e7-46b8-8de5-68213954921c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04 Sound File">
+      <UniqueIdentifier>{aa274e1b-8a2d-4082-b905-c18138b84eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{4ac8f897-e76a-46fb-bf32-80f619742dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Player">
+      <UniqueIdentifier>{8880fccc-ba75-4d51-aee0-bd223fadc694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ray">
+      <UniqueIdentifier>{133be285-9b18-4005-b8e7-85eb24818210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{e9126a67-699d-4eca-a754-c0db86e684df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Magnet">
+      <UniqueIdentifier>{53af07e7-3f6c-4177-bffd-31a7384c7560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoudingSphere">
+      <UniqueIdentifier>{c6b5aa5a-bff9-4abe-b39e-61aa3752e32d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Bullet">
+      <UniqueIdentifier>{3dfdaea0-621c-4e51-96f2-c7a44fffac99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{70463875-2daf-44d5-93ba-792197bcfcb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{bb8b83bf-5a45-49ed-b64c-06e357407b18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Splash">
+      <UniqueIdentifier>{c158ea93-11b0-43d9-a8d0-00037b9c28ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SelectCharacter">
+      <UniqueIdentifier>{edcabc91-3a71-4735-b36c-0c72ab3bf29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Result">
+      <UniqueIdentifier>{77746008-6b77-4523-9c21-d099946cc532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{9a615eb5-f59e-43b5-ad3c-9a58b319a70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Colony">
+      <UniqueIdentifier>{ba0b0858-8d3b-49b8-8221-cc672ae84516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Junk">
+      <UniqueIdentifier>{1ccf7e5f-d1a6-4161-990c-49ef8dc3e062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ベース">
+      <UniqueIdentifier>{1c726889-d3b4-4cad-ac1a-dc8e30d085fe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Director.cpp">
+      <Filter>Director</Filter>
+    </ClCompile>
+    <ClCompile Include="Base.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Entry.cpp">
+      <Filter>Entry</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D9.cpp">
+      <Filter>Direct3D9</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractScene.cpp">
+      <Filter>Scene\AbstractScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInputController.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Object\ベース</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Magnet.cpp">
+      <Filter>Object\Magnet</Filter>
+    </ClCompile>
+    <ClCompile Include="BoudingSphere.cpp">
+      <Filter>BoudingSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="HitPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ColonyHitPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MissileUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Splash.cpp">
+      <Filter>Scene\Splash</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>Scene\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\SelectCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Colony.cpp">
+      <Filter>Object\Colony</Filter>
+    </ClCompile>
+    <ClCompile Include="Junk.cpp">
+      <Filter>Object\Junk</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Director.h">
+      <Filter>Director</Filter>
+    </ClInclude>
+    <ClInclude Include="Base.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D9.h">
+      <Filter>Direct3D9</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractScene.h">
+      <Filter>Scene\AbstractScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualController.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputController.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object\ベース</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Magnet.h">
+      <Filter>Object\Magnet</Filter>
+    </ClInclude>
+    <ClInclude Include="BoudingSphere.h">
+      <Filter>BoudingSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="HitPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ColonyHitPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MissileUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Splash.h">
+      <Filter>Scene\Splash</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>Scene\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\SelectCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Colony.h">
+      <Filter>Object\Colony</Filter>
+    </ClInclude>
+    <ClInclude Include="Junk.h">
+      <Filter>Object\Junk</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="04 Sound File\Chorus.wav">
+      <Filter>04 Sound File</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\HierarchyMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\robotB_still_back.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\SkinnedMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\StaticMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\planet.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\field001.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="02 Visual File\outline.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\Shade.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\UVグリッド.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\MissileUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\ColonyHitPointUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBase.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeCover.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBar.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="03 Shader File\ToonShader.fx">
+      <Filter>03 Shader File</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
