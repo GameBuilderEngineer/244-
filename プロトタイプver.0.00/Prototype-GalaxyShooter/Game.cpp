@@ -36,6 +36,11 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(direct3D9->device, (LPSTR)"Toon_6Color.x", &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
+		hp[i].initialize(direct3D9->device, i);
+		sp[i].initialize(direct3D9->device, i);
+		colonyHp[i].initialize(direct3D9->device, i);
+		missileInfomation[i].initialize(direct3D9->device, i);
+		weaponInfomation[i].initialize(direct3D9->device, i);
 	}
 
 	//磁石
@@ -46,11 +51,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 		bullet[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
 		bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), rand() % 360);
 		
-		hp[i].initialize(direct3D9->device, i);
-		sp[i].initialize(direct3D9->device, i);
-		colonyHp[i].initialize(direct3D9->device, i);
-		missileInfomation[i].initialize(direct3D9->device, i);
-		weaponInfomation[i].initialize(direct3D9->device, i);
 	}
 
 	//フィールド

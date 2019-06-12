@@ -43,7 +43,6 @@ private:
 	Magnet magnet;
 	Text text;
 	Text text2;
-	Object player[gameNS::NUM_PLAYER];
 	HitPointUI hp[gameNS::NUM_PLAYER];
 	SkillPointUI sp[gameNS::NUM_PLAYER];
 	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
