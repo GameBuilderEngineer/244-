@@ -4,6 +4,13 @@
 #include "Player.h"
 #include "Text.h"
 #include "Magnet.h"
+#include "HitPointUI.h"
+#include "SkillPointUI.h"
+#include "ColonyHitPointUI.h"
+#include "MissileUI.h"
+#include "WeaponUI.h"
+
+
 
 namespace gameNS
 {
@@ -36,6 +43,12 @@ private:
 	Magnet magnet;
 	Text text;
 	Text text2;
+	Object player[gameNS::NUM_PLAYER];
+	HitPointUI hp[gameNS::NUM_PLAYER];
+	SkillPointUI sp[gameNS::NUM_PLAYER];
+	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
+	MissileUI missileInfomation[gameNS::NUM_PLAYER];
+	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 public:
 	Game();
 	~Game();
@@ -47,5 +60,5 @@ public:
 	virtual void uninitialize() override;
 
 	void render3D(Direct3D9* direct3D9, Camera currentCamera);
-	void renderUI();
+	void renderUI(LPDIRECT3DDEVICE9 device);
 };

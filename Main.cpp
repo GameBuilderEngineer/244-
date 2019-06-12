@@ -580,3 +580,9 @@ VOID FreeDx()
 	SAFE_RELEASE( pDevice );
 	SAFE_RELEASE( pD3d );
 }
+
+// デバイス取得
+LPDIRECT3DDEVICE9 GetDevice(void)
+{
+	return pDevice;
+}

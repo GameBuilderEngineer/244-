@@ -76,6 +76,12 @@
     <Filter Include="Object\Bullet">
       <UniqueIdentifier>{3dfdaea0-621c-4e51-96f2-c7a44fffac99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{70463875-2daf-44d5-93ba-792197bcfcb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{bb8b83bf-5a45-49ed-b64c-06e357407b18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -134,6 +140,24 @@
     </ClCompile>
     <ClCompile Include="BoudingSphere.cpp">
       <Filter>BoudingSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="HitPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ColonyHitPointUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MissileUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponUI.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +218,24 @@
     <ClInclude Include="BoudingSphere.h">
       <Filter>BoudingSphere</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="HitPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ColonyHitPointUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MissileUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Media Include="04 Sound File\Chorus.wav">
@@ -228,6 +270,21 @@
       <Filter>02 Visual File</Filter>
     </Image>
     <Image Include="02 Visual File\UVグリッド.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\MissileUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\ColonyHitPointUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBase.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeCover.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBar.png">
       <Filter>02 Visual File</Filter>
     </Image>
   </ItemGroup>
