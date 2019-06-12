@@ -55,9 +55,6 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{4ac8f897-e76a-46fb-bf32-80f619742dc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\ベース">
-      <UniqueIdentifier>{1c726889-d3b4-4cad-ac1a-dc8e30d085fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Player">
       <UniqueIdentifier>{8880fccc-ba75-4d51-aee0-bd223fadc694}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,27 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{bb8b83bf-5a45-49ed-b64c-06e357407b18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Splash">
+      <UniqueIdentifier>{c158ea93-11b0-43d9-a8d0-00037b9c28ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SelectCharacter">
+      <UniqueIdentifier>{edcabc91-3a71-4735-b36c-0c72ab3bf29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Result">
+      <UniqueIdentifier>{77746008-6b77-4523-9c21-d099946cc532}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{9a615eb5-f59e-43b5-ad3c-9a58b319a70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Colony">
+      <UniqueIdentifier>{ba0b0858-8d3b-49b8-8221-cc672ae84516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Junk">
+      <UniqueIdentifier>{1ccf7e5f-d1a6-4161-990c-49ef8dc3e062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ベース">
+      <UniqueIdentifier>{1c726889-d3b4-4cad-ac1a-dc8e30d085fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,15 +141,6 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Colony.cpp">
-      <Filter>Object\Colony</Filter>
-    </ClCompile>
-    <ClCompile Include="Junk.cpp">
-      <Filter>Object\Junk</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Object\ベース</Filter>
     </ClCompile>
@@ -167,6 +176,24 @@
     </ClCompile>
     <ClCompile Include="WeaponUI.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Splash.cpp">
+      <Filter>Scene\Splash</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>Scene\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\SelectCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Colony.cpp">
+      <Filter>Object\Colony</Filter>
+    </ClCompile>
+    <ClCompile Include="Junk.cpp">
+      <Filter>Object\Junk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,16 +236,6 @@
     <ClInclude Include="Audio.h">
       <Filter>Audio</Filter>
     </ClInclude>
-
-    <ClInclude Include="Light.h">
-      <Filter>Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Colony.h">
-      <Filter>Object\Colony</Filter>
-    </ClInclude>
-    <ClInclude Include="Junk.h">
-      <Filter>Object\Junk</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Object\ベース</Filter>
     </ClInclude>
@@ -254,6 +271,24 @@
     </ClInclude>
     <ClInclude Include="WeaponUI.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Splash.h">
+      <Filter>Scene\Splash</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>Scene\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\SelectCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Colony.h">
+      <Filter>Object\Colony</Filter>
+    </ClInclude>
+    <ClInclude Include="Junk.h">
+      <Filter>Object\Junk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

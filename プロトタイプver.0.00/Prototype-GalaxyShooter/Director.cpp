@@ -1,6 +1,10 @@
 #include "Director.h"
+#include "Splash.h"
 #include "Title.h"
+#include "SelectCharacter.h"
 #include "Game.h"
+#include "Result.h"
+
 
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
@@ -152,11 +156,11 @@ void Director::changeNextScene(){
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
-	case SceneList::OPENING:				scene = new Title(); break;
+	case SceneList::SPLASH:					scene = new Splash(); break;
 	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::SELECT_CHARACTER:		scene = new SelectCharacter(); break;
 	case SceneList::GAME:					scene = new Game(); break;
-	case SceneList::SELECT_CHARACTER:		scene = new Title(); break;
-	case SceneList::RESULT:					scene = new Title(); break;
+	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
 	scene->initialize(d3d,input);

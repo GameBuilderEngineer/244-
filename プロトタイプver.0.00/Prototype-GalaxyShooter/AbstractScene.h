@@ -10,7 +10,7 @@ namespace SceneList
 {
 	enum {
 		NONE_SCENE = -1,
-		OPENING,
+		SPLASH,
 		TITLE,
 		SELECT_CHARACTER,
 		GAME,

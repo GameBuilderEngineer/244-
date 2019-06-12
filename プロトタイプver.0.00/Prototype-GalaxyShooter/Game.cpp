@@ -37,8 +37,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	light = new Light;
 	light->initialize(direct3D9);
 
-	planet.initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(10, -98, 0));
-
 	colony[0].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(150, 0, 300));
 	colony[1].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(-150, 0, 300));
 
@@ -289,14 +287,14 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	for (int i = 0; i < NUM_COLONY; i++)
 	{
-		colony[i].render(direct3D9->device);
+		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
-		junk[i].render(direct3D9->device);
+		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	//フィールドの描画
