@@ -9,6 +9,11 @@
 #include "ColonyHitPointUI.h"
 #include "MissileUI.h"
 #include "WeaponUI.h"
+#include "Colony.h"
+#include "Junk.h"
+
+#define JUNK_MAX (10) //ÉKÉâÉNÉ^ÇÃêî
+
 
 
 
@@ -32,6 +37,12 @@ namespace gameNS
 		D3DXQUATERNION(0,3,-30,0.0f),
 		D3DXQUATERNION(0,100,-500,0.0f),
 	};
+
+	enum {
+		COLONY1,
+		COLONY2,
+		NUM_COLONY,
+	};
 }
 
 class Game : public AbstractScene
@@ -48,6 +59,9 @@ private:
 	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
 	MissileUI missileInfomation[gameNS::NUM_PLAYER];
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
+	Colony colony[gameNS::NUM_COLONY];
+	Junk junk[JUNK_MAX];
+
 public:
 	Game();
 	~Game();

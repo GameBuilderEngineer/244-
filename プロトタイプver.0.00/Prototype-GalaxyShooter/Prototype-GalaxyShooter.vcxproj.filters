@@ -123,6 +123,15 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Colony.cpp">
+      <Filter>Object\Colony</Filter>
+    </ClCompile>
+    <ClCompile Include="Junk.cpp">
+      <Filter>Object\Junk</Filter>
+    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Object\ベース</Filter>
     </ClCompile>
@@ -199,6 +208,16 @@
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Colony.h">
+      <Filter>Object\Colony</Filter>
+    </ClInclude>
+    <ClInclude Include="Junk.h">
+      <Filter>Object\Junk</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Object\ベース</Filter>

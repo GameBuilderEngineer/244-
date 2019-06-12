@@ -2,6 +2,7 @@
 #include "Base.h"
 #include "Camera.h"
 #include "Input.h"
+#include "Light.h"
 #include <string>
 
 
@@ -23,6 +24,7 @@ protected:
 	//Data
 	Input* input;
 	Camera* camera;
+	Light* light;
 	bool onChange;
 	int nextScene;
 	std::string sceneName;

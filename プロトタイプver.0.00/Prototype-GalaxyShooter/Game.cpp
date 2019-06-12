@@ -13,6 +13,7 @@ Game::Game()
 
 Game::~Game()
 {
+
 }
 
 void Game::initialize(Direct3D9* direct3D9,Input* _input) {
@@ -32,7 +33,15 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
 	}
 
-	//プレイヤー
+	//light
+	light = new Light;
+	light->initialize(direct3D9);
+
+	planet.initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(10, -98, 0));
+
+	colony[0].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(150, 0, 300));
+	colony[1].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(-150, 0, 300));
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(direct3D9->device, (LPSTR)"Toon_6Color.x", &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
@@ -76,7 +85,10 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 
 	text.initialize(direct3D9->device,0,10, 0xff00ff00);
 	text2.initialize(direct3D9->device,7,7, 0xff0000ff);
-	
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].initialize(direct3D9->device, (LPSTR)"RobotB.x", &D3DXVECTOR3(5 + i, 3, 3));
+	}
 }
 
 void Game::update() {
@@ -233,9 +245,18 @@ void Game::update() {
 		missileInfomation[i].update();
 		weaponInfomation[i].update();
 	}
+	// コロニーアップデート
+	colony[0].update();
+
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		// ガラクタアップデート
+		junk[i].update();
+	}
 }
 
 void Game::render(Direct3D9* direct3D9) {
+
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
@@ -263,6 +284,21 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	{//バレットの描画
 		bullet[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
 	}
+
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
+
+	for (int i = 0; i < NUM_COLONY; i++)
+	{
+		colony[i].render(direct3D9->device);
+	}
+
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
+
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].render(direct3D9->device);
+	}
+
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	magnet.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -371,6 +407,8 @@ void Game::AI() {
 }
 
 void Game::uninitialize() {
+	SAFE_DELETE(light);
+	SAFE_DELETE_ARRAY(camera);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		hp[i].uninitialize();

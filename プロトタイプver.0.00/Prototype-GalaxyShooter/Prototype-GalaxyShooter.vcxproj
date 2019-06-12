@@ -131,6 +131,7 @@
     <ClCompile Include="BoudingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
+    <ClCompile Include="Colony.cpp" />
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
@@ -141,6 +142,8 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="MissileUI.cpp" />
+    <ClCompile Include="Junk.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Ray.cpp" />
@@ -158,6 +161,7 @@
     <ClInclude Include="BoudingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
+    <ClInclude Include="Colony.h" />
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
@@ -167,6 +171,8 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Magnet.h" />
     <ClInclude Include="MissileUI.h" />
+    <ClInclude Include="Junk.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Ray.h" />
