@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "Direct3D9.h"
 using namespace gameNS;
-D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);//仮置き
-int currentBullet;
+
+int currentBullet;//仮
 
 Game::Game()
 {
@@ -68,7 +68,8 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	light.Range = 200.0f;
 	direct3D9->device->SetLight(0, &light);
 
-	text.initialize(direct3D9->device);
+	text.initialize(direct3D9->device,0,10, 0xff00ff00);
+	text2.initialize(direct3D9->device,7,7, 0xff0000ff);
 	
 }
 
@@ -108,12 +109,36 @@ void Game::update() {
 			{
 				player[i].jump();
 			}
+			
+
 			break;
 		case PLAYER2:
-			if (input->isKeyDown('I'))player[i].addSpeed(player[i].getAxisZ()->direction*0.1);
-			if (input->isKeyDown('K'))player[i].addSpeed(player[i].getReverseAxisZ()->direction*0.1);
-			if (input->isKeyDown('J'))player[i].addSpeed(player[i].getReverseAxisX()->direction*0.1);
-			if (input->isKeyDown('L'))player[i].addSpeed(player[i].getAxisX()->direction*0.1);
+			if (input->isKeyDown(VK_UP)) {
+				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
+				player[i].addSpeed(moveDirection*0.1);
+				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+			}
+			if (input->isKeyDown(VK_DOWN)) {
+				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
+				player[i].addSpeed(moveDirection*-0.1);
+				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+			}
+			if (input->isKeyDown(VK_LEFT)) {
+				moveDirection = camera[i].getDirectionX();
+				player[i].addSpeed(moveDirection*-0.1);
+				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+			}
+			if (input->isKeyDown(VK_RIGHT))
+
+			{
+				moveDirection = camera[i].getDirectionX();
+				player[i].addSpeed(moveDirection*0.1);
+				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+			}
+			if (input->wasKeyPressed(VK_RETURN))
+			{
+				player[i].jump();
+			}
 			break;
 		}
 		//フィールド補正
@@ -172,16 +197,19 @@ void Game::update() {
 	}
 
 	//カメラの回転
-	if (input->isKeyDown('F')) {
+	if (input->isKeyDown('G')) {
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
 	};
-	if (input->isKeyDown('H')) {
+	if (input->isKeyDown('J')) {
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
 	};
-	if (input->isKeyDown(VK_LEFT)) {
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
+
+
+
+	if (input->getMouseLButton()) {
+		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getMouseRawX());
 	};
-	if (input->isKeyDown(VK_RIGHT)) {
+	if (input->getMouseRButton()) {
 		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
 	};
 	
@@ -215,7 +243,7 @@ void Game::render(Direct3D9* direct3D9) {
 void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
-		player[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		player[i].toonRender(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
 	}
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
@@ -256,7 +284,55 @@ void Game::renderUI() {
 		camera[PLAYER1].relativeQuaternion.y,
 		camera[PLAYER1].relativeQuaternion.z,
 		camera[PLAYER1].relativeQuaternion.w);
-
+	text.print(10, 110, "input(x:%d,y:%d,rowX%d,rowY%d)", 
+		input->getMouseX(),
+		input->getMouseY(),
+		input->getMouseRawX(),
+		input->getMouseRawY());
+	text2.print(800, 10,
+		"1P:Controller\n\
+		isA:%d wasA:%d\n\
+		isB:%d wasB:%d\n\
+		isX:%d wasX:%d\n\
+		isY:%d wasY:%d\n\
+		isUP:%d wasUP:%d\n\
+		isRIGHT:%d wasRIGHT:%d\n\
+		isDOWN:%d wasDOWN:%d\n\
+		isLEFT:%d wasLEFT:%d\n\
+		isR1:%d wasR1:%d\n\
+		isR2:%d wasR2:%d\n\
+		isR3:%d wasR3:%d\n\
+		isL1:%d wasL1:%d\n\
+		isL2:%d wasL2:%d\n\
+		isL3:%d wasL3:%d\n\
+		isHOME:%d wasHOME:%d\n\
+		isCAPTURE:%d wasCAPTURE:%d\n\
+		isSPECIAL_MAIN:%d wasSPECIAL_MAIN:%d\n\
+		isSPECIAL_SUB:%d wasSPECIAL_SUB:%d\n\
+		LeftStick:(%.2f,%.2f)\n\
+		RightStick:(%.2f,%.2f)\n\
+		",
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::A),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::B),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::B),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::X),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::X),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::Y),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::Y),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::UP),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::UP),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::RIGHT),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::RIGHT),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::DOWN),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::LEFT),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::LEFT),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::R1),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::R1),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::R2),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::R2),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::R3),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::R3),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::L1),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::L1),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::L2),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::L2),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::L3),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::L3),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::HOME),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::HOME),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::CAPTURE),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::CAPTURE),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::SPECIAL_MAIN),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_MAIN),
+		input->getController()[inputNS::DINPUT_1P]->isButton(virtualControllerNS::SPECIAL_SUB),input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::SPECIAL_SUB),
+		input->getController()[inputNS::DINPUT_1P]->getLeftStick().x,input->getController()[inputNS::DINPUT_1P]->getLeftStick().y,
+		input->getController()[inputNS::DINPUT_1P]->getRightStick().x,input->getController()[inputNS::DINPUT_1P]->getRightStick().y
+	);
 }
 
 void Game::collisions() {
@@ -269,15 +345,4 @@ void Game::AI() {
 
 void Game::uninitialize() {
 
-}
-
-//仮置き
-D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N)
-{
-	D3DXVECTOR3 S; //滑りベクトル（滑る方向）
-
-	//滑りベクトル S=L-(N * L)/(|N|^2)*N
-	S = L - ((D3DXVec3Dot(&N, &L)) / (pow(D3DXVec3Length(&N), 2)))*N;
-
-	return S;
 }

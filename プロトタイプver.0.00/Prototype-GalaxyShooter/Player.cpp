@@ -11,6 +11,11 @@ Player::~Player()
 
 }
 
+void Player::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
+{
+	Object::initialize(device, xFileName, _position);
+	bodyCollide.initialize(device, &position, mesh);
+}
 
 void Player::update()
 {
@@ -25,31 +30,14 @@ void Player::update()
 
 	postureControl(axisY.direction, reverseAxisY.normal,0.05f);
 
-	//法線とキャラクターとの外積を求める（平面に直立するための回転軸となる）
-	//D3DXVec3Cross(&rotationAxis, &axisY.direction, &reverseAxisY.normal);
-	//D3DXVec3Normalize(&rotationAxis,&rotationAxis);
-	//
-	//if (!isinf(rotationAxis.x+rotationAxis.y+rotationAxis.z))
-	//{
-	//	//float dot = D3DXVec3Dot(&axisY.direction, &reverseAxisY.normal);
-	//	//float upLength = D3DXVec3Length(&axisY.direction);
-	//	//float normalLength = D3DXVec3Length(&reverseAxisY.normal);
-	//	//radian = acosf( dot / ( upLength*normalLength ) );
-	//
-	//	//回転角を求める
-	//	//acos(上方向ベクトル・(ドット積)法線ベクトル)
-	//	if(formedRadianAngle(&radian, axisY.direction, reverseAxisY.normal))
-	//	{
-	//		//回転クォータニオンを作成
-	//		deltaRotation= D3DXQUATERNION(0, 0, 0, 1);
-	//		D3DXQuaternionRotationAxis(&deltaRotation, &rotationAxis, radian);
-	//		deltaRotation = quaternion * deltaRotation;
-	//
-	//		D3DXQuaternionSlerp(&quaternion, &quaternion, &deltaRotation, 0.05f);
-	//	}
-	//}
-
 	Object::update();
+}
+
+void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+{
+	Object::render(device,view,projection,cameraPositon);
+	bodyCollide.render(device, matrixWorld);
+
 }
 
 void Player::jump()
@@ -59,5 +47,8 @@ void Player::jump()
 
 void Player::move(D3DXVECTOR2 moveDirection)
 {
+	//D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
+	//player[i].addSpeed(moveDirection*0.1);
+	//player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
 
 }

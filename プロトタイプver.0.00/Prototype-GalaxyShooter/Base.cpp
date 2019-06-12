@@ -90,3 +90,15 @@ bool Base::formedRadianAngle(float* out, D3DXVECTOR3 v1, D3DXVECTOR3 v2) {
 	if (isnan(*out))return false;
 	return true;
 }
+
+
+//仮置き
+D3DXVECTOR3 Base::slip(D3DXVECTOR3 L, D3DXVECTOR3 N)
+{
+	D3DXVECTOR3 S; //滑りベクトル（滑る方向）
+
+	//滑りベクトル S=L-(N * L)/(|N|^2)*N
+	S = L - ((D3DXVec3Dot(&N, &L)) / (pow(D3DXVec3Length(&N), 2)))*N;
+
+	return S;
+}

@@ -35,6 +35,7 @@ private:
 	Object field;
 	Magnet magnet;
 	Text text;
+	Text text2;
 public:
 	Game();
 	~Game();

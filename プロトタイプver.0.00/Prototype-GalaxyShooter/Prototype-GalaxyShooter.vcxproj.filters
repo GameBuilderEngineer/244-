@@ -70,6 +70,12 @@
     <Filter Include="Object\Magnet">
       <UniqueIdentifier>{53af07e7-3f6c-4177-bffd-31a7384c7560}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BoudingSphere">
+      <UniqueIdentifier>{c6b5aa5a-bff9-4abe-b39e-61aa3752e32d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Bullet">
+      <UniqueIdentifier>{3dfdaea0-621c-4e51-96f2-c7a44fffac99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -126,6 +132,9 @@
     <ClCompile Include="Magnet.cpp">
       <Filter>Object\Magnet</Filter>
     </ClCompile>
+    <ClCompile Include="BoudingSphere.cpp">
+      <Filter>BoudingSphere</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Director.h">
@@ -181,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="Magnet.h">
       <Filter>Object\Magnet</Filter>
+    </ClInclude>
+    <ClInclude Include="BoudingSphere.h">
+      <Filter>BoudingSphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

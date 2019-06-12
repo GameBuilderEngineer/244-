@@ -48,6 +48,7 @@ public:
 	static void anyAxisRotation(D3DXQUATERNION* quaternion,D3DXVECTOR3 axis, float degree);
 	//二つのベクトルのなす角を計算
 	static bool formedRadianAngle(float* out, D3DXVECTOR3 v1, D3DXVECTOR3 v2);
+	D3DXVECTOR3 slip(D3DXVECTOR3 L, D3DXVECTOR3 N);
 
 };
 

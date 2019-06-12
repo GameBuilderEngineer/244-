@@ -305,46 +305,9 @@ void Input::update(bool windowActivate)
 	{
 		dInputController[i].update(windowActivate);
 	}
-}
-
-void DirectInputController::update(bool windowActivate)
-{
-	if (device == NULL)	return;
-
-	HRESULT hr;
-	// デバイスの直接データを取得する
-	hr = device->Poll();
-	if (FAILED(hr))
+	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
 	{
-		hr = device->Acquire();
-		while (windowActivate && hr == DIERR_INPUTLOST)
-		{
-			hr = device->Acquire();
-		}
-	}
-
-	// コントローラーの状態を取得する
-	hr = device->GetDeviceState(sizeof(DIJOYSTATE2), &joyState);
-	if (FAILED(hr))
-	{
-		if (windowActivate && hr == DIERR_INPUTLOST)
-		{
-			device->Acquire();
-		}
-	}
-
-	// バッファリングデータを取得する
-	while (windowActivate)
-	{
-		DWORD items = 1;
-		hr = device->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &objectData, &items, 0);
-		if (hr == DIERR_INPUTLOST)
-		{
-			device->Acquire();
-		}
-		else if (FAILED(hr) || items == 0)
-		{
-			break;// データが読めないか、存在しない
-		}
+		virtualController[i]->update();
 	}
 }
+

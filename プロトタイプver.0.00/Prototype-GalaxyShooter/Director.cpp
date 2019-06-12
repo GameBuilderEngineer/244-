@@ -35,7 +35,7 @@ HRESULT Director::initialize(){
 
 	//input
 	input = new Input();
-	input->initialize(wnd,false);
+	input->initialize(window->wnd,true);
 	window->setInput(input);
 
 	scene->initialize(d3d,input);
@@ -103,8 +103,8 @@ void Director::mainLoop(){
 	render();
 	fixFPS60();
 
-	
-	input->clear(inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
+	//input->clearAll();
+	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
 }
 
 void Director::update(){

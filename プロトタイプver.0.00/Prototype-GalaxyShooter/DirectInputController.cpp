@@ -15,7 +15,7 @@ HRESULT DirectInputController::initialize(HWND wnd)
 
 	//アプリケーションで使用するコントローラーのプロパティを列挙して設定する
 	MFAIL(device->EnumObjects(EnumObjectsCallback, this, DIDFT_ALL),"コントローラプロパティの列挙と設定に失敗しました。");
-
+	
 	// 軸モードを設定（絶対値モードに設定。デフォルトなので必ずしも設定は必要ない）
 	DIPROPDWORD propWord;
 	propWord.diph.dwSize = sizeof(propWord);
@@ -65,4 +65,46 @@ BOOL CALLBACK DirectInputController::EnumObjectsCallback(const DIDEVICEOBJECTINS
 		}
 	}
 	return DIENUM_CONTINUE;
+}
+
+void DirectInputController::update(bool windowActivate)
+{
+	if (device == NULL)	return;
+
+	HRESULT hr;
+	// デバイスの直接データを取得する
+	hr = device->Poll();
+	if (FAILED(hr))
+	{
+		hr = device->Acquire();
+		while (windowActivate && hr == DIERR_INPUTLOST)
+		{
+			hr = device->Acquire();
+		}
+	}
+
+	// コントローラーの状態を取得する
+	hr = device->GetDeviceState(sizeof(DIJOYSTATE2), &joyState);
+	if (FAILED(hr))
+	{
+		if (windowActivate && hr == DIERR_INPUTLOST)
+		{
+			device->Acquire();
+		}
+	}
+
+	// バッファリングデータを取得する
+	while (windowActivate)
+	{
+		DWORD items = 1;
+		hr = device->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), &objectData, &items, 0);
+		if (hr == DIERR_INPUTLOST)
+		{
+			device->Acquire();
+		}
+		else if (FAILED(hr) || items == 0)
+		{
+			break;// データが読めないか、存在しない
+		}
+	}
 }

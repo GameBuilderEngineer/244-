@@ -74,6 +74,12 @@ public:
 	void clear(UCHAR what);									// 指定された入力バッファをクリアする。// KEYS_DOWN、KEYS_PRESSED、MOUSE、TEXT_INまたはKEYS_MOUSE_TEXT。// OR '|'を使用するパルメータを組み合わせるオペレータ。
 	void clearAll() { clear(inputNS::KEYS_MOUSE_TEXT); }	// キー、マウス、およびテキスト入力データをクリアします。
 	//-----------------------
+	//Controller
+	//-----------------------
+	VirtualController** getController() { return virtualController; };
+
+
+	//-----------------------
 	//KeyBoard
 	//-----------------------
 	void keyDown(WPARAM);									// キーダウン状態を保存する

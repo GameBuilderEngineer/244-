@@ -137,6 +137,32 @@ public:
 	// ボタンの状態を取得
 	bool getButton(int VC_BUTTON) { return buttons[VC_BUTTON]; }
 
+	// コントローラの指定したボタンの状態を戻す
+	// 押している間はtureを戻す
+	bool isButton(int VC_BUTTON)
+	{
+		return getButton(VC_BUTTON);
+	}
+
+	// コントローラnの指定したボタンの状態を戻す
+	// 押されたときのみtrueを返す
+	bool wasButton(int VC_BUTTON)
+	{
+		if (getBefore(VC_BUTTON) == true) { return false; }
+		else { return getButton(VC_BUTTON); }
+	}
+
+	// コントローラnの左スティックのXY軸を戻す
+	D3DXVECTOR2 getLeftStick(UINT n)
+	{
+		return getLeftStick();
+	}
+	// コントローラnの右スティックのXY軸を戻す
+	D3DXVECTOR2 getRightStick(UINT n)
+	{
+		return getRightStick();
+	}
+
 	// スティックの情報を取得
 	D3DXVECTOR2 getLeftStick() { return leftStick; }
 	D3DXVECTOR2 getRightStick() { return rightStick; }
