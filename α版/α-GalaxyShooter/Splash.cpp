@@ -22,7 +22,7 @@ void Splash::initialize(Direct3D9* direct3D9, Input* _input) {
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 }
 
-void Splash::update() {
+void Splash::update(float frameTime) {
 
 	camera->update();
 }

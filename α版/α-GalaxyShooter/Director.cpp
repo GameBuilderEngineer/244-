@@ -65,8 +65,16 @@ HRESULT Director::initialize(){
 	setSoundDirectory();
 	sound->load((char*)"Chorus.wav");
 
-	return S_OK;
 
+	// 高分解能タイマーの準備を試みる
+	if (QueryPerformanceFrequency(&timerFreq) == false)
+	{
+		MSG("高分解能タイマーの取得失敗しました。");
+	}
+	// 開始時間を取得
+	QueryPerformanceCounter(&timeStart); 
+
+	return S_OK;
 }
 
 void Director::run(HINSTANCE _instance){
@@ -112,6 +120,7 @@ void Director::mainLoop(){
 			fpsMode = VARIABLE_FPS;
 	}
 
+	setFrameTime();
 	update();
 	render();
 	fixFPS60();
@@ -124,7 +133,7 @@ void Director::mainLoop(){
 void Director::update(){
 	input->update(window->windowActivate);
 	audio->run();
-	scene->update();
+	scene->update(frameTime);
 }
 
 void Director::render(){
@@ -135,6 +144,15 @@ void Director::render(){
 		d3d->endScene();
 	}
 	d3d->present();
+}
+
+void Director::setFrameTime()
+{
+	// 最後のフレームからの経過時間を計算、frameTimeに保存
+	QueryPerformanceCounter(&timeEnd);
+	frameTime = (float)(timeEnd.QuadPart - timeStart.QuadPart) / (float)timerFreq.QuadPart;
+
+	timeStart = timeEnd;
 }
 
 void Director::fixFPS60() {
@@ -150,6 +168,7 @@ void Director::fixFPS60() {
 
 		QueryPerformanceCounter(&CurrentTime);
 		Time = CurrentTime.QuadPart - PreviousTime.QuadPart;
+
 		Time *= (DOUBLE)1100.0 / (DOUBLE)Frq.QuadPart;
 
 		//ここに次フレームまでの待機中にさせたい処理を記述
@@ -170,6 +189,7 @@ void Director::displayFPS() {
 
 	QueryPerformanceCounter(&time2);
 	elaptime = (time2.QuadPart - time.QuadPart)*microsec;
+
 	if (elaptime > 1000000)
 	{
 		QueryPerformanceCounter(&time);

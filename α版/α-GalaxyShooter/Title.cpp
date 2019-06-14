@@ -23,7 +23,7 @@ void Title::initialize(Direct3D9* direct3D9,Input* _input) {
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 }
 
-void Title::update() {
+void Title::update(float frameTime) {
 
 	camera->update();
 }

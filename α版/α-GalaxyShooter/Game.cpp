@@ -3,6 +3,7 @@
 using namespace gameNS;
 
 int currentBullet;//仮
+float FrameTime = 0.0f;//仮
 
 Game::Game()
 {
@@ -77,14 +78,18 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	}
 }
 
-void Game::update() {
+void Game::update(float frameTime) {
 	
+	sceneTimer += frameTime;
+	FrameTime = frameTime;
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
 		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
 		player[i].setGravity(*field.getPosition(), 0.1f);
 		
 		D3DXVECTOR3 moveDirection;
+		bool onJump = false;
 		switch (i)
 		{
 		case PLAYER1:
@@ -111,7 +116,7 @@ void Game::update() {
 			}
 			if (input->wasKeyPressed(VK_SPACE))
 			{
-				player[i].jump();
+				onJump = true;
 			}
 			if (input->getController()[PLAYER1]->checkConnect()) {
 				player[i].move(input->getController()[PLAYER1]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
@@ -140,12 +145,12 @@ void Game::update() {
 				player[i].addSpeed(moveDirection*0.1);
 				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
 			}
-			if (input->wasKeyPressed(VK_RETURN))
-			{
-				player[i].jump();
-			}
 			if (input->getController()[PLAYER2]->checkConnect()) {
 				player[i].move(input->getController()[PLAYER2]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
+			}
+			if (input->wasKeyPressed(VK_RETURN))
+			{
+				onJump = true;
 			}
 			break;
 		}
@@ -163,6 +168,7 @@ void Game::update() {
 			//{//二重チェック
 			//	player[i].setSpeed(moveRay.slip(player[i].getSpeed(),moveRay.normal));
 			//}
+			if(onJump)player[i].jump();
 		}
 
 		player[i].update();
@@ -339,6 +345,12 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 }
 
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
+	text.print(10, 150,
+		"\
+		sceneTime:%.2f\n\
+		frameTime:%.2f\n\
+		",
+		sceneTimer, FrameTime);
 	text.print(10, 10, "acceleration(\t%.2f,\t%.2f,\t%.2f)",
 		player[PLAYER1].getAcceleration().x,
 		player[PLAYER1].getAcceleration().y,

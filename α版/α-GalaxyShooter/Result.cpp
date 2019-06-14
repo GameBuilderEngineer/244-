@@ -23,7 +23,7 @@ void Result::initialize(Direct3D9* direct3D9, Input* _input) {
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 }
 
-void Result::update() {
+void Result::update(float frameTime) {
 
 	camera->update();
 }
