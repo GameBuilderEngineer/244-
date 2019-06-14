@@ -37,8 +37,9 @@ Input::~Input()
 	}
 }
 
-HRESULT Input::initialize(HWND wnd,bool capture)
+HRESULT Input::initialize(HINSTANCE instance,HWND _wnd,bool capture)
 {
+	wnd = _wnd;
 	//------------------------------------------------
 	// 高精細マウスを登録
 	mouseCaptured = capture;
@@ -49,13 +50,12 @@ HRESULT Input::initialize(HWND wnd,bool capture)
 		Rid[0].dwFlags = RIDEV_INPUTSINK;
 		Rid[0].hwndTarget = wnd;
 		RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
-		SetCapture(wnd);	// マウスをキャプチャ
 	}
 	//------------------------------------------------
 
 	//------------------------------------------------
 	// 「DirectInput」オブジェクトの作成
-	MFAIL(DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&dinput, NULL),
+	MFAIL(DirectInput8Create(instance, DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&dinput, NULL),
 		"DirectInputオブジェクトの作成に失敗しました。");
 
 	enumDInputNum = 0;
@@ -64,18 +64,49 @@ HRESULT Input::initialize(HWND wnd,bool capture)
 		"利用可能なゲームコントローラーの列挙に失敗しました。");
 	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
 	{
-		dInputController[i].initialize(wnd);
-		if(strcmp(dInputController[i].name,"Controller (Xbox One For Windows)"))
+		dInputController[i].initialize(_wnd);
+		
+		if (strcmp(dInputController[i].name, "Controller (Xbox One For Windows)") == 0)
 			virtualController[i] = new D_XBOX_ONE_ELITE(i, &dInputController[i]);
-		if(strcmp(dInputController[i].name,"Wireless Controller"))
-			virtualController[i] = new DualShock4(i, &dInputController[i]);
-		if(strcmp(dInputController[i].name,"Pro Controller"))
+		else if (strcmp(dInputController[i].name, "Pro Controller") == 0)
 			virtualController[i] = new Nintendo_Switch_Pro_Contoroller(i, &dInputController[i]);
+		else if (strcmp(dInputController[i].name, "Wireless Controller") == 0)
+			virtualController[i] = new DualShock4(i, &dInputController[i]);
+		else
+			virtualController[i] = new EMPTY_CONTROLLER();
 	}
 	//------------------------------------------------
 
 	return S_OK;
 }
+HRESULT Input::resetController()
+{
+	//for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
+	//{//仮想コントローラの削除
+	//	SAFE_DELETE(virtualController[i]);
+	//}
+
+	//再度初期化
+	enumDInputNum = 0;
+	//利用可能なゲームコントローラーの列挙関数を実行
+	MFAIL(dinput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY),
+		"利用可能なゲームコントローラーの列挙に失敗しました。");
+	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
+	{
+		dInputController[i].initialize(wnd);
+
+		if (strcmp(dInputController[i].name, "Controller (Xbox One For Windows)") == 0)
+			virtualController[i] = new D_XBOX_ONE_ELITE(i, &dInputController[i]);
+		else if (strcmp(dInputController[i].name, "Pro Controller") == 0)
+			virtualController[i] = new Nintendo_Switch_Pro_Contoroller(i, &dInputController[i]);
+		else if (strcmp(dInputController[i].name, "Wireless Controller") == 0)
+			virtualController[i] = new DualShock4(i, &dInputController[i]);
+		else
+			virtualController[i] = new EMPTY_CONTROLLER();
+	}
+
+}
+
 //=============================================================================
 // このキーについて、keysDown配列とkeysPressed配列にtrueを設定
 // 実行前：wParamに、仮想キーコード(0～255)が格納されている
@@ -301,13 +332,17 @@ BOOL CALLBACK Input::enumJoysticksCallback(const DIDEVICEINSTANCE* instance, VOI
 
 void Input::update(bool windowActivate)
 {
+	int connectNum = 0;
 	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
 	{
+		if (dInputController[i].connected == false)continue;
 		dInputController[i].update(windowActivate);
+		connectNum++;
 	}
-	for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
+	for (int i = 0; i < connectNum; i++)
 	{
-		virtualController[i]->update();
+			virtualController[i]->update();
 	}
+
 }
 

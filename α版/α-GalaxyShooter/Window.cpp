@@ -69,26 +69,32 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		return 0;
 	case WM_LBUTTONDOWN:			// 左マウスボタンが押された
 		input->setMouseLButton(true);
+		SetCapture(wnd);
 		input->mouseIn(lParam);
 		return 0;
 	case WM_LBUTTONUP:				// 左マウスボタンが離された
 		input->setMouseLButton(false);
+		ReleaseCapture();
 		input->mouseIn(lParam);
 		return 0;
 	case WM_MBUTTONDOWN:			// 中央マウスボタンが押された
 		input->setMouseMButton(true);
+		SetCapture(wnd);
 		input->mouseIn(lParam);
 		return 0;
 	case WM_MBUTTONUP:				// 中央マウスボタンが離された
 		input->setMouseMButton(false);
+		ReleaseCapture();
 		input->mouseIn(lParam);
 		return 0;
 	case WM_RBUTTONDOWN:			// 右マウスボタンが押された
 		input->setMouseRButton(true);
+		SetCapture(wnd);
 		input->mouseIn(lParam);
 		return 0;
 	case WM_RBUTTONUP:				// 右マウスボタンが離された
 		input->setMouseRButton(false);
+		ReleaseCapture();
 		input->mouseIn(lParam);
 		return 0;
 		// マウスのXボタンが押された/離された
@@ -97,8 +103,8 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		input->mouseIn(lParam);
 		return 0;
 	case WM_DEVICECHANGE:			// コントローラをチェック
+		input->resetController();
 		return 0;
-
 	}
 	return DefWindowProc(wnd, msg, wParam, lParam);
 }

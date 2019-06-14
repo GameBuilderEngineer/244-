@@ -14,9 +14,6 @@
 
 #define JUNK_MAX (10) //ガラクタの数
 
-
-
-
 namespace gameNS
 {
 	enum {
@@ -26,6 +23,7 @@ namespace gameNS
 	};
 
 	const int NUM_BULLET = 30;
+	const int NUM_MAGNET = 30;
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
 	{
@@ -43,6 +41,7 @@ namespace gameNS
 		COLONY2,
 		NUM_COLONY,
 	};
+	
 }
 
 class Game : public AbstractScene
@@ -51,7 +50,7 @@ private:
 	Player player[gameNS::NUM_PLAYER];
 	Player bullet[gameNS::NUM_BULLET];//（仮）実験的にプレイヤークラスを使用しています
 	Object field;
-	Magnet magnet;
+	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
 	HitPointUI hp[gameNS::NUM_PLAYER];

@@ -125,7 +125,7 @@
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
-    <ClCompile Include="BoudingSphere.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
-    <ClInclude Include="BoudingSphere.h" />
+    <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
@@ -188,6 +188,34 @@
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\bullet.x" />
+    <None Include="02 Visual File\field001.x" />
+    <None Include="02 Visual File\HierarchyMesh.x" />
+    <None Include="02 Visual File\magnetN.x" />
+    <None Include="02 Visual File\magnetS.x" />
+    <None Include="02 Visual File\planet.x" />
+    <None Include="02 Visual File\RobotB.x" />
+    <None Include="02 Visual File\robotB_still_back.x" />
+    <None Include="02 Visual File\SkinnedMesh.x" />
+    <None Include="02 Visual File\star.x" />
+    <None Include="02 Visual File\StaticMesh.x" />
+    <None Include="02 Visual File\Toon_6Color.x" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="02 Visual File\ColonyHitPointUI.jpg" />
+    <Image Include="02 Visual File\GaugeBar.png" />
+    <Image Include="02 Visual File\GaugeBase.png" />
+    <Image Include="02 Visual File\GaugeCover.png" />
+    <Image Include="02 Visual File\MissileUI.jpg" />
+    <Image Include="02 Visual File\nTex.png" />
+    <Image Include="02 Visual File\outline.bmp" />
+    <Image Include="02 Visual File\ragged.bmp" />
+    <Image Include="02 Visual File\Shade.bmp" />
+    <Image Include="02 Visual File\sTex.png" />
+    <Image Include="02 Visual File\UVグリッド.png" />
+    <Image Include="02 Visual File\WeaponUI.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

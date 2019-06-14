@@ -1,19 +1,19 @@
-#include "BoudingSphere.h"
+#include "BoundingSphere.h"
 
 
 
-BoudingSphere::BoudingSphere()
+BoundingSphere::BoundingSphere()
 {
-	ZeroMemory(this, sizeof(BoudingSphere));
+	ZeroMemory(this, sizeof(BoundingSphere));
 }
 
 
-BoudingSphere::~BoudingSphere()
+BoundingSphere::~BoundingSphere()
 {
 }
 
 
-void BoudingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position, LPD3DXMESH ownerMesh)
+void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position, LPD3DXMESH ownerMesh)
 {
 	position = _position;
 
@@ -35,7 +35,7 @@ void BoudingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position, 
 	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
 
 }
-void BoudingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
+void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
 {
 	// ライティングモードを設定
 	device->SetRenderState(D3DRS_LIGHTING, true);
@@ -79,7 +79,7 @@ void BoudingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
 	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);//ワイヤーフレーム表示
 }
 
-bool BoudingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius)
+bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius)
 {
 	//２つの物体の中心間の距離を求める
 	float length = D3DXVec3Length(&(targetCenter - center));

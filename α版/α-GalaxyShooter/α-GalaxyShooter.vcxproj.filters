@@ -114,9 +114,6 @@
     <ClCompile Include="Base.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="BoudingSphere.cpp">
-      <Filter>BoudingSphere</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -201,6 +198,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>BoudingSphere</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -211,9 +211,6 @@
     </ClInclude>
     <ClInclude Include="Base.h">
       <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="BoudingSphere.h">
-      <Filter>BoudingSphere</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
@@ -299,5 +296,84 @@
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>BoudingSphere</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="02 Visual File\bullet.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\field001.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\HierarchyMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\magnetN.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\magnetS.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\planet.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\RobotB.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\robotB_still_back.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\SkinnedMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\star.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\StaticMesh.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\Toon_6Color.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="02 Visual File\ColonyHitPointUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBar.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeBase.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\GaugeCover.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\MissileUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\nTex.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\outline.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\ragged.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\Shade.bmp">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\sTex.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\UVグリッド.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
+    <Image Include="02 Visual File\WeaponUI.jpg">
+      <Filter>02 Visual File</Filter>
+    </Image>
   </ItemGroup>
 </Project>

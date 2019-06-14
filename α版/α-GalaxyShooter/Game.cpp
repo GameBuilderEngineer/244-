@@ -49,43 +49,31 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 		missileInfomation[i].initialize(direct3D9->device, i);
 		weaponInfomation[i].initialize(direct3D9->device, i);
 	}
-
-	//磁石
-	magnet.initialize(direct3D9->device);
+	for (int i = 0; i < NUM_MAGNET; i++)
+	{//磁石
+		if (NUM_MAGNET / 2 > i) {
+			magnet[i].initialize(direct3D9->device,2.0f);
+		}
+		else {
+			magnet[i].initialize(direct3D9->device,-2.0f);
+		}
+	}
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの初期化
 		bullet[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
-		bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), rand() % 360);
+		bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
 		
 	}
 
 	//フィールド
 	field.initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(0, -100, 0));
 
-
-
-	//仮置き
-	// ライトをあてる 白色で光沢反射ありに設定
-	D3DXVECTOR3 vDirection(1, 1, 1);
-	D3DLIGHT9 light;
-	ZeroMemory(&light, sizeof(D3DLIGHT9));
-	light.Type = D3DLIGHT_DIRECTIONAL;
-	light.Diffuse.r = 1.0f;
-	light.Diffuse.g = 1.0f;
-	light.Diffuse.b = 1.0f;
-	light.Specular.r = 1.0f;
-	light.Specular.g = 1.0f;
-	light.Specular.b = 1.0f;
-	D3DXVec3Normalize((D3DXVECTOR3*)&light.Direction, &vDirection);
-	light.Range = 200.0f;
-	direct3D9->device->SetLight(0, &light);
-
-	text.initialize(direct3D9->device,0,10, 0xff00ff00);
-	text2.initialize(direct3D9->device,7,7, 0xff0000ff);
+	text.initialize(direct3D9->device,10,10, 0xff00ff00);
+	text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
-		junk[i].initialize(direct3D9->device, (LPSTR)"RobotB.x", &D3DXVECTOR3(5 + i, 3, 3));
+		junk[i].initialize(direct3D9->device, (LPSTR)"RobotB.x", &D3DXVECTOR3((float)(5 + i), 3, 3));
 	}
 }
 
@@ -125,9 +113,11 @@ void Game::update() {
 			{
 				player[i].jump();
 			}
-			
-
+			if (input->getController()[PLAYER1]->checkConnect()) {
+				player[i].move(input->getController()[PLAYER1]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
+			}
 			break;
+
 		case PLAYER2:
 			if (input->isKeyDown(VK_UP)) {
 				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
@@ -145,7 +135,6 @@ void Game::update() {
 				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
 			}
 			if (input->isKeyDown(VK_RIGHT))
-
 			{
 				moveDirection = camera[i].getDirectionX();
 				player[i].addSpeed(moveDirection*0.1);
@@ -154,6 +143,9 @@ void Game::update() {
 			if (input->wasKeyPressed(VK_RETURN))
 			{
 				player[i].jump();
+			}
+			if (input->getController()[PLAYER2]->checkConnect()) {
+				player[i].move(input->getController()[PLAYER2]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			break;
 		}
@@ -220,7 +212,10 @@ void Game::update() {
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
 	};
 
-
+	if (input->getController()[PLAYER1]->checkConnect()) {
+		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f);
+		camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f);
+	}
 
 	if (input->getMouseLButton()) {
 		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getMouseRawX());
@@ -228,7 +223,12 @@ void Game::update() {
 	if (input->getMouseRButton()) {
 		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
 	};
-	
+
+	if (input->getController()[PLAYER2]->checkConnect()) {
+		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x*0.001f);
+		camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y*0.001f);
+	}
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//カメラの更新
 		camera[i].setUpVector(player[i].getAxisY()->direction);
@@ -251,6 +251,32 @@ void Game::update() {
 		// ガラクタアップデート
 		junk[i].update();
 	}
+
+	if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
+	{
+		magnet[NUM_MAGNET - 1].reverseAmount();
+	}
+
+	magnet[NUM_MAGNET-1].setPosition(*player[PLAYER1].getPosition());
+	magnet[1].setPosition(*player[PLAYER2].getPosition());
+
+	//磁石の更新
+	for (int i = 0; i < NUM_MAGNET; i++)
+	{
+		for (int j = 0; j < NUM_MAGNET; j++)
+		{
+			if(j != i)
+				magnet[i].calculationMagneticeForce(magnet[j]);
+		}
+	}
+	for (int i = 0; i < NUM_MAGNET; i++)
+	{
+		magnet[i].update();
+	}
+
+	
+
+
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -299,7 +325,10 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	magnet.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	for (int i = 0; i < NUM_MAGNET; i++)
+	{//
+		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -337,7 +366,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getMouseY(),
 		input->getMouseRawX(),
 		input->getMouseRawY());
-	text2.print(800, 10,
+
+	text.print(WINDOW_WIDTH / 2, 10, 
+		"magnetPosition(%.02f,%.02f,%.02f)\n\
+		 magnetSpeed(%.02f,%.02f,%.02f)\n\
+		",
+		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
+		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
+	);
+
+	text2.print(10, 450,
 		"1P:Controller\n\
 		isA:%d wasA:%d\n\
 		isB:%d wasB:%d\n\
@@ -381,11 +419,56 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_1P]->getLeftStick().x,input->getController()[inputNS::DINPUT_1P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_1P]->getRightStick().x,input->getController()[inputNS::DINPUT_1P]->getRightStick().y
 	);
-
-	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	text2.print(WINDOW_WIDTH/2.0f, 450,
+		"2P:Controller\n\
+		isA:%d wasA:%d\n\
+		isB:%d wasB:%d\n\
+		isX:%d wasX:%d\n\
+		isY:%d wasY:%d\n\
+		isUP:%d wasUP:%d\n\
+		isRIGHT:%d wasRIGHT:%d\n\
+		isDOWN:%d wasDOWN:%d\n\
+		isLEFT:%d wasLEFT:%d\n\
+		isR1:%d wasR1:%d\n\
+		isR2:%d wasR2:%d\n\
+		isR3:%d wasR3:%d\n\
+		isL1:%d wasL1:%d\n\
+		isL2:%d wasL2:%d\n\
+		isL3:%d wasL3:%d\n\
+		isHOME:%d wasHOME:%d\n\
+		isCAPTURE:%d wasCAPTURE:%d\n\
+		isSPECIAL_MAIN:%d wasSPECIAL_MAIN:%d\n\
+		isSPECIAL_SUB:%d wasSPECIAL_SUB:%d\n\
+		LeftStick:(%.2f,%.2f)\n\
+		RightStick:(%.2f,%.2f)\n\
+		",
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::A),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::B),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::B),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::X),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::X),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::Y),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::Y),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::UP),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::UP),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::RIGHT),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::RIGHT),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::DOWN),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::DOWN),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::LEFT),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::LEFT),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::R1),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::R1),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::R2),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::R2),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::R3),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::R3),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::L1),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::L1),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::L2),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::L2),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::L3),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::L3),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::HOME),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::HOME),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::CAPTURE),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::CAPTURE),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::SPECIAL_MAIN),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_MAIN),
+		input->getController()[inputNS::DINPUT_2P]->isButton(virtualControllerNS::SPECIAL_SUB),input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::SPECIAL_SUB),
+		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
+		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
+	);
+	// αブレンドを行う
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		hp[i].render(device);

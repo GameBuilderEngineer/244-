@@ -49,6 +49,7 @@ public:
 		D3DXVECTOR3 result;
 		D3DXVec3Normalize(&result, &(gazePosition- position));
 		return result;}
+	D3DXVECTOR3 getHorizontalAxis();
 
 	void setAspect(DWORD _windowWidth, DWORD _windowHeight);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; };

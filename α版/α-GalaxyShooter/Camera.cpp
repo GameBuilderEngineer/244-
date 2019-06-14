@@ -39,14 +39,16 @@ void Camera::update()
 		relativeQuaternion.y*D3DXVECTOR3(world._21,world._22,world._23)+
 		relativeQuaternion.z*D3DXVECTOR3(world._31,world._32,world._33);
 
-	//if (targetX != NULL)
-	//	position += *targetX*relativeQuaternion.x;
-	//if (targetY != NULL)
-	//	position += *targetY*relativeQuaternion.y;
-	//if (targetZ != NULL)
-	//	position += *targetZ*relativeQuaternion.z;
 
 	setViewProjection();
+}
+
+D3DXVECTOR3 Camera::getHorizontalAxis()
+{
+	D3DXVECTOR3 axis;
+	D3DXVec3Cross(&axis,&D3DXVECTOR3(0,1,0),&D3DXVECTOR3(relativeQuaternion.x, relativeQuaternion.y, relativeQuaternion.z));
+	if (isnan(axis.x)||isnan(axis.y)||isnan(axis.z))return D3DXVECTOR3(1,0,0);	
+	return axis;
 }
 
 void Camera::rotation(D3DXVECTOR3 axis,float degree)

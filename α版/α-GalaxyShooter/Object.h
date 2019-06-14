@@ -9,7 +9,7 @@ namespace objectNS {
 }
 
 
-class Object
+class Object:public Base
 {
 protected:
 	//Data

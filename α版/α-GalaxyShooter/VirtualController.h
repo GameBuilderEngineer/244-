@@ -47,6 +47,7 @@ namespace virtualControllerNS {
 	// 接頭語：[D->DInput][X->XInput]
 	enum CONTROLLER_ID
 	{
+		EMPTY,
 		D_XBOE, // XboxOneElite コントローラ[dwDevType:66069]
 		D_NSPC, // Nintendo Switch Pro コントローラ[dwDevType:66069]
 		D_DS4, // DualShock4 コントローラ[dwDevType:66328]
@@ -79,6 +80,7 @@ private:
 	int controller_ID;
 	int player_ID;
 protected:
+	bool connected;					// 接続状態
 	DirectInputController * DCon;
 	void onButton(int VC_BUTTON) { buttons[VC_BUTTON] = true; }
 	void offButton(int VC_BUTTON) { buttons[VC_BUTTON] = false; }
@@ -129,7 +131,11 @@ public:
 		if (DCon == NULL)return "NULL";
 		return DCon->name;
 	}
+	
 	virtual void update() = 0;
+
+	//接続状態を確認
+	bool checkConnect() { return connected; }
 
 	// 直前のボタンの状態を取得
 	bool getBefore(int VC_BUTTON) { return recorder[VC_BUTTON]; }
@@ -152,22 +158,35 @@ public:
 		else { return getButton(VC_BUTTON); }
 	}
 
-	// コントローラnの左スティックのXY軸を戻す
-	D3DXVECTOR2 getLeftStick(UINT n)
-	{
-		return getLeftStick();
-	}
-	// コントローラnの右スティックのXY軸を戻す
-	D3DXVECTOR2 getRightStick(UINT n)
-	{
-		return getRightStick();
-	}
-
 	// スティックの情報を取得
 	D3DXVECTOR2 getLeftStick() { return leftStick; }
 	D3DXVECTOR2 getRightStick() { return rightStick; }
 };
 
+// =============================
+// 空のコントローラ
+// コントローラを取得できなかった場合はこのクラスで初期化する
+// =============================
+class EMPTY_CONTROLLER :public VirtualController
+{
+private:
+	//常にfalseや0値を返す機能しないコントローラ
+public:
+	EMPTY_CONTROLLER() {
+		setControllerID(virtualControllerNS::EMPTY);
+		setPlayerID(-1);
+		DCon = NULL;
+		initBefore();
+		connected = false;
+	};
+
+	virtual void update()
+	{
+		recordBefore();
+		resetButtons();
+		resetStick();
+	};
+};
 // =============================
 // [DInput型]VC
 // XBOX ONE ELITEコントローラ
@@ -193,6 +212,7 @@ public:
 		setPlayerID(playerID);
 		DCon = DC;
 		initBefore();
+		connected = true;
 	};
 
 	virtual void update()
@@ -252,6 +272,7 @@ public:
 		setControllerID(virtualControllerNS::D_NSPC);
 		DCon = DC;
 		initBefore();
+		connected = true;
 	};
 
 	virtual void update()
@@ -313,6 +334,7 @@ public:
 		setControllerID(virtualControllerNS::D_DS4);
 		DCon = DC;
 		initBefore();
+		connected = true;
 	};
 
 	virtual void update()

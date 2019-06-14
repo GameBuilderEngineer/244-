@@ -9,6 +9,7 @@
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
 	scene = new Title();
+	fpsMode = FIXED_FPS;
 }
 
 Director::~Director(){
@@ -39,7 +40,7 @@ HRESULT Director::initialize(){
 
 	//input
 	input = new Input();
-	input->initialize(window->wnd,true);
+	input->initialize(instance,window->wnd,true);
 	window->setInput(input);
 
 	scene->initialize(d3d,input);
@@ -103,9 +104,18 @@ void Director::mainLoop(){
 	if (scene->checkChangeOrder())// シーン切替フラグの確認
 		changeNextScene();
 
+	if (input->wasKeyPressed(VK_OEM_3))
+	{
+		if (fpsMode != FIXED_FPS)
+			fpsMode = FIXED_FPS;
+		else
+			fpsMode = VARIABLE_FPS;
+	}
+
 	update();
 	render();
 	fixFPS60();
+	displayFPS();
 
 	//input->clearAll();
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
@@ -118,7 +128,6 @@ void Director::update(){
 }
 
 void Director::render(){
-
 	d3d->clear();
 	if (SUCCEEDED(d3d->beginScene()))
 	{
@@ -128,7 +137,28 @@ void Director::render(){
 	d3d->present();
 }
 
-void Director::fixFPS60(){
+void Director::fixFPS60() {
+	if (fpsMode != FIXED_FPS)return;
+	static INT Frames = 0, FPS = 0;
+	static LARGE_INTEGER Frq = { 0 }, PreviousTime = { 0 }, CurrentTime = { 0 };
+	DOUBLE Time = 0;
+	char sz[11] = { 0 };
+
+	while (Time < 16.6666)//1100ms / 60frame=16.6666 
+	{
+		QueryPerformanceFrequency(&Frq);
+
+		QueryPerformanceCounter(&CurrentTime);
+		Time = CurrentTime.QuadPart - PreviousTime.QuadPart;
+		Time *= (DOUBLE)1100.0 / (DOUBLE)Frq.QuadPart;
+
+		//ここに次フレームまでの待機中にさせたい処理を記述
+
+	}
+	PreviousTime = CurrentTime;
+}
+void Director::displayFPS() {
+	//FPS計算表示
 	static LARGE_INTEGER time;
 	LARGE_INTEGER time2, frq;
 	double elaptime = 0;
@@ -145,10 +175,17 @@ void Director::fixFPS60(){
 		QueryPerformanceCounter(&time);
 
 		char str[50];
+		char name[200] = { 0 };
+		GetClassNameA(wnd, name, sizeof(name));
 		sprintf(str, "fps=%d", frame);
-		SetWindowTextA(wnd, str);
+		strcat(name, str);
+		SetWindowTextA(wnd, name);
 		frame = 0;
 	}
+
+}
+
+void Director::variableFPS(){
 }
 
 void Director::changeNextScene(){

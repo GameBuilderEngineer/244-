@@ -5,6 +5,8 @@
 #include <dxerr.h>
 #pragma comment( lib, "dxerr.lib" )
 #pragma comment(lib,"dinput8.lib")
+#pragma comment( lib, "dxguid.lib" )
+
 
 #define DIDEVICE_BUFFERSIZE 100;		// デバイスに設定するバッファ・サイズ
 
@@ -24,6 +26,6 @@ public:
 		device = NULL;
 	}
 
-	static BOOL CALLBACK EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext);
+	static BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE, VOID* pContext);
 
 };

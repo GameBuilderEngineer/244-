@@ -14,7 +14,7 @@ HRESULT DirectInputController::initialize(HWND wnd)
 	MFAIL(device->SetCooperativeLevel(wnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND),"協調レベルの設定に失敗しました。");
 
 	//アプリケーションで使用するコントローラーのプロパティを列挙して設定する
-	MFAIL(device->EnumObjects(EnumObjectsCallback, this, DIDFT_ALL),"コントローラプロパティの列挙と設定に失敗しました。");
+	MFAIL(device->EnumObjects(EnumObjectsCallback, this, DIDFT_AXIS),"コントローラプロパティの列挙と設定に失敗しました。");
 	
 	// 軸モードを設定（絶対値モードに設定。デフォルトなので必ずしも設定は必要ない）
 	DIPROPDWORD propWord;
@@ -45,25 +45,26 @@ HRESULT DirectInputController::initialize(HWND wnd)
 }
 
 //アプリケーションで使用するコントローラーのプロパティを列挙して設定する
-BOOL CALLBACK DirectInputController::EnumObjectsCallback(const DIDEVICEOBJECTINSTANCE* objectInstance, VOID* context)
+BOOL CALLBACK DirectInputController::EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE objectInstance, VOID* context)
 {
 	DirectInputController* obj = (DirectInputController*)context;
 
-	if (objectInstance->dwType & DIDFT_AXIS)
-	{
-		DIPROPRANGE propRange;//軸範囲
-		propRange.diph.dwSize = sizeof(DIPROPRANGE);
-		propRange.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-		propRange.diph.dwHow = DIPH_BYID;
-		propRange.diph.dwObj = objectInstance->dwType;
-		propRange.lMin = -1000;
-		propRange.lMax = +1000;
+	//if (objectInstance->dwType & DIDFT_AXIS)
+	//{
+	DIPROPRANGE propRange;//軸範囲
+	ZeroMemory(&propRange, sizeof(propRange));
+	propRange.diph.dwSize = sizeof(propRange);
+	propRange.diph.dwHeaderSize = sizeof(propRange.diph);
+	propRange.diph.dwHow = DIPH_BYID;
+	propRange.diph.dwObj = objectInstance->dwType;
+	propRange.lMin = -1000;
+	propRange.lMax = +1000;
 
-		if (FAILED(obj->device->SetProperty(DIPROP_RANGE, &propRange.diph)))
-		{
-			return DIENUM_STOP;
-		}
+	if (FAILED(obj->device->SetProperty(DIPROP_RANGE, &propRange.diph)))
+	{
+		return DIENUM_STOP;
 	}
+	//}
 	return DIENUM_CONTINUE;
 }
 

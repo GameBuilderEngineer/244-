@@ -66,7 +66,13 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	//アンチエイリアシングをかける
 	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);
-	//
+	// αブレンドを行う
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	// ビューポートを取得
 	device->GetViewport(&viewPort);
 	return S_OK;
 }

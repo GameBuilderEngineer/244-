@@ -35,6 +35,7 @@ namespace inputNS
 class Input : public Base
 {
 private:
+	HWND wnd;
 	//-----------------------
 	//KeyBoard
 	//-----------------------
@@ -68,7 +69,7 @@ private:
 public:
 	Input();
 	virtual ~Input();
-	HRESULT initialize(HWND wnd,bool capture);
+	HRESULT initialize(HINSTANCE instance, HWND _wnd,bool capture);
 	void update(bool windowActivate);
 	
 	void clear(UCHAR what);									// 指定された入力バッファをクリアする。// KEYS_DOWN、KEYS_PRESSED、MOUSE、TEXT_INまたはKEYS_MOUSE_TEXT。// OR '|'を使用するパルメータを組み合わせるオペレータ。
@@ -77,6 +78,8 @@ public:
 	//Controller
 	//-----------------------
 	VirtualController** getController() { return virtualController; };
+
+	HRESULT resetController();
 
 
 	//-----------------------

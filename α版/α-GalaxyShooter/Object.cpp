@@ -123,11 +123,6 @@ VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 }
 VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
 {
-
-	//‰ñ“]‚É‚æ‚èAƒ[ƒJƒ‹Ž²‚ð‹È‚°‚é
-	//D3DXVec3TransformCoord(&axisX, &D3DXVECTOR3(1, 0, 0), &matrixRotation);
-	//D3DXVec3TransformCoord(&axisY, &D3DXVECTOR3(0, 1, 0), &matrixRotation);
-	//D3DXVec3TransformCoord(&axisZ, &D3DXVECTOR3(0, 0, 1), &matrixRotation);
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 
 	effect->SetTechnique("ToonShading");
