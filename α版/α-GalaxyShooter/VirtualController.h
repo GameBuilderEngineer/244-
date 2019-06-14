@@ -177,6 +177,9 @@ public:
 		setPlayerID(-1);
 		DCon = NULL;
 		initBefore();
+		recordBefore();
+		resetButtons();
+		resetStick();
 		connected = false;
 	};
 
