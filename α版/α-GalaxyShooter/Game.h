@@ -11,6 +11,7 @@
 #include "WeaponUI.h"
 #include "Colony.h"
 #include "Junk.h"
+#include "GameMaster.h"
 
 #define JUNK_MAX (10) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -27,8 +28,8 @@ namespace gameNS
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
 	{
-		D3DXVECTOR3(10,10,0),
-		D3DXVECTOR3(-10,10,0),
+		D3DXVECTOR3(10,20,0),
+		D3DXVECTOR3(-10,20,0),
 	};
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
 	{
@@ -60,6 +61,8 @@ private:
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
+	GameMaster gameMaster;
+	
 
 public:
 	Game();

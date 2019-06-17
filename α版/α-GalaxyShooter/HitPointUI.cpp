@@ -134,11 +134,8 @@ void HitPointUI::uninitialize(void)
 //=============================================================================
 // XVˆ—
 //=============================================================================
-void HitPointUI::update(void)
+void HitPointUI::update(int hp,int hpMax)
 {
-	// ‚Ä‚«‚Æ‚¤‚È‚µ‚å‚è
-	int hp = 30;
-	int hpMax = 100;
 	float percentage = (float)hp / (float)hpMax;
 	gaugeBar.setSize((int)(percentage * WIDTH), HEIGHT);
 	gaugeBar.setVertex();

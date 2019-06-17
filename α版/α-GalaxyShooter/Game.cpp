@@ -64,102 +64,98 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	{//バレットの初期化
 		bullet[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
 		bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
-		
 	}
 
 	//フィールド
-	field.initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(0, -100, 0));
+	field.initialize(direct3D9->device, (LPSTR)"x100starRegularPolyhedron.x", &D3DXVECTOR3(0, -100, 0));
 
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
 	text2.initialize(direct3D9->device,11,11, 0xff0000ff);
+
+	//ガラクタ
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
-		junk[i].initialize(direct3D9->device, (LPSTR)"RobotB.x", &D3DXVECTOR3((float)(5 + i), 3, 3));
+		junk[i].initialize(direct3D9->device, (LPSTR)"x10starRegularPolyhedron.x", &D3DXVECTOR3((float)(5 + i), 3, 3));
 	}
+
 }
+
+float difference = 1.0f;
 
 void Game::update(float frameTime) {
 	
 	sceneTimer += frameTime;
 	FrameTime = frameTime;
+	if (frameTime > 0.03)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
 		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
-		player[i].setGravity(*field.getPosition(), 0.1f);
-		
-		D3DXVECTOR3 moveDirection;
+		if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP))
+			difference += 0.01f;
+		if(input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN))
+			difference -= 0.01f;
+
 		bool onJump = false;
 		switch (i)
 		{
 		case PLAYER1:
 			if (input->isKeyDown('W')) {
-				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
-				player[i].addSpeed(moveDirection*0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('S')) {
-				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
-				player[i].addSpeed(moveDirection*-0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('A')) {
-				moveDirection = camera[i].getDirectionX();
-				player[i].addSpeed(moveDirection*-0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('D'))
 			{
-				moveDirection = camera[i].getDirectionX();
-				player[i].addSpeed(moveDirection*0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
-			if (input->wasKeyPressed(VK_SPACE))
+			if (input->wasKeyPressed(VK_SPACE)||input->getController()[i]->wasButton(virtualControllerNS::B))
 			{
 				onJump = true;
 			}
-			if (input->getController()[PLAYER1]->checkConnect()) {
-				player[i].move(input->getController()[PLAYER1]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
+			if (input->wasKeyPressed('R'))
+			{
+				player[i].reset();
 			}
 			break;
-
 		case PLAYER2:
 			if (input->isKeyDown(VK_UP)) {
-				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
-				player[i].addSpeed(moveDirection*0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_DOWN)) {
-				D3DXVec3Normalize(&moveDirection, &slip(camera[i].getDirectionZ(), player[i].getAxisY()->direction));
-				player[i].addSpeed(moveDirection*-0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_LEFT)) {
-				moveDirection = camera[i].getDirectionX();
-				player[i].addSpeed(moveDirection*-0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, -moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_RIGHT))
 			{
-				moveDirection = camera[i].getDirectionX();
-				player[i].addSpeed(moveDirection*0.1);
-				player[i].postureControl(player[i].getAxisZ()->direction, moveDirection, 0.1f);
+				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
-			if (input->getController()[PLAYER2]->checkConnect()) {
-				player[i].move(input->getController()[PLAYER2]->getLeftStick(), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->wasKeyPressed(VK_RETURN))
+			if (input->wasKeyPressed(VK_RETURN)|| input->getController()[i]->wasButton(virtualControllerNS::B))
 			{
 				onJump = true;
 			}
 			break;
 		}
+
+		//コントローラスティックによる移動
+		if (input->getController()[i]->checkConnect()) {
+			player[i].move(input->getController()[i]->getLeftStick()*0.001f, camera[i].getDirectionX(), camera[i].getDirectionZ());
+		}
+
 		//フィールド補正
 		if (player[i].getReverseAxisY()->rayIntersect(*field.getMesh(), field.getMatrixWorld()) &&
-			player[i].getRadius() >= (player[i].getReverseAxisY()->distance -0.01f))
+			player[i].getRadius() >= (player[i].getReverseAxisY()->distance -difference))
 		{
 			//めり込み補正
+			//現在位置+ 垂直方向*(めり込み距離)
 			player[i].setPosition(*player[i].getPosition() + player[i].getAxisY()->direction*(player[i].getRadius() - player[i].getReverseAxisY()->distance));
+
 			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 			player[i].setSpeed(player[i].getReverseAxisY()->slip(player[i].getSpeed(), player[i].getReverseAxisY()->normal));
 			//Ray moveRay;//移動ベクトルを使ってレイを作成
@@ -170,8 +166,13 @@ void Game::update(float frameTime) {
 			//}
 			if(onJump)player[i].jump();
 		}
+		else {
+			//player[i].setGravity(*field.getPosition(), 80.0f);
+			player[i].setGravity(-player[i].getAxisY()->direction, 80.0f);
+			//player[i].setGravity(-player[i].getReverseAxisY()->normal, 80.0f);
+		}
 
-		player[i].update();
+		player[i].update(frameTime);
 	}
 
 	if (input->wasKeyPressed('Z'))
@@ -185,7 +186,6 @@ void Game::update(float frameTime) {
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの更新
-		
 		bullet[i].setSpeed(D3DXVECTOR3(0, 0, 0));
 		bullet[i].setGravity(*field.getPosition(), 0.4f);
 		bullet[i].addSpeed(bullet[i].getAxisZ()->direction*0.2*(i+1));//自動移動
@@ -207,7 +207,7 @@ void Game::update(float frameTime) {
 			//}
 		}
 
-		bullet[i].update();
+		bullet[i].update(frameTime);
 	}
 
 	//カメラの回転
@@ -243,8 +243,8 @@ void Game::update(float frameTime) {
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		hp[i].update();
-		sp[i].update();
+		hp[i].update(player[i].getHp(),player[i].getMaxHp());
+		sp[i].update(player[i].getSp(), player[i].getMaxSp());
 		colonyHp[i].update();
 		missileInfomation[i].update();
 		weaponInfomation[i].update();
@@ -279,10 +279,6 @@ void Game::update(float frameTime) {
 	{
 		magnet[i].update();
 	}
-
-	
-
-
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -344,7 +340,11 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 #endif
 }
 
+bool onUI = true;
+
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
+	text.print(50, 200,
+		"difference:%.3f\n",difference);
 	text.print(10, 150,
 		"\
 		sceneTime:%.2f\n\
@@ -481,17 +481,30 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		hp[i].render(device);
-		sp[i].render(device);
-		colonyHp[i].render(device);
-		missileInfomation[i].render(device);
-		weaponInfomation[i].render(device);
+	if (input->wasKeyPressed('U'))onUI = !onUI;
+	if (onUI) {
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			hp[i].render(device);
+			sp[i].render(device);
+			colonyHp[i].render(device);
+			missileInfomation[i].render(device);
+			weaponInfomation[i].render(device);
+		}
 	}
+
 }
 
 void Game::collisions() {
+	for (int i = 0; i < NUM_BULLET; i++)
+	{//バレットの描画
+		if (player[PLAYER1].bodyCollide.collide(
+			bullet[i].bodyCollide.getCenter(), bullet[i].bodyCollide.getRadius(),
+			player[PLAYER1].getMatrixWorld(), bullet[i].getMatrixWorld()))
+		{
+			player[PLAYER1].damgae(20);
+		}
+	}
 
 }
 

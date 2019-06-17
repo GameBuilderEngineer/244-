@@ -28,6 +28,6 @@ public:
 	~HitPointUI(void);
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber);	
 	void uninitialize(void);
-	void update(void);
+	void update(int hp, int hpMax);
 	void render(LPDIRECT3DDEVICE9 device);
 };

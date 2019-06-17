@@ -79,10 +79,16 @@ void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
 	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);//ワイヤーフレーム表示
 }
 
-bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius)
+bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX ownerMatrix, D3DXMATRIX targetMatrix)
 {
+	
+	D3DXVECTOR3 ownerCenter;
+	D3DXVECTOR3 _targetCenter;
+	D3DXVec3TransformCoord(&ownerCenter, &center, &ownerMatrix);
+	D3DXVec3TransformCoord(&_targetCenter, &targetCenter, &targetMatrix);
+
 	//２つの物体の中心間の距離を求める
-	float length = D3DXVec3Length(&(targetCenter - center));
+	float length = D3DXVec3Length(&(_targetCenter - ownerCenter));
 	// その距離が、２つの物体の半径を足したものより小さい場合、境界球同士が重なっている（衝突している）ということ
 	if (length <= radius + targetRadius)
 	{

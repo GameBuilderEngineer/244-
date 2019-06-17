@@ -161,11 +161,11 @@ VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX proj
 
 }
 
-
-
 void Object::setGravity(D3DXVECTOR3 source, float power)
 {
-	D3DXVec3Normalize(&gravity, &(source- position));
+	D3DXVec3Normalize(&gravity, &source);
+	//gravity *= min(power, reverseAxisY.distance);
 	gravity *= power;
+	
 	if (onGravity)speed += gravity;
 }

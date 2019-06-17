@@ -201,6 +201,7 @@
     <ClCompile Include="BoundingSphere.cpp">
       <Filter>BoudingSphere</Filter>
     </ClCompile>
+    <ClCompile Include="GameMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -299,6 +300,7 @@
     <ClInclude Include="BoundingSphere.h">
       <Filter>BoudingSphere</Filter>
     </ClInclude>
+    <ClInclude Include="GameMaster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

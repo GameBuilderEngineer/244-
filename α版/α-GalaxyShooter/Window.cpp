@@ -46,13 +46,12 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_ACTIVATE:
 		windowActivate = wParam != WA_INACTIVE;
 		return 0;
-	case VK_ESCAPE:
-		PostQuitMessage(0);
-		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 	case WM_KEYDOWN:case WM_SYSKEYDOWN: // キーが押された
+		if(wParam == VK_ESCAPE)
+			PostQuitMessage(0);
 		input->keyDown(wParam);
 		return 0;
 	case WM_KEYUP:case WM_SYSKEYUP: // キーが離された

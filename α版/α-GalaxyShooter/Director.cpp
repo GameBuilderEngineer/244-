@@ -134,6 +134,7 @@ void Director::update(){
 	input->update(window->windowActivate);
 	audio->run();
 	scene->update(frameTime);
+	scene->collisions();
 }
 
 void Director::render(){
