@@ -103,6 +103,21 @@
     <Filter Include="Object\Planet">
       <UniqueIdentifier>{27493bab-38b6-4b88-b308-f24bf5c68959}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{a961cdc6-07cd-4b4d-b6ca-08d88425a08f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\KnowledgeSource">
+      <UniqueIdentifier>{b6f00b19-6362-45d5-ae57-d4230f5aaa8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\BlackBoard">
+      <UniqueIdentifier>{95923a1f-6c37-4cf8-92c9-4af5ad4aa990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Algorithm">
+      <UniqueIdentifier>{a1835b16-ca3e-40c9-bbee-4780c1ad163b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Arbiter">
+      <UniqueIdentifier>{7102d4a8-a9b7-4b37-aece-0431b5f37a2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -201,6 +216,45 @@
     <ClCompile Include="BoundingSphere.cpp">
       <Filter>BoudingSphere</Filter>
     </ClCompile>
+    <ClCompile Include="AgentAI.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="KnowledgeSourceBase.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardBase.cpp">
+      <Filter>AI\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardMemory.cpp">
+      <Filter>AI\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardRecognition.cpp">
+      <Filter>AI\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardBody.cpp">
+      <Filter>AI\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="Fuzzy.cpp">
+      <Filter>AI\Algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="Arbiter.cpp">
+      <Filter>AI\Arbiter</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionGeneration.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanning.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
+    <ClCompile Include="Sensor.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentAnalysis.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
+    <ClCompile Include="DecisionMaking.cpp">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -298,6 +352,48 @@
     </ClInclude>
     <ClInclude Include="BoundingSphere.h">
       <Filter>BoudingSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentAI.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AICommon.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="KnowledgeSourceBase.h">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackBoardBase.h">
+      <Filter>AI\BlackBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackBoardMemory.h">
+      <Filter>AI\BlackBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackBoardRecognition.h">
+      <Filter>AI\BlackBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackBoardBody.h">
+      <Filter>AI\BlackBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="Fuzzy.h">
+      <Filter>AI\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="Arbiter.h">
+      <Filter>AI\Arbiter</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionGeneration.h">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanning.h">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentAnalysis.h">
+      <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="DecisionMaking.h">
+      <Filter>AI\KnowledgeSource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
