@@ -12,8 +12,13 @@
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
+#include "Bullet.h"
+#include "Planet.h"
+#include "PointSprite.h"
+#include "Plane.h"
 
-#define JUNK_MAX (10) //ガラクタの数
+
+#define JUNK_MAX (100) //ガラクタの数
 
 namespace gameNS
 {
@@ -25,32 +30,36 @@ namespace gameNS
 
 	const int NUM_BULLET = 30;
 	const int NUM_MAGNET = 30;
+	const D3DXVECTOR3 PLANET_POSITION(0.0f,0.0f,0.0f);
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
 	{
-		D3DXVECTOR3(10,20,0),
-		D3DXVECTOR3(-10,20,0),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(0,-100,0)
 	};
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
 	{
-		D3DXQUATERNION(0,3,-30,0.0f),
-		D3DXQUATERNION(0,100,-500,0.0f),
+		D3DXQUATERNION(0,20.0f,-40,0.0f),
+		D3DXQUATERNION(0,100,-500,0.0f)
 	};
-
+	
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
+	
 	enum {
 		COLONY1,
 		COLONY2,
 		NUM_COLONY,
 	};
-	
+
 }
 
 class Game : public AbstractScene
 {
 private:	
 	Player player[gameNS::NUM_PLAYER];
-	Player bullet[gameNS::NUM_BULLET];//（仮）実験的にプレイヤークラスを使用しています
-	Object field;
+	Bullet bullet1[gameNS::NUM_BULLET];
+	Bullet bullet2[gameNS::NUM_BULLET];
+	Planet field;
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
@@ -62,7 +71,8 @@ private:
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
 	GameMaster gameMaster;
-	
+	PointSprite pointSprite;
+	Plane plane;
 
 public:
 	Game();

@@ -5,11 +5,13 @@
 #include "Game.h"
 #include "Result.h"
 
-
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
+	hiddenCursor = true;
+	lockCursor = true;
 	scene = new Title();
 	fpsMode = FIXED_FPS;
+	ShowCursor(FALSE);
 }
 
 Director::~Director(){
@@ -20,6 +22,9 @@ Director::~Director(){
 	SAFE_DELETE(audio);
 	SAFE_DELETE(sound);
 	SAFE_DELETE(scene);
+	textureLoader->release();
+	SAFE_DELETE(textureLoader);
+	ShowCursor(TRUE);
 }
 
 HRESULT Director::initialize(){
@@ -29,6 +34,17 @@ HRESULT Director::initialize(){
 		return E_FAIL;
 	MFAIL(window->initialize(instance, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME), "ウィンドウ作成失敗");
 	wnd = window->wnd;
+#ifdef _DEBUG
+	//debugWindow
+	debugWindow0 = new DebugWindow;
+	if (!debugWindow0)
+		return E_FAIL;
+	MFAIL(debugWindow0->initialize(instance, window->getRect().left, window->getRect().bottom, WINDOW_WIDTH, WINDOW_HEIGHT/2, DEBUG_NAME), "デバッグウィンドウ0作成失敗");
+	debugWindow1 = new DebugWindow;
+	if (!debugWindow1)
+		return E_FAIL;
+	MFAIL(debugWindow1->initialize(instance, window->getRect().right, window->getRect().top, WINDOW_WIDTH/2, WINDOW_HEIGHT, DEBUG_NAME), "デバッグウィンドウ1作成失敗");
+#endif // _DEBUG
 	//direct3D9
 	d3d = new Direct3D9;
 	if (d3d == NULL)
@@ -42,6 +58,11 @@ HRESULT Director::initialize(){
 	input = new Input();
 	input->initialize(instance,window->wnd,true);
 	window->setInput(input);
+
+
+	//textureLoader
+	textureLoader = new TextureLoader;
+	textureLoader->load(d3d->device);
 
 	scene->initialize(d3d,input);
 
@@ -132,9 +153,22 @@ void Director::mainLoop(){
 
 void Director::update(){
 	input->update(window->windowActivate);
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
 	audio->run();
 	scene->update(frameTime);
 	scene->collisions();
+	//SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
 }
 
 void Director::render(){
@@ -168,12 +202,12 @@ void Director::fixFPS60() {
 		QueryPerformanceFrequency(&Frq);
 
 		QueryPerformanceCounter(&CurrentTime);
-		Time = CurrentTime.QuadPart - PreviousTime.QuadPart;
+		Time = (DOUBLE)(CurrentTime.QuadPart - PreviousTime.QuadPart);
 
 		Time *= (DOUBLE)1100.0 / (DOUBLE)Frq.QuadPart;
 
 		//ここに次フレームまでの待機中にさせたい処理を記述
-
+		if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
 	}
 	PreviousTime = CurrentTime;
 }

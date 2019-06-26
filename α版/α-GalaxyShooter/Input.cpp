@@ -115,10 +115,13 @@ void Input::keyDown(WPARAM wParam)
 {
 	if (wParam < inputNS::KEYS_ARRAY_LEN)
 	{// キーコードが、バッファ範囲内にあることを確認
+		if (keysDown[wParam] == false)
+		{
+			keysPressed[wParam] = true;
+		}
 		// keysDown配列を更新
 		keysDown[wParam] = true;
 		// keysPressed配列を更新
-		keysPressed[wParam] = true;
 	}
 }
 
@@ -185,7 +188,6 @@ bool Input::wasKeyPressed(UCHAR vkey) const
 {
 	if (vkey < inputNS::KEYS_ARRAY_LEN)
 		return keysPressed[vkey];
-
 	return false;
 }
 

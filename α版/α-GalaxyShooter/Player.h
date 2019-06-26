@@ -5,6 +5,8 @@
 namespace playerNS{
 	const float SPEED = 30.0f;
 	const float JUMP_FORCE = 200.0f;
+	const float RECOVERY_TIME = 1.0f;
+	const float GRAVITY_FORCE = 80.0f;
 }
 
 class Player : public Object
@@ -14,6 +16,8 @@ private:
 	int maxHp;
 	int sp;
 	int maxSp;
+	float recoveryTimer;
+
 public:
 	BoundingSphere bodyCollide;
 

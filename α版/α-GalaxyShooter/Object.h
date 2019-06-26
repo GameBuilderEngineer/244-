@@ -36,6 +36,8 @@ protected:
 
 	//各種フラグ
 	bool onGravity;				//重力有効化フラグ
+	bool onActive;				//アクティブ化フラグ
+	bool onRender;				//描画有効化フラグ
 
 	//方向6軸
 	Ray axisX;
@@ -44,6 +46,8 @@ protected:
 	Ray reverseAxisX;
 	Ray reverseAxisY;
 	Ray reverseAxisZ;
+	//重力Ray
+	Ray gravityRay;
 
 	//行列（位置・回転・ワールド）：スケール追加予定
 	D3DXMATRIX matrixPosition;
@@ -76,6 +80,8 @@ public:
 	Ray* getReverseAxisX() { return &reverseAxisX; };
 	Ray* getReverseAxisY() { return &reverseAxisY; };
 	Ray* getReverseAxisZ() { return &reverseAxisZ; };
+	Ray* getGravityRay() { return &gravityRay; };
+	bool getActive() { return onActive; }
 
 	//セット関数
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
@@ -83,7 +89,9 @@ public:
 	void setGravity(D3DXVECTOR3 source, float power);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setQuaternion(D3DXQUATERNION _quaternion) { quaternion = _quaternion; }
-	
+	void activation();			//活性化
+	void inActivation();		//不活化
+
 	//姿勢制御
 	void postureControl(D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection,float t)
 	{

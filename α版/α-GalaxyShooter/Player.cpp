@@ -4,12 +4,14 @@ using namespace playerNS;
 
 Player::Player()
 {
-	hp = 0;
+	hp = 100;
 	maxHp = 100;
-	sp = 0;
+	sp = 100;
 	maxSp = 100;
 	onGravity = true;
 	radius = 5.0f;
+	activation();
+	recoveryTimer = 0.0f;
 }
 
 Player::~Player()
@@ -26,8 +28,14 @@ void Player::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* 
 
 void Player::update(float frameTime)
 {
-	recoveryHp(1);//Ž©“®HP‰ñ•œ
-	recoverySp(1);//Ž©“®SP‰ñ•œ
+
+	recoveryTimer += frameTime;
+	if (recoveryTimer > RECOVERY_TIME)
+	{
+		recoveryHp(1);//Ž©“®HP‰ñ•œ
+		//recoverySp(1);//Ž©“®SP‰ñ•œ
+		recoveryTimer = 0.0f;
+	}
 
 	D3DXVECTOR3 moveDirection;
 

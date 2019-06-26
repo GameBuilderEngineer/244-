@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Window.h"
+#include "DebugWindow.h"
 #include "Direct3D9.h"
 #include "Input.h"
 #include "Camera.h"
@@ -8,6 +9,8 @@
 #include "AbstractScene.h"
 #include "VirtualController.h"
 #include "Audio.h"
+#include "TextureLoader.h"
+
 enum
 {
 	VARIABLE_FPS,	//可変フレームレート
@@ -21,6 +24,10 @@ public:
 	//Data
 	HINSTANCE instance;				//
 	Window* window;					//ウィンドウクラス・ハンドル
+#ifdef _DEBUG
+	DebugWindow* debugWindow0;			//デバッグウィンドウクラス
+	DebugWindow* debugWindow1;			//デバッグウィンドウクラス
+#endif // _DEBUG
 	HWND wnd;						//ウィンドウハンドル
 	Direct3D9* d3d;					//DirectX9クラス・デバイス
 	Input* input;					//Inputクラス
@@ -28,12 +35,15 @@ public:
 	Audio* audio;					//オーディオクラス
 	Sound* sound;					//サウンドクラス
 	AbstractScene* scene;			//抽象シーンクラス
+	TextureLoader* textureLoader;	//テクスチャローダークラス
 	std::string* currentSceneName;	//現在のシーンの名前
 	int fpsMode;					//フレームレート状態変数
 	LARGE_INTEGER timeStart;		// パフォーマンスカウンターの開始値
 	LARGE_INTEGER timeEnd;			// パフォーマンスカウンターの終了値
 	LARGE_INTEGER timerFreq;		// パフォーマンスカウンターの周波数
 	float frameTime;				//フレーム時間
+	bool hiddenCursor;				//カーソル非表示フラグ
+	bool lockCursor;				//カーソル位置固定フラグ
 	//Method
 	Director();
 	~Director();

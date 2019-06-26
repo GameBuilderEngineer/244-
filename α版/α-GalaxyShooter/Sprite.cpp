@@ -82,10 +82,8 @@ void Sprite::render(LPDIRECT3DDEVICE9 device)
 {
 	// 頂点フォーマットの設定
 	device->SetFVF(FVF_VERTEX_2D);
-
 	// テクスチャの設定
 	device->SetTexture(0, texture);
-
 	// ポリゴンの描画
 	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, vertexWk, sizeof(VERTEX_2D));
 }

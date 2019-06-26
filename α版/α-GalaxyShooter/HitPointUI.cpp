@@ -15,7 +15,7 @@ const static float		POSITION_X_PLAYER1 = 40.0f;			// X座標
 const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
 const static float		POSITION_Y = 15.0f;					// Y座標
 #define BAR_COLOR		(D3DCOLOR_RGBA(0, 255, 0, 255))		// バーの色
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 0))	// バーの色
 
 
 //*****************************************************************************

@@ -2,14 +2,16 @@
 #include "Direct3D9.h"
 using namespace gameNS;
 
-int currentBullet;//仮
+int currentBullet1;//仮
+int currentBullet2;//仮
 float FrameTime = 0.0f;//仮
 
 Game::Game()
 {
 	sceneName = "Scene -Game-";
 	nextScene = SceneList::NONE_SCENE;
-	currentBullet = 0;
+	currentBullet1 = 0;
+	currentBullet2 = 0;
 }
 
 Game::~Game()
@@ -31,6 +33,7 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
 		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[i]);
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setRelativeGaze(D3DXVECTOR3(0, 10, 0));
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
 	}
 
@@ -38,8 +41,11 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	light = new Light;
 	light->initialize(direct3D9);
 
+	//コロニー
 	colony[0].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(150, 0, 300));
 	colony[1].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(-150, 0, 300));
+	//フィールド
+	field.initialize(direct3D9->device, (LPSTR)"planet.x", &(D3DXVECTOR3)PLANET_POSITION);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
@@ -49,7 +55,23 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 		colonyHp[i].initialize(direct3D9->device, i);
 		missileInfomation[i].initialize(direct3D9->device, i);
 		weaponInfomation[i].initialize(direct3D9->device, i);
+		//重力線を作成
+		D3DXVECTOR3 gravityDirection;
+		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
+		player[i].getGravityRay()->initialize(*player[i].getPosition(), gravityDirection);
+		if (player[i].getGravityRay()->rayIntersect(*field.getMesh(), field.getMatrixWorld()))
+		{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
+			player[i].postureControl(player[i].getAxisY()->direction, player[i].getGravityRay()->normal, 1.0f);
+			player[i].setGravity(-player[i].getGravityRay()->normal, playerNS::GRAVITY_FORCE);
+		}
+		else 
+		{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
+			player[i].postureControl(player[i].getAxisY()->direction, gravityDirection, 1.0f);
+			player[i].setGravity(gravityDirection, playerNS::GRAVITY_FORCE);
+		}
+
 	}
+
 	for (int i = 0; i < NUM_MAGNET; i++)
 	{//磁石
 		if (NUM_MAGNET / 2 > i) {
@@ -62,22 +84,30 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの初期化
-		bullet[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
-		bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
+		bullet1[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
+		bullet2[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
+		//bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
 	}
 
-	//フィールド
-	field.initialize(direct3D9->device, (LPSTR)"x100starRegularPolyhedron.x", &D3DXVECTOR3(0, -100, 0));
 
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
 	text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
+
 	//ガラクタ
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
-		junk[i].initialize(direct3D9->device, (LPSTR)"x10starRegularPolyhedron.x", &D3DXVECTOR3((float)(5 + i), 3, 3));
-	}
+		D3DXVECTOR3 position((float)(rand()%100-50), (float)(rand()%100-50), (float)(rand()%100-50));
 
+		D3DXVec3Normalize(&position, &position);
+		position *= 100;
+		junk[i].initialize(direct3D9->device, (LPSTR)"starRegularPolyhedron.x", &position);
+	}
+	//ポイントスプライト
+	pointSprite.initilaize(direct3D9->device);
+	//インスタンスプレーン
+	plane.createPositionSpherical(10000, 300.0f);
+	plane.initialize(direct3D9->device);
 }
 
 float difference = 1.0f;
@@ -167,52 +197,51 @@ void Game::update(float frameTime) {
 			if(onJump)player[i].jump();
 		}
 		else {
-			//player[i].setGravity(*field.getPosition(), 80.0f);
-			player[i].setGravity(-player[i].getAxisY()->direction, 80.0f);
-			//player[i].setGravity(-player[i].getReverseAxisY()->normal, 80.0f);
+			player[i].setGravity(-player[i].getAxisY()->direction, playerNS::GRAVITY_FORCE);
 		}
 
 		player[i].update(frameTime);
 	}
 
-	if (input->wasKeyPressed('Z'))
+	//バレットの発射
+	//動的生成にしたい
+	if (input->getMouseLButton() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::R1))
 	{
-		bullet[currentBullet].setPosition(*player[PLAYER1].getPosition());
-		bullet[currentBullet].addSpeed(player[PLAYER1].getAxisZ()->direction*0.2);
-		bullet[currentBullet].postureControl(bullet[currentBullet].getAxisZ()->direction, player[PLAYER1].getAxisZ()->direction, 1.0f);
-		currentBullet++;
-		if (currentBullet >= NUM_BULLET)currentBullet = 0;
+		bullet1[currentBullet1].setPosition(*player[PLAYER1].getPosition());
+		//Y軸方向への成分を削除する
+		D3DXVECTOR3 front = slip(camera[PLAYER1].getDirectionZ(), player[PLAYER1].getAxisY()->direction);
+		D3DXVec3Normalize(&front, &front);//正規化
+		bullet1[currentBullet1].addSpeed(front*0.2);//速度を加算
+		bullet1[currentBullet1].setQuaternion(player[PLAYER1].getQuaternion());
+		bullet1[currentBullet1].postureControl(player[PLAYER1].getAxisZ()->direction, front,1.0f);
+		bullet1[currentBullet1].activation();
+		bullet1[currentBullet1].Object::update();
+		currentBullet1++;
+		if (currentBullet1 >= NUM_BULLET)currentBullet1 = 0;
+	}
+	if (input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
+	{
+		bullet2[currentBullet2].setPosition(*player[PLAYER2].getPosition());
+		bullet2[currentBullet2].addSpeed(player[PLAYER2].getAxisZ()->direction*0.2);
+		bullet2[currentBullet2].setQuaternion(player[PLAYER2].getQuaternion());
+		currentBullet2++;
+		if (currentBullet2 >= NUM_BULLET)currentBullet2 = 0;
 	}
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの更新
-		bullet[i].setSpeed(D3DXVECTOR3(0, 0, 0));
-		bullet[i].setGravity(*field.getPosition(), 0.4f);
-		bullet[i].addSpeed(bullet[i].getAxisZ()->direction*0.2*(i+1));//自動移動
-		
-		bullet[i].anyAxisRotation(bullet[i].getAxisY()->direction, (rand() % 10) -5);
-		//フィールド補正
-		if (bullet[i].getReverseAxisY()->rayIntersect(*field.getMesh(), field.getMatrixWorld()) &&
-			bullet[i].getRadius() >= (bullet[i].getReverseAxisY()->distance -0.01f))
-		{
-			//めり込み補正
-			bullet[i].setPosition(*bullet[i].getPosition() + bullet[i].getAxisY()->direction*(bullet[i].getRadius() - bullet[i].getReverseAxisY()->distance));
-			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			bullet[i].setSpeed(bullet[i].getReverseAxisY()->slip(bullet[i].getSpeed(), bullet[i].getReverseAxisY()->normal));
-			//Ray moveRay;//移動ベクトルを使ってレイを作成
-			//moveRay.initialize(*bullet[i].getPosition(), bullet[i].getSpeed());
-			//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && bullet[i].getRadius() > moveRay.distance)
-			//{//二重チェック
-			//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
-			//}
-		}
-
-		bullet[i].update(frameTime);
+		bullet1[i].update(frameTime,*field.getMesh(),field.getMatrixWorld());
+		bullet2[i].update(frameTime,*field.getMesh(),field.getMatrixWorld());
 	}
 
 	//カメラの回転
+
+	//1Pカメラ制御
+	camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX()));
+	camera[PLAYER1].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY()));
+
 	if (input->isKeyDown('G')) {
-		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
+		//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
 	};
 	if (input->isKeyDown('J')) {
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
@@ -222,12 +251,14 @@ void Game::update(float frameTime) {
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f);
 		camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f);
 	}
+	//2Pをロックオン
+	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
+		camera[PLAYER1].lockOn(*player[PLAYER2].getPosition(),frameTime);
+	}
 
+	//2Pカメラ制御
 	if (input->getMouseLButton()) {
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getMouseRawX());
-	};
-	if (input->getMouseRButton()) {
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
+		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX()));
 	};
 
 	if (input->getController()[PLAYER2]->checkConnect()) {
@@ -249,13 +280,14 @@ void Game::update(float frameTime) {
 		missileInfomation[i].update();
 		weaponInfomation[i].update();
 	}
+
 	// コロニーアップデート
 	colony[0].update();
 
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
 		// ガラクタアップデート
-		junk[i].update();
+		junk[i].update(frameTime, *field.getMesh(), field.getMatrixWorld(),*field.getPosition());
 	}
 
 	if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
@@ -308,7 +340,8 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	}
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
-		bullet[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		bullet1[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		bullet2[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
 	}
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
@@ -331,6 +364,11 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	{//
 		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+	//ポイントスプライトの描画
+	pointSprite.render(direct3D9->device,currentCamera.position);
+	//プレーンの描画
+	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -497,14 +535,48 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 void Game::collisions() {
 	for (int i = 0; i < NUM_BULLET; i++)
-	{//バレットの描画
-		if (player[PLAYER1].bodyCollide.collide(
-			bullet[i].bodyCollide.getCenter(), bullet[i].bodyCollide.getRadius(),
-			player[PLAYER1].getMatrixWorld(), bullet[i].getMatrixWorld()))
+	{	//バレット1<->プレイヤー2
+		if (!bullet1[i].getActive())continue;
+		if (player[PLAYER2].bodyCollide.collide(
+			bullet1[i].bodyCollide.getCenter(), bullet1[i].bodyCollide.getRadius(),
+			player[PLAYER2].getMatrixWorld(), bullet1[i].getMatrixWorld()))
 		{
-			player[PLAYER1].damgae(20);
+			player[PLAYER2].damgae(5);
+			bullet1[i].inActivation();
 		}
 	}
+		
+	for (int i = 0; i < NUM_BULLET; i++)
+	{
+		//バレット2<->プレイヤー1
+		if (!bullet2[i].getActive())continue;
+		if (player[PLAYER1].bodyCollide.collide(
+			bullet2[i].bodyCollide.getCenter(), bullet2[i].bodyCollide.getRadius(),
+			player[PLAYER1].getMatrixWorld(), bullet2[i].getMatrixWorld()))
+		{
+			player[PLAYER1].damgae(5);
+			bullet2[i].inActivation();
+			
+		}
+	}
+
+	//ネストが深い！！
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		for (int k = 0; k < JUNK_MAX; k++)
+		{
+			if (between2VectorLength(*player[i].getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
+			{
+				if (player[i].bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
+					player[i].getMatrixWorld(),junk[k].getMatrixWorld()))
+				{//プレイヤーとガラクタが衝突したら
+					junk[k].inActivation();
+				}
+				junk[k].headPosition(*player[i].getPosition());
+			}
+		}
+	}
+
 
 }
 

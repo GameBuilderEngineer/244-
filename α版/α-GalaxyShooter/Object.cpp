@@ -74,6 +74,7 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR
 
 void Object::update()
 {
+	if (onActive == false)return;
 	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
 	D3DXMatrixTranslation(&matrixPosition, position.x, position.y, position.z);
 
@@ -93,7 +94,7 @@ void Object::update()
 
 VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
-
+	if (onRender == false)return;
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 	device->SetRenderState(D3DRS_LIGHTING, true);
 
@@ -168,4 +169,15 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 	gravity *= power;
 	
 	if (onGravity)speed += gravity;
+}
+
+void Object::activation()
+{
+	onRender = true;
+	onActive = true;
+}
+void Object::inActivation()
+{
+	onRender = false;
+	onActive = false;
 }
