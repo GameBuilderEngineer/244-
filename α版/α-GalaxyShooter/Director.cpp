@@ -22,8 +22,8 @@ Director::~Director(){
 	SAFE_DELETE(audio);
 	SAFE_DELETE(sound);
 	SAFE_DELETE(scene);
-	textureLoader->release();
 	SAFE_DELETE(textureLoader);
+	SAFE_DELETE(staticMeshLoader);
 	ShowCursor(TRUE);
 }
 
@@ -34,6 +34,7 @@ HRESULT Director::initialize(){
 		return E_FAIL;
 	MFAIL(window->initialize(instance, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME), "ウィンドウ作成失敗");
 	wnd = window->wnd;
+
 #ifdef _DEBUG
 	//debugWindow
 	debugWindow0 = new DebugWindow;
@@ -45,6 +46,7 @@ HRESULT Director::initialize(){
 		return E_FAIL;
 	MFAIL(debugWindow1->initialize(instance, window->getRect().right, window->getRect().top, WINDOW_WIDTH/2, WINDOW_HEIGHT, DEBUG_NAME), "デバッグウィンドウ1作成失敗");
 #endif // _DEBUG
+
 	//direct3D9
 	d3d = new Direct3D9;
 	if (d3d == NULL)
@@ -59,33 +61,28 @@ HRESULT Director::initialize(){
 	input->initialize(instance,window->wnd,true);
 	window->setInput(input);
 
-
 	//textureLoader
 	textureLoader = new TextureLoader;
 	textureLoader->load(d3d->device);
 
-	scene->initialize(d3d,input);
-
 	//メッシュ読み込み
 	// Xファイルからメッシュをロードする	
 	//StaticMesh
-	setVisualDirectory();
+	staticMeshLoader = new StaticMeshLoader;
+	staticMeshLoader->load(d3d->device);
+
 	//HierarchyMesh
-	setVisualDirectory();
+	//setVisualDirectory();
 	//SKINMESH
-	setVisualDirectory();
+	//setVisualDirectory();
 
 	//Audio(XACTエンジン)
 	setSoundDirectory();
 	audio = new Audio;
 	audio->initialize();
-	//Sound(XAuido2)
-	sound = new Sound;
-	MFAIL(sound->initialize(), "サウンド初期化失敗");
-	//サウンド読み込み
-	setSoundDirectory();
-	sound->load((char*)"Chorus.wav");
 
+	//scene
+	scene->initialize(d3d,input,textureLoader,staticMeshLoader);
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -110,10 +107,10 @@ void Director::run(HINSTANCE _instance){
 	}
 	ShowWindow(wnd, SW_SHOW);
 	UpdateWindow(wnd);
+
 	// メッセージループ
 	MSG msg = { 0 };
 	ZeroMemory(&msg, sizeof(msg));
-	sound->PlaySound(0, true);
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -126,7 +123,6 @@ void Director::run(HINSTANCE _instance){
 			mainLoop();
 		}
 	}
-	sound->StopSound(0);
 }
 
 void Director::mainLoop(){
@@ -147,7 +143,6 @@ void Director::mainLoop(){
 	fixFPS60();
 	displayFPS();
 
-	//input->clearAll();
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
 }
 
@@ -168,7 +163,7 @@ void Director::update(){
 	audio->run();
 	scene->update(frameTime);
 	scene->collisions();
-	//SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+	if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
 }
 
 void Director::render(){
@@ -211,6 +206,7 @@ void Director::fixFPS60() {
 	}
 	PreviousTime = CurrentTime;
 }
+
 void Director::displayFPS() {
 	//FPS計算表示
 	static LARGE_INTEGER time;
@@ -237,7 +233,6 @@ void Director::displayFPS() {
 		SetWindowTextA(wnd, name);
 		frame = 0;
 	}
-
 }
 
 void Director::variableFPS(){
@@ -255,6 +250,6 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	scene->initialize(d3d,input);
+	scene->initialize(d3d,input, textureLoader, staticMeshLoader);
 	currentSceneName = scene->getSceneName();
 }

@@ -1,7 +1,5 @@
 #include "Magnet.h"
 
-
-
 Magnet::Magnet()
 {
 
@@ -40,7 +38,6 @@ void Magnet::reverseAmount()
 
 void Magnet::update()
 {
-
 	position += speed;
 	Object::update();
 }

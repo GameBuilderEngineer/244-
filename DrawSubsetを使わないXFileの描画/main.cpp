@@ -200,7 +200,7 @@ INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR szStgr, INT iCmdS
 
 	//バーテックスバッファーの取得
 	pMesh->GetVertexBuffer(&lpVB);
-	
+
 
 	//頂点データのサイズを取得
 	DWORD dwStride = pMesh->GetNumBytesPerVertex();

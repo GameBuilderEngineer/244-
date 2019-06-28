@@ -19,9 +19,14 @@ Game::~Game()
 
 }
 
-void Game::initialize(Direct3D9* direct3D9,Input* _input) {
+void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -360,13 +365,17 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	
+	//(仮)//マグネットの描画
 	for (int i = 0; i < NUM_MAGNET; i++)
-	{//
+	{
 		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
-	//ポイントスプライトの描画
+
+	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device,currentCamera.position);
-	//プレーンの描画
+	
+	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef _DEBUG
@@ -378,9 +387,12 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 #endif
 }
 
-bool onUI = true;
+
 
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
+#ifdef _DEBUG
+
+
 	text.print(50, 200,
 		"difference:%.3f\n",difference);
 	text.print(10, 150,
@@ -513,6 +525,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
 	);
+#endif // _DEBUG
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定

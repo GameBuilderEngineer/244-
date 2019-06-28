@@ -12,7 +12,7 @@ class Result :
 public:
 	Result();
 	~Result();
-	virtual void initialize(Direct3D9* direct3D9, Input* _input) override;
+	virtual void initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;

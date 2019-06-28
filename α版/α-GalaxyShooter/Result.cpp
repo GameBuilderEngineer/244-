@@ -12,9 +12,14 @@ Result::~Result()
 {
 }
 
-void Result::initialize(Direct3D9* direct3D9, Input* _input) {
+void Result::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);

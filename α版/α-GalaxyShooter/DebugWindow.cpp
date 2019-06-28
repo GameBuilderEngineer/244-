@@ -38,7 +38,7 @@ HRESULT DebugWindow::initialize(HINSTANCE instance, INT x, INT y, INT width, INT
 	wndClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	RegisterClassEx(&wndClass);
 	//ウィンドウの作成
-	wnd = CreateWindowEx(WS_EX_TOPMOST
+	wnd = CreateWindowEx(WS_EX_WINDOWEDGE
 		,windowName, windowName,
 		WS_OVERLAPPEDWINDOW
 		, x, y, width, height, 0, 0, instance, 0);

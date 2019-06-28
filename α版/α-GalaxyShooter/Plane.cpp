@@ -14,8 +14,6 @@ Plane::~Plane()
 
 HRESULT Plane::initialize(LPDIRECT3DDEVICE9 device)
 {
-
-
 	PlaneVertex vertex[4] = {
 		{D3DXVECTOR2( -1.0f,  1.0f),D3DXVECTOR2(0.0f,0.0f)},
 		{D3DXVECTOR2(  1.0f,  1.0f),D3DXVECTOR2(1.0f,0.0f)},
@@ -40,7 +38,6 @@ HRESULT Plane::initialize(LPDIRECT3DDEVICE9 device)
 	//位置情報バッファの作成
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*num, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*num, position, positionBuffer);
-
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
@@ -101,6 +98,7 @@ void Plane::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX project
 	device->SetStreamSourceFreq(1, 1);
 
 }
+
 void Plane::createPositionSpherical(int _num ,float radius)
 {
 	num = _num;

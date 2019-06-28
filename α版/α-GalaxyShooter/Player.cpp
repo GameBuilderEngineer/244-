@@ -60,12 +60,16 @@ void Player::update(float frameTime)
 void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	Object::toonRender(device,view,projection,cameraPositon);
+#ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
+#endif // _DEBUG
 }
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	Object::render(device,view,projection,cameraPositon);
+#ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
+#endif // _DEBUG
 }
 
 void Player::jump()

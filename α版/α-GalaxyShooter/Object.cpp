@@ -122,6 +122,7 @@ VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	reverseAxisZ.render(device, 10.0f);
 #endif // _DEBUG
 }
+
 VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
 {
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
