@@ -34,7 +34,6 @@ public:
 	Input* input;							//Inputクラス
 	Camera* camera;							//カメラクラス
 	Audio* audio;							//オーディオクラス
-	Sound* sound;							//サウンドクラス
 	AbstractScene* scene;					//抽象シーンクラス
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス

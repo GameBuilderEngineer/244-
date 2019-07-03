@@ -13,7 +13,6 @@ Director::Director(){
 	scene = new Splash();
 	hiddenCursor = true;
 	lockCursor = true;
-	scene = new Title();
 	fpsMode = FIXED_FPS;
 	ShowCursor(FALSE);
 }
@@ -24,7 +23,6 @@ Director::~Director(){
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(input);
 	SAFE_DELETE(audio);
-	SAFE_DELETE(sound);
 	SAFE_DELETE(scene);
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
@@ -116,7 +114,6 @@ void Director::run(HINSTANCE _instance){
 	// メッセージループ
 	MSG msg = { 0 };
 	ZeroMemory(&msg, sizeof(msg));
-	sound->PlaySound(0, true);
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -129,7 +126,6 @@ void Director::run(HINSTANCE _instance){
 			mainLoop();
 		}
 	}
-	sound->StopSound(0);
 }
 
 void Director::mainLoop(){

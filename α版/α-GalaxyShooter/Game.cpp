@@ -12,7 +12,6 @@ Game::Game()
 	currentBullet1 = 0;
 	currentBullet2 = 0;
 	nextScene = SceneList::RESULT;
-	currentBullet = 0;
 }
 
 Game::~Game()
@@ -550,6 +549,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
 	);
+#endif
 	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定

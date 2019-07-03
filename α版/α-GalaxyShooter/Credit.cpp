@@ -11,9 +11,14 @@ Credit::~Credit()
 {
 }
 
-void Credit::initialize(Direct3D9* direct3D9, Input* _input) {
+void Credit::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -24,7 +29,7 @@ void Credit::initialize(Direct3D9* direct3D9, Input* _input) {
 	credit2D.initialize(direct3D9->device, 0);
 }
 
-void Credit::update() {
+void Credit::update(float frameTime) {
 
 	camera->update();
 
