@@ -17,7 +17,7 @@ public:
 	Magnet();
 	~Magnet();
 
-	void initialize(LPDIRECT3DDEVICE9 device,float amount);
+	void initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh,float amount);
 	void reverseAmount();
 	void calculationMagneticeForce(Magnet target);
 	void update();

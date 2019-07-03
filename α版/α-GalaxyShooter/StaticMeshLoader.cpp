@@ -4,7 +4,6 @@ using namespace staticMeshNS;
 StaticMeshLoader::StaticMeshLoader()
 {
 	fileName[BULLET] = { "bullet.x" };
-	fileName[FIELD001] = { "field001.x" };
 	fileName[SAMPLE_HIERARCHY_MESH] = { "HierarchyMesh.x" };
 	fileName[MAGNET_S] = { "magnetS.x" };
 	fileName[MAGNET_N] = { "magnetN.x" };
@@ -18,6 +17,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X100] = { "x100starRegularPolyhedron.x" };
 	fileName[SAMPLE_STATIC_MESH] = { "StaticMesh.x" };
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
+	fileName[MEMORY_PILE] = { "memoryPile.x" };
 }
 
 StaticMeshLoader::~StaticMeshLoader()
@@ -57,15 +57,72 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 			}
 		}
 
-		//頂点バッファの取得
-		staticMesh[i].mesh->GetVertexBuffer(&staticMesh[i].vertexBuffer);
+		
 
 		//インデックスバッファの取得
 		staticMesh[i].mesh->GetIndexBuffer(&staticMesh[i].indexBuffer);
 
+		//ULONG addref = staticMesh[i].mesh->AddRef();
+		//
+		//DWORD Options;
+		//const D3DVERTEXELEMENT9* pDeclaration;
+		//LPDIRECT3DDEVICE9 pD3DDevice;
+		//LPD3DXMESH* ppCloneMesh;
+		//staticMesh[i].mesh->CloneMesh(Options,pDeclaration,pD3DDevice,ppCloneMesh );
+		//
+		//
+		//DWORD FVF;
+		//staticMesh[i].mesh->CloneMeshFVF(Options, FVF, pD3DDevice, ppCloneMesh);
+		//
+		//const DWORD* pAdjacency;
+		//DWORD* pPRep;
+		//staticMesh[i].mesh->ConvertAdjacencyToPointReps(pAdjacency, pPRep);
+		
+		//staticMesh[i].mesh->ConvertPointRepsToAdjacency(pPRep, (DWORD*)pAdjacency);
+		//
+		//DWORD Attribld;
+		//staticMesh[i].mesh->DrawSubset(Attribld);
+		
+		//属性テーブルサイズを取得
+		staticMesh[i].mesh->GetAttributeTable(NULL, &staticMesh[i].attributeTableSize);
+		//サイズ分のメモリ領域確保
+		staticMesh[i].attributeTable = new D3DXATTRIBUTERANGE[staticMesh[i].attributeTableSize];
+		//属性テーブルの取得
+		staticMesh[i].mesh->GetAttributeTable(staticMesh[i].attributeTable, &staticMesh[i].attributeTableSize);
+
+
+		//
+		D3DVERTEXELEMENT9 vertexElement[65];
+		staticMesh[i].mesh->GetDeclaration(vertexElement);
+		for (int num = 0; num < 65;num++)
+		{
+			staticMesh[i].vertexElement[num] = vertexElement[num];
+		}
+		device->CreateVertexDeclaration(vertexElement, &staticMesh[i].declaration);
+
+		//FVF = staticMesh[i].mesh->GetFVF();
+
+		staticMesh[i].numBytesPerVertex = staticMesh[i].mesh->GetNumBytesPerVertex();
+
 		//
 		staticMesh[i].mesh->GetFVF();
-
+		
+		//頂点バッファの取得
+		DWORD dwStride = staticMesh[i].mesh->GetNumBytesPerVertex();
+		BYTE *pbVertices = NULL;
+		staticMesh[i].mesh->GetVertexBuffer(&staticMesh[i].vertexBuffer);
+		DWORD maxVertices = staticMesh[i].mesh->GetNumVertices();
+		if (SUCCEEDED(staticMesh[i].vertexBuffer->Lock(0, 0, (VOID**)&pbVertices, 0)))
+		{
+			D3DXVECTOR3* position;
+			D3DXVECTOR3* normal;
+			for (int n = 0; n < maxVertices + 10; n++)
+			{
+				position = (D3DXVECTOR3*)&pbVertices[n*dwStride];
+				normal = (D3DXVECTOR3*)&pbVertices[n*dwStride + sizeof(D3DXVECTOR3)];
+			}
+			staticMesh[i].vertexBuffer->Unlock();
+		}
 	}
 
 

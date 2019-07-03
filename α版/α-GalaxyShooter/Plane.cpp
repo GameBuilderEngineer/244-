@@ -111,5 +111,4 @@ void Plane::createPositionSpherical(int _num ,float radius)
 		pos *= radius;
 		position[i] = pos;
 	}
-
 }

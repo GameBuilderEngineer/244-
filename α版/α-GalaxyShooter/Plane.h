@@ -21,7 +21,6 @@ public:
 	Plane();
 	~Plane();
 
-	//_position：表示数分の位置情報を設定する
 	HRESULT initialize(LPDIRECT3DDEVICE9 device);
 
 	//球状にランダム配置表示する

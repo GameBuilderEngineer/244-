@@ -45,7 +45,9 @@ HRESULT Director::initialize(){
 	if (!debugWindow1)
 		return E_FAIL;
 	MFAIL(debugWindow1->initialize(instance, window->getRect().right, window->getRect().top, WINDOW_WIDTH/2, WINDOW_HEIGHT, DEBUG_NAME), "デバッグウィンドウ1作成失敗");
+	SetForegroundWindow(wnd);
 #endif // _DEBUG
+
 
 	//direct3D9
 	d3d = new Direct3D9;

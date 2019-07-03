@@ -142,7 +142,9 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
+    <ClCompile Include="MemoryPile.cpp" />
     <ClCompile Include="MissileUI.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
@@ -183,7 +185,9 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Junk.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LostThing.h" />
     <ClInclude Include="Magnet.h" />
+    <ClInclude Include="MemoryPile.h" />
     <ClInclude Include="MissileUI.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />

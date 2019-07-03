@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "AbstractScene.h"
 #include "Object.h"
 #include "Player.h"
@@ -16,7 +17,7 @@
 #include "Planet.h"
 #include "PointSprite.h"
 #include "Plane.h"
-
+#include "MemoryPile.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -51,6 +52,9 @@ namespace gameNS
 		NUM_COLONY,
 	};
 
+	const int NUM_1P_MEMORY_PILE = 5;
+	const int NUM_2P_MEMORY_PILE = 5;
+
 }
 
 class Game : public AbstractScene
@@ -73,7 +77,10 @@ private:
 	GameMaster gameMaster;
 	PointSprite pointSprite;
 	Plane plane;
-	
+	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
+	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
+
+
 	bool onUI = true;
 
 public:

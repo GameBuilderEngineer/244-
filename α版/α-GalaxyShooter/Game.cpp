@@ -47,14 +47,14 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	light->initialize(direct3D9);
 
 	//コロニー
-	colony[0].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(150, 0, 300));
-	colony[1].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(-150, 0, 300));
+	colony[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &D3DXVECTOR3(150, 0, 300));
+	colony[1].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &D3DXVECTOR3(-150, 0, 300));
 	//フィールド
-	field.initialize(direct3D9->device, (LPSTR)"planet.x", &(D3DXVECTOR3)PLANET_POSITION);
+	field.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i].initialize(direct3D9->device, (LPSTR)"Toon_6Color.x", &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
+		player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
 		hp[i].initialize(direct3D9->device, i);
 		sp[i].initialize(direct3D9->device, i);
 		colonyHp[i].initialize(direct3D9->device, i);
@@ -80,17 +80,17 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	for (int i = 0; i < NUM_MAGNET; i++)
 	{//磁石
 		if (NUM_MAGNET / 2 > i) {
-			magnet[i].initialize(direct3D9->device,2.0f);
+			magnet[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_N],2.0f);
 		}
 		else {
-			magnet[i].initialize(direct3D9->device,-2.0f);
+			magnet[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_S] ,-2.0f);
 		}
 	}
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの初期化
-		bullet1[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
-		bullet2[i].initialize(direct3D9->device, (LPSTR)"bullet.x", &D3DXVECTOR3(0,0,0));
+		bullet1[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
+		bullet2[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
 		//bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
 	}
 
@@ -106,13 +106,26 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 
 		D3DXVec3Normalize(&position, &position);
 		position *= 100;
-		junk[i].initialize(direct3D9->device, (LPSTR)"starRegularPolyhedron.x", &position);
+		junk[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON], &position);
 	}
 	//ポイントスプライト
 	pointSprite.initilaize(direct3D9->device);
 	//インスタンスプレーン
-	plane.createPositionSpherical(10000, 300.0f);
+	plane.createPositionSpherical(1000, 300.0f);
 	plane.initialize(direct3D9->device);
+
+	//メモリーパイルの初期化
+	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+	{
+		memoryPile1P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
+	}
+	for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+	{
+		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
+	}
+
+
+
 }
 
 float difference = 1.0f;
@@ -316,6 +329,13 @@ void Game::update(float frameTime) {
 	{
 		magnet[i].update();
 	}
+
+	//1Pのメモリーパイルの更新
+	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+	{
+		memoryPile1P[i].update(frameTime);
+	}
+
 }
 
 void Game::render(Direct3D9* direct3D9) {

@@ -13,10 +13,10 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
+void Bullet::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
-	Object::initialize(device, xFileName, _position);
-	bodyCollide.initialize(device, &position, mesh);
+	Object::initialize(device, _staticMesh, _position);
+	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 }
 

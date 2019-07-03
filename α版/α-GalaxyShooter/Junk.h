@@ -18,7 +18,7 @@ public:
 	Ray betweenField;
 	Junk();
 	~Junk();
-	void initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
+	void initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position);
 
 	void update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX fieldMatrix, D3DXVECTOR3 fieldPosition);
 	void bound();

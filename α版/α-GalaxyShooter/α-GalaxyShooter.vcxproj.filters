@@ -127,6 +127,18 @@
     <Filter Include="ShaderLoader">
       <UniqueIdentifier>{49cb0e54-1b30-43bc-944a-283d060b8b09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\MemoryPile">
+      <UniqueIdentifier>{a0d2f54e-80bf-46fb-94a7-2b3ccfe42487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\MemoryLine">
+      <UniqueIdentifier>{cd990212-341c-4002-b257-ddbfdb399324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Wage">
+      <UniqueIdentifier>{d5c600e5-063e-40c7-9579-a27b7391cad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\LostThing">
+      <UniqueIdentifier>{841eed46-062a-4e78-a3ee-e22c2bafa361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -246,7 +258,13 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>TextureLoader</Filter>
     </ClCompile>
-    <ClCompile Include="StaticMeshLoader.cpp" />
+    <ClCompile Include="StaticMeshLoader.cpp">
+      <Filter>StaticMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="LostThing.cpp">
+      <Filter>Object\LostThing</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -366,7 +384,13 @@
     <ClInclude Include="TextureLoader.h">
       <Filter>TextureLoader</Filter>
     </ClInclude>
-    <ClInclude Include="StaticMeshLoader.h" />
+    <ClInclude Include="StaticMeshLoader.h">
+      <Filter>StaticMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="LostThing.h">
+      <Filter>Object\LostThing</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
