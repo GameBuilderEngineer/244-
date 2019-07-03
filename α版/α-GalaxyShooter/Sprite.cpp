@@ -185,6 +185,10 @@ void Sprite::setVertex(void)
 		vertexWk[3].vtx.y = position.y + sinf(rotation.z) * width + cos(rotation.z) * height;
 		break;
 	}
+	vertexWk[0].vtx.z = 0.0f;
+	vertexWk[1].vtx.z = 0.0f;
+	vertexWk[2].vtx.z = 0.0f;
+	vertexWk[3].vtx.z = 0.0f;
 }
 
 
