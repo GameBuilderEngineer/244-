@@ -14,6 +14,9 @@
 
 #define JUNK_MAX (10) //ƒKƒ‰ƒNƒ^‚Ì”
 
+
+
+
 namespace gameNS
 {
 	enum {
@@ -41,7 +44,6 @@ namespace gameNS
 		COLONY2,
 		NUM_COLONY,
 	};
-	
 }
 
 class Game : public AbstractScene

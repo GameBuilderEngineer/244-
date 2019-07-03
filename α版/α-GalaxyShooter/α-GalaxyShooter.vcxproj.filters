@@ -34,9 +34,6 @@
     <Filter Include="Object">
       <UniqueIdentifier>{0e14a614-14ab-488d-a105-7be72db5e82c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Game">
-      <UniqueIdentifier>{d95aa518-3c8e-4925-b91f-da9b598e5ac9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{be3a3183-9cea-4d22-826b-d5a69c2e4a62}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,45 @@
     </Filter>
     <Filter Include="Object\Planet">
       <UniqueIdentifier>{27493bab-38b6-4b88-b308-f24bf5c68959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Game">
+      <UniqueIdentifier>{d95aa518-3c8e-4925-b91f-da9b598e5ac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Splash\Splash2D">
+      <UniqueIdentifier>{f8726285-6ecd-414b-b93b-c13b0d2d3dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\SelectCharacter\SelectCharacter2D">
+      <UniqueIdentifier>{e6b12f7b-6b14-457c-8101-dd5351af80ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Result\Result2D">
+      <UniqueIdentifier>{b467a5f0-a32d-435e-9e98-e7dc67d44d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Credit">
+      <UniqueIdentifier>{0fd1597f-a49c-4b94-9c17-003fec8a27e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Tutorial">
+      <UniqueIdentifier>{e24a5634-eb37-4ee2-86b9-40c2975ddb48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Operation">
+      <UniqueIdentifier>{84cdff66-1433-45db-9e64-13d280b174b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Tutorial\Tutorial2D">
+      <UniqueIdentifier>{d38573a4-d008-4841-8b45-79651d0a485c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Credit\Credit2D">
+      <UniqueIdentifier>{27471d35-a683-420c-a5a0-9f4addc70f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Title\TitleTransition">
+      <UniqueIdentifier>{2dd5a8f7-9421-4360-815f-933cb633ba7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Title\TitleTransition\TitleTransPos">
+      <UniqueIdentifier>{f4742acb-56cc-43bb-ab37-9e4b8cd8a7ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Operation\KeyOpe">
+      <UniqueIdentifier>{16f93d88-7254-4bca-a3ed-0f4b4e1ffca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Operation\PadOpe">
+      <UniqueIdentifier>{6bbbdd36-c724-4379-938f-c4399c00cc55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +236,42 @@
     </ClCompile>
     <ClCompile Include="BoundingSphere.cpp">
       <Filter>BoudingSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Splash2D.cpp">
+      <Filter>Scene\Splash\Splash2D</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter2D.cpp">
+      <Filter>Scene\SelectCharacter\SelectCharacter2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Result2D.cpp">
+      <Filter>Scene\Result\Result2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Credit.cpp">
+      <Filter>Scene\Credit</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>Scene\Tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="Operation.cpp">
+      <Filter>Scene\Operation</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial2D.cpp">
+      <Filter>Scene\Tutorial\Tutorial2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Credit2D.cpp">
+      <Filter>Scene\Credit\Credit2D</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleTransition.cpp">
+      <Filter>Scene\Title\TitleTransition</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleTransPos.cpp">
+      <Filter>Scene\Title\TitleTransition\TitleTransPos</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyOpe.cpp">
+      <Filter>Scene\Operation\KeyOpe</Filter>
+    </ClCompile>
+    <ClCompile Include="PadOpe.cpp">
+      <Filter>Scene\Operation\PadOpe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -375,5 +447,41 @@
     <Image Include="02 Visual File\WeaponUI.jpg">
       <Filter>02 Visual File</Filter>
     </Image>
+    <ClInclude Include="Splash2D.h">
+      <Filter>Scene\Splash\Splash2D</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter2D.h">
+      <Filter>Scene\SelectCharacter\SelectCharacter2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Result2D.h">
+      <Filter>Scene\Result\Result2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Credit.h">
+      <Filter>Scene\Credit</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Scene\Tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Operation.h">
+      <Filter>Scene\Operation</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial2D.h">
+      <Filter>Scene\Tutorial\Tutorial2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Credit2D.h">
+      <Filter>Scene\Credit\Credit2D</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleTransition.h">
+      <Filter>Scene\Title\TitleTransition</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleTransPos.h">
+      <Filter>Scene\Title\TitleTransition\TitleTransPos</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyOpe.h">
+      <Filter>Scene\Operation\KeyOpe</Filter>
+    </ClInclude>
+    <ClInclude Include="PadOpe.h">
+      <Filter>Scene\Operation\PadOpe</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

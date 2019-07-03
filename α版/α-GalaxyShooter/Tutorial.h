@@ -1,22 +1,21 @@
 #pragma once
 #include "AbstractScene.h"
-#include "Result2D.h"
+#include "Tutorial2D.h"
 
-namespace resultNS
+namespace tutorialNS
 {
 
 }
 
-class Result :
-	public AbstractScene
+class Tutorial : public AbstractScene
 {
-
 private:
-	Result2D result2D;
+
+	Tutorial2D tutorial2D;
 
 public:
-	Result();
-	~Result();
+	Tutorial();
+	~Tutorial();
 	virtual void initialize(Direct3D9* direct3D9, Input* _input) override;
 	virtual void update() override;
 	virtual void render(Direct3D9* direct3D9) override;
@@ -26,6 +25,4 @@ public:
 
 	void render3D(Direct3D9* direct3D9);
 	void renderUI(LPDIRECT3DDEVICE9 device);
-
 };
-

@@ -1,22 +1,23 @@
 #pragma once
 #include "AbstractScene.h"
-#include "Result2D.h"
+#include "KeyOpe.h"
+#include "PadOpe.h"
 
-namespace resultNS
+namespace operationNS
 {
 
 }
 
-class Result :
-	public AbstractScene
+class Operation : public AbstractScene
 {
-
 private:
-	Result2D result2D;
+
+	KeyOpe keyOpe;
+	PadOpe padOpe;
 
 public:
-	Result();
-	~Result();
+	Operation();
+	~Operation();
 	virtual void initialize(Direct3D9* direct3D9, Input* _input) override;
 	virtual void update() override;
 	virtual void render(Direct3D9* direct3D9) override;
@@ -26,6 +27,5 @@ public:
 
 	void render3D(Direct3D9* direct3D9);
 	void renderUI(LPDIRECT3DDEVICE9 device);
-
+	int opeTransition; // オペレーション画像入れ替え
 };
-
