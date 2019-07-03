@@ -7,7 +7,7 @@ int currentBullet;//仮
 Game::Game()
 {
 	sceneName = "Scene -Game-";
-	nextScene = SceneList::NONE_SCENE;
+	nextScene = SceneList::RESULT;
 	currentBullet = 0;
 }
 
@@ -37,6 +37,7 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 	light = new Light;
 	light->initialize(direct3D9);
 
+	// コロニー初期化
 	colony[0].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(150, 0, 300));
 	colony[1].initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(-150, 0, 300));
 
@@ -62,8 +63,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input) {
 
 	//フィールド
 	field.initialize(direct3D9->device, (LPSTR)"planet.x", &D3DXVECTOR3(0, -100, 0));
-
-
 
 	//仮置き
 	// ライトをあてる 白色で光沢反射ありに設定
@@ -251,6 +250,9 @@ void Game::update() {
 		// ガラクタアップデート
 		junk[i].update();
 	}
+
+	if (input->anyKeyPressed())changeScene(nextScene);
+
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -286,14 +288,14 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
 	for (int i = 0; i < NUM_COLONY; i++)
-	{
+	{// コロニーの描画
 		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
 	for (int i = 0; i < JUNK_MAX; i++)
-	{
+	{// ガラクタの描画
 		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
@@ -307,6 +309,9 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	debugRay.update(*player[PLAYER1].getPosition(), player[PLAYER1].getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
 #endif
+
+	//if (input->anyKeyPressed())changeScene(nextScene);
+
 }
 
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
@@ -386,14 +391,25 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+
+	device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		hp[i].render(device);
+
 		sp[i].render(device);
 		colonyHp[i].render(device);
 		missileInfomation[i].render(device);
 		weaponInfomation[i].render(device);
 	}
+
+	// αテストを無効に
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+
 }
 
 void Game::collisions() {

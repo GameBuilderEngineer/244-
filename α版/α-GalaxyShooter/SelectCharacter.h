@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractScene.h"
+#include "SelectCharacter2D.h"
 
 namespace selectCharacterNS
 {
@@ -9,6 +10,8 @@ namespace selectCharacterNS
 class SelectCharacter :public AbstractScene
 {
 private:
+	SelectCharacter2D selectCharacter2D;
+
 public:
 	SelectCharacter();
 	~SelectCharacter();
@@ -20,5 +23,5 @@ public:
 	virtual void uninitialize() override;
 
 	void render3D(Direct3D9* direct3D9);
-	void renderUI();
+	void renderUI(LPDIRECT3DDEVICE9 device);
 };

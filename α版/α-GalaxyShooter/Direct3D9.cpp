@@ -96,7 +96,7 @@ void Direct3D9::showFPS()
 void Direct3D9::clear()
 {
 	//画面クリア（実際は単色で画面を塗りつぶす処理）
-	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(100, 100, 100), 1.0f, 0);
+	device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 }
 
 HRESULT Direct3D9::present()

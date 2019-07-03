@@ -15,8 +15,6 @@
 #define JUNK_MAX (10) //ƒKƒ‰ƒNƒ^‚Ì”
 
 
-
-
 namespace gameNS
 {
 	enum {

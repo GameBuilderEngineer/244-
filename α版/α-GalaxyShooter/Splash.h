@@ -1,13 +1,17 @@
 #pragma once
 #include "AbstractScene.h"
+#include "Splash2D.h"
+
 namespace splashNS
 {
 
 }
 
-class Splash :
-	public AbstractScene
-{
+class Splash :public AbstractScene{
+
+private:
+	Splash2D splash2D;
+
 public:
 	Splash();
 	~Splash();
@@ -19,7 +23,7 @@ public:
 	virtual void uninitialize() override;
 
 	void render3D(Direct3D9* direct3D9);
-	void renderUI();
+	void renderUI(LPDIRECT3DDEVICE9 device);
 
 };
 

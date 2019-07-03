@@ -1,6 +1,8 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Object.h"
+#include "TitleTransition.h"
+#include "TitleTransPos.h"
 
 namespace titleNS
 {
@@ -10,6 +12,8 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
+	TitleTransition titleTrans;
+	TitleTransPos titleTransPos;
 
 public:
 	Title();
@@ -22,5 +26,8 @@ public:
 	virtual void uninitialize() override;
 
 	void render3D(Direct3D9* direct3D9);
-	void renderUI();
+	void renderUI(LPDIRECT3DDEVICE9 device);
+
+	void titleTransition(void);								// ‘I‘ğUI‘JˆÚˆ—
+
 };
