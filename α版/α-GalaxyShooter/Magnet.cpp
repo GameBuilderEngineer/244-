@@ -1,7 +1,5 @@
 #include "Magnet.h"
 
-
-
 Magnet::Magnet()
 {
 
@@ -12,14 +10,14 @@ Magnet::~Magnet()
 {
 }
 
-void Magnet::initialize(LPDIRECT3DDEVICE9 device,float _amount)
+void Magnet::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh,float _amount)
 {
 	amount = _amount;
 	if (_amount > 0) {
-		Object::initialize(device, (LPSTR)"magnetS.x", &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
+		Object::initialize(device, _staticMesh, &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
 	}
 	else {
-		Object::initialize(device, (LPSTR)"magnetN.x", &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
+		Object::initialize(device, _staticMesh, &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
 	}
 }
 
@@ -40,7 +38,6 @@ void Magnet::reverseAmount()
 
 void Magnet::update()
 {
-
 	position += speed;
 	Object::update();
 }

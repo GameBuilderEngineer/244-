@@ -139,6 +139,42 @@
     <Filter Include="Scene\Operation\PadOpe">
       <UniqueIdentifier>{6bbbdd36-c724-4379-938f-c4399c00cc55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameMaster">
+      <UniqueIdentifier>{d16cb65b-0b76-4d40-bf56-b9dcc8ce7a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Billboard">
+      <UniqueIdentifier>{6800e31b-d99c-429b-b8dd-ada477141582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PointSprite">
+      <UniqueIdentifier>{edb7be5c-4d96-4e77-a32d-8717ce391e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plane">
+      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureLoader">
+      <UniqueIdentifier>{8abfba9a-50b0-4e76-a76a-d54291bc1404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StaticMeshLoader">
+      <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkinMeshLoader">
+      <UniqueIdentifier>{227a2aeb-6834-4f6c-b1eb-b0003ed0e189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderLoader">
+      <UniqueIdentifier>{49cb0e54-1b30-43bc-944a-283d060b8b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\MemoryPile">
+      <UniqueIdentifier>{a0d2f54e-80bf-46fb-94a7-2b3ccfe42487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\MemoryLine">
+      <UniqueIdentifier>{cd990212-341c-4002-b257-ddbfdb399324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Wage">
+      <UniqueIdentifier>{d5c600e5-063e-40c7-9579-a27b7391cad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\LostThing">
+      <UniqueIdentifier>{841eed46-062a-4e78-a3ee-e22c2bafa361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -273,6 +309,34 @@
     <ClCompile Include="PadOpe.cpp">
       <Filter>Scene\Operation\PadOpe</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMaster.cpp">
+      <Filter>GameMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="PointSprite.cpp">
+      <Filter>PointSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Billboard.cpp">
+      <Filter>Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>TextureLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshLoader.cpp">
+      <Filter>StaticMeshLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="LostThing.cpp">
+      <Filter>Object\LostThing</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -371,6 +435,34 @@
     <ClInclude Include="BoundingSphere.h">
       <Filter>BoudingSphere</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Object\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMaster.h">
+      <Filter>GameMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="PointSprite.h">
+      <Filter>PointSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Billboard.h">
+      <Filter>Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshLoader.h">
+      <Filter>StaticMeshLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="LostThing.h">
+      <Filter>Object\LostThing</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

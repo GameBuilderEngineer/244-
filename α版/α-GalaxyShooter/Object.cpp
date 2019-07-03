@@ -26,43 +26,16 @@ Object::~Object()
 	
 }
 
-HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
+HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
+	//読込クラスからポインタをもらう
+	staticMesh = _staticMesh;
 	// メッシュの初期位置
 	memcpy(position, _position, sizeof(D3DXVECTOR3));
-	// Xファイルからメッシュをロードする	
-	LPD3DXBUFFER materialBuffer = NULL;
-	setVisualDirectory();
-	if (FAILED(D3DXLoadMeshFromX(xFileName, D3DXMESH_SYSTEMMEM,
-		device, NULL, &materialBuffer, NULL,
-		&numMaterials, &mesh)))
-	{
-		MessageBox(NULL, "Xファイルの読み込みに失敗しました", xFileName, MB_OK);
-		return E_FAIL;
-	}
-	D3DXMATERIAL* materials = (D3DXMATERIAL*)materialBuffer->GetBufferPointer();
-	meshMaterials = new D3DMATERIAL9[numMaterials];
-	meshTextures = new LPDIRECT3DTEXTURE9[numMaterials];
 
-	for (DWORD i = 0; i < numMaterials; i++)
-	{
-		meshMaterials[i] = materials[i].MatD3D;
-		meshMaterials[i].Ambient = meshMaterials[i].Diffuse;
-		meshTextures[i] = NULL;
-		if (materials[i].pTextureFilename != NULL &&
-			lstrlen(materials[i].pTextureFilename) > 0)
-		{
-			if (FAILED(D3DXCreateTextureFromFile(device,
-				materials[i].pTextureFilename,
-				&meshTextures[i])))
-			{
-				MessageBox(NULL, "テクスチャの読み込みに失敗しました", NULL, MB_OK);
-			}
-		}
-	}
+	setVisualDirectory();
 	MFAIL(D3DXCreateTextureFromFile(device, "Shade.bmp", &textureShade), "Shade.bmpの読み込みに失敗しました");
 	MFAIL(D3DXCreateTextureFromFile(device, "Outline.bmp", &textureLine), "Outline.bmpの読み込みに失敗しました");
-	materialBuffer->Release();
 	//シェーダーを読み込む
 	setShaderDirectory();
 	MFAIL(D3DXCreateEffectFromFile(device, "ToonShader.fx", NULL, NULL, 0, NULL, &effect, NULL), "シェーダーファイル読み込み失敗");
@@ -74,6 +47,7 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR
 
 void Object::update()
 {
+	if (onActive == false)return;
 	//ワールドトランスフォーム（ローカル座標→ワールド座標への変換）	
 	D3DXMatrixTranslation(&matrixPosition, position.x, position.y, position.z);
 
@@ -93,24 +67,52 @@ void Object::update()
 
 VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
-
+	if (onRender == false)return;
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 	device->SetRenderState(D3DRS_LIGHTING, true);
 
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);
+
+	//インスタンス宣言
+	//device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | 1);
+	//device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+
+	//頂点宣言を追加
+	//device->SetVertexDeclaration(staticMesh->declaration);
+	//device->SetFVF(staticMesh->mesh->GetFVF());
+	//ストリームにメッシュの頂点バッファをバインド
+	//device->SetStreamSource(0, staticMesh->vertexBuffer, 0, sizeof(staticMesh->numBytesPerVertex));
+
+	//インデックスバッファをセット
+	//device->SetIndices(staticMesh->indexBuffer);
+
 	// レンダリング			
-	for (DWORD i = 0; i < numMaterials; i++)
+	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		device->SetMaterial(&meshMaterials[i]);
-		device->SetTexture(0, meshTextures[i]);
-		mesh->DrawSubset(i);
+		device->SetMaterial(&staticMesh->materials[i]);
+		device->SetTexture(0,staticMesh->textures[i]);
+		
+
+		//device->DrawIndexedPrimitive(
+		//	D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type
+		//	0,													//INT BaseVertexIndex
+		//	staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex
+		//	staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices
+		//	staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex
+		//	staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount
+		staticMesh->mesh->DrawSubset(i);
 	}
 
 	// マテリアルをデフォルトに戻す
 	device->SetMaterial(&matDef);
 	// テクスチャの設定をNULLにする
 	device->SetTexture(0, NULL);
+
+	//後始末
+	//device->SetStreamSourceFreq(0, 1);
+	//device->SetStreamSourceFreq(1, 1);
+
 
 #ifdef _DEBUG
 	axisX.render(device, 10.0f);
@@ -121,6 +123,7 @@ VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	reverseAxisZ.render(device, 10.0f);
 #endif // _DEBUG
 }
+
 VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
 {
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
@@ -137,18 +140,17 @@ VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX proj
 	effect->Begin(NULL, 0);
 
 	// レンダリング			
-	for (DWORD i = 0; i < numMaterials; i++)
+	for (DWORD i = 0; i <staticMesh->numMaterial; i++)
 	{
 		effect->BeginPass(0);
-		effect->SetFloatArray("Diffuse", (FLOAT*)&meshMaterials[i].Diffuse, 4);
+		effect->SetFloatArray("Diffuse", (FLOAT*)&staticMesh->materials[i].Diffuse, 4);
 		//effect->SetTexture("DecalTexture", meshTextures[i]);
 		//device->SetMaterial(&meshMaterials[i]);
 		//device->SetTexture(0, meshTextures[i]);
-		mesh->DrawSubset(i);
+		staticMesh->mesh->DrawSubset(i);
 		effect->EndPass();
 	}
 	effect->End();
-
 
 #ifdef _DEBUG
 	axisX.render(device, 10.0f);
@@ -161,11 +163,22 @@ VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX proj
 
 }
 
-
-
 void Object::setGravity(D3DXVECTOR3 source, float power)
 {
-	D3DXVec3Normalize(&gravity, &(source- position));
+	D3DXVec3Normalize(&gravity, &source);
+	//gravity *= min(power, reverseAxisY.distance);
 	gravity *= power;
+	
 	if (onGravity)speed += gravity;
+}
+
+void Object::activation()
+{
+	onRender = true;
+	onActive = true;
+}
+void Object::inActivation()
+{
+	onRender = false;
+	onActive = false;
 }

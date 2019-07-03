@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <d3dx9.h>
 #include "Ray.h"
+#include "StaticMeshLoader.h"
 
 namespace objectNS {
 
@@ -15,13 +16,21 @@ protected:
 	//Data
 
 	//描画系変数
-	LPD3DXMESH mesh;
-	D3DMATERIAL9* meshMaterials;
-	LPDIRECT3DTEXTURE9* meshTextures;
+	//LPD3DXMESH mesh;
+	//D3DMATERIAL9* meshMaterials;
+	//LPDIRECT3DTEXTURE9* meshTextures;
+	//DWORD numMaterials;
+
+	//スタティックメッシュ
+	StaticMesh* staticMesh;
+
+	//シェーダーエフェクト
+	LPD3DXEFFECT effect;
+
+	//トゥーンシェーダー用変数
 	LPDIRECT3DTEXTURE9 textureShade;
 	LPDIRECT3DTEXTURE9 textureLine;
-	DWORD numMaterials;
-	LPD3DXEFFECT effect;
+	
 
 	//ステータス変数
 	D3DXVECTOR3 position;		//位置
@@ -36,6 +45,8 @@ protected:
 
 	//各種フラグ
 	bool onGravity;				//重力有効化フラグ
+	bool onActive;				//アクティブ化フラグ
+	bool onRender;				//描画有効化フラグ
 
 	//方向6軸
 	Ray axisX;
@@ -44,6 +55,8 @@ protected:
 	Ray reverseAxisX;
 	Ray reverseAxisY;
 	Ray reverseAxisZ;
+	//重力Ray
+	Ray gravityRay;
 
 	//行列（位置・回転・ワールド）：スケール追加予定
 	D3DXMATRIX matrixPosition;
@@ -54,12 +67,12 @@ public:
 	//Method
 	Object();
 	~Object();
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
+	HRESULT initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position);
 	void update();
 	VOID render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	VOID toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	//取得関数
-	LPD3DXMESH* getMesh() { return &mesh; }
+	LPD3DXMESH* getMesh() { return &staticMesh->mesh; }
 	D3DXMATRIX getMatrixWorld() { return matrixWorld; }
 	
 	D3DXVECTOR3* getPosition() { return &position; };
@@ -76,6 +89,8 @@ public:
 	Ray* getReverseAxisX() { return &reverseAxisX; };
 	Ray* getReverseAxisY() { return &reverseAxisY; };
 	Ray* getReverseAxisZ() { return &reverseAxisZ; };
+	Ray* getGravityRay() { return &gravityRay; };
+	bool getActive() { return onActive; }
 
 	//セット関数
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
@@ -83,7 +98,9 @@ public:
 	void setGravity(D3DXVECTOR3 source, float power);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setQuaternion(D3DXQUATERNION _quaternion) { quaternion = _quaternion; }
-	
+	void activation();			//活性化
+	void inActivation();		//不活化
+
 	//姿勢制御
 	void postureControl(D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection,float t)
 	{

@@ -134,12 +134,9 @@ void SkillPointUI::uninitialize(void)
 //=============================================================================
 // XVˆ—
 //=============================================================================
-void SkillPointUI::update(void)
+void SkillPointUI::update(int sp, int spMax)
 {
-	// ‚Ä‚«‚Æ‚¤‚È‚µ‚å‚è
-	int hp = 45;
-	int hpMax = 100;
-	float percentage = (float)hp / (float)hpMax;
+	float percentage = (float)sp / (float)spMax;
 	gaugeBar.setSize((int)(percentage * WIDTH), HEIGHT);
 	gaugeBar.setVertex();
 }

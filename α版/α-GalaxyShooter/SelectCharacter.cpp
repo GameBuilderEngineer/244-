@@ -15,9 +15,14 @@ SelectCharacter::~SelectCharacter()
 
 }
 
-void SelectCharacter::initialize(Direct3D9* direct3D9, Input* _input) {
+void SelectCharacter::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -28,7 +33,7 @@ void SelectCharacter::initialize(Direct3D9* direct3D9, Input* _input) {
 	selectCharacter2D.initialize(direct3D9->device, 0);
 }
 
-void SelectCharacter::update() {
+void SelectCharacter::update(float frameTime) {
 
 	camera->update();
 

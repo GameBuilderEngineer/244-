@@ -8,12 +8,14 @@
 #include "Game.h"
 #include "Result.h"
 
-
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
 	scene = new Splash();
+	hiddenCursor = true;
+	lockCursor = true;
 	scene = new Title();
 	fpsMode = FIXED_FPS;
+	ShowCursor(FALSE);
 }
 
 Director::~Director(){
@@ -24,6 +26,9 @@ Director::~Director(){
 	SAFE_DELETE(audio);
 	SAFE_DELETE(sound);
 	SAFE_DELETE(scene);
+	SAFE_DELETE(textureLoader);
+	SAFE_DELETE(staticMeshLoader);
+	ShowCursor(TRUE);
 }
 
 HRESULT Director::initialize(){
@@ -33,6 +38,21 @@ HRESULT Director::initialize(){
 		return E_FAIL;
 	MFAIL(window->initialize(instance, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME), "ウィンドウ作成失敗");
 	wnd = window->wnd;
+
+#ifdef _DEBUG
+	//debugWindow
+	debugWindow0 = new DebugWindow;
+	if (!debugWindow0)
+		return E_FAIL;
+	MFAIL(debugWindow0->initialize(instance, window->getRect().left, window->getRect().bottom, WINDOW_WIDTH, WINDOW_HEIGHT/2, DEBUG_NAME), "デバッグウィンドウ0作成失敗");
+	debugWindow1 = new DebugWindow;
+	if (!debugWindow1)
+		return E_FAIL;
+	MFAIL(debugWindow1->initialize(instance, window->getRect().right, window->getRect().top, WINDOW_WIDTH/2, WINDOW_HEIGHT, DEBUG_NAME), "デバッグウィンドウ1作成失敗");
+	SetForegroundWindow(wnd);
+#endif // _DEBUG
+
+
 	//direct3D9
 	d3d = new Direct3D9;
 	if (d3d == NULL)
@@ -47,30 +67,38 @@ HRESULT Director::initialize(){
 	input->initialize(instance,window->wnd,true);
 	window->setInput(input);
 
-	scene->initialize(d3d,input);
+	//textureLoader
+	textureLoader = new TextureLoader;
+	textureLoader->load(d3d->device);
 
 	//メッシュ読み込み
 	// Xファイルからメッシュをロードする	
 	//StaticMesh
-	setVisualDirectory();
+	staticMeshLoader = new StaticMeshLoader;
+	staticMeshLoader->load(d3d->device);
+
 	//HierarchyMesh
-	setVisualDirectory();
+	//setVisualDirectory();
 	//SKINMESH
-	setVisualDirectory();
+	//setVisualDirectory();
 
 	//Audio(XACTエンジン)
 	setSoundDirectory();
 	audio = new Audio;
 	audio->initialize();
-	//Sound(XAuido2)
-	sound = new Sound;
-	MFAIL(sound->initialize(), "サウンド初期化失敗");
-	//サウンド読み込み
-	setSoundDirectory();
-	sound->load((char*)"Chorus.wav");
+
+	//scene
+	scene->initialize(d3d,input,textureLoader,staticMeshLoader);
+
+	// 高分解能タイマーの準備を試みる
+	if (QueryPerformanceFrequency(&timerFreq) == false)
+	{
+		MSG("高分解能タイマーの取得失敗しました。");
+	}
+	// 開始時間を取得
+	QueryPerformanceCounter(&timeStart); 
 
 	return S_OK;
-
 }
 
 void Director::run(HINSTANCE _instance){
@@ -116,6 +144,7 @@ void Director::mainLoop(){
 			fpsMode = VARIABLE_FPS;
 	}
 
+	setFrameTime();
 	update();
 	render();
 	fixFPS60();
@@ -127,8 +156,22 @@ void Director::mainLoop(){
 
 void Director::update(){
 	input->update(window->windowActivate);
+	if (input->wasKeyPressed(VK_F1))
+	{
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			ShowCursor(FALSE);
+		}
+		else {
+			ShowCursor(TRUE);
+		}
+	}
+	if (input->wasKeyPressed(VK_F2))
+		lockCursor = !lockCursor;
 	audio->run();
-	scene->update();
+	scene->update(frameTime);
+	scene->collisions();
+	if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
 }
 
 void Director::render(){
@@ -139,6 +182,15 @@ void Director::render(){
 		d3d->endScene();
 	}
 	d3d->present();
+}
+
+void Director::setFrameTime()
+{
+	// 最後のフレームからの経過時間を計算、frameTimeに保存
+	QueryPerformanceCounter(&timeEnd);
+	frameTime = (float)(timeEnd.QuadPart - timeStart.QuadPart) / (float)timerFreq.QuadPart;
+
+	timeStart = timeEnd;
 }
 
 void Director::fixFPS60() {
@@ -153,14 +205,16 @@ void Director::fixFPS60() {
 		QueryPerformanceFrequency(&Frq);
 
 		QueryPerformanceCounter(&CurrentTime);
-		Time = CurrentTime.QuadPart - PreviousTime.QuadPart;
+		Time = (DOUBLE)(CurrentTime.QuadPart - PreviousTime.QuadPart);
+
 		Time *= (DOUBLE)1100.0 / (DOUBLE)Frq.QuadPart;
 
 		//ここに次フレームまでの待機中にさせたい処理を記述
-
+		if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
 	}
 	PreviousTime = CurrentTime;
 }
+
 void Director::displayFPS() {
 	//FPS計算表示
 	static LARGE_INTEGER time;
@@ -174,6 +228,7 @@ void Director::displayFPS() {
 
 	QueryPerformanceCounter(&time2);
 	elaptime = (time2.QuadPart - time.QuadPart)*microsec;
+
 	if (elaptime > 1000000)
 	{
 		QueryPerformanceCounter(&time);
@@ -186,7 +241,6 @@ void Director::displayFPS() {
 		SetWindowTextA(wnd, name);
 		frame = 0;
 	}
-
 }
 
 void Director::variableFPS(){
@@ -207,6 +261,6 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	scene->initialize(d3d,input);
+	scene->initialize(d3d,input, textureLoader, staticMeshLoader);
 	currentSceneName = scene->getSceneName();
 }

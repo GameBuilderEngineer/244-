@@ -11,9 +11,14 @@ Splash::~Splash()
 {
 }
 
-void Splash::initialize(Direct3D9* direct3D9, Input* _input) {
+void Splash::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -25,7 +30,7 @@ void Splash::initialize(Direct3D9* direct3D9, Input* _input) {
 
 }
 
-void Splash::update() {
+void Splash::update(float frameTime) {
 
 	camera->update();
 
