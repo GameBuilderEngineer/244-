@@ -22,13 +22,36 @@ void Operation::initialize(Direct3D9* direct3D9, Input* _input) {
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
 	keyOpe.initialize(direct3D9->device, 0);
+	padOpe.initialize(direct3D9->device, 0);
+
+	opeTransition = 0; // オペレーション画像入れ替え
+
 }
 
 void Operation::update() {
 
 	camera->update();
 
-	keyOpe.update();
+	// キーを押したら選択UI移動
+	if (input->wasKeyPressed(VK_RIGHT))
+	{
+		opeTransition++;
+	}
+	else if (input->wasKeyPressed(VK_LEFT))
+	{
+		opeTransition--;
+	}
+
+	// 選択UI限界
+	if (opeTransition > 1)
+	{
+		opeTransition = 0;
+	}
+	// 選択UI上限
+	else if (opeTransition < 0)
+	{
+		opeTransition = 1;
+	}
 
 	if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
 
@@ -50,7 +73,23 @@ void Operation::render3D(Direct3D9* direct3D9) {
 
 void Operation::renderUI(LPDIRECT3DDEVICE9 device) {
 
-	keyOpe.render(device);
+	switch (opeTransition)
+	{
+		// パッド説明
+	case 0:
+
+		padOpe.render(device);
+		keyOpe.render(device);
+
+		break;
+		// キーボード説明
+	case 1:
+
+		keyOpe.render(device);
+		padOpe.render(device);
+
+		break;
+	}
 }
 
 void Operation::collisions() {
@@ -64,4 +103,5 @@ void Operation::AI() {
 void Operation::uninitialize() {
 
 	keyOpe.uninitialize();
+	padOpe.uninitialize();
 }

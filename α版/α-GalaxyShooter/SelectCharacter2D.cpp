@@ -44,9 +44,9 @@ HRESULT SelectCharacter2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumbe
 	setVisualDirectory();
 	if (buffTexture == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "nTex.png", &buffTexture)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "serect.png", &buffTexture)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "nTex.png", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "serect.png", MB_OK);
 			return E_FAIL;
 		}
 	}

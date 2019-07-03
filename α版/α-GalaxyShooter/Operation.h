@@ -27,4 +27,5 @@ public:
 
 	void render3D(Direct3D9* direct3D9);
 	void renderUI(LPDIRECT3DDEVICE9 device);
+	int opeTransition; // オペレーション画像入れ替え
 };

@@ -42,9 +42,9 @@ HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 	setVisualDirectory();
 	if (texturePadOpe == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "sTex.png", &texturePadOpe)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &texturePadOpe)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "sTex.png", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
 			return E_FAIL;
 		}
 	}

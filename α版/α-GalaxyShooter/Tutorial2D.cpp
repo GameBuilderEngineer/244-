@@ -45,9 +45,9 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 	setVisualDirectory();
 	if (textureTutorial2D == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &textureTutorial2D)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "tutorial.png", &textureTutorial2D)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "tutorial.png", MB_OK);
 			return E_FAIL;
 		}
 	}

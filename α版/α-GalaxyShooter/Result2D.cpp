@@ -43,9 +43,9 @@ HRESULT Result2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 	setVisualDirectory();
 	if (buffTexture == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "sTex.png", &buffTexture)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "result.png", &buffTexture)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "sTex.png", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "result.png", MB_OK);
 			return E_FAIL;
 		}
 	}

@@ -42,9 +42,9 @@ HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 	setVisualDirectory();
 	if (textureKeyOpe == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &textureKeyOpe)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "sousasetumei.png", &textureKeyOpe)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "sousasetumei.png", MB_OK);
 			return E_FAIL;
 		}
 	}

@@ -45,9 +45,9 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 	setVisualDirectory();
 	if (textureCredit2D == NULL)
 	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &textureCredit2D)))
+		if (FAILED(D3DXCreateTextureFromFile(device, "kurezitto.png", &textureCredit2D)))
 		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
+			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "kurezitto.png", MB_OK);
 			return E_FAIL;
 		}
 	}
