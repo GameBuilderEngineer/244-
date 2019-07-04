@@ -24,7 +24,7 @@ private:
 public:
 	Tutorial2D(void);
 	~Tutorial2D(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber);
+	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader);
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device);

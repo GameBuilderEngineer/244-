@@ -6,6 +6,7 @@
 //=============================================================================
 #pragma once
 #include "Sprite.h"
+#include "AbstractScene.h"
 
 //*****************************************************************************
 // ƒNƒ‰ƒX’è‹`
@@ -26,7 +27,7 @@ public:
 	// Method
 	HitPointUI(void);
 	~HitPointUI(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber);	
+	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader);
 	void uninitialize(void);
 	void update(int hp, int hpMax);
 	void render(LPDIRECT3DDEVICE9 device);

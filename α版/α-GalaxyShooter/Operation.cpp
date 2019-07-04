@@ -25,8 +25,8 @@ void Operation::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
-	keyOpe.initialize(direct3D9->device, 0);
-	padOpe.initialize(direct3D9->device, 0);
+	keyOpe.initialize(direct3D9->device, 0, _textureLoader);
+	padOpe.initialize(direct3D9->device, 0, _textureLoader);
 
 	opeTransition = 0; // オペレーション画像入れ替え
 

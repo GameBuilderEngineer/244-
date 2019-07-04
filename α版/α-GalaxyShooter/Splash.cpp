@@ -26,7 +26,7 @@ void Splash::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _tex
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
-	splash2D.initialize(direct3D9->device,0);
+	splash2D.initialize(direct3D9->device,0, _textureLoader);
 
 }
 

@@ -6,8 +6,8 @@
 // 定数・マクロ
 //*****************************************************************************
 //マクロ定義
-const static int		WIDTH = 1280;								// パッド操作説明横サイズ
-const static int		HEIGHT = 720;								// パッド操作説明縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;						// パッド操作説明横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// パッド操作説明縦サイズ
 
 const static float		POSITION_X = 0.0f;							// パッド操作説明X座標
 const static float		POSITION_Y = 0.0f;							// パッド操作説明Y座標
@@ -34,20 +34,14 @@ PadOpe::~PadOpe()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (texturePadOpe == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &texturePadOpe)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	texturePadOpe = *textureLoader->getTexture(textureLoaderNS::PAD_OPE);
 
 	padOpe.initialize(device,
 		texturePadOpe,								// テクスチャ

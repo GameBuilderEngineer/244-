@@ -5,11 +5,20 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
+#ifdef _DEBUG
 const static int		WIDTH = 600;								// タイトル選択位置画像横サイズ
 const static int		HEIGHT = 50;								// タイトル選択位置画像縦サイズ
 
 const static float		POSITION_X = 0.0f;							// タイトル選択位置画像X座標
 static float			POSITION_Y = CNT_TITLE_START;				// タイトル選択位置画像Y座標
+#else
+const static int		WIDTH = 800;								// タイトル選択位置画像横サイズ
+const static int		HEIGHT = 80;								// タイトル選択位置画像縦サイズ
+
+const static float		POSITION_X = 0.0f;							// タイトル選択位置画像X座標
+static float			POSITION_Y = CNT_RELEASE_START;				// タイトル選択位置画像Y座標
+#endif 
+
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -33,20 +42,14 @@ TitleTransPos::~TitleTransPos()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (titleTransPosTex == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "Title_Bar.png", &titleTransPosTex)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "nTex.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	titleTransPosTex = *textureLoader->getTexture(textureLoaderNS::TITLE_POS);
 
 	titleTransPos.initialize(device,
 		titleTransPosTex,								// テクスチャ
@@ -108,27 +111,47 @@ void TitleTransPos::titleTransPosMove(void)
 	{
 		// ゲーム開始
 	case 0:
+#ifdef _DEBUG
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_START, 0));
+#else
+		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_START, 0));
+#endif 
 		break;
 
 		// チュートリアル
 	case 1:
+#ifdef _DEBUG
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_TUTORIAL, 0));
+#else
+		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_TUTORIAL, 0));
+#endif 
 		break;
 
 		// 操作方法
 	case 2:
+#ifdef _DEBUG
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_OPERATION, 0));
+#else
+		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_OPERATION, 0));
+#endif 
 		break;
 
 		// クレジット
 	case 3:
+#ifdef _DEBUG
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_CREDIT, 0));
+#else
+		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_CREDIT, 0));
+#endif 
 		break;
 
 		// ゲーム終了
 	case 4:
+#ifdef _DEBUG
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_END, 0));
+#else
+		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_END, 0));
+#endif 
 		break;
 	}
 }

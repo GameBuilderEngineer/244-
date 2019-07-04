@@ -55,11 +55,11 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
-		hp[i].initialize(direct3D9->device, i);
-		sp[i].initialize(direct3D9->device, i);
-		colonyHp[i].initialize(direct3D9->device, i);
-		missileInfomation[i].initialize(direct3D9->device, i);
-		weaponInfomation[i].initialize(direct3D9->device, i);
+		hp[i].initialize(direct3D9->device, i, _textureLoader);
+		sp[i].initialize(direct3D9->device, i, _textureLoader);
+		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
+		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
+		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
 		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
@@ -312,9 +312,6 @@ void Game::update(float frameTime) {
 	{
 		magnet[NUM_MAGNET - 1].reverseAmount();
 	}
-
-	if (input->anyKeyPressed())changeScene(nextScene);
-
 
 
 	magnet[NUM_MAGNET-1].setPosition(*player[PLAYER1].getPosition());

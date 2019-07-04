@@ -9,7 +9,7 @@
 
 #define SPLASH2D_COLOR		(D3DCOLOR_RGBA(255, 255, 255,alphaColor))	// スプラッシュの色
 #define SPLASH_ALPHA_MAX	(255)										// スプラッシュ最大アルファ値
-#define SPLASH_TIME			(1100)										// スプラッシュ消滅時間
+#define SPLASH_TIME			(350)										// スプラッシュ消滅時間
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -26,7 +26,7 @@ private:
 public:
 	Splash2D(void);
 	~Splash2D(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber);
+	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,TextureLoader*textureLoader);
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device);

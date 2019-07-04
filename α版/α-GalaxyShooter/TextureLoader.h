@@ -15,6 +15,15 @@ namespace textureLoaderNS
 		SPRITE,
 		RING,
 		UV_GRID,
+		SPLASH,
+		TITLE_POS,
+		TITLE_TRANS,
+		TUTORIAL,
+		SELECT,
+		RESULT,
+		KEY_OPE,
+		PAD_OPE,
+		CREDIT,
 		MAX_TEXTURE,
 	};
 }

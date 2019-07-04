@@ -6,8 +6,8 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		WIDTH = 1280;						// 横サイズ
-const static int		HEIGHT = 720;						// 縦サイズ					
+const static int		WIDTH = WINDOW_WIDTH;				// 横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;				// 縦サイズ					
 const static float		POSITION_X_PLAYER1 = 0.0f;			// X座標
 const static float		POSITION_X_PLAYER2 = 0.0f;
 const static float		POSITION_Y = 0.0f;					// Y座標
@@ -36,20 +36,14 @@ SelectCharacter2D::~SelectCharacter2D()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT SelectCharacter2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT SelectCharacter2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (buffTexture == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "serect.png", &buffTexture)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "serect.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	buffTexture = *textureLoader->getTexture(textureLoaderNS::SELECT);
 
 	Sprite::initialize(device,
 		buffTexture,						// テクスチャ

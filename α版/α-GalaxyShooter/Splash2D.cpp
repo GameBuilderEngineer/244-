@@ -7,19 +7,13 @@
 // 定数・マクロ
 //*****************************************************************************
 //マクロ定義
-const static int		WIDTH = 960;								// スプラッシュ2D横サイズ
-const static int		HEIGHT = 540;								// スプラッシュ2D縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;						// スプラッシュ2D横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// スプラッシュ2D縦サイズ
 static int				alphaColor = 0;								// アルファ値
 static int				time = 0;									// スプラッシュ2D消滅時間
 
-#ifdef _DEBUG
-const static float		POSITION_X = 160.0f;						// スプラッシュ2DX座標
-const static float		POSITION_Y = 80.0f;							// スプラッシュ2DY座標
-#else
-const static float		POSITION_X = 480.0f;						// スプラッシュ2DX座標
-const static float		POSITION_Y = 270.0f;						// スプラッシュ2DY座標
-#endif
-
+const static float		POSITION_X = 0.0f;							// スプラッシュ2DX座標
+const static float		POSITION_Y = 0.0f;							// スプラッシュ2DY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -44,20 +38,22 @@ Splash2D::~Splash2D()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT Splash2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT Splash2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
-	setVisualDirectory();
-	if (textureSplash2D == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "Team_Logo_Texture.png", &textureSplash2D)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "Team_Logo_Texture.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+	//setVisualDirectory();
+	//if (textureSplash2D == NULL)
+	//{
+	//	if (FAILED(D3DXCreateTextureFromFile(device, "Team_Logo_Texture.png", &textureSplash2D)))
+	//	{
+	//		MessageBox(NULL, "テクスチャの読み込みに失敗しました", "Team_Logo_Texture.png", MB_OK);
+	//		return E_FAIL;
+	//	}
+	//}
+
+	textureSplash2D = *textureLoader->getTexture(textureLoaderNS::SPLASH);
 
 	splash2D.initialize(device,
 		textureSplash2D,							// テクスチャ

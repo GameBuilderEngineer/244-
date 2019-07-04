@@ -7,8 +7,8 @@
 // 定数・マクロ
 //*****************************************************************************
 //マクロ定義
-const static int		WIDTH = 1280;								// クレジット2D横サイズ
-const static int		HEIGHT = 720;								// クレジット2D縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;						// クレジット2D横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// クレジット2D縦サイズ
 
 const static float		POSITION_X = 0.0f;							// クレジット2DX座標
 const static float		POSITION_Y = 0.0f;							// クレジット2DY座標
@@ -37,7 +37,7 @@ Credit2D::~Credit2D()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
@@ -51,6 +51,8 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 			return E_FAIL;
 		}
 	}
+
+	textureCredit2D = *textureLoader->getTexture(textureLoaderNS::CREDIT);
 
 	credit2D.initialize(device,
 		textureCredit2D,							// テクスチャ

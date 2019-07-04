@@ -7,11 +7,11 @@
 // 定数・マクロ
 //*****************************************************************************
 //マクロ定義
-const static int		WIDTH = 960;								// チュートリアル2D横サイズ
-const static int		HEIGHT = 540;								// チュートリアル2D縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;						// チュートリアル2D横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// チュートリアル2D縦サイズ
 
-const static float		POSITION_X = 160.0f;						// チュートリアル2DX座標
-const static float		POSITION_Y = 80.0f;							// チュートリアル2DY座標
+const static float		POSITION_X = 0.0f;							// チュートリアル2DX座標
+const static float		POSITION_Y = 0.0f;							// チュートリアル2DY座標
 
 //*****************************************************************************
 // グローバル変数
@@ -37,20 +37,14 @@ Tutorial2D::~Tutorial2D()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (textureTutorial2D == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "tutorial.png", &textureTutorial2D)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "tutorial.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	textureTutorial2D = *textureLoader->getTexture(textureLoaderNS::TUTORIAL);
 
 	tutorial2D.initialize(device,
 		textureTutorial2D,							// テクスチャ

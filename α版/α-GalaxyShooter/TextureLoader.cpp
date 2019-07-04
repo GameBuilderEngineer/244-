@@ -15,6 +15,15 @@ TextureLoader::TextureLoader()
 	textureName[SPRITE] = {"Sprite.jpg"};
 	textureName[RING] = {"ring.png"};
 	textureName[UV_GRID] = {"UVƒOƒŠƒbƒh.png"};
+	textureName[SPLASH] = { "Team_Logo_Texture.png" };
+	textureName[TITLE_POS] = { "Title_Bar.png" };
+	textureName[TITLE_TRANS] = { "Title.png" };
+	textureName[TUTORIAL] = { "tutorial.png" };
+	textureName[SELECT] = { "serect.png" };
+	textureName[RESULT] = { "result.png" };
+	textureName[KEY_OPE] = { "sousasetumei.png" };
+	textureName[PAD_OPE] = { "MissileUI.jpg" };
+	textureName[CREDIT] = { "kurezitto.png" };
 }
 
 

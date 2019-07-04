@@ -6,8 +6,8 @@
 // 定数・マクロ
 //*****************************************************************************
 //マクロ定義
-const static int		WIDTH = 1280;								// キーボード操作説明横サイズ
-const static int		HEIGHT = 720;								// キーボード操作説明縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;						// キーボード操作説明横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// キーボード操作説明縦サイズ
 
 const static float		POSITION_X = 0.0f;							// キーボード操作説明X座標
 const static float		POSITION_Y = 0.0f;							// キーボード操作説明Y座標
@@ -34,20 +34,14 @@ KeyOpe::~KeyOpe()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (textureKeyOpe == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "sousasetumei.png", &textureKeyOpe)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "sousasetumei.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	textureKeyOpe = *textureLoader->getTexture(textureLoaderNS::KEY_OPE);
 
 	keyOpe.initialize(device,
 		textureKeyOpe,								// テクスチャ

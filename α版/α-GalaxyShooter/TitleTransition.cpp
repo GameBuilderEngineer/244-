@@ -5,8 +5,8 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		WIDTH = 1280;								// タイトル遷移画像横サイズ
-const static int		HEIGHT = 720;								// タイトル遷移画像縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;								// タイトル遷移画像横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;								// タイトル遷移画像縦サイズ
 
 const static float		POSITION_X = 0.0f;							// タイトル遷移画像X座標
 const static float		POSITION_Y = 0.0f;							// タイトル遷移画像Y座標
@@ -34,20 +34,14 @@ TitleTransition::~TitleTransition()
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (titleTransTex == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "Title.png", &titleTransTex)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "ColonyHitPointUI.jpg", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	titleTransTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TRANS);
 
 	titleTrans.initialize(device,
 		titleTransTex,									// テクスチャ

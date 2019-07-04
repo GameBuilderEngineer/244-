@@ -5,7 +5,7 @@
 #pragma once
 #include "Sprite.h"
 #include "Input.h"
-
+#include "AbstractScene.h"
 
 #define TITLE_TRANS_COLOR		(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイトル遷移画像の色
 //*****************************************************************************
@@ -22,7 +22,7 @@ private:
 public:
 	TitleTransition(void);
 	~TitleTransition(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber);
+	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader);
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device);

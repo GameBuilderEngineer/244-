@@ -45,20 +45,15 @@ WeaponUI::~WeaponUI(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT WeaponUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT WeaponUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (buffTexture == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "WeaponUI.jpg", &buffTexture)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "WeaponUI.jpg", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	buffTexture = *textureLoader->getTexture(textureLoaderNS::UI_WEAPON);
+
 	D3DCOLOR c = DEFAULT_COLOR;
 	Sprite::initialize(device,
 		buffTexture,						// テクスチャ
