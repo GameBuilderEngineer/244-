@@ -47,12 +47,14 @@ HRESULT DebugWindow::initialize(HINSTANCE instance, INT x, INT y, INT width, INT
 	//ウィンドウの表示
 	ShowWindow(wnd, SW_SHOW);
 	UpdateWindow(wnd);
+
 	initialized = true;
 	return S_OK;
 }
 LRESULT DebugWindow::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (!initialized)	return DefWindowProc(wnd, msg, wParam, lParam);
 	if (input == NULL)	return DefWindowProc(wnd, msg, wParam, lParam);
+	HDC hdc;
 	switch (msg)
 	{
 	case WM_ACTIVATE:
@@ -61,10 +63,16 @@ LRESULT DebugWindow::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	case WM_PAINT:
+		hdc = GetDC(wnd);
+
+		ReleaseDC(wnd, hdc);
+
 	case WM_KEYDOWN:case WM_SYSKEYDOWN: // キーが押された
 		if (wParam == VK_ESCAPE)
 			PostQuitMessage(0);
 		return 0;
+
 	}
 	return DefWindowProc(wnd, msg, wParam, lParam);
 }

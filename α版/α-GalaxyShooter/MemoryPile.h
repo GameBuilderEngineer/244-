@@ -10,6 +10,5 @@ public:
 	void update(float frameTime);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 
-
 };
 

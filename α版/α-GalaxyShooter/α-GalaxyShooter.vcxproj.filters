@@ -175,6 +175,9 @@
     <Filter Include="Object\LostThing">
       <UniqueIdentifier>{841eed46-062a-4e78-a3ee-e22c2bafa361}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window\DebugWindow">
+      <UniqueIdentifier>{667c5df3-6df3-414a-aa95-702711604679}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -312,9 +315,6 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Object\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="DebugWindow.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
     <ClCompile Include="GameMaster.cpp">
       <Filter>GameMaster</Filter>
     </ClCompile>
@@ -336,7 +336,12 @@
     <ClCompile Include="LostThing.cpp">
       <Filter>Object\LostThing</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryPile.cpp" />
+    <ClCompile Include="MemoryPile.cpp">
+      <Filter>Object\MemoryPile</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>Window\DebugWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -438,9 +443,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>Object\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="DebugWindow.h">
-      <Filter>Window</Filter>
-    </ClInclude>
     <ClInclude Include="GameMaster.h">
       <Filter>GameMaster</Filter>
     </ClInclude>
@@ -462,7 +464,12 @@
     <ClInclude Include="LostThing.h">
       <Filter>Object\LostThing</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryPile.h" />
+    <ClInclude Include="MemoryPile.h">
+      <Filter>Object\MemoryPile</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>Window\DebugWindow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

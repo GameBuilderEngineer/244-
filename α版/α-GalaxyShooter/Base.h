@@ -18,8 +18,8 @@
 #ifdef _DEBUG
 #define APP_NAME (LPSTR)"Galaxy Shooter ver.ƒ¿-Debug-"
 #define DEBUG_NAME (LPSTR)"DebugWindow"
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 960
+#define WINDOW_HEIGHT 540
 #define   new                   new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #define   malloc(s)             _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #define   calloc(c, s)          _calloc_dbg(c, s, _NORMAL_BLOCK, __FILE__, __LINE__)

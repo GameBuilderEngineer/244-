@@ -1,9 +1,9 @@
 #include "MemoryPile.h"
 
 
-
 MemoryPile::MemoryPile()
 {
+	inActivation();
 }
 
 
@@ -14,7 +14,6 @@ MemoryPile::~MemoryPile()
 void MemoryPile::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
 	Object::initialize(device, _staticMesh, _position);
-
 }
 
 void MemoryPile::update(float frameTime)

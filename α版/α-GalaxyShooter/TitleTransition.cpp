@@ -5,8 +5,8 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		WIDTH = 1280;								// タイトル遷移画像横サイズ
-const static int		HEIGHT = 720;								// タイトル遷移画像縦サイズ
+const static int		WIDTH = WINDOW_WIDTH;								// タイトル遷移画像横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;								// タイトル遷移画像縦サイズ
 
 const static float		POSITION_X = 0.0f;							// タイトル遷移画像X座標
 const static float		POSITION_Y = 0.0f;							// タイトル遷移画像Y座標

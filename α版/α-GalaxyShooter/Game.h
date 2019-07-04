@@ -43,8 +43,12 @@ namespace gameNS
 	};
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
 	{
-		D3DXQUATERNION(0,20.0f,-40,0.0f),
-		D3DXQUATERNION(0,100,-500,0.0f)
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
+#ifdef _DEBUG
+		D3DXQUATERNION(0.0f,100.0f,-500,0.0f)
+#else
+		D3DXQUATERNION(0.0f,20.0f,-400,0.0f)
+#endif // _DEBUG
 	};
 	
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
@@ -57,7 +61,8 @@ namespace gameNS
 
 	const int NUM_1P_MEMORY_PILE = 5;
 	const int NUM_2P_MEMORY_PILE = 5;
-
+	const float INTERVAL_TIME_BULLET1 = 0.2f;
+	const float INTERVAL_TIME_BULLET2 = 0.2f;
 }
 
 class Game : public AbstractScene
@@ -85,6 +90,18 @@ private:
 
 
 	bool onUI = true;
+	int currentBullet1;//‰¼
+	int currentBullet2;//‰¼
+	float intervalBullet1;
+	float intervalBullet2;
+	int currentMemoryPile1;//‰¼
+	int currentMemoryPile2;//‰¼
+	float FrameTime = 0.0f;//‰¼
+
+	int reverseValue1PXAxis;
+	int reverseValue1PYAxis;
+	int reverseValue2PXAxis;
+	int reverseValue2PYAxis;
 
 public:
 	Game();
