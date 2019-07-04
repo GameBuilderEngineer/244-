@@ -276,7 +276,7 @@ void Game::update(float frameTime) {
 		if (input->wasKeyPressed(VK_F4))reverseValue1PYAxis*=-1;
 		//1Pカメラ制御
 		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue1PXAxis));
-		camera[PLAYER1].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue1PYAxis));
+		camera[PLAYER1].rotation(camera[PLAYER1].getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue1PYAxis));
 
 		if (input->isKeyDown('G')) {
 			//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
@@ -286,8 +286,8 @@ void Game::update(float frameTime) {
 		};
 
 		if (input->getController()[PLAYER1]->checkConnect()) {
-			camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f);
-			camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f);
+			camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f*reverseValue1PXAxis);
+			camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f*reverseValue1PYAxis);
 		}
 		//2Pをロックオン(未完)
 		if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
@@ -299,12 +299,12 @@ void Game::update(float frameTime) {
 		//2Pカメラ制御
 		if (input->getMouseLButton()) {
 			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue2PXAxis));
-			camera[PLAYER2].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue2PYAxis));
+			camera[PLAYER2].rotation(camera[PLAYER2].getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue2PYAxis));
 		};
 
 		if (input->getController()[PLAYER2]->checkConnect()) {
-			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x*0.001f);
-			camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y*0.001f);
+			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x * 0.001f * reverseValue2PXAxis);
+			camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y * 0.001f * reverseValue2PYAxis);
 		}
 
 		for (int i = 0; i < NUM_PLAYER; i++)
