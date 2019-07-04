@@ -2,15 +2,21 @@
 #include "Direct3D9.h"
 using namespace gameNS;
 
-int currentBullet1;//仮
-int currentBullet2;//仮
-float FrameTime = 0.0f;//仮
-
 Game::Game()
 {
 	sceneName = "Scene -Game-";
+	currentMemoryPile1 = 0;
+	currentMemoryPile2 = 0;
+	intervalBullet1 = 0;
+	intervalBullet2 = 0;
 	currentBullet1 = 0;
 	currentBullet2 = 0;
+
+	reverseValue1PXAxis = 1;
+	reverseValue1PYAxis = 1;
+	reverseValue2PXAxis = 1;
+	reverseValue2PYAxis = 1;
+
 	nextScene = SceneList::RESULT;
 }
 
@@ -74,7 +80,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 			player[i].postureControl(player[i].getAxisY()->direction, gravityDirection, 1.0f);
 			player[i].setGravity(gravityDirection, playerNS::GRAVITY_FORCE);
 		}
-
 	}
 
 	for (int i = 0; i < NUM_MAGNET; i++)
@@ -94,22 +99,21 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 		//bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
 	}
 
-
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
 	text2.initialize(direct3D9->device,11,11, 0xff0000ff);
-
 
 	//ガラクタ
 	for (int i = 0; i < JUNK_MAX; i++)
 	{
 		D3DXVECTOR3 position((float)(rand()%100-50), (float)(rand()%100-50), (float)(rand()%100-50));
-
 		D3DXVec3Normalize(&position, &position);
 		position *= 100;
 		junk[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON], &position);
 	}
+
 	//ポイントスプライト
 	pointSprite.initilaize(direct3D9->device);
+
 	//インスタンスプレーン
 	plane.createPositionSpherical(1000, 300.0f);
 	plane.initialize(direct3D9->device);
@@ -123,8 +127,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	{
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
-
-
 
 }
 
@@ -223,7 +225,14 @@ void Game::update(float frameTime) {
 
 	//バレットの発射
 	//動的生成にしたい
-	if (input->getMouseLButton() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::R1))
+	if (intervalBullet1 > 0)
+		intervalBullet1 -= frameTime;
+	else 
+		intervalBullet1 = 0;
+	if (intervalBullet2 > 0)intervalBullet2 -= frameTime;
+	else intervalBullet2 = 0;
+	if ((input->getMouseLButton() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::R1))
+		&& intervalBullet1 == 0)
 	{
 		bullet1[currentBullet1].setPosition(*player[PLAYER1].getPosition());
 		//Y軸方向への成分を削除する
@@ -236,14 +245,23 @@ void Game::update(float frameTime) {
 		bullet1[currentBullet1].Object::update();
 		currentBullet1++;
 		if (currentBullet1 >= NUM_BULLET)currentBullet1 = 0;
+		intervalBullet1 = INTERVAL_TIME_BULLET1;
 	}
-	if (input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
+	if ((input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
+		&& intervalBullet2 == 0)
 	{
 		bullet2[currentBullet2].setPosition(*player[PLAYER2].getPosition());
-		bullet2[currentBullet2].addSpeed(player[PLAYER2].getAxisZ()->direction*0.2);
+		//Y軸方向への成分を削除する
+		D3DXVECTOR3 front = slip(camera[PLAYER2].getDirectionZ(), player[PLAYER2].getAxisY()->direction);
+		D3DXVec3Normalize(&front, &front);//正規化
+		bullet2[currentBullet2].addSpeed(front*0.2);//速度を加算
 		bullet2[currentBullet2].setQuaternion(player[PLAYER2].getQuaternion());
+		bullet2[currentBullet2].postureControl(player[PLAYER2].getAxisZ()->direction, front,1.0f);
+		bullet2[currentBullet2].activation();
+		bullet2[currentBullet2].Object::update();
 		currentBullet2++;
 		if (currentBullet2 >= NUM_BULLET)currentBullet2 = 0;
+		intervalBullet2 = INTERVAL_TIME_BULLET2;
 	}
 
 	for (int i = 0; i < NUM_BULLET; i++)
@@ -253,90 +271,132 @@ void Game::update(float frameTime) {
 	}
 
 	//カメラの回転
-
-	//1Pカメラ制御
-	camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX()));
-	camera[PLAYER1].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY()));
-
-	if (input->isKeyDown('G')) {
-		//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
-	};
-	if (input->isKeyDown('J')) {
-		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
-	};
-
-	if (input->getController()[PLAYER1]->checkConnect()) {
-		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f);
-		camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f);
-	}
-	//2Pをロックオン
-	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
-		camera[PLAYER1].lockOn(*player[PLAYER2].getPosition(),frameTime);
-	}
-
-	//2Pカメラ制御
-	if (input->getMouseLButton()) {
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX()));
-	};
-
-	if (input->getController()[PLAYER2]->checkConnect()) {
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x*0.001f);
-		camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y*0.001f);
-	}
-
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{//カメラの更新
-		camera[i].setUpVector(player[i].getAxisY()->direction);
-		camera[i].update();
-	}
-
-	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		hp[i].update(player[i].getHp(),player[i].getMaxHp());
-		sp[i].update(player[i].getSp(), player[i].getMaxSp());
-		colonyHp[i].update();
-		missileInfomation[i].update();
-		weaponInfomation[i].update();
+		if (input->wasKeyPressed(VK_F3))reverseValue1PXAxis*=-1;
+		if (input->wasKeyPressed(VK_F4))reverseValue1PYAxis*=-1;
+		//1Pカメラ制御
+		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue1PXAxis));
+		camera[PLAYER1].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue1PYAxis));
+
+		if (input->isKeyDown('G')) {
+			//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
+		};
+		if (input->isKeyDown('J')) {
+			//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
+		};
+
+		if (input->getController()[PLAYER1]->checkConnect()) {
+			camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f);
+			camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f);
+		}
+		//2Pをロックオン(未完)
+		if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
+			camera[PLAYER1].lockOn(*player[PLAYER2].getPosition(),frameTime);
+		}
+
+		if (input->wasKeyPressed(VK_F5))reverseValue2PXAxis*=-1;
+		if (input->wasKeyPressed(VK_F6))reverseValue2PYAxis*=-1;
+		//2Pカメラ制御
+		if (input->getMouseLButton()) {
+			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue2PXAxis));
+			camera[PLAYER2].rotation(camera->getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue2PYAxis));
+		};
+
+		if (input->getController()[PLAYER2]->checkConnect()) {
+			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x*0.001f);
+			camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y*0.001f);
+		}
+
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{//カメラの更新
+			camera[i].setUpVector(player[i].getAxisY()->direction);
+			camera[i].update();
+		}
+	}
+
+	//プレイヤーの更新
+	{
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			hp[i].update(player[i].getHp(), player[i].getMaxHp());
+			sp[i].update(player[i].getSp(), player[i].getMaxSp());
+			colonyHp[i].update();
+			missileInfomation[i].update();
+			weaponInfomation[i].update();
+		}
 	}
 
 	// コロニーアップデート
-	colony[0].update();
-
-	for (int i = 0; i < JUNK_MAX; i++)
 	{
-		// ガラクタアップデート
-		junk[i].update(frameTime, *field.getMesh(), field.getMatrixWorld(),*field.getPosition());
-	}
+		colony[0].update();
 
-	if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
-	{
-		magnet[NUM_MAGNET - 1].reverseAmount();
-	}
-
-
-	magnet[NUM_MAGNET-1].setPosition(*player[PLAYER1].getPosition());
-	magnet[1].setPosition(*player[PLAYER2].getPosition());
-
-	//磁石の更新
-	for (int i = 0; i < NUM_MAGNET; i++)
-	{
-		for (int j = 0; j < NUM_MAGNET; j++)
+		for (int i = 0; i < JUNK_MAX; i++)
 		{
-			if(j != i)
-				magnet[i].calculationMagneticeForce(magnet[j]);
+			// ガラクタアップデート
+			junk[i].update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
 		}
 	}
-	for (int i = 0; i < NUM_MAGNET; i++)
+
+	//磁石の更新
 	{
-		magnet[i].update();
+		if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::A))
+		{
+			magnet[NUM_MAGNET - 1].reverseAmount();
+		}
+		magnet[NUM_MAGNET - 1].setPosition(*player[PLAYER1].getPosition());
+		magnet[1].setPosition(*player[PLAYER2].getPosition());
+		for (int i = 0; i < NUM_MAGNET; i++)
+		{
+			for (int j = 0; j < NUM_MAGNET; j++)
+			{
+				if (j != i)
+					magnet[i].calculationMagneticeForce(magnet[j]);
+			}
+		}
+		for (int i = 0; i < NUM_MAGNET; i++)
+		{
+			magnet[i].update();
+		}
 	}
 
-	//1Pのメモリーパイルの更新
-	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+	//メモリーパイルの更新
 	{
-		memoryPile1P[i].update(frameTime);
+		//1Pのメモリーパイルのセット
+		if ( input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1))
+		{
+			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
+			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
+			memoryPile1P[currentMemoryPile1].activation();
+			memoryPile1P[currentMemoryPile1].Object::update();
+			currentMemoryPile1++;
+			if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)currentMemoryPile1 = 0;
+		}
+
+		//2Pのメモリーパイルのセット
+		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
+		{
+			memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2].getPosition());
+			memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2].getQuaternion());
+			memoryPile2P[currentMemoryPile2].activation();
+			memoryPile2P[currentMemoryPile2].Object::update();
+			currentMemoryPile2++;
+			if (currentMemoryPile2 >= NUM_2P_MEMORY_PILE)currentMemoryPile2 = 0;
+		}
+
+
+		//1Pのメモリーパイルの更新
+		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		{
+			memoryPile1P[i].update(frameTime);
+		}
+		//2Pのメモリーパイルの更新
+		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+		{
+			memoryPile2P[i].update(frameTime);
+		}
 	}
 
+	//if (input->anyKeyPressed())changeScene(nextScene);
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -364,6 +424,7 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	{//プレイヤーの描画
 		player[i].toonRender(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
 	}
+	
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
 		bullet1[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
@@ -386,7 +447,7 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	
+
 	//(仮)//マグネットの描画
 	for (int i = 0; i < NUM_MAGNET; i++)
 	{
@@ -395,9 +456,22 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device,currentCamera.position);
-	
+
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//メモリーパイルの描画
+	{
+		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		{
+			memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		}
+		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+		{
+			memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		}
+	}
+
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -412,8 +486,6 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 #ifdef _DEBUG
-
-
 	text.print(50, 200,
 		"difference:%.3f\n",difference);
 	text.print(10, 150,

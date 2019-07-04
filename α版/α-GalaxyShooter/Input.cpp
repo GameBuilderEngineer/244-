@@ -343,8 +343,73 @@ void Input::update(bool windowActivate)
 	}
 	for (int i = 0; i < connectNum; i++)
 	{
-			virtualController[i]->update();
+		virtualController[i]->update();
 	}
-
+	updateMouse();
 }
 
+void Input::updateMouse(void)
+{
+	if (getMouseLButton())
+	{
+		if (mouseBuffer[0] == false)
+		{
+			mouseButtonTrigger[0] = true;
+			mouseBuffer[0] = true;
+		}
+		else
+		{
+			mouseButtonTrigger[0] = false;
+		}
+	}
+	else
+	{
+		if (mouseBuffer[0] == true)
+		{
+			mouseButtonTrigger[0] = false;
+			mouseBuffer[0] = false;
+		}
+	}
+
+	if (getMouseMButton())
+	{
+		if (mouseBuffer[1] == false)
+		{
+			mouseButtonTrigger[1] = true;
+			mouseBuffer[1] = true;
+		}
+		else
+		{
+			mouseButtonTrigger[1] = false;
+		}
+	}
+	else
+	{
+		if (mouseBuffer[1] == true)
+		{
+			mouseButtonTrigger[1] = false;
+			mouseBuffer[1] = false;
+		}
+	}
+
+	if (getMouseRButton())
+	{
+		if (mouseBuffer[2] == false)
+		{
+			mouseButtonTrigger[2] = true;
+			mouseBuffer[2] = true;
+		}
+		else
+		{
+			mouseButtonTrigger[2] = false;
+		}
+	}
+	else
+	{
+		if (mouseBuffer[2] == true)
+		{
+			mouseButtonTrigger[2] = false;
+			mouseBuffer[2] = false;
+		}
+	}
+}

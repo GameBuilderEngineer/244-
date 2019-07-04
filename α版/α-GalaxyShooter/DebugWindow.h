@@ -11,6 +11,7 @@ public:
 	Input* input;
 	LPRECT rect;
 
+
 	bool windowActivate;
 	bool initialized;
 	//Method

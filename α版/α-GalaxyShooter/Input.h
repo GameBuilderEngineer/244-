@@ -56,6 +56,9 @@ private:
 	bool mouseRButton;				// マウスの右ボタンが押されている場合はtrue
 	bool mouseX1Button;				// X1のマウスボタンが押されている場合はtrue
 	bool mouseX2Button;				// X2のマウスボタンが押されている場合はtrue
+	bool mouseBuffer[5] = { false,false,false,false,false };
+	bool mouseButtonTrigger[5] = { false,false,false,false,false };						// マウスのボタンが押された時一度だけtrue,順番は上準拠;
+
 	//-----------------------
 	//DInputController
 	//-----------------------
@@ -110,10 +113,16 @@ public:
 	int getMouseRawX()	const { return mouseRawX; }			// マウスのX位置の移動のローデータを戻す。左への移動は<0、右への移動は>0//高精細マウスと互換性があります。
 	int getMouseRawY()	const { return mouseRawY; }			// マウスのY位置の移動のローデータを戻す。左への移動は<0、右への移動は>0// 高精細マウスと互換性があります。
 	bool getMouseLButton()	const { return mouseLButton; }	// 左マウスボタンの状態を戻す
+	bool getMouseLButtonTrigger() { return mouseButtonTrigger[0]; }	// 左マウスボタンのトリガー情報を戻す
 	bool getMouseMButton()	const { return mouseMButton; }	// 中央マウスボタンの状態を戻す
+	bool getMouseMButtonTrigger() { return mouseButtonTrigger[1]; }// 中央マウスボタンのトリガー情報を戻す
 	bool getMouseRButton()	const { return mouseRButton; }	// 右マウスボタンの状態を戻す
+	bool getMouseRButtonTrigger() { return mouseButtonTrigger[2]; }	// 右マウスボタンのトリガー情報を戻す
 	bool getMouseX1Button()	const { return mouseX1Button; }	// X1マウスボタンの状態を戻す
+	bool getMouseX1ButtonTrigger() { return mouseButtonTrigger[3]; }	// X1マウスボタンのトリガー情報を戻す
 	bool getMouseX2Button()	const { return mouseX2Button; }	// X2マウスボタンの状態を戻す
+	bool getMouseX2ButtonTrigger() { return mouseButtonTrigger[4]; }	// X2マウスボタンのトリガー情報を戻す
+	void updateMouse();
 
 	//-----------------------
 	//DInputController

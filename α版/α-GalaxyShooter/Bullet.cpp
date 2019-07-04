@@ -74,7 +74,6 @@ void Bullet::update(float frameTime, LPD3DXMESH fieldMesh,D3DXMATRIX matrix)
 	//épê®êßå‰
 	postureControl(axisY.direction, reverseAxisY.normal, 3.0f * frameTime);
 
-
 	Object::update();
 }
 
