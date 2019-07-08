@@ -15,12 +15,18 @@
 #include "BlackBoardMemory.h"
 
 
-
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class AgentAI {
 private:
+	// Data
+	static int	numAgent;	// AIの数  
+	int			aiID;		// AIの固有識別番号
+	// Playerクラスに必要だと思われる
+	//bool isNPC;
+	//int characterID;
+
 	// アービター：各モジュールのタイミングや切り替えを制御
 	Arbiter *arbiter;								// 調停者（Arbiter）
 
@@ -35,13 +41,6 @@ private:
 	RecognitionBB			*recognitionBB; 		// 環境認識
 	BodyBB					*bodyBB; 				// 身体状態
 	MemoryBB				*memoryBB; 				// 記憶
-
-	// Playerクラスに必要だと思われる
-	//bool isNPC;
-	//int characterID;
-
-	// Data
-	int aiID;							// AIの固有識別番号
 
 public:
 	// Method

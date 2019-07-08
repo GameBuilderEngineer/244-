@@ -17,7 +17,8 @@ public:
 	// Method
 	BlackBoardBase(void);
 	~BlackBoardBase(void);
-	virtual void initialize(void);			// 初期化処理
-	virtual void uninitialize(void);		// 終了処理
-	void* getPage(int page) { return index[page]; }
+	virtual void initialize(void);					// 初期化処理
+	virtual void uninitialize(void);				// 終了処理
+	virtual bool getAccessPermission(int tag) = 0;	// モジュールにアクセス許可を返す
+	void* getPage(int page) { return index[page]; }	// ページを取得
 };

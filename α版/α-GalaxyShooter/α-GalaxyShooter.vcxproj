@@ -133,6 +133,7 @@
     <ClCompile Include="BlackBoardRecognition.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ChinginTable.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Wasuremono.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -181,6 +183,7 @@
     <ClInclude Include="BlackBoardRecognition.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ChinginTable.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="DecisionMaking.h" />
@@ -213,6 +216,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="VirtualController.h" />
+    <ClInclude Include="Wasuremono.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

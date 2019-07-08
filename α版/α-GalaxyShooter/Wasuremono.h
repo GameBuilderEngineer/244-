@@ -1,34 +1,34 @@
 //-----------------------------------------------------------------------------
-// 身体ブラックボード処理 [BlackBoardBody.h]
+// チンギンデータ処理[Wasuremono.h]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/19
+// 作成日：2019/7/8
 //-----------------------------------------------------------------------------
-#include "BlackBoardBase.h"
+#pragma once
+#include "Object.h"
+#include "ChinginTable.h"
 
 //*****************************************************************************
 // 定数定義
 //*****************************************************************************
-namespace BlackBoardBodyNS
-{
-	enum
-	{
-		NUM_PAGE
-	};
-}
 
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class BodyBB : public BlackBoardBase {
-protected:
-	// Data
+class Wasuremono :public Object
+{
+private:
+	int id;
+	ChinginTable* p;
 
 public:
-	// Method
-	BodyBB(void);
-	~BodyBB(void);
-	void initialize(void) override;				// 初期化処理
-	void uninitialize(void) override;			// 終了処理
-	bool getAccessPermission(int tag) override;	// モジュールにアクセス許可を返す
+	Wasuremono(void);
+	~Wasuremono(void);
+	void initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position);
+	void update(void);
+	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	void move(D3DXVECTOR2 moveDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ);
+	void jump(void);
 };
+
+

@@ -3,6 +3,7 @@
 // Author：GP12A332 32 中込和輝
 // 作成日：2019/6/19
 //-----------------------------------------------------------------------------
+#include "AIcommon.h"
 #include "BlackBoardMemory.h"
 
 //=============================================================================
@@ -40,3 +41,20 @@ void MemoryBB::uninitialize(void)
 
 }
 
+
+//=============================================================================
+// モジュールにアクセス許可を返す
+//=============================================================================
+bool MemoryBB::getAccessPermission(int tag)
+{
+	switch (tag)
+	{
+	case Module::PATH_PLANNING:
+	case Module::DECISION_MAKING:
+	case Module::MOTION_GENERATION:
+		return true;
+
+	default:
+		return false;
+	}
+}

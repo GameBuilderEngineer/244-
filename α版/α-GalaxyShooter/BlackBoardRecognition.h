@@ -11,9 +11,9 @@
 //*****************************************************************************
 // 定数定義
 //*****************************************************************************
-namespace RecognitionNS
+namespace Page
 {
-	enum INDEX_RECOBNITION_BLACK_BOARD
+	enum PAGE
 	{
 		// from Sensor
 		DISTANCE_TO_OPPONENT_CRISP_DATA,
@@ -21,28 +21,34 @@ namespace RecognitionNS
 		DISTANCE_TO_XXXXXXX2_CRISP_DATA,
 		DISTANCE_TO_XXXXXXX3_CRISP_DATA,
 		DISTANCE_TO_XXXXXXX4_CRISP_DATA,
+		_DUMMY_COUNT_DISTANCE_CRISP_DATA,
 
 		// from EnvironmentAnalysis
 		DISTANCE_TO_OPPONENT_FUZZY_DATA,
 		DISTANCE_TO_XXXXXXX1_FUZZY_DATA,
 		DISTANCE_TO_XXXXXXX2_FUZZY_DATA,
 		DISTANCE_TO_XXXXXXX3_FUZZY_DATA,
-		DISTANCE_TO_XXXXXXX4_FUZZY_DATA,
-
-		NUM_PAGE
+		_DUMMY_COUNT_DISTANCE_FUZZY_DATA,
 	};
-};
 
+	// 各種類ごとのページ数（ページが増えたらここに追加する）
+	const static int NUM_DISTANCE_CRISP_DATA = _DUMMY_COUNT_DISTANCE_CRISP_DATA;
+	const static int NUM_DISTANCE_FUZZY_DATA = _DUMMY_COUNT_DISTANCE_FUZZY_DATA - _DUMMY_COUNT_DISTANCE_CRISP_DATA + 1;
+
+	// ページ総数（ページが増えたらここに追加する）
+	const static int NUM_PAGE_RECOGNITION_BB = NUM_DISTANCE_CRISP_DATA + NUM_DISTANCE_FUZZY_DATA;
+};
 
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class RecognitionBB : public BlackBoardBase {
+class RecognitionBB : public BlackBoardBase
+{
 protected:
 	// Data
-	float vecLength[NUM_TARGET];
-	FuzzyDistance fuzzyDistance[NUM_TARGET];
+	float vecLength[Target::NUM_MAX];
+	FuzzyDistance fuzzyDistance[Target::NUM_MAX];
 
 public:
 	// Method
@@ -50,4 +56,5 @@ public:
 	~RecognitionBB(void);
 	void initialize(void) override;				// 初期化処理
 	void uninitialize(void) override;			// 終了処理
+	bool getAccessPermission(int tag) override;	// モジュールにアクセス許可を返す
 };

@@ -26,7 +26,7 @@ private:
 	DWORD decisionMakingLastFrame;	// 意思決定を最後に更新したのが何フレーム目か記録
 	DWORD motionGenerationLastFrame;// 運動生成を最後に更新したのが何フレーム目か記録
 
-	KnowledgeSourceBase *module[NUM_KNOWLEDGE_SOURCE];// 各モジュールのアドレス
+	KnowledgeSourceBase *module[Module::NUM_MAX];// 各モジュールのアドレス
 
 public:
 	// Method

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "Sensor.h"
 #include "BlackBoardRecognition.h"
-using namespace RecognitionNS;
+#include <memory>
 
 //=============================================================================
 // コンストラクタ
@@ -49,6 +49,16 @@ void Sensor::uninitialize(void)
 void Sensor::update(void)
 {
 	// 工事中
-	const float* test1 = read<float>(bb[ENVIRONMENT_RECOGNITION], DISTANCE_TO_OPPONENT_CRISP_DATA);
-	float test2 = copy<float>(bb[ENVIRONMENT_RECOGNITION], DISTANCE_TO_XXXXXXX1_CRISP_DATA);
+	const float& test1 = read<float>(BB::ENVIRONMENT_RECOGNITION, Page::DISTANCE_TO_XXXXXXX4_CRISP_DATA);
+	float test2 = copy<float>(BB::ENVIRONMENT_RECOGNITION, Page::DISTANCE_TO_XXXXXXX3_FUZZY_DATA);
+
+	write(BB::ENVIRONMENT_RECOGNITION, Page::DISTANCE_TO_OPPONENT_FUZZY_DATA, test2);
+
+	//// forで回したい
+	//const float* test[NUM_DISTANCE_CRISP_DATA];
+	//for (int i = 0; i < NUM_DISTANCE_CRISP_DATA; i++)
+	//{
+	//	test[i] = read<float>(ENVIRONMENT_RECOGNITION, DISTANCE_TO_OPPONENT_CRISP_DATA);
+	//}
+	
 }

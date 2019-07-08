@@ -255,6 +255,12 @@
     <ClCompile Include="DecisionMaking.cpp">
       <Filter>AI\KnowledgeSource</Filter>
     </ClCompile>
+    <ClCompile Include="ChinginTable.cpp">
+      <Filter>Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Wasuremono.cpp">
+      <Filter>Scene\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -394,6 +400,12 @@
     </ClInclude>
     <ClInclude Include="DecisionMaking.h">
       <Filter>AI\KnowledgeSource</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginTable.h">
+      <Filter>Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Wasuremono.h">
+      <Filter>Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

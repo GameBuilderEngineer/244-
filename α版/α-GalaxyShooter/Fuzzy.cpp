@@ -8,7 +8,7 @@
 //=============================================================================
 // メンバーシップ関数「上昇斜辺」／
 //=============================================================================
-float FuzzyGrade(float value, float x0, float x1)
+float Fuzzy::grade(float value, float x0, float x1)
 {
 	if (value < x0)	 { return 0.0f; }
 	if (value >= x1) { return 1.0f; }
@@ -25,9 +25,9 @@ float FuzzyGrade(float value, float x0, float x1)
 //=============================================================================
 // メンバーシップ関数「下降斜辺」＼
 //=============================================================================
-float FuzzyReverseGrade(float value, float x0, float x1)
+float Fuzzy::reverseGrade(float value, float x0, float x1)
 {
-	float result = FuzzyNot(FuzzyGrade(value, x0, x1));
+	float result = not(grade(value, x0, x1));
 
 	if (result != 2.0f/* 1.0f - (-1.0f) */)
 	{
@@ -41,19 +41,19 @@ float FuzzyReverseGrade(float value, float x0, float x1)
 //=============================================================================
 // メンバーシップ関数「三角形」＿／＼＿
 //=============================================================================
-float FuzzyTriangle(float value, float x0, float x1, float x2)
+float Fuzzy::triangle(float value, float x0, float x1, float x2)
 {
 	if (value < x0)		{ return 0.0f; }
 	if (value >= x2)	{ return 0.0f; }
 
 	if (x0 <= value && value < x1)
 	{
-		return FuzzyGrade(value, x0, x1);
+		return grade(value, x0, x1);
 	}
 
 	if (x1 <= value && value < x2)
 	{
-		return FuzzyNot(FuzzyGrade(value, x1, x2));
+		return NOT(grade(value, x1, x2));
 	}
 
 	return -1.0f;
@@ -63,20 +63,20 @@ float FuzzyTriangle(float value, float x0, float x1, float x2)
 //=============================================================================
 // メンバーシップ関数「台形」＿／￣＼＿
 //=============================================================================
-float FuzzyTrapenoid(float value, float x0, float x1, float x2, float x3)
+float Fuzzy::trapenoid(float value, float x0, float x1, float x2, float x3)
 {
 	if (value < x0)	 { return 0.0f; }
 
 	if (x0 <= value && value < x1)
 	{
-		return FuzzyGrade(value, x0, x1);
+		return grade(value, x0, x1);
 	}
 
 	if (x1 <= value && value < x2) { return 1.0f; }
 
 	if (x2 <= value && value < x3)
 	{
-		return FuzzyNot(FuzzyGrade(value, x2, x3));
+		return NOT(grade(value, x2, x3));
 	}
 
 	if (value >= x3) { return 0.0f; }
@@ -88,7 +88,7 @@ float FuzzyTrapenoid(float value, float x0, float x1, float x2, float x3)
 //=============================================================================
 // ヘッジ関数「とても強く」
 //=============================================================================
-float HedgeVery(float a)
+float Fuzzy::hedgeVery(float a)
 {
 	return powf(a, 2.0f);
 }
@@ -97,7 +97,7 @@ float HedgeVery(float a)
 //=============================================================================
 // ヘッジ関数「とても弱く」
 //=============================================================================
-float HedgeNotVery(float a)
+float Fuzzy::hedgeNotVery(float a)
 { 
 	return powf(a, 0.5f);
 }
@@ -106,7 +106,7 @@ float HedgeNotVery(float a)
 //=============================================================================
 // ファジーAND演算
 //=============================================================================
-float FuzzyAnd(float a, float b) 
+float Fuzzy::AND(float a, float b) 
 {
 	return fminf(a, b);
 }
@@ -115,7 +115,7 @@ float FuzzyAnd(float a, float b)
 //=============================================================================
 // ファジーOR演算
 //=============================================================================
-float FuzzyOr(float a, float b)
+float Fuzzy::OR(float a, float b)
 {
 	return fmaxf(a, b);
 }
@@ -125,7 +125,11 @@ float FuzzyOr(float a, float b)
 // ファジーNOT演算
 //=============================================================================
 
-float FuzzyNot(float a)
+float Fuzzy::NOT(float a)
 {
 	return 1.0f - a;
+}
+
+void a()
+{
 }

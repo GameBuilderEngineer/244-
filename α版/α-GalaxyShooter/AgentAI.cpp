@@ -5,11 +5,20 @@
 //-----------------------------------------------------------------------------
 #include "AgentAI.h"
 
+//*****************************************************************************
+// グローバル変数
+//*****************************************************************************
+int AgentAI::numAgent = 0;
+
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 AgentAI::AgentAI(void)
 {
+	aiID = numAgent++;
+
+	// モジュールとブラックボード生成
 	arbiter = new Arbiter;
 	sensor = new Sensor;
 	environmentAnalysis = new EnvironmentAnalysis;
@@ -21,18 +30,16 @@ AgentAI::AgentAI(void)
 	memoryBB = new MemoryBB;
 
 	// アービターにモジュールを接続
-	arbiter->setModule(SENSOR, sensor);
-	arbiter->setModule(ENVIRONMENT_ANSLYSIS, environmentAnalysis);
-	arbiter->setModule(PATH_PLANNING, pathPlanning);
-	arbiter->setModule(DECISION_MAKING, decisionMaking);
-	arbiter->setModule(MOTION_GENERATION, motionGeneration);
+	arbiter->setModule(Module::SENSOR, sensor);
+	arbiter->setModule(Module::ENVIRONMENT_ANSLYSIS, environmentAnalysis);
+	arbiter->setModule(Module::PATH_PLANNING, pathPlanning);
+	arbiter->setModule(Module::DECISION_MAKING, decisionMaking);
+	arbiter->setModule(Module::MOTION_GENERATION, motionGeneration);
 
 	// モジュールにブラックボードを接続
-	// センサー　環境認識
-	// 環境解析　環境認識
-	// 経路探索　環境認識　記憶
-	// 意思決定　環境認識　記憶
-	// 運動生成　身体状態　記憶
+    setBlackBoard(BB::ENVIRONMENT_RECOGNITION, recognitionBB);
+	setBlackBoard(BB::BODY, bodyBB);
+	setBlackBoard(BB::MEMORY, memoryBB);
 }
 
 
@@ -41,7 +48,18 @@ AgentAI::AgentAI(void)
 //=============================================================================
 AgentAI::~AgentAI(void)
 {
+	// モジュールとブラックボード破棄
+	delete arbiter;
+	delete sensor;
+	delete environmentAnalysis;
+	delete pathPlanning;
+	delete decisionMaking;
+	delete motionGeneration;
+	delete recognitionBB;
+	delete bodyBB;
+	delete memoryBB;
 
+	--numAgent;
 }
 
 

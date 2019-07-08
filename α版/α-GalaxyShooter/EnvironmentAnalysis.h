@@ -5,12 +5,14 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "Fuzzy.h"
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class EnvironmentAnalysis:public KnowledgeSourceBase {
 private:
+	Fuzzy fuzzy;						// ファジー理論処理
 
 public:
 	// Method

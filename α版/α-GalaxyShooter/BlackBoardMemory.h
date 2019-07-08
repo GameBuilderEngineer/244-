@@ -24,4 +24,5 @@ public:
 	~MemoryBB(void);
 	void initialize(void) override;				// 初期化処理
 	void uninitialize(void) override;			// 終了処理
+	bool getAccessPermission(int tag) override;	// モジュールにアクセス許可を返す
 };
