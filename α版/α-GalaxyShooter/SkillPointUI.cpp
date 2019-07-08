@@ -47,36 +47,17 @@ SkillPointUI::~SkillPointUI(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT SkillPointUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber) 
+HRESULT SkillPointUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (textureGaugeBase == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "GaugeBase.png", &textureGaugeBase)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "GaugeBase.png", MB_OK);
-			return E_FAIL;
-		}
-	}
-	if (textureGaugeBar == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "GaugeBar.png", &textureGaugeBar)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "GaugeBar.png", MB_OK);
-			return E_FAIL;
-		}
-	}
-	if (textureGaugeCover == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "GaugeCover.png", &textureGaugeCover)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "GaugeCover.png", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	textureGaugeBase = *textureLoader->getTexture(textureLoaderNS::UI_GAUGE_BASE);
+	textureGaugeBar = *textureLoader->getTexture(textureLoaderNS::UI_GAUGE_BAR);
+	textureGaugeCover = *textureLoader->getTexture(textureLoaderNS::UI_GAUGE_COVER);
+
 
 	// スプライト初期化
 	gaugeBase.initialize(device,
@@ -134,12 +115,9 @@ void SkillPointUI::uninitialize(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void SkillPointUI::update(void)
+void SkillPointUI::update(int sp, int spMax)
 {
-	// てきとうなしょり
-	int hp = 45;
-	int hpMax = 100;
-	float percentage = (float)hp / (float)hpMax;
+	float percentage = (float)sp / (float)spMax;
 	gaugeBar.setSize((int)(percentage * WIDTH), HEIGHT);
 	gaugeBar.setVertex();
 }

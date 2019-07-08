@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "AbstractScene.h"
 #include "Object.h"
 #include "Player.h"
@@ -11,8 +12,17 @@
 #include "WeaponUI.h"
 #include "Colony.h"
 #include "Junk.h"
+#include "GameMaster.h"
+#include "Bullet.h"
+#include "Planet.h"
+#include "PointSprite.h"
+#include "Plane.h"
+#include "MemoryPile.h"
 
-#define JUNK_MAX (10) //ガラクタの数
+#define JUNK_MAX (100) //ガラクタの数
+
+
+
 
 namespace gameNS
 {
@@ -24,32 +34,44 @@ namespace gameNS
 
 	const int NUM_BULLET = 30;
 	const int NUM_MAGNET = 30;
+	const D3DXVECTOR3 PLANET_POSITION(0.0f,0.0f,0.0f);
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
 	{
-		D3DXVECTOR3(10,10,0),
-		D3DXVECTOR3(-10,10,0),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(0,-100,0)
 	};
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
 	{
-		D3DXQUATERNION(0,3,-30,0.0f),
-		D3DXQUATERNION(0,100,-500,0.0f),
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
+#ifdef _DEBUG
+		D3DXQUATERNION(0.0f,100.0f,-500,0.0f)
+#else
+		D3DXQUATERNION(0.0f,20.0f,-400,0.0f)
+#endif // _DEBUG
 	};
-
+	
+	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
+	
 	enum {
 		COLONY1,
 		COLONY2,
 		NUM_COLONY,
 	};
-	
+
+	const int NUM_1P_MEMORY_PILE = 5;
+	const int NUM_2P_MEMORY_PILE = 5;
+	const float INTERVAL_TIME_BULLET1 = 0.2f;
+	const float INTERVAL_TIME_BULLET2 = 0.2f;
 }
 
 class Game : public AbstractScene
 {
 private:	
 	Player player[gameNS::NUM_PLAYER];
-	Player bullet[gameNS::NUM_BULLET];//（仮）実験的にプレイヤークラスを使用しています
-	Object field;
+	Bullet bullet1[gameNS::NUM_BULLET];
+	Bullet bullet2[gameNS::NUM_BULLET];
+	Planet field;
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
@@ -60,12 +82,32 @@ private:
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
+	GameMaster gameMaster;
+	PointSprite pointSprite;
+	Plane plane;
+	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
+	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
+
+
+	bool onUI = true;
+	int currentBullet1;//仮
+	int currentBullet2;//仮
+	float intervalBullet1;
+	float intervalBullet2;
+	int currentMemoryPile1;//仮
+	int currentMemoryPile2;//仮
+	float FrameTime = 0.0f;//仮
+
+	int reverseValue1PXAxis;
+	int reverseValue1PYAxis;
+	int reverseValue2PXAxis;
+	int reverseValue2PYAxis;
 
 public:
 	Game();
 	~Game();
-	virtual void initialize(Direct3D9* direct3D9,Input* _input) override;
-	virtual void update() override;
+	virtual void initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) override;
+	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;
 	virtual void AI() override;

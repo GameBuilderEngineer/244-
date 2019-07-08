@@ -45,20 +45,14 @@ MissileUI::~MissileUI(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT MissileUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT MissileUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (buffTexture == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "MissileUI.jpg", &buffTexture)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "MissileUI.jpg", MB_OK);
-			return E_FAIL;
-		}
-	}
+
+	buffTexture = *textureLoader->getTexture(textureLoaderNS::UI_MISSILE);
 
 	Sprite::initialize(device,
 		buffTexture,						// テクスチャ

@@ -17,6 +17,7 @@ public:
 	bool onGaze;						//=true 注視ありモード
 	D3DXVECTOR3 position;				//カメラ位置
 	D3DXVECTOR3 gazePosition;			//注視
+	D3DXVECTOR3 relativeGaze;			//注視相対値
 	D3DXVECTOR3 upVector;				//上方ベクトル
 	D3DXQUATERNION posture;				//姿勢クォータニオン
 	D3DXMATRIX world;					//姿勢制御用行列
@@ -28,7 +29,6 @@ public:
 	D3DXMATRIX view;					//ビューマトリックス
 	D3DXMATRIX projection;				//プロジェクションマトリックス
 
-
 	//Method
 	Camera();
 	~Camera();
@@ -36,6 +36,8 @@ public:
 	void update();
 
 	void rotation(D3DXVECTOR3 axis, float angle);
+
+	void lockOn(D3DXVECTOR3 lockOnTarget,float frameTime);
 
 	D3DXVECTOR3 getDirectionX() { 
 		D3DXVECTOR3 result;
@@ -50,6 +52,9 @@ public:
 		D3DXVec3Normalize(&result, &(gazePosition- position));
 		return result;}
 	D3DXVECTOR3 getHorizontalAxis();
+	D3DXVECTOR3 getAxisZ();
+	D3DXVECTOR3 getAxisY();
+
 
 	void setAspect(DWORD _windowWidth, DWORD _windowHeight);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; };
@@ -60,5 +65,6 @@ public:
 	void setTargetX(D3DXVECTOR3* targetAxisX) { targetX = targetAxisX; }
 	void setTargetY(D3DXVECTOR3* targetAxisY) { targetY = targetAxisY; }
 	void setTargetZ(D3DXVECTOR3* targetAxisZ) { targetZ = targetAxisZ; }
+	void setRelativeGaze(D3DXVECTOR3 _relativeGaze) { relativeGaze = _relativeGaze;}
 	HRESULT setViewProjection();
 };

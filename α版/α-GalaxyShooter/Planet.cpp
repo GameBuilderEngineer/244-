@@ -4,6 +4,7 @@
 
 Planet::Planet()
 {
+	activation();
 }
 
 

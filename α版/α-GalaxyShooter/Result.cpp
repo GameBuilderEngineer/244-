@@ -5,27 +5,37 @@ using namespace resultNS;
 Result::Result()
 {
 	sceneName = "Scene -Result-";
-	nextScene = SceneList::GAME;
+	nextScene = SceneList::TITLE;
 }
 
 Result::~Result()
 {
 }
 
-void Result::initialize(Direct3D9* direct3D9, Input* _input) {
+void Result::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
 	//Input
 	input = _input;
+	//textureLoader
+	textureLoader = _textureLoader;
+	//staticMeshLoader
+	staticMeshLoader = _staticMeshLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+
+	result2D.initialize(direct3D9->device, 0, _textureLoader);
 }
 
-void Result::update() {
+void Result::update(float frameTime) {
 
 	camera->update();
+
+	if (input->anyKeyPressed())changeScene(nextScene);
+
 }
 
 void Result::render(Direct3D9* direct3D9) {
@@ -35,16 +45,16 @@ void Result::render(Direct3D9* direct3D9) {
 	direct3D9->changeViewportFullWindow();
 	render3D(direct3D9);
 	//UI
-	renderUI();
-	if (input->anyKeyPressed())changeScene(nextScene);
+	renderUI(direct3D9->device);
 }
 
 void Result::render3D(Direct3D9* direct3D9) {
 
 }
 
-void Result::renderUI() {
+void Result::renderUI(LPDIRECT3DDEVICE9 device) {
 
+	result2D.render(device);
 }
 
 void Result::collisions() {
@@ -57,4 +67,5 @@ void Result::AI() {
 
 void Result::uninitialize() {
 
+	result2D.uninitialize();
 }

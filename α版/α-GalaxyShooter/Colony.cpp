@@ -4,6 +4,7 @@
 
 Colony::Colony()
 {
+	activation();
 }
 
 

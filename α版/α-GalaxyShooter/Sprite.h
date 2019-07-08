@@ -53,6 +53,7 @@ struct VERTEX_2D
 // クラス定義
 //*****************************************************************************
 class Sprite {
+
 private:
 	// Data
 	VERTEX_2D			vertexWk[spriteNS::NUM_VERTEX];	// 頂点情報格納ワーク
@@ -65,6 +66,7 @@ private:
 	float				centralAngle;					// 中心座標から４頂点への角度
 	float				radius;							// 半径
 	float				originalRadius;					// 元の半径
+	float				alpha;							// アルファ値
 
 public:
 	// Method
@@ -82,6 +84,8 @@ public:
 	void setVertex(void);												// 頂点座標の設定
 	void setColor(D3DCOLOR v0, D3DCOLOR v1, D3DCOLOR v2, D3DCOLOR v3);	// カラーの設定
 	void setColor(D3DCOLOR color);										// カラーの設定　４頂点一括設定Ver
+	void setAlpha(D3DCOLOR color);
+	void setPosition2(D3DXVECTOR3 _position);
 
 	D3DXVECTOR3 getPosition(void) { return position; }
 	D3DXVECTOR3 getRotation(void) { return rotation; }

@@ -15,7 +15,7 @@ const static int		HEIGHT = 90;						// 縦サイズ
 const static float		POSITION_X_PLAYER1 = WINDOW_WIDTH / 2.0f - 105.0f;
 const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
 const static float		POSITION_Y = WINDOW_HEIGHT- 130.0f;	// Y座標
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 128))	// バーの色
 
 
 //*****************************************************************************
@@ -45,21 +45,16 @@ WeaponUI::~WeaponUI(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT WeaponUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
+HRESULT WeaponUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (buffTexture == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "WeaponUI.jpg", &buffTexture)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "WeaponUI.jpg", MB_OK);
-			return E_FAIL;
-		}
-	}
 
+	buffTexture = *textureLoader->getTexture(textureLoaderNS::UI_WEAPON);
+
+	D3DCOLOR c = DEFAULT_COLOR;
 	Sprite::initialize(device,
 		buffTexture,						// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -69,6 +64,7 @@ HRESULT WeaponUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber)
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
+
 
 	return S_OK;
 }

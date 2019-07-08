@@ -1,48 +1,79 @@
 #include "Player.h"
+using namespace playerNS;
+
 
 Player::Player()
 {
+	hp = 100;
+	maxHp = 100;
+	sp = 100;
+	maxSp = 100;
 	onGravity = true;
 	radius = 5.0f;
+	activation();
+	recoveryTimer = 0.0f;
 }
 
 Player::~Player()
 {
-
 }
 
-void Player::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
+void Player::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
-	Object::initialize(device, xFileName, _position);
-	bodyCollide.initialize(device, &position, mesh);
+	Object::initialize(device, _staticMesh, _position);
+	bodyCollide.initialize(device, &position, _staticMesh->mesh);
+	radius = bodyCollide.getRadius();
 }
 
-void Player::update()
+void Player::update(float frameTime)
 {
-	if (D3DXVec3Length(&acceleration) > 0.01f)
+
+	recoveryTimer += frameTime;
+	if (recoveryTimer > RECOVERY_TIME)
 	{
+		recoveryHp(1);//自動HP回復
+		//recoverySp(1);//自動SP回復
+		recoveryTimer = 0.0f;
+	}
+
+	D3DXVECTOR3 moveDirection;
+
+	if (D3DXVec3Length(&acceleration) > 0.01f)
+	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
-	position += speed;
 
+	//位置更新
+	position += speed*frameTime;
+
+	//加速度減衰
 	acceleration *= 0.9f;
 	
+	//姿勢制御
+	postureControl(axisY.direction, reverseAxisY.normal,3.0f * frameTime);
 
-	postureControl(axisY.direction, reverseAxisY.normal,0.05f);
 
 	Object::update();
 }
 
+void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+{
+	Object::toonRender(device,view,projection,cameraPositon);
+#ifdef _DEBUG
+	bodyCollide.render(device, matrixWorld);
+#endif // _DEBUG
+}
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	Object::render(device,view,projection,cameraPositon);
+#ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
-
+#endif // _DEBUG
 }
 
 void Player::jump()
 {
-	acceleration += axisY.direction;
+	acceleration += axisY.direction*JUMP_FORCE;
 }
 
 void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVECTOR3 cameraAxisZ)
@@ -56,6 +87,18 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 
 	//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
-	addSpeed(moveDirection*0.0007);
+	addSpeed(moveDirection*SPEED);
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
+}
+
+void Player::reset()
+{
+	position = D3DXVECTOR3(0, 10, 0);
+	quaternion = D3DXQUATERNION(0, 0, 0, 1);
+	axisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(1, 0, 0));
+	axisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0));
+	axisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 1));
+	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(-1, 0, 0));
+	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1, 0));
+	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, -1));
 }

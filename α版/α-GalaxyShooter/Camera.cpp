@@ -38,10 +38,24 @@ void Camera::update()
 		relativeQuaternion.x*D3DXVECTOR3(world._11,world._12,world._13)+
 		relativeQuaternion.y*D3DXVECTOR3(world._21,world._22,world._23)+
 		relativeQuaternion.z*D3DXVECTOR3(world._31,world._32,world._33);
+	gazePosition += 
+		relativeGaze.x*D3DXVECTOR3(world._11,world._12,world._13)+
+		relativeGaze.y*D3DXVECTOR3(world._21,world._22,world._23)+
+		relativeGaze.z*D3DXVECTOR3(world._31,world._32,world._33);
 
 
 	setViewProjection();
 }
+
+D3DXVECTOR3 Camera::getAxisZ()
+{
+	return D3DXVECTOR3(world._31, world._32, world._33);
+}
+D3DXVECTOR3 Camera::getAxisY()
+{
+	return D3DXVECTOR3(world._21, world._22, world._23);
+}
+
 
 D3DXVECTOR3 Camera::getHorizontalAxis()
 {
@@ -79,4 +93,23 @@ HRESULT Camera::setViewProjection()
 	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 4, aspect, 0.1f, 1000.0f);
 
 	return S_OK;
+}
+
+void Camera::lockOn(D3DXVECTOR3 lockOnTarget,float frameTime)
+{
+	D3DXVECTOR3 axis(0, 1, 0);
+	float radian;
+
+	//プレイヤーとロックオン対象の方向ベクトル
+	D3DXVECTOR3 lockOnTargetDirection;
+	between2VectorDirection(&lockOnTargetDirection, *target, lockOnTarget);
+	lockOnTargetDirection = slip(lockOnTargetDirection, getDirectionY());
+	D3DXVec3Normalize(&lockOnTargetDirection, &lockOnTargetDirection);
+	D3DXVECTOR3 front = slip(getDirectionZ(), getDirectionY());
+	D3DXVec3Normalize(&front, &front);
+	if (formedRadianAngle(&radian, front, lockOnTargetDirection))
+	{
+		rotation(axis, D3DXToDegree(radian));
+	}
+
 }

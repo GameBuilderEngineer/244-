@@ -11,6 +11,7 @@ Window::Window()
 	input = NULL;
 	initialized = false;
 	windowActivate = true;
+	
 }
 HRESULT Window::initialize(HINSTANCE instance, INT x, INT y, INT width, INT height, LPSTR windowName) {
 	window = this;
@@ -37,7 +38,11 @@ HRESULT Window::initialize(HINSTANCE instance, INT x, INT y, INT width, INT heig
 	initialized = true;
 	return S_OK;
 }
-
+void Window::update()
+{
+	ShowWindow(wnd, SW_SHOW);
+	UpdateWindow(wnd);
+}
 LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if(!initialized)	return DefWindowProc(wnd, msg, wParam, lParam);
 	if(input == NULL)	return DefWindowProc(wnd, msg, wParam, lParam);
@@ -46,13 +51,12 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_ACTIVATE:
 		windowActivate = wParam != WA_INACTIVE;
 		return 0;
-	case VK_ESCAPE:
-		PostQuitMessage(0);
-		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 	case WM_KEYDOWN:case WM_SYSKEYDOWN: // キーが押された
+		if(wParam == VK_ESCAPE)
+			PostQuitMessage(0);
 		input->keyDown(wParam);
 		return 0;
 	case WM_KEYUP:case WM_SYSKEYUP: // キーが離された
@@ -108,3 +112,17 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	}
 	return DefWindowProc(wnd, msg, wParam, lParam);
 }
+
+D3DXVECTOR2 Window::getCenter()
+{
+	GetWindowRect(wnd, &rect);//現在のウィンドウの矩形情報を取得
+	D3DXVECTOR2 center((rect.right - rect.left)/2, (rect.bottom - rect.top)/2);//ウィンドウ左上からの中央位置への差を計算
+	center += D3DXVECTOR2(rect.left, rect.top);//0,0位置からウィンドウ左上位置を加算	
+	return center;
+}
+RECT Window::getRect()
+{
+	GetWindowRect(wnd, &rect);//現在のウィンドウの矩形情報を取得
+	return rect;
+}
+

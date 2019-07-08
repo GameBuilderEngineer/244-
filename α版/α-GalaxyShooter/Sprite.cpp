@@ -22,6 +22,7 @@ Sprite::Sprite(void)
 //=============================================================================
 Sprite::~Sprite(void)
 {
+
 }
 
 
@@ -82,10 +83,8 @@ void Sprite::render(LPDIRECT3DDEVICE9 device)
 {
 	// 頂点フォーマットの設定
 	device->SetFVF(FVF_VERTEX_2D);
-
 	// テクスチャの設定
 	device->SetTexture(0, texture);
-
 	// ポリゴンの描画
 	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, NUM_POLYGON, vertexWk, sizeof(VERTEX_2D));
 }
@@ -146,6 +145,14 @@ void Sprite::setSize(int _width, int _height)
 	}
 }
 
+//=============================================================================
+// 位置設定
+//=============================================================================
+void Sprite::setPosition2(D3DXVECTOR3 _position)
+{
+	position = _position;
+
+}
 
 //=============================================================================
 // 頂点座標の設定
@@ -176,6 +183,10 @@ void Sprite::setVertex(void)
 		vertexWk[3].vtx.y = position.y + sinf(rotation.z) * width + cos(rotation.z) * height;
 		break;
 	}
+	vertexWk[0].vtx.z = 0.0f;
+	vertexWk[1].vtx.z = 0.0f;
+	vertexWk[2].vtx.z = 0.0f;
+	vertexWk[3].vtx.z = 0.0f;
 }
 
 
@@ -197,4 +208,12 @@ void Sprite::setColor(D3DCOLOR color)
 	vertexWk[1].diffuse =
 	vertexWk[2].diffuse =
 	vertexWk[3].diffuse = color;
+}
+
+void Sprite::setAlpha(D3DCOLOR color)
+{
+	vertexWk[0].diffuse = D3DCOLOR_RGBA(255, 255, 255, color);
+	vertexWk[1].diffuse = D3DCOLOR_RGBA(255, 255, 255, color);
+	vertexWk[2].diffuse = D3DCOLOR_RGBA(255, 255, 255, color);
+	vertexWk[3].diffuse = D3DCOLOR_RGBA(255, 255, 255, color);
 }
