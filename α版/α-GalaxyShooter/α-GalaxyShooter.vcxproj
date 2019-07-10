@@ -135,7 +135,6 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ChinginTable.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
@@ -189,6 +188,8 @@
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="Wasuremono.cpp" />
+    <ClCompile Include="WasuremonoManager.cpp" />
+    <ClCompile Include="WasuremonoTable.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -207,7 +208,6 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ChinginTable.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="Credit.h" />
@@ -261,6 +261,8 @@
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Wasuremono.h" />
+    <ClInclude Include="WasuremonoManager.h" />
+    <ClInclude Include="WasuremonoTable.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

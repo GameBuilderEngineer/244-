@@ -193,6 +193,9 @@
     <Filter Include="AI\Arbiter">
       <UniqueIdentifier>{7102d4a8-a9b7-4b37-aece-0431b5f37a2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Wasuremono">
+      <UniqueIdentifier>{f76eb046-ecae-44fb-b8f2-bba0f2acdb5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -396,11 +399,14 @@
     <ClCompile Include="DecisionMaking.cpp">
       <Filter>AI\KnowledgeSource</Filter>
     </ClCompile>
-    <ClCompile Include="ChinginTable.cpp">
-      <Filter>Scene\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Wasuremono.cpp">
-      <Filter>Scene\Game</Filter>
+      <Filter>Object\Wasuremono</Filter>
+    </ClCompile>
+    <ClCompile Include="WasuremonoManager.cpp">
+      <Filter>Object\Wasuremono</Filter>
+    </ClCompile>
+    <ClCompile Include="WasuremonoTable.cpp">
+      <Filter>Object\Wasuremono</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,12 +548,6 @@
     <ClInclude Include="DecisionMaking.h">
       <Filter>AI\KnowledgeSource</Filter>
     </ClInclude>
-    <ClInclude Include="ChinginTable.h">
-      <Filter>Scene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Wasuremono.h">
-      <Filter>Scene\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>Object\Bullet</Filter>
     </ClInclude>
@@ -577,6 +577,15 @@
     </ClInclude>
     <ClInclude Include="DebugWindow.h">
       <Filter>Window\DebugWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Wasuremono.h">
+      <Filter>Object\Wasuremono</Filter>
+    </ClInclude>
+    <ClInclude Include="WasuremonoManager.h">
+      <Filter>Object\Wasuremono</Filter>
+    </ClInclude>
+    <ClInclude Include="WasuremonoTable.h">
+      <Filter>Object\Wasuremono</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

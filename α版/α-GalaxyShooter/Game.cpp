@@ -127,7 +127,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	{
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
-
 }
 
 float difference = 1.0f;

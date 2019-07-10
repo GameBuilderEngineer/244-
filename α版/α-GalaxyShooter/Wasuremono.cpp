@@ -5,6 +5,13 @@
 //-----------------------------------------------------------------------------
 #include "Wasuremono.h"
 
+//*****************************************************************************
+// グローバル変数　(※静的メンバ変数)
+//*****************************************************************************
+LPDIRECT3DDEVICE9 Wasuremono::device;	// デバイス
+WasuremonoTable* Wasuremono::table;		// ワスレモノテーブルを指すポインタ
+
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -13,23 +20,21 @@ Wasuremono::Wasuremono(void)
 
 }
 
-
-//=============================================================================
-// デストラクタ
-//=============================================================================
-Wasuremono::~Wasuremono(void)
+Wasuremono::Wasuremono(int typeID, D3DXVECTOR3 *position)
 {
-
+	initialize(typeID, position);
 }
 
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTOR3* _position)
+void Wasuremono::initialize(int typeID, D3DXVECTOR3 *position)
 {
-	Object::initialize(device, xFileName, _position);
-	bodyCollide.initialize(device, &position, mesh);
+	this->typeID = typeID;
+	Object::initialize(device, table->getStaticMesh(typeID), position);
+	bodyCollide.initialize(device, position, staticMesh->mesh);
+	radius = bodyCollide.getRadius();
 }
 
 
@@ -38,18 +43,52 @@ void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, LPSTR xFileName, D3DXVECTO
 //=============================================================================
 void Wasuremono::update()
 {
-	if (D3DXVec3Length(&acceleration) > 0.01f)
+	setSpeed(D3DXVECTOR3(0, 0, 0));
+
+	float difference = 1.0f;
+
+
+	D3DXVECTOR3 gravityDirection;
+	D3DXVec3Normalize(&gravityDirection, &(fieldPosition - position));
+	betweenField.update(position, gravityDirection);
+
+
+
+	//フィールド補正
+	if (betweenField.rayIntersect(fieldMesh, fieldMatrix) &&
+		radius >= (betweenField.distance - difference))
 	{
+		//めり込み補正
+		setPosition(position + betweenField.normal*(radius - betweenField.distance));
+		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+		//setSpeed(reverseAxisY.slip(speed, reverseAxisY.normal));
+		//Ray moveRay;//移動ベクトルを使ってレイを作成
+		//moveRay.initialize(*bullet[i].getPosition(), bullet[i].getSpeed());
+		//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && bullet[i].getRadius() > moveRay.distance)
+		//{//二重チェック
+		//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
+		//}
+		bound();
+	}
+	else {
+		setGravity(gravityDirection, 80.0f);
+	}
+
+	roopRotation();
+
+	if (D3DXVec3Length(&acceleration) > 0.01f)
+	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
-	position += speed;
 
+	//位置更新
+	position += speed * frameTime;
+
+	//加速度減衰
 	acceleration *= 0.9f;
-
-
-	postureControl(axisY.direction, reverseAxisY.normal, 0.05f);
-
 	Object::update();
+
+
 }
 
 
@@ -59,33 +98,99 @@ void Wasuremono::update()
 void Wasuremono::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	Object::render(device, view, projection, cameraPositon);
+#ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
+#endif
+}
 
+
+//*****************************************************************************
+// 各ワスレモノの更新処理
+//*****************************************************************************
+//=============================================================================
+// チューイングガム
+//=============================================================================
+void ChewingGum::update(void)
+{
+	Wasuremono::update();
+}
+
+//=============================================================================
+// 扇風機
+//=============================================================================
+void ElectricFan::update(void)
+{
+	Wasuremono::update();
 }
 
 
 //=============================================================================
-// 移動
+// 縄跳び
 //=============================================================================
-void Wasuremono::jump()
+void JumpRope::update(void)
 {
-	acceleration += axisY.direction;
+	Wasuremono::update();
 }
 
 
-void Wasuremono::move(D3DXVECTOR2 operationDirection, D3DXVECTOR3 cameraAxisX, D3DXVECTOR3 cameraAxisZ)
+//=============================================================================
+// テレビ
+//=============================================================================
+void Television::update(void)
 {
-	if (operationDirection.x == 0 && operationDirection.y == 0)return;//入力値が0以下ならば移動しない
-	//Y軸方向への成分を削除する
-	D3DXVECTOR3 front = slip(cameraAxisZ, axisY.direction);
-	D3DXVECTOR3 right = slip(cameraAxisX, axisY.direction);
-	D3DXVec3Normalize(&front, &front);//正規化
-	D3DXVec3Normalize(&right, &right);//正規化
-
-	//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
-	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
-	addSpeed(moveDirection*0.0007);
-	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
+	Wasuremono::update();
 }
 
 
+//=============================================================================
+// けんだま
+//=============================================================================
+void Kendama::update(void)
+{
+	Wasuremono::update();
+}
+
+
+//=============================================================================
+// サッカーボール
+//=============================================================================
+void SoccerBall::update(void)
+{
+	Wasuremono::update();
+}
+
+
+//=============================================================================
+// クリスマスツリー
+//=============================================================================
+void ChristmasTree::update(void)
+{
+	Wasuremono::update();
+}
+
+
+//=============================================================================
+// 自転車
+//=============================================================================
+void Bicycle::update(void)
+{
+	Wasuremono::update();
+}
+
+
+//=============================================================================
+// 黒電話
+//=============================================================================
+void DialPhone::update(void)
+{
+	Wasuremono::update();
+}
+
+
+//=============================================================================
+// ウサギのぬいぐるみ
+//=============================================================================
+void StuffedBunny::update(void)
+{
+	Wasuremono::update();
+}

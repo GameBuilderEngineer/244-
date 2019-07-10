@@ -89,7 +89,7 @@ public:
 
 	D3DXVECTOR3 getPosition(void) { return position; }
 	D3DXVECTOR3 getRotation(void) { return rotation; }
-	D3DXVECTOR3 setPosition(void) { return position; }
-	D3DXVECTOR3 setRotation(void) { return rotation; }
+	void setPosition(D3DXVECTOR3 _position) { position = _position; }
+	void setRotation(D3DXVECTOR3 _position) { position = _position; }
 	void setPivot(int _pivot) { pivot = _pivot; }
 };
