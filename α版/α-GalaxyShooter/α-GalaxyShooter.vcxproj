@@ -127,11 +127,11 @@
     <ClCompile Include="Arbiter.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
-    <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="BlackBoardBase.cpp" />
     <ClCompile Include="BlackBoardBody.cpp" />
     <ClCompile Include="BlackBoardMemory.cpp" />
     <ClCompile Include="BlackBoardRecognition.cpp" />
+    <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -153,8 +153,8 @@
     <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
-    <ClCompile Include="KeyOpe.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
+    <ClCompile Include="KeyOpe.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
@@ -162,10 +162,10 @@
     <ClCompile Include="MissileUI.cpp" />
     <ClCompile Include="MotionGeneration.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="PathPlanning.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="PadOpe.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="PathPlanning.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
@@ -199,11 +199,11 @@
     <ClInclude Include="Arbiter.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Billboard.h" />
     <ClInclude Include="BlackBoardBase.h" />
     <ClInclude Include="BlackBoardBody.h" />
     <ClInclude Include="BlackBoardMemory.h" />
     <ClInclude Include="BlackBoardRecognition.h" />
-    <ClInclude Include="Billboard.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
