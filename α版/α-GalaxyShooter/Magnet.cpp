@@ -2,7 +2,7 @@
 
 Magnet::Magnet()
 {
-
+	activation();
 }
 
 
