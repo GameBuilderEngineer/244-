@@ -3,6 +3,7 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
+static int				alphaColor = 255;					// アルファ値
 const static int		WIDTH = WINDOW_WIDTH / 2;			// 横サイズ
 const static int		HEIGHT = WINDOW_HEIGHT;				// 縦サイズ					
 const static float		POSITION_X_PLAYER1 = 0.0f;			// X座標
@@ -39,13 +40,14 @@ HRESULT HpEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 	// ここに書き加えられる
 	cntFrame = 0;
 	playerNumber = _playerNumber;
+	isActive = false;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
 
 	textureHpEffect = *textureLoader->getTexture(textureLoaderNS::HP_EFFECT);
 
-	ScreenEffectBase::initialize(device,
+	hpEffect.initialize(device,
 		textureHpEffect,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
 		WIDTH,								// 横幅
@@ -60,7 +62,7 @@ HRESULT HpEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 
 void HpEffect::uninitialize(void)
 {
-	setTexture(NULL);
+	hpEffect.setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntEffect--;
@@ -77,17 +79,16 @@ void HpEffect::update(void)
 	cntFrame++;
 	if (cntFrame < settingFrame)
 	{
-		// 処理をつくる
-
 	}
 
 	if (cntFrame == settingFrame)
 	{
 		isActive = false;
+		cntFrame = 0;
 	}
 }
 
 void HpEffect::render(LPDIRECT3DDEVICE9 device)
 {
-	ScreenEffectBase render2D;
+	hpEffect.render(device);
 }

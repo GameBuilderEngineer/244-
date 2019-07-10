@@ -8,6 +8,7 @@ private:
 	int playerNumber;				// プレイヤー番号
 	static int cntEffect;
 	static LPDIRECT3DTEXTURE9 textureHpEffect;		// テクスチャ１
+	Sprite hpEffect;
 
 public:
 	HpEffect();

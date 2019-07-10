@@ -636,5 +636,8 @@
     <ClInclude Include="PadOpe.h">
       <Filter>Scene\Operation\PadOpe</Filter>
     </ClInclude>
+    <Image Include="..\..\..\..\..\..\OneDrive\デスクトップ\effect2.png">
+      <Filter>02 Visual File</Filter>
+    </Image>
   </ItemGroup>
 </Project>

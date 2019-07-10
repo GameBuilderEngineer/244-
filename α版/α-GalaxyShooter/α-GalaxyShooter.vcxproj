@@ -256,6 +256,7 @@
     <None Include="02 Visual File\Toon_6Color.x" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\..\OneDrive\デスクトップ\effect2.png" />
     <Image Include="02 Visual File\ColonyHitPointUI.jpg" />
     <Image Include="02 Visual File\GaugeBar.png" />
     <Image Include="02 Visual File\GaugeBase.png" />

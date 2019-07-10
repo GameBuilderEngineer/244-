@@ -636,6 +636,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	if (input->wasKeyPressed('U'))onUI = !onUI;
+
 	if (onUI) {
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -647,9 +648,15 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			timerUI[i].render(device);
 			chingin[i].render(device);
 
+			if (input->wasKeyPressed('E'))
+			{
+				hpEffect[i].activate(50);
+			}
+
 			if (hpEffect[i].isActive)
 			{
-				hpEffect[i].render2D(device);
+
+				hpEffect[i].render(device);
 			}
 		}
 	}
