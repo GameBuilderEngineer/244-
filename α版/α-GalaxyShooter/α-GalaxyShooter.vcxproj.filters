@@ -148,9 +148,6 @@
     <Filter Include="PointSprite">
       <UniqueIdentifier>{edb7be5c-4d96-4e77-a32d-8717ce391e08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plane">
-      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\MemoryPile">
       <UniqueIdentifier>{a0d2f54e-80bf-46fb-94a7-2b3ccfe42487}</UniqueIdentifier>
     </Filter>
@@ -177,6 +174,9 @@
     </Filter>
     <Filter Include="Loader\StaticMeshLoader">
       <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InstancingBillboard">
+      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -327,9 +327,6 @@
     <ClCompile Include="Billboard.cpp">
       <Filter>Billboard</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Plane</Filter>
-    </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>Loader\TextureLoader</Filter>
     </ClCompile>
@@ -344,6 +341,12 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Loader\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryLine.cpp">
+      <Filter>Object\MemoryLine</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp">
+      <Filter>InstancingBillboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -458,9 +461,6 @@
     <ClInclude Include="Billboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Plane</Filter>
-    </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>Loader\TextureLoader</Filter>
     </ClInclude>
@@ -475,6 +475,12 @@
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
       <Filter>Loader\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLine.h">
+      <Filter>Object\MemoryLine</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>InstancingBillboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

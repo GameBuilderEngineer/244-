@@ -1,20 +1,20 @@
-#include "Plane.h"
+#include "InstancingBillboard.h"
 
 
 
-Plane::Plane()
+InstancingBillboard::InstancingBillboard()
 {
 }
 
 
-Plane::~Plane()
+InstancingBillboard::~InstancingBillboard()
 {
 	delete[] position;
 }
 
-HRESULT Plane::initialize(LPDIRECT3DDEVICE9 device)
+HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
 {
-	PlaneVertex vertex[4] = {
+	InstancingBillboardVertex vertex[4] = {
 		{D3DXVECTOR2( -1.0f,  1.0f),D3DXVECTOR2(0.0f,0.0f)},
 		{D3DXVECTOR2(  1.0f,  1.0f),D3DXVECTOR2(1.0f,0.0f)},
 		{D3DXVECTOR2( -1.0f, -1.0f),D3DXVECTOR2(0.0f,1.0f)},
@@ -53,7 +53,7 @@ HRESULT Plane::initialize(LPDIRECT3DDEVICE9 device)
 	setShaderDirectory();
 	HRESULT hr;
 	LPD3DXBUFFER err = NULL;
-	if (FAILED(hr = D3DXCreateEffectFromFile(device, "PlaneShader.fx", NULL, NULL, 0, NULL, &effect, &err)))
+	if (FAILED(hr = D3DXCreateEffectFromFile(device, "InstancingBillboard.fx", NULL, NULL, 0, NULL, &effect, &err)))
 	{
 		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "ERROR", MB_OK);
 	}
@@ -65,7 +65,7 @@ HRESULT Plane::initialize(LPDIRECT3DDEVICE9 device)
 	return S_OK;
 }
 
-void Plane::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	//回転を打ち消す。
 	//D3DXMATRIX cancelRotation = view;
@@ -87,7 +87,7 @@ void Plane::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX project
 	device->SetVertexDeclaration(declation);
 	
 	//デバイスデータストリームにメッシュの頂点バッファをバインド
-	device->SetStreamSource(0, vertexBuffer, 0, sizeof(PlaneVertex));
+	device->SetStreamSource(0, vertexBuffer, 0, sizeof(InstancingBillboardVertex));
 	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));
 
 	//インデックスバッファをセット
@@ -112,7 +112,7 @@ void Plane::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX project
 
 }
 
-void Plane::createPositionSpherical(int _num ,float radius)
+void InstancingBillboard::createPositionSpherical(int _num ,float radius)
 {
 	num = _num;
 	//位置バッファの作成

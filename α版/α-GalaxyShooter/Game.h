@@ -16,7 +16,7 @@
 #include "Bullet.h"
 #include "Planet.h"
 #include "PointSprite.h"
-#include "Plane.h"
+#include "InstancingBillboard.h"
 #include "MemoryPile.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
@@ -34,7 +34,7 @@ namespace gameNS
 
 	const int NUM_BULLET = 30;
 	const int NUM_MAGNET = 30;
-	const int NUM_CUBE = 10000;
+	const int NUM_CUBE = 1000;
 	const D3DXVECTOR3 PLANET_POSITION(0.0f,0.0f,0.0f);
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
@@ -85,7 +85,7 @@ private:
 	Junk junk[JUNK_MAX];
 	GameMaster gameMaster;
 	PointSprite pointSprite;
-	Plane plane;
+	InstancingBillboard plane;
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 

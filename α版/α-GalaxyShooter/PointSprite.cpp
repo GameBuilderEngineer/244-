@@ -54,7 +54,7 @@ void PointSprite::render(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 cameraPositon)
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-	//ライティング計算はしない。　深度バッファには書き込まない
+	//ライティング計算はしない。深度バッファには書き込まない
 	device->SetRenderState(D3DRS_LIGHTING, false);
 	device->SetRenderState(D3DRS_ZWRITEENABLE, false);
 	//ポイントスプライト用のテクスチャをセット

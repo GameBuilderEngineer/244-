@@ -127,7 +127,7 @@ void Game::initialize(
 	pointSprite.initilaize(direct3D9->device);
 
 	//インスタンスプレーン
-	plane.createPositionSpherical(10000, 250.0f);
+	plane.createPositionSpherical(3000, 250.0f);
 	plane.initialize(direct3D9->device);
 
 	//メモリーパイルの初期化

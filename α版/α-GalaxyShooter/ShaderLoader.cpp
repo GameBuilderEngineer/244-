@@ -5,7 +5,7 @@ using namespace shaderNS;
 ShaderLoader::ShaderLoader()
 {
 	shaderName[TOON] = { "ToonShader.fx" };
-	shaderName[INSTANCE_BILLBOARD] = { "PlaneShader.fx" };
+	shaderName[INSTANCE_BILLBOARD] = { "InstancingBillboard.fx" };
 	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
 }
 
