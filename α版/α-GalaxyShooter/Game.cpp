@@ -66,6 +66,10 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
 		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
+		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
+		chingin[i].initialize(direct3D9->device, i, _textureLoader);
+		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
+
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
 		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
@@ -323,6 +327,9 @@ void Game::update(float frameTime) {
 			colonyHp[i].update();
 			missileInfomation[i].update();
 			weaponInfomation[i].update();
+			timerUI[i].update();
+			chingin[i].update();
+			hpEffect[i].update();
 		}
 	}
 
@@ -637,6 +644,13 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			colonyHp[i].render(device);
 			missileInfomation[i].render(device);
 			weaponInfomation[i].render(device);
+			timerUI[i].render(device);
+			chingin[i].render(device);
+
+			if (hpEffect[i].isActive)
+			{
+				hpEffect[i].render2D(device);
+			}
 		}
 	}
 	// αテストを無効に
@@ -705,5 +719,8 @@ void Game::uninitialize() {
 		colonyHp[i].uninitialize();
 		missileInfomation[i].uninitialize();
 		weaponInfomation[i].uninitialize();
+		timerUI[i].uninitialize();
+		chingin[i].uninitialize();
+		hpEffect[i].uninitialize();
 	}
 }

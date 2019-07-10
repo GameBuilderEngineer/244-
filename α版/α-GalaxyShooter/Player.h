@@ -3,6 +3,7 @@
 #include "BoundingSphere.h"
 #include "MemoryPile.h"
 
+
 namespace playerNS{
 	const float SPEED = 30.0f;
 	const float JUMP_FORCE = 200.0f;
@@ -21,7 +22,6 @@ private:
 
 public:
 	BoundingSphere bodyCollide;
-
 
 	Player();
 	~Player();

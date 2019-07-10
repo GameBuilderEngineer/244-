@@ -10,6 +10,8 @@
 #include "ColonyHitPointUI.h"
 #include "MissileUI.h"
 #include "WeaponUI.h"
+#include "TimerUI.h"
+#include "ChinginUI.h"
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
@@ -18,6 +20,7 @@
 #include "PointSprite.h"
 #include "Plane.h"
 #include "MemoryPile.h"
+#include "HpEffect.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -80,6 +83,8 @@ private:
 	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
 	MissileUI missileInfomation[gameNS::NUM_PLAYER];
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
+	TimerUI timerUI[gameNS::NUM_PLAYER];
+	ChinginUI chingin[gameNS::NUM_PLAYER];
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
 	GameMaster gameMaster;
@@ -87,7 +92,7 @@ private:
 	Plane plane;
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
-
+	HpEffect hpEffect[gameNS::NUM_PLAYER];
 
 	bool onUI = true;
 	int currentBullet1;//âº

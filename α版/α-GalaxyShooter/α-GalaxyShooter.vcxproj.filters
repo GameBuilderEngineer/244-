@@ -178,6 +178,36 @@
     <Filter Include="Window\DebugWindow">
       <UniqueIdentifier>{667c5df3-6df3-414a-aa95-702711604679}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\ColonyHitPointUI">
+      <UniqueIdentifier>{f14b319f-6d32-475c-bd58-135a774459f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HitPointUI">
+      <UniqueIdentifier>{5565fcff-b6de-40c3-be90-b5702f01d8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\MissileUI">
+      <UniqueIdentifier>{4633f7f2-068d-4adf-8cfb-06bea5d2d826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SkillPointUI">
+      <UniqueIdentifier>{ed11d3ab-25ee-4257-97df-5e60c8b9a4dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WeaponUI">
+      <UniqueIdentifier>{28aa5322-3ec3-4de8-bf00-e4a90185d77b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\TimerUI">
+      <UniqueIdentifier>{c6392830-968a-465e-aca0-52cdd4642e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\ChinginUI">
+      <UniqueIdentifier>{da418feb-173d-4b6e-b027-7fe8ddcd8c17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{bd1f81cf-5758-406b-aa7c-382a09780ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\HpEffect">
+      <UniqueIdentifier>{d12c0997-c69e-4487-a846-ed50f9a50e02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\ScreenEffectBase">
+      <UniqueIdentifier>{0621b3be-98ca-44d9-a499-42b8633761d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -195,9 +225,6 @@
     <ClCompile Include="Colony.cpp">
       <Filter>Object\Colony</Filter>
     </ClCompile>
-    <ClCompile Include="ColonyHitPointUI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Direct3D9.cpp">
       <Filter>Direct3D9</Filter>
     </ClCompile>
@@ -213,9 +240,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>Scene\Game</Filter>
     </ClCompile>
-    <ClCompile Include="HitPointUI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -227,9 +251,6 @@
     </ClCompile>
     <ClCompile Include="Magnet.cpp">
       <Filter>Object\Magnet</Filter>
-    </ClCompile>
-    <ClCompile Include="MissileUI.cpp">
-      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Object\ベース</Filter>
@@ -249,9 +270,6 @@
     <ClCompile Include="SelectCharacter.cpp">
       <Filter>Scene\SelectCharacter</Filter>
     </ClCompile>
-    <ClCompile Include="SkillPointUI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
@@ -266,9 +284,6 @@
     </ClCompile>
     <ClCompile Include="Title.cpp">
       <Filter>Scene\Title</Filter>
-    </ClCompile>
-    <ClCompile Include="WeaponUI.cpp">
-      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Window</Filter>
@@ -342,6 +357,33 @@
     <ClCompile Include="DebugWindow.cpp">
       <Filter>Window\DebugWindow</Filter>
     </ClCompile>
+    <ClCompile Include="ColonyHitPointUI.cpp">
+      <Filter>UI\ColonyHitPointUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HitPointUI.cpp">
+      <Filter>UI\HitPointUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MissileUI.cpp">
+      <Filter>UI\MissileUI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillPointUI.cpp">
+      <Filter>UI\SkillPointUI</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponUI.cpp">
+      <Filter>UI\WeaponUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerUI.cpp">
+      <Filter>UI\TimerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ChinginUI.cpp">
+      <Filter>UI\ChinginUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HpEffect.cpp">
+      <Filter>Effect\HpEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenEffectBase.cpp">
+      <Filter>Effect\ScreenEffectBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -359,9 +401,6 @@
     <ClInclude Include="Colony.h">
       <Filter>Object\Colony</Filter>
     </ClInclude>
-    <ClInclude Include="ColonyHitPointUI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Direct3D9.h">
       <Filter>Direct3D9</Filter>
     </ClInclude>
@@ -374,9 +413,6 @@
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
     </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
     </ClInclude>
@@ -388,9 +424,6 @@
     </ClInclude>
     <ClInclude Include="Magnet.h">
       <Filter>Object\Magnet</Filter>
-    </ClInclude>
-    <ClInclude Include="MissileUI.h">
-      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Object\ベース</Filter>
@@ -410,9 +443,6 @@
     <ClInclude Include="SelectCharacter.h">
       <Filter>Scene\SelectCharacter</Filter>
     </ClInclude>
-    <ClInclude Include="SkillPointUI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Sound</Filter>
     </ClInclude>
@@ -430,9 +460,6 @@
     </ClInclude>
     <ClInclude Include="VirtualController.h">
       <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="WeaponUI.h">
-      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
@@ -469,6 +496,33 @@
     </ClInclude>
     <ClInclude Include="DebugWindow.h">
       <Filter>Window\DebugWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="ColonyHitPointUI.h">
+      <Filter>UI\ColonyHitPointUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HitPointUI.h">
+      <Filter>UI\HitPointUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MissileUI.h">
+      <Filter>UI\MissileUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillPointUI.h">
+      <Filter>UI\SkillPointUI</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponUI.h">
+      <Filter>UI\WeaponUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerUI.h">
+      <Filter>UI\TimerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginUI.h">
+      <Filter>UI\ChinginUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HpEffect.h">
+      <Filter>Effect\HpEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenEffectBase.h">
+      <Filter>Effect\ScreenEffectBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
