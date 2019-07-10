@@ -22,16 +22,29 @@ Game::Game()
 
 Game::~Game()
 {
-
+	//BGMの再生
+	audio->stopCue(audioCue::GAME_BGM_001);
+	//audio->stopCue(audioCue::GAME_BGM_002);
+	//audio->stopCue(audioCue::GAME_BGM_003);
 }
 
-void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Game::initialize(
+	Direct3D9* direct3D9,
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
 
 	//camera
 	camera = new Camera[NUM_PLAYER];
@@ -85,10 +98,10 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	for (int i = 0; i < NUM_MAGNET; i++)
 	{//磁石
 		if (NUM_MAGNET / 2 > i) {
-			magnet[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_N],2.0f);
+			magnet[i].initialize(direct3D9->device, staticMeshLoader,2.0f);
 		}
 		else {
-			magnet[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_S] ,-2.0f);
+			magnet[i].initialize(direct3D9->device, staticMeshLoader ,-2.0f);
 		}
 	}
 
@@ -96,7 +109,6 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	{//バレットの初期化
 		bullet1[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
 		bullet2[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
-		//bullet[i].anyAxisRotation(D3DXVECTOR3(0, 1, 0), (float)(rand() % 360));
 	}
 
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
@@ -115,7 +127,7 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	pointSprite.initilaize(direct3D9->device);
 
 	//インスタンスプレーン
-	plane.createPositionSpherical(1000, 300.0f);
+	plane.createPositionSpherical(10000, 250.0f);
 	plane.initialize(direct3D9->device);
 
 	//メモリーパイルの初期化
@@ -128,6 +140,29 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	D3DXVECTOR3 positionList[] =
+	{
+		D3DXVECTOR3(100,50,50),
+		D3DXVECTOR3(-100,-100,-50),
+		D3DXVECTOR3(100,-50,10),
+		D3DXVECTOR3(100,50,10),
+		D3DXVECTOR3(100,0,100),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(-100,100,100),
+		D3DXVECTOR3(-100,-100,100),
+		D3DXVECTOR3(-100,100,0),
+		D3DXVECTOR3(-100,100,-100),
+	};
+
+	//meshのインスタンシング描画のテスト
+	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
+	testObject.setNumOfRender(direct3D9->device, 10, positionList);
+	testObject.activation();
+
+	//BGMの再生
+	audio->playCue(audioCue::GAME_BGM_001);
+	//audio->playCue(audioCue::GAME_BGM_002);
+	//audio->playCue(audioCue::GAME_BGM_003);
 }
 
 float difference = 1.0f;
@@ -247,6 +282,7 @@ void Game::update(float frameTime) {
 		if (currentBullet1 >= NUM_BULLET)currentBullet1 = 0;
 		intervalBullet1 = INTERVAL_TIME_BULLET1;
 	}
+
 	if ((input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
 		&& intervalBullet2 == 0)
 	{
@@ -383,12 +419,12 @@ void Game::update(float frameTime) {
 			if (currentMemoryPile2 >= NUM_2P_MEMORY_PILE)currentMemoryPile2 = 0;
 		}
 
-
 		//1Pのメモリーパイルの更新
 		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
 		{
 			memoryPile1P[i].update(frameTime);
 		}
+
 		//2Pのメモリーパイルの更新
 		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
 		{
@@ -396,7 +432,6 @@ void Game::update(float frameTime) {
 		}
 	}
 
-	//if (input->anyKeyPressed())changeScene(nextScene);
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -419,16 +454,19 @@ void Game::render(Direct3D9* direct3D9) {
 	renderUI(direct3D9->device);
 }
 
-void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
+void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
-		player[i].toonRender(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		player[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
-	
+
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
-		bullet1[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
-		bullet2[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		bullet1[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		bullet2[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
@@ -455,7 +493,7 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 	}
 
 	//(仮)//ポイントスプライトの描画
-	pointSprite.render(direct3D9->device,currentCamera.position);
+	pointSprite.render(direct3D9->device, currentCamera.position);
 
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -472,6 +510,8 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 		}
 	}
 
+	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 
 #ifdef _DEBUG
 	Ray debugRay;

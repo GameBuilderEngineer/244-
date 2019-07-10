@@ -63,7 +63,9 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	// スペキュラ（光沢反射）を有効にする
 	device->SetRenderState(D3DRS_SPECULARENABLE, true);
 	// カリングはしない
-	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	// カリングを有効にする
+	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	//アンチエイリアシングをかける
 	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);
 	// αブレンドを行う
@@ -132,13 +134,13 @@ HRESULT Direct3D9::changeViewportFullWindow()
 
 HRESULT Direct3D9::changeViewport1PWindow()
 {
-	changeViewport(0, 0, viewPort.Width/2, viewPort.Height);
+	changeViewport(0, 0, viewPort.Width/2-3, viewPort.Height);
 	return S_OK;
 }
 
 HRESULT Direct3D9::changeViewport2PWindow()
 {
-	changeViewport(viewPort.Width/2, 0, viewPort.Width/2, viewPort.Height);
+	changeViewport(viewPort.Width/2+3, 0, viewPort.Width/2-3, viewPort.Height);
 	return S_OK;
 }
 

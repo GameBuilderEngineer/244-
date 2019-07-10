@@ -88,6 +88,7 @@ private:
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 
+	Object testObject;//‰¼
 
 	bool onUI = true;
 	int currentBullet1;//‰¼
@@ -106,7 +107,13 @@ private:
 public:
 	Game();
 	~Game();
-	virtual void initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) override;
+	virtual void initialize(
+		Direct3D9* direct3D9,
+		Input* _input,
+		Audio* _audio,
+		TextureLoader* _textureLoader,
+		StaticMeshLoader* _staticMeshLoader,
+		ShaderLoader* _shaderLoader) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;

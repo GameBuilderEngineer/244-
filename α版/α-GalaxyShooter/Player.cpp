@@ -56,9 +56,10 @@ void Player::update(float frameTime)
 	Object::update();
 }
 
-void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
+	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
-	Object::toonRender(device,view,projection,cameraPositon);
+	Object::toonRender(device,view,projection,cameraPositon,effect,textureShade,textureLine);
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
 #endif // _DEBUG

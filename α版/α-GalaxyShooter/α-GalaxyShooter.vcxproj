@@ -161,6 +161,7 @@
     <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SkillPointUI.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Result2D.h" />
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="SkillPointUI.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />

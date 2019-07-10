@@ -10,14 +10,18 @@ Magnet::~Magnet()
 {
 }
 
-void Magnet::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh,float _amount)
+void Magnet::initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* _staticMeshLoader,float _amount)
 {
 	amount = _amount;
+	staticMeshLoader = _staticMeshLoader;
+	int radius = 150;
 	if (_amount > 0) {
-		Object::initialize(device, _staticMesh, &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
+		Object::initialize(device,  &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_N],
+			&D3DXVECTOR3((float)((rand() % radius) - radius / 2), (float)((rand() % radius) - radius / 2), (float)((rand() % radius) - radius / 2)));
 	}
 	else {
-		Object::initialize(device, _staticMesh, &D3DXVECTOR3(rand()%30,rand()%30,rand()%30));
+		Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::MAGNET_N],
+			&D3DXVECTOR3((float)((rand() % radius) - radius / 2), (float)((rand() % radius) - radius / 2), (float)((rand() % radius) - radius / 2)));
 	}
 }
 

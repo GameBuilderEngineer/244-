@@ -105,24 +105,24 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 		staticMesh[i].numBytesPerVertex = staticMesh[i].mesh->GetNumBytesPerVertex();
 
 		//
-		staticMesh[i].mesh->GetFVF();
+		//staticMesh[i].mesh->GetFVF();
 		
 		//頂点バッファの取得
-		DWORD dwStride = staticMesh[i].mesh->GetNumBytesPerVertex();
-		BYTE *pbVertices = NULL;
 		staticMesh[i].mesh->GetVertexBuffer(&staticMesh[i].vertexBuffer);
-		DWORD maxVertices = staticMesh[i].mesh->GetNumVertices();
-		if (SUCCEEDED(staticMesh[i].vertexBuffer->Lock(0, 0, (VOID**)&pbVertices, 0)))
-		{
-			D3DXVECTOR3* position;
-			D3DXVECTOR3* normal;
-			for (int n = 0; n < maxVertices + 10; n++)
-			{
-				position = (D3DXVECTOR3*)&pbVertices[n*dwStride];
-				normal = (D3DXVECTOR3*)&pbVertices[n*dwStride + sizeof(D3DXVECTOR3)];
-			}
-			staticMesh[i].vertexBuffer->Unlock();
-		}
+		//DWORD dwStride = staticMesh[i].mesh->GetNumBytesPerVertex();
+		//BYTE *pbVertices = NULL;
+		//DWORD maxVertices = staticMesh[i].mesh->GetNumVertices();
+		//if (SUCCEEDED(staticMesh[i].vertexBuffer->Lock(0, 0, (VOID**)&pbVertices, 0)))
+		//{
+		//	D3DXVECTOR3* position;
+		//	D3DXVECTOR3* normal;
+		//	for (int n = 0; n < maxVertices + 10; n++)
+		//	{
+		//		position = (D3DXVECTOR3*)&pbVertices[n*dwStride];
+		//		normal = (D3DXVECTOR3*)&pbVertices[n*dwStride + sizeof(D3DXVECTOR3)];
+		//	}
+		//	staticMesh[i].vertexBuffer->Unlock();
+		//}
 	}
 
 

@@ -11,6 +11,7 @@ Object::Object()
 	reverseAxisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(-1, 0, 0));
 	reverseAxisY.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, -1, 0));
 	reverseAxisZ.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(0, 0, -1));
+	renderNum = 1;
 #ifdef _DEBUG
 	axisX.color = D3DXCOLOR(255, 0, 0, 255);
 	axisY.color = D3DXCOLOR(0, 255, 0, 255);
@@ -30,20 +31,17 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3
 {
 	//読込クラスからポインタをもらう
 	staticMesh = _staticMesh;
+
 	// メッシュの初期位置
 	memcpy(position, _position, sizeof(D3DXVECTOR3));
-
-	setVisualDirectory();
-	MFAIL(D3DXCreateTextureFromFile(device, "Shade.bmp", &textureShade), "Shade.bmpの読み込みに失敗しました");
-	MFAIL(D3DXCreateTextureFromFile(device, "Outline.bmp", &textureLine), "Outline.bmpの読み込みに失敗しました");
-	//シェーダーを読み込む
-	setShaderDirectory();
-	MFAIL(D3DXCreateEffectFromFile(device, "ToonShader.fx", NULL, NULL, 0, NULL, &effect, NULL), "シェーダーファイル読み込み失敗");
-	
+	//事前更新
 	update();
 
 	return S_OK;
 }
+
+
+
 
 void Object::update()
 {
@@ -64,8 +62,89 @@ void Object::update()
 	reverseAxisZ.update(position, -D3DXVECTOR3(matrixWorld._31, matrixWorld._32, matrixWorld._33));
 }
 
+void Object::setNumOfRender(LPDIRECT3DDEVICE9 device,int num, D3DXVECTOR3* _positionList)
+{
+	renderNum = num;
+	//位置情報バッファの作成
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*num, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*num, _positionList, positionBuffer);
 
-VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+	//頂点宣言
+	D3DVERTEXELEMENT9 vertexElement[65];
+	int i = 0;
+	while(staticMesh->vertexElement[i].Type != D3DDECLTYPE_UNUSED)
+	{
+		vertexElement[i] = staticMesh->vertexElement[i];
+		i++;
+	}
+	vertexElement[i] = { 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 };
+	i++;
+	vertexElement[i] = D3DDECL_END();
+	i++;
+	device->CreateVertexDeclaration(vertexElement, &declaration);
+}
+
+void Object::multipleRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,LPD3DXEFFECT effect)
+{
+	if (onRender == false)return;
+	//device->SetTransform(D3DTS_WORLD, &matrixWorld);
+	device->SetRenderState(D3DRS_LIGHTING, true);
+
+	D3DMATERIAL9 matDef;
+	device->GetMaterial(&matDef);
+
+	//インスタンス宣言
+	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
+	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+
+	//頂点宣言を追加
+	device->SetVertexDeclaration(declaration);
+
+	//ストリームにメッシュの頂点バッファをバインド
+	device->SetStreamSource(0, staticMesh->vertexBuffer, 0, staticMesh->numBytesPerVertex);
+	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));
+
+	//インデックスバッファをセット
+	device->SetIndices(staticMesh->indexBuffer);
+
+	effect->SetTechnique("mainTechnique");
+	effect->SetMatrix("matrixProjection", &projection);
+	effect->SetMatrix("matrixView", &view);
+
+	effect->Begin(0, 0);
+	effect->BeginPass(0);
+
+	// レンダリング
+	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
+	{
+		device->SetMaterial(&staticMesh->materials[i]);
+		effect->SetValue("diffuse", &staticMesh->materials[i],16);
+		effect->SetTexture("textureDecal", staticMesh->textures[i]);
+
+		device->DrawIndexedPrimitive(
+			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type
+			0,													//INT BaseVertexIndex
+			staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex
+			staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices
+			staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex
+			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount
+	}
+
+	effect->EndPass();
+	effect->End();
+
+	// マテリアルをデフォルトに戻す
+	device->SetMaterial(&matDef);
+	// テクスチャの設定をNULLにする
+	device->SetTexture(0, NULL);
+
+	//後始末
+	device->SetStreamSourceFreq(0, 1);
+	device->SetStreamSourceFreq(1, 1);
+
+}
+
+void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	if (onRender == false)return;
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
@@ -74,45 +153,33 @@ VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);
 
-	//インスタンス宣言
-	//device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | 1);
-	//device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INSTANCEDATA | 1);
-
 	//頂点宣言を追加
-	//device->SetVertexDeclaration(staticMesh->declaration);
-	//device->SetFVF(staticMesh->mesh->GetFVF());
+	device->SetVertexDeclaration(staticMesh->declaration);
 	//ストリームにメッシュの頂点バッファをバインド
-	//device->SetStreamSource(0, staticMesh->vertexBuffer, 0, sizeof(staticMesh->numBytesPerVertex));
+	device->SetStreamSource(0, staticMesh->vertexBuffer, 0, staticMesh->numBytesPerVertex);
 
 	//インデックスバッファをセット
-	//device->SetIndices(staticMesh->indexBuffer);
+	device->SetIndices(staticMesh->indexBuffer);
 
 	// レンダリング			
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
 		device->SetMaterial(&staticMesh->materials[i]);
 		device->SetTexture(0,staticMesh->textures[i]);
-		
 
-		//device->DrawIndexedPrimitive(
-		//	D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type
-		//	0,													//INT BaseVertexIndex
-		//	staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex
-		//	staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices
-		//	staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex
-		//	staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount
-		staticMesh->mesh->DrawSubset(i);
+		device->DrawIndexedPrimitive(
+			D3DPT_TRIANGLELIST,									//D3DPRIMITIVETYPE Type
+			0,													//INT BaseVertexIndex
+			staticMesh->attributeTable[i].VertexStart,			//UINT MinIndex
+			staticMesh->attributeTable[i].VertexCount,			//UINT NumVertices
+			staticMesh->attributeTable[i].FaceStart * 3,		//UINT StartIndex
+			staticMesh->attributeTable[i].FaceCount);			//UINT PrimitiveCount
 	}
 
 	// マテリアルをデフォルトに戻す
 	device->SetMaterial(&matDef);
 	// テクスチャの設定をNULLにする
 	device->SetTexture(0, NULL);
-
-	//後始末
-	//device->SetStreamSourceFreq(0, 1);
-	//device->SetStreamSourceFreq(1, 1);
-
 
 #ifdef _DEBUG
 	axisX.render(device, 10.0f);
@@ -124,7 +191,8 @@ VOID Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 #endif // _DEBUG
 }
 
-VOID Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon)
+void Object::toonRender(LPDIRECT3DDEVICE9 device,D3DXMATRIX view,D3DXMATRIX projection,D3DXVECTOR3 cameraPositon,
+	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 

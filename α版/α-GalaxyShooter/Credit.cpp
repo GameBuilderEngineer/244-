@@ -11,13 +11,23 @@ Credit::~Credit()
 {
 }
 
-void Credit::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Credit::initialize(
+	Direct3D9* direct3D9, 
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
 
 	//camera
 	camera = new Camera;

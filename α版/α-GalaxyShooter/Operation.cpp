@@ -11,13 +11,23 @@ Operation::~Operation()
 {
 }
 
-void Operation::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Operation::initialize(
+	Direct3D9* direct3D9,
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -29,6 +39,7 @@ void Operation::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _
 	padOpe.initialize(direct3D9->device, 0, _textureLoader);
 
 	opeTransition = 0; // オペレーション画像入れ替え
+
 
 }
 
