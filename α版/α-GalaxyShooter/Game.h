@@ -34,6 +34,7 @@ namespace gameNS
 
 	const int NUM_BULLET = 30;
 	const int NUM_MAGNET = 30;
+	const int NUM_CUBE = 10000;
 	const D3DXVECTOR3 PLANET_POSITION(0.0f,0.0f,0.0f);
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
@@ -89,6 +90,7 @@ private:
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 
 	Object testObject;//‰¼
+	Object testCube;//‰¼
 
 	bool onUI = true;
 	int currentBullet1;//‰¼

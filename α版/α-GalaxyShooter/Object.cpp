@@ -87,8 +87,7 @@ void Object::setNumOfRender(LPDIRECT3DDEVICE9 device,int num, D3DXVECTOR3* _posi
 void Object::multipleRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,LPD3DXEFFECT effect)
 {
 	if (onRender == false)return;
-	//device->SetTransform(D3DTS_WORLD, &matrixWorld);
-	device->SetRenderState(D3DRS_LIGHTING, true);
+	//device->SetRenderState(D3DRS_LIGHTING, true);
 
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);

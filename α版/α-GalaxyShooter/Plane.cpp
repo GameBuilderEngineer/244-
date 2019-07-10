@@ -71,8 +71,6 @@ void Plane::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX project
 	//D3DXMATRIX cancelRotation = view;
 	//cancelRotation._41 = cancelRotation._42 = cancelRotation._43 = 0;
 	//D3DXMatrixInverse(&cancelRotation, NULL,&cancelRotation);
-	
-	
 
 	// ƒ¿ƒuƒŒƒ“ƒh‚ðs‚¤
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);

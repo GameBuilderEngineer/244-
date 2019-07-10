@@ -140,6 +140,8 @@ void Game::initialize(
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+
+	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
 		D3DXVECTOR3(100,50,50),
@@ -153,11 +155,21 @@ void Game::initialize(
 		D3DXVECTOR3(-100,100,0),
 		D3DXVECTOR3(-100,100,-100),
 	};
-
-	//meshのインスタンシング描画のテスト
 	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
 	testObject.setNumOfRender(direct3D9->device, 10, positionList);
 	testObject.activation();
+
+
+
+	D3DXVECTOR3 cubeList[NUM_CUBE];
+	for (int i = 0; i < NUM_CUBE; i++)
+	{
+		cubeList[i] = D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
+	}
+	testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
+	testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
+	testCube.activation();
+
 
 	//BGMの再生
 	audio->playCue(audioCue::GAME_BGM_001);
@@ -171,7 +183,7 @@ void Game::update(float frameTime) {
 	
 	sceneTimer += frameTime;
 	FrameTime = frameTime;
-	if (frameTime > 0.03)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
+	if (frameTime > 0.06)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
@@ -512,7 +524,8 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-
+	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
