@@ -10,6 +10,8 @@ const char WAVE_BANK[] = "Win\\WavesBank.xwb";
 // SOUND_BANKは.xsbファイルの場所でなければなりません。
 const char SOUND_BANK[] = "Win\\SoundsBank.xsb";
 
+//
+
 // オーディオキュー
 //const char ENGINE1[] = "engine1";
 //const char BEEP1[] = "beep1";
