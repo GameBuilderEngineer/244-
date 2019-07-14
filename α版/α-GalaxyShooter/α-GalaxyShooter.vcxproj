@@ -152,6 +152,7 @@
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="HpEffect.cpp" />
+    <ClCompile Include="iiduka2.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="Wasuremono.cpp" />
     <ClCompile Include="WasuremonoManager.cpp" />
+    <ClCompile Include="WasuremonoSeries.cpp" />
     <ClCompile Include="WasuremonoTable.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -270,6 +272,7 @@
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="Wasuremono.h" />
     <ClInclude Include="WasuremonoManager.h" />
+    <ClInclude Include="WasuremonoSeries.h" />
     <ClInclude Include="WasuremonoTable.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />

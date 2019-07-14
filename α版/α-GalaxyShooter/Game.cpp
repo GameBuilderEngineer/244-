@@ -131,6 +131,9 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	{
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
+
+	// ƒƒXƒŒƒ‚ƒm‚Ì‰Šú‰»
+	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 }
 
 float difference = 1.0f;
@@ -402,6 +405,13 @@ void Game::update(float frameTime) {
 		}
 	}
 
+	// ƒƒXƒŒƒ‚ƒm‚ÌXV
+	wasuremonoManager.update(frameTime);
+	for (int i = 0; i < wasuremono.size(); i++)
+	{
+		wasuremono[i]->update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
+	}
+
 	//if (input->anyKeyPressed())changeScene(nextScene);
 }
 
@@ -446,10 +456,10 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	for (int i = 0; i < JUNK_MAX; i++)
-	{// ƒKƒ‰ƒNƒ^‚Ì•`‰æ
-		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	//for (int i = 0; i < junk_max; i++)
+	//{// ƒKƒ‰ƒNƒ^‚Ì•`‰æ
+	//	junk[i].render(direct3d9->device, currentcamera.view, currentcamera.projection, currentcamera.position);
+	//}
 
 	//ƒtƒB[ƒ‹ƒh‚Ì•`‰æ
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -478,6 +488,11 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 		}
 	}
 
+	// ƒƒXƒŒƒ‚ƒm‚Ì•`‰æ
+	for(int i = 0; i < wasuremono.size(); i++)
+	{
+		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -700,8 +715,6 @@ void Game::collisions() {
 			}
 		}
 	}
-
-
 }
 
 void Game::AI() {
@@ -722,4 +735,5 @@ void Game::uninitialize() {
 		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
 	}
+	wasuremonoManager.uninitialize();
 }

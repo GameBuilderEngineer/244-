@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "Base.h"
 #include "WasuremonoManager.h"
+#include "WasuremonoSeries.h"
 using namespace WasuremonoNS;
 
 //=============================================================================
@@ -28,18 +29,19 @@ WasuremonoManager::~WasuremonoManager(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader)
+void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet*)
 {
 	if (table == NULL)
-	{// 初回の実行の場合
-		table = new WasuremonoTable(staticMeshLoader);
-		// デストラクタで破棄（ゲームシーンをリプレイする場合の初期化など破棄不要なケースを想定）
-
-		Wasuremono::setDevice(device);
-		Wasuremono::setTable(table);
+	{	// インスタンス生成時のみ
+		table = new WasuremonoTable(staticMeshLoader);	// テーブル生成
+		Wasuremono::setTable(table);					// テーブル→ワスレモノに設定
+		this->device = device;
 	}
 
-	frameCnt = 0;
+	this->wasuremono = wasuremono;
+	wasuremono->reserve(WASUREMONO_MAX);	// vectorのメモリのみ先に確保
+	setUp();								// ワスレモノ初期配備
+	timeCnt = 0.0f;
 	respawnMode = 0;
 }
 
@@ -49,20 +51,21 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* s
 //=============================================================================
 void WasuremonoManager::uninitialize(void)
 {
-
+	clear();// ワスレモノ一斉破棄
 }
 
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void WasuremonoManager::update(void)
+void WasuremonoManager::update(float frameTime)
 {
-	// 更新頻度を調整
-	if (frameCnt++ < SECOND(3)) { return; }
-	frameCnt = 0;
+	// リスポーンの更新間隔を調整
+	timeCnt += frameTime;
+	if (timeCnt < RESPAWN_SURBEY_INTERVAL) { return; }
+	timeCnt = 0.0f;
 
-	// 状況を取得しリスポーンを判断する
+	// 条件に当てはまればリスポーン
 	if (surbeyRespawnCondition() == true)
 	{
 		autoRespawn();
@@ -75,10 +78,10 @@ void WasuremonoManager::update(void)
 //=============================================================================
 bool WasuremonoManager::surbeyRespawnCondition(void)
 {
-	// 仮の条件
-	if (wasuremono.size() < size_t(INITIAL_PLACEMENT_NUMBER * 0.8f))
+	// 仮
+	if (wasuremono->size() < size_t(INITIAL_PLACEMENT_NUMBER * 0.8f))
 	{
-		respawnMode = FEW_WASUREMONO;
+		respawnMode = RANDOM;
 		return true;
 	}
 
@@ -91,9 +94,13 @@ bool WasuremonoManager::surbeyRespawnCondition(void)
 //=============================================================================
 void WasuremonoManager::autoRespawn(void)
 {
+	D3DXVECTOR3 newPosition;
+
 	switch (respawnMode)
 	{
-	case FEW_WASUREMONO:
+	case RANDOM:
+		positionRand(newPosition);
+		create(rand() % NUM_WASUREMONO, &newPosition);
 		break;
 
 	default:
@@ -110,49 +117,50 @@ Wasuremono* WasuremonoManager::create(int typeID, D3DXVECTOR3 *position)
 	switch (typeID)
 	{
 		case CHEWING_GUM:
-			wasuremono.push_back(new ChewingGum(typeID, position));
+			wasuremono->emplace_back(new ChewingGum(device, typeID, position));
 			break;
 
 		case ELECTRIC_FAN:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new ElectricFan(device, typeID, position));
 			break;
 
 		case JUMP_ROPE:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new JumpRope(device, typeID, position));
 			break;
 
 		case TELEVISION:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new Television(device, typeID, position));
 			break;
 
 		case KENDAMA:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new Kendama(device, typeID, position));
 			break;
 
 		case SOCCER_BALL:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new SoccerBall(device, typeID, position));
 			break;
 
 		case CHRISTMAS_TREE:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new ChristmasTree(device, typeID, position));
 			break;
 
 		case BICYCLE:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new Bicycle(device, typeID, position));
 			break;
 
 		case DIAL_PHONE:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new DialPhone(device, typeID, position));
 			break;
 
 		case STUFFED_BUNNY:
-			wasuremono.push_back(new Wasuremono(typeID, position));
+			wasuremono->emplace_back(new StuffedBunny(device, typeID, position));
 			break;
 		
 		default:
 			break;
 	}
-	return wasuremono.back();
+
+	return wasuremono->back();
 }
 
 
@@ -161,57 +169,84 @@ Wasuremono* WasuremonoManager::create(int typeID, D3DXVECTOR3 *position)
 //=============================================================================
 void WasuremonoManager::destroy(int id)
 {
-	delete wasuremono[id];
-	wasuremono.erase(wasuremono.begin() + id);
+	delete (*wasuremono)[id];
+	wasuremono->erase(wasuremono->begin() + id);
 }
 
 
 //=============================================================================
-// ゲーム開始時のワスレモノ初期生成
+// ワスレモノ初期配備
 //=============================================================================
-void WasuremonoManager::startWork(void)
+void WasuremonoManager::setUp(void)
 {
-	wasuremono.reserve(INITIAL_PLACEMENT_NUMBER);		// ポインタ確保
+	std::vector<int> type(INITIAL_PLACEMENT_NUMBER);
+	setUpInitialType(type);
 
-	int typeID[INITIAL_PLACEMENT_NUMBER];				// 種類生成
-	setUpInitialType(typeID);
-
-	D3DXVECTOR3 position[INITIAL_PLACEMENT_NUMBER];		// 座標生成
+	std::vector<D3DXVECTOR3> position(INITIAL_PLACEMENT_NUMBER);
 	setUpInitialPosition(position);
 
 	for (int i = 0; i < INITIAL_PLACEMENT_NUMBER; i++)
 	{
-		wasuremono[i] = create(typeID[i], &position[i]);
+		(*wasuremono)[i] = create(type[i], &position[i]);
 	}
 }
 
 
 //=============================================================================
-// ゲーム終了時のワスレモノ一斉破棄
+// ワスレモノ一斉破棄
 //=============================================================================
-void WasuremonoManager::finishWork(void)
+void WasuremonoManager::clear(void)
 {
-	for (size_t i = 0; i < wasuremono.size(); i++)
+	for (size_t i = 0; i < wasuremono->size(); i++)
 	{
-		delete wasuremono[i];
+		delete (*wasuremono)[i];
 	}
-	wasuremono.clear();
+	(*wasuremono).clear();
 }
 
 
 //=============================================================================
 // ゲームスタート時にワスレモノのタイプを決めるアルゴリズム
 //=============================================================================
-void WasuremonoManager::setUpInitialType(int typeID[])
+void WasuremonoManager::setUpInitialType(std::vector<int> &type)
 {
-
+	for (int i = 0; i < type.size(); i++)
+	{
+		type[i] = rand() % NUM_WASUREMONO;	// 仮
+	}
 }
 
 
 //=============================================================================
 // ゲームスタート時にワスレモノを配置するアルゴリズム
 //=============================================================================
-void WasuremonoManager::setUpInitialPosition(D3DXVECTOR3 position[])
+void WasuremonoManager::setUpInitialPosition(std::vector<D3DXVECTOR3> &position)
 {
-	
+	for (int i = 0; i < position.size(); i++)
+	{
+		positionRand(position[i]);	// 仮
+	}
 }
+
+//=============================================================================
+// ランダム配置
+//=============================================================================
+D3DXVECTOR3 WasuremonoManager::positionRand(D3DXVECTOR3 &out)
+{
+	// 仮
+	float x = (float)(rand() % 100);
+	if (rand() % 2) x = -x;
+	float y = (float)(rand() % 100);
+	if (rand() % 2) y = -y;
+	float z = (float)(rand() % 100);
+	if (rand() % 2) z = -z;
+	D3DXVECTOR3 setPos = D3DXVECTOR3(x, y, z);
+	D3DXVec3Normalize(&setPos, &setPos);
+	setPos.x *= 200.0f;
+	setPos.y *= 200.0f;
+	setPos.z *= 200.0f;
+	
+	out = setPos;
+	return setPos;
+}
+

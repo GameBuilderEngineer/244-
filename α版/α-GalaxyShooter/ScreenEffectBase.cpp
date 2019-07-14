@@ -159,7 +159,6 @@ void ScreenEffectBase::setSize(int _width, int _height)
 void ScreenEffectBase::setPosition2(D3DXVECTOR3 _position)
 {
 	position = _position;
-
 }
 
 //=============================================================================

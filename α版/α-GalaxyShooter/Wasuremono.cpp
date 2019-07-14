@@ -1,16 +1,14 @@
 //-----------------------------------------------------------------------------
-// チンギンデータ処理[Wasuremono.cpp]
+// ワスレモノ処理[Wasuremono.cpp]
 // Author：GP12A332 32 中込和輝
 // 作成日：2019/7/7
 //-----------------------------------------------------------------------------
 #include "Wasuremono.h"
 
 //*****************************************************************************
-// グローバル変数　(※静的メンバ変数)
+// 静的メンバ変数
 //*****************************************************************************
-LPDIRECT3DDEVICE9 Wasuremono::device;	// デバイス
 WasuremonoTable* Wasuremono::table;		// ワスレモノテーブルを指すポインタ
-
 
 //=============================================================================
 // コンストラクタ
@@ -20,29 +18,33 @@ Wasuremono::Wasuremono(void)
 
 }
 
-Wasuremono::Wasuremono(int typeID, D3DXVECTOR3 *position)
+Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
 {
-	initialize(typeID, position);
+	this->typeID = typeID;
+	Object::initialize(device, table->getStaticMesh(typeID), position);
+	bodyCollide.initialize(device, position, staticMesh->mesh);
+	radius = bodyCollide.getRadius();
+	onGravity = true;
+	activation();
 }
 
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void Wasuremono::initialize(int typeID, D3DXVECTOR3 *position)
+void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
 {
-	this->typeID = typeID;
-	Object::initialize(device, table->getStaticMesh(typeID), position);
-	bodyCollide.initialize(device, position, staticMesh->mesh);
-	radius = bodyCollide.getRadius();
+	Wasuremono(device, typeID, position);
 }
 
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void Wasuremono::update()
+void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix, D3DXVECTOR3 fieldPosition)
 {
+	if (!onActive) { return; }
+
 	setSpeed(D3DXVECTOR3(0, 0, 0));
 
 	float difference = 1.0f;
@@ -55,7 +57,7 @@ void Wasuremono::update()
 
 
 	//フィールド補正
-	if (betweenField.rayIntersect(fieldMesh, fieldMatrix) &&
+	if (betweenField.rayIntersect(fieldMesh, matrix) &&
 		radius >= (betweenField.distance - difference))
 	{
 		//めり込み補正
@@ -68,13 +70,12 @@ void Wasuremono::update()
 		//{//二重チェック
 		//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
 		//}
-		bound();
+		//bound();
 	}
 	else {
 		setGravity(gravityDirection, 80.0f);
 	}
 
-	roopRotation();
 
 	if (D3DXVec3Length(&acceleration) > 0.01f)
 	{//加速度が小さい場合、加算しない
@@ -86,9 +87,8 @@ void Wasuremono::update()
 
 	//加速度減衰
 	acceleration *= 0.9f;
+
 	Object::update();
-
-
 }
 
 
@@ -101,96 +101,4 @@ void Wasuremono::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
 #endif
-}
-
-
-//*****************************************************************************
-// 各ワスレモノの更新処理
-//*****************************************************************************
-//=============================================================================
-// チューイングガム
-//=============================================================================
-void ChewingGum::update(void)
-{
-	Wasuremono::update();
-}
-
-//=============================================================================
-// 扇風機
-//=============================================================================
-void ElectricFan::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// 縄跳び
-//=============================================================================
-void JumpRope::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// テレビ
-//=============================================================================
-void Television::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// けんだま
-//=============================================================================
-void Kendama::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// サッカーボール
-//=============================================================================
-void SoccerBall::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// クリスマスツリー
-//=============================================================================
-void ChristmasTree::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// 自転車
-//=============================================================================
-void Bicycle::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// 黒電話
-//=============================================================================
-void DialPhone::update(void)
-{
-	Wasuremono::update();
-}
-
-
-//=============================================================================
-// ウサギのぬいぐるみ
-//=============================================================================
-void StuffedBunny::update(void)
-{
-	Wasuremono::update();
 }

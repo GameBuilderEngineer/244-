@@ -8,9 +8,12 @@
 #include "StaticMeshLoader.h"
 #include "WasuremonoTable.h"
 #include "Wasuremono.h" 
+#include "Planet.h"
+
 // インクルードは
-// WasuremonoTable→Wasuremono, WasuremonoManager
-// Wasuremono→WasuremonoManager
+// WasuremonoTable→Wasuremono, WasuremonoSeries, WasuremonoManager
+// Wasuremono→WasuremonoSeries, WasuremonoManager
+// WasuremonoSeries→WasuremonoManager
 
 //*****************************************************************************
 // 定数定義
@@ -20,14 +23,13 @@ namespace WasuremonoNS
 	// リスポーンモード
 	enum RESPAWN_MODE
 	{
-		FEW_WASUREMONO		// ワスレモノの少ない場所にリスポーン
+		RANDOM		// ランダム
 	};
 
-
+	const static int WASUREMONO_MAX = 200;
 	const static int INITIAL_PLACEMENT_NUMBER = 100;
+	const static float RESPAWN_SURBEY_INTERVAL = 3.0f;
 }
-
-#define SECOND(_s)	(_s * 60/*fps*/)
 
 
 
@@ -37,33 +39,41 @@ namespace WasuremonoNS
 class WasuremonoManager
 {
 private:
-	DWORD frameCnt;						// フレームカウント
+	// Data
+	WasuremonoTable* table;					// ワスレモノ表（名称やチンギンを参照可能）
+	std::vector<Wasuremono*>* wasuremono;	// ワスレモノ
+	float timeCnt;							// 時間カウント
+	int respawnMode;						// リスポーンのモード
+	LPDIRECT3DDEVICE9 device;				// デバイス
+	Planet *field;							// フィールド情報
+		
+	// タイプ初期化
+	void setUpInitialType(std::vector<int> &type);
+	// 座標初期化
+	void setUpInitialPosition(std::vector<D3DXVECTOR3> &position);
+	// リスポーン条件を調べる
+	bool surbeyRespawnCondition(void);
+	// 自動リスポーン処理
+	void autoRespawn(void);
+	// ランダム配置
+	D3DXVECTOR3 positionRand(D3DXVECTOR3 &out);
 
-	// ワスレモノ表（名称やチンギンを参照可能）
-	WasuremonoTable* table;
-
-	// ワスレモノスロット（生成したワスレモノを管理するポインタvector）
-	std::vector<Wasuremono*> wasuremono;
-
-	// 初期化アルゴリズム
-	void setUpInitialType(int typeID[]);
-	void setUpInitialPosition(D3DXVECTOR3 position[]);
-
-	// リスポーン関係
-	int respawnMode;					// リスポーンのモード
-	bool surbeyRespawnCondition(void);	// リスポーン条件を調べる
-	void autoRespawn(void);				// 自動リスポーン処理
 
 public:
 	WasuremonoManager(void);
-	~WasuremonoManager(void);
-	void initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader);// 初期化
-	void uninitialize(void);					// 終了処理
-	void update(void);							// 更新処理
-	Wasuremono* create(int typeID, D3DXVECTOR3 *position);// ワスレモノを生成
-	void destroy(int id);						// ワスレモノを破棄
-	void startWork(void);						// ゲーム開始時のワスレモノ初期生成
-	void finishWork(void);						// ゲーム終了時のワスレモノ一斉破棄
+	~WasuremonoManager(void);							
+	void initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet*);
+	void uninitialize(void);
+	void update(float frameTime);
+
+	// ワスレモノを生成
+	Wasuremono* create(int typeID, D3DXVECTOR3 *position);
+	// ワスレモノを破棄
+	void destroy(int id);
+	// ワスレモノ初期配備
+	void setUp(void);
+	// ワスレモノ一斉破棄
+	void clear(void);
 };
 
 

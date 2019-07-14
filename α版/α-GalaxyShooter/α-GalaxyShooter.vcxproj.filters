@@ -450,6 +450,12 @@
     <ClCompile Include="WasuremonoTable.cpp">
       <Filter>Object\Wasuremono</Filter>
     </ClCompile>
+    <ClCompile Include="iiduka2.cpp">
+      <Filter>Effect\ScreenEffectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="WasuremonoSeries.cpp">
+      <Filter>Object\Wasuremono</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -640,6 +646,9 @@
     </ClInclude>
     <ClInclude Include="ScreenEffectBase.h">
       <Filter>Effect\ScreenEffectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="WasuremonoSeries.h">
+      <Filter>Object\Wasuremono</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

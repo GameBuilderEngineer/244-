@@ -78,7 +78,6 @@ void HpEffect::update(void)
 	if (cntFrame < settingFrame)
 	{
 		// ˆ—‚ð‚Â‚­‚é
-
 	}
 
 	if (cntFrame == settingFrame)

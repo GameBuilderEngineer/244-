@@ -26,9 +26,13 @@ namespace WasuremonoNS
 		BICYCLE,			// 自転車
 		DIAL_PHONE,			// 黒電話
 		STUFFED_BUNNY,		// うさぎのぬいぐるみ
-		HUMAN,				// 人間（対戦相手）
-
 		NUM_WASUREMONO,		// ワスレモノ種類の数
+
+		// 人間（対戦相手）はテーブル上にデータのみ存在する
+		// テーブル上以外でワスレモノとしては数えない
+		HUMAN = NUM_WASUREMONO,
+
+		NUM_TABLE_ELEMENT	// ワスレモノテーブルの要素数
 	};
 }
 
@@ -47,37 +51,37 @@ struct WasuremonoData
 class WasuremonoTable
 {
 private:
-	StaticMeshLoader* staticMeshLoader;
-	WasuremonoData data[WasuremonoNS::NUM_WASUREMONO];	// テーブル本体
+	StaticMeshLoader* staticMeshLoader;						// メッシュローダー
+	WasuremonoData data[WasuremonoNS::NUM_TABLE_ELEMENT];	// テーブル本体
 
 public:
-	WasuremonoTable(StaticMeshLoader* staticMeshLoader);
+	WasuremonoTable(StaticMeshLoader* p);
 	~WasuremonoTable(void);
 
 	// 要素のアドレス取得
-	WasuremonoData* find(int id);
+	WasuremonoData* find(int typeID);
 	WasuremonoData* find(std::string name);
-	WasuremonoData* find(int amount);
 	WasuremonoData* begin(void);
 	// 存在するか検索　true……存在する/false……存在しない
-	bool exists(int id);
+	bool exists(int typeID);
 	bool exists(std::string name);
-	bool exists(int amount);
 	// 名前を取得
-	std::string getName(int id);
+	std::string getName(int typeID);
 	// 金額を取得
-	int getAmount(int id);
+	int getAmount(int typeID);
 	int getAmount(std::string name);
+	// メッシュ情報を取得
+	StaticMesh* getStaticMesh(int typeID);
+	StaticMesh* getStaticMesh(std::string name);
 	// 金額を加える
-	void addAmount(int &dest, int id);
+	void addAmount(int &dest, int typeID);
 	void addAmount(int &dest, std::string name);
 	// 金額を引く
-	void subAmount(int &dest, int id);
+	void subAmount(int &dest, int typeID);
 	void subAmount(int &dest, std::string name);
 
-	// その他アクセサ
+	// メッシュローダーをセット
 	void setStaticMeshLoader(StaticMeshLoader* staticMeshLoader) { this->staticMeshLoader = staticMeshLoader; }
-	StaticMesh* getStaticMesh(int id) { return data[id].staticMesh; }
 };
 
 

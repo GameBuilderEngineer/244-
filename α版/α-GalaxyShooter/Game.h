@@ -20,6 +20,8 @@
 #include "PointSprite.h"
 #include "Plane.h"
 #include "MemoryPile.h"
+#include "Wasuremono.h"
+#include "WasuremonoManager.h"
 #include "HpEffect.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
@@ -92,6 +94,8 @@ private:
 	Plane plane;
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
+	std::vector<Wasuremono*> wasuremono;
+	WasuremonoManager wasuremonoManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 
 	bool onUI = true;
