@@ -135,6 +135,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="HitPointUI.cpp" />
+    <ClCompile Include="HpEffect.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Result2D.cpp" />
+    <ClCompile Include="ScreenEffectBase.cpp" />
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="Sensor.cpp" />
@@ -182,6 +185,7 @@
     <ClCompile Include="StaticMeshLoader.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="TimerUI.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleTransition.cpp" />
     <ClCompile Include="TitleTransPos.cpp" />
@@ -208,6 +212,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="Credit.h" />
@@ -222,6 +227,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="HitPointUI.h" />
+    <ClInclude Include="HpEffect.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Junk.h" />
     <ClInclude Include="KnowledgeSourceBase.h" />
@@ -243,6 +249,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Result2D.h" />
+    <ClInclude Include="ScreenEffectBase.h" />
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="Sensor.h" />
@@ -254,6 +261,7 @@
     <ClInclude Include="StaticMeshLoader.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="TimerUI.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleTransition.h" />
     <ClInclude Include="TitleTransPos.h" />
