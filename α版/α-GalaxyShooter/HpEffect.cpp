@@ -9,7 +9,7 @@ const static int		HEIGHT = WINDOW_HEIGHT;				// 縦サイズ
 const static float		POSITION_X_PLAYER1 = 0.0f;			// X座標
 const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
 const static float		POSITION_Y = 0.0f;					// Y座標
-#define HP_EFFECT_COLOR		(D3DCOLOR_RGBA(255, 255, 255, 255))		// エフェクトの色
+#define HP_EFFECT_COLOR		(D3DCOLOR_RGBA(255, 255, 255, alphaColor))		// エフェクトの色
 
 //*****************************************************************************
 // グローバル変数
@@ -90,5 +90,8 @@ void HpEffect::update(void)
 
 void HpEffect::render(LPDIRECT3DDEVICE9 device)
 {
+	if (!isActive) return;
+
 	hpEffect.render(device);
 }
+

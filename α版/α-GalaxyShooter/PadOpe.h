@@ -18,7 +18,6 @@ private:
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 texturePadOpe;		// パッド操作説明テクスチャ
-	Sprite padOpe;									// パッド操作説明
 
 public:
 	PadOpe(void);

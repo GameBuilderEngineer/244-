@@ -21,6 +21,7 @@
 #include "Plane.h"
 #include "MemoryPile.h"
 #include "HpEffect.h"
+#include "TargetDisplayEffect.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -93,6 +94,7 @@ private:
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
+	TargetDisplayEffect target;
 
 	bool onUI = true;
 	int currentBullet1;//âº

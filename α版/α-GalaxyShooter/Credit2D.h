@@ -18,8 +18,7 @@ private:
 	// Data
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 textureCredit2D;		// テクスチャ１
-	Sprite credit2D;								// クレジット2D
+	static LPDIRECT3DTEXTURE9 textureCredit2D;		// テクスチャ
 
 public:
 	Credit2D(void);

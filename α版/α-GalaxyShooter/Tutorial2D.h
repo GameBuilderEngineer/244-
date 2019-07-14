@@ -19,7 +19,6 @@ private:
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 textureTutorial2D;	// テクスチャ１
-	Sprite tutorial2D;								// チュートリアル2D
 
 public:
 	Tutorial2D(void);

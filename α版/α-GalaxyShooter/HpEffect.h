@@ -18,4 +18,6 @@ public:
 	void uninitialize();
 	void update();
 	void render(LPDIRECT3DDEVICE9 device);
+
+
 };

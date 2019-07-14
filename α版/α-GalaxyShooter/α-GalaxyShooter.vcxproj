@@ -170,6 +170,7 @@
     <ClCompile Include="Splash2D.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
+    <ClCompile Include="TargetDisplayEffect.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimerUI.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Splash2D.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StaticMeshLoader.h" />
+    <ClInclude Include="TargetDisplayEffect.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimerUI.h" />

@@ -25,6 +25,7 @@ namespace textureLoaderNS
 		PAD_OPE,
 		CREDIT,
 		HP_EFFECT,
+		TARGET,
 		MAX_TEXTURE,
 	};
 }

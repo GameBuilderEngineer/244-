@@ -4,7 +4,6 @@
 //=============================================================================
 #pragma once
 #include "TitleTransition.h"
-#include "Input.h"
 #include "AbstractScene.h"
 
 #define TITLE_TRANSPOS_COLOR		(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイトル選択位置の色
@@ -30,7 +29,6 @@ private:
 	int playerNumber;											// プレイヤー番号
 	static int cntUI;											// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 titleTransPosTex;					// タイトル選択位置画像
-	Sprite titleTransPos;										// タイトル選択位置
 public:
 	TitleTransPos(void);
 	~TitleTransPos(void);

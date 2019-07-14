@@ -69,6 +69,7 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
 		chingin[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
+		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
 
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
@@ -330,6 +331,7 @@ void Game::update(float frameTime) {
 			timerUI[i].update();
 			chingin[i].update();
 			hpEffect[i].update();
+			target.update();
 		}
 	}
 
@@ -426,12 +428,20 @@ void Game::render(Direct3D9* direct3D9) {
 	renderUI(direct3D9->device);
 }
 
-void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
+void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
+
+	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
-		player[i].toonRender(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
+		player[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
-	
+
+	target.renderEffectImage(direct3D9->device);
+
+	target.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
 		bullet1[i].render(direct3D9->device,currentCamera.view,currentCamera.projection,currentCamera.position);
@@ -479,7 +489,10 @@ void Game::render3D(Direct3D9* direct3D9,Camera currentCamera) {
 		}
 	}
 
-
+	//for (int i = 0; i < NUM_PLAYER; i++)
+	//{
+	//	target[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -647,17 +660,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			weaponInfomation[i].render(device);
 			timerUI[i].render(device);
 			chingin[i].render(device);
-
-			if (input->wasKeyPressed('E'))
-			{
-				hpEffect[i].activate(50);
-			}
-
-			if (hpEffect[i].isActive)
-			{
-
-				hpEffect[i].render(device);
-			}
+			hpEffect[i].render(device);
 		}
 	}
 	// αテストを無効に
@@ -703,6 +706,7 @@ void Game::collisions() {
 					player[i].getMatrixWorld(),junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
+					hpEffect[i].activate(10);
 				}
 				junk[k].headPosition(*player[i].getPosition());
 			}
@@ -729,5 +733,6 @@ void Game::uninitialize() {
 		timerUI[i].uninitialize();
 		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
+		target.uninitialize();
 	}
 }

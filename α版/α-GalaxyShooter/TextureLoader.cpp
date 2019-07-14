@@ -25,6 +25,8 @@ TextureLoader::TextureLoader()
 	textureName[PAD_OPE] = { "MissileUI.jpg" };
 	textureName[CREDIT] = { "kurezitto.png" };
 	textureName[HP_EFFECT] = { "effect2.png" };
+	textureName[TARGET] = { "kurezitto.png" };
+
 }
 
 

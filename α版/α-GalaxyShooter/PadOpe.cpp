@@ -43,7 +43,7 @@ HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 
 	texturePadOpe = *textureLoader->getTexture(textureLoaderNS::PAD_OPE);
 
-	padOpe.initialize(device,
+	Sprite::initialize(device,
 		texturePadOpe,								// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
 		WIDTH,										// 横幅
@@ -61,7 +61,7 @@ HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 //=============================================================================
 void PadOpe::uninitialize(void)
 {
-	padOpe.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -84,6 +84,6 @@ void PadOpe::update(void)
 //=============================================================================
 void PadOpe::render(LPDIRECT3DDEVICE9 device)
 {
-	padOpe.render(device);
+	Sprite::render(device);
 }
 

@@ -43,7 +43,7 @@ HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 
 	textureKeyOpe = *textureLoader->getTexture(textureLoaderNS::KEY_OPE);
 
-	keyOpe.initialize(device,
+	Sprite::initialize(device,
 		textureKeyOpe,								// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
 		WIDTH,										// 横幅
@@ -61,7 +61,7 @@ HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 //=============================================================================
 void KeyOpe::uninitialize(void)
 {
-	keyOpe.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -84,6 +84,6 @@ void KeyOpe::update(void)
 //=============================================================================
 void KeyOpe::render(LPDIRECT3DDEVICE9 device)
 {
-	keyOpe.render(device);
+	Sprite::render(device);
 }
 

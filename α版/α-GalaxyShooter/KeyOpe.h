@@ -18,7 +18,6 @@ private:
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 textureKeyOpe;		// キーボード操作説明テクスチャ
-	Sprite keyOpe;									// キーボード操作説明
 
 public:
 	KeyOpe(void);

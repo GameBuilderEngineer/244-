@@ -3,9 +3,8 @@
 //
 //=============================================================================
 #pragma once
-#include "Sprite.h"
 #include "AbstractScene.h"
-
+#include "Sprite.h"
 
 #define SPLASH2D_COLOR		(D3DCOLOR_RGBA(255, 255, 255,alphaColor))	// スプラッシュの色
 #define SPLASH_ALPHA_MAX	(255)										// スプラッシュ最大アルファ値
@@ -20,8 +19,7 @@ private:
 	// Data
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 textureSplash2D;		// テクスチャ１
-	Sprite splash2D;								// スプラッシュ2D
+	static LPDIRECT3DTEXTURE9 textureSplash2D;		// テクスチャ
 
 public:
 	Splash2D(void);

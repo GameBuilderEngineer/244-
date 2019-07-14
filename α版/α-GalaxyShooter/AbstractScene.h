@@ -39,11 +39,7 @@ public:
 	//Method
 	AbstractScene();
 	virtual ~AbstractScene();
-	virtual void initialize(
-		Direct3D9* direct3D9,
-		Input* input,
-		TextureLoader* textureLoader,
-		StaticMeshLoader* staticMeshLoader) = 0;		//‰Šú‰»
+	virtual void initialize(Direct3D9* direct3D9,Input* input,TextureLoader* textureLoader,StaticMeshLoader* staticMeshLoader) = 0;		//‰Šú‰»
 	virtual void update(float frameTime) = 0;			//XV
 	virtual void render(Direct3D9* direct3D9) = 0;		//•`‰æ
 	virtual void collisions() = 0;						//Õ“Ëˆ—

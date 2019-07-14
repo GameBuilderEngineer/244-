@@ -208,6 +208,9 @@
     <Filter Include="Effect\ScreenEffectBase">
       <UniqueIdentifier>{0621b3be-98ca-44d9-a499-42b8633761d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\TargetDisplayEffect">
+      <UniqueIdentifier>{2faaedd2-7064-4bb5-aae6-dd818c534bf1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -384,6 +387,9 @@
     <ClCompile Include="ScreenEffectBase.cpp">
       <Filter>Effect\ScreenEffectBase</Filter>
     </ClCompile>
+    <ClCompile Include="TargetDisplayEffect.cpp">
+      <Filter>Effect\TargetDisplayEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -523,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="ScreenEffectBase.h">
       <Filter>Effect\ScreenEffectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetDisplayEffect.h">
+      <Filter>Effect\TargetDisplayEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -51,7 +51,7 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 
 	titleTransPosTex = *textureLoader->getTexture(textureLoaderNS::TITLE_POS);
 
-	titleTransPos.initialize(device,
+	Sprite::initialize(device,
 		titleTransPosTex,								// テクスチャ
 		spriteNS::TOP_LEFT,								// 原点
 		WIDTH,											// 横幅
@@ -71,7 +71,7 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 //=============================================================================
 void TitleTransPos::uninitialize(void)
 {
-	titleTransPos.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -90,7 +90,7 @@ void TitleTransPos::update(void)
 	titleTransPosMove();
 
 	// 位置設定
-	titleTransPos.setVertex();
+	setVertex();
 }
 
 
@@ -99,7 +99,7 @@ void TitleTransPos::update(void)
 //=============================================================================
 void TitleTransPos::render(LPDIRECT3DDEVICE9 device)
 {
-	titleTransPos.render(device);
+	Sprite::render(device);
 }
 
 //=============================================================================
@@ -112,7 +112,7 @@ void TitleTransPos::titleTransPosMove(void)
 		// ゲーム開始
 	case 0:
 #ifdef _DEBUG
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_START, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_TITLE_START, 0));
 #else
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_START, 0));
 #endif 
@@ -121,7 +121,7 @@ void TitleTransPos::titleTransPosMove(void)
 		// チュートリアル
 	case 1:
 #ifdef _DEBUG
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_TUTORIAL, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_TITLE_TUTORIAL, 0));
 #else
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_TUTORIAL, 0));
 #endif 
@@ -130,7 +130,7 @@ void TitleTransPos::titleTransPosMove(void)
 		// 操作方法
 	case 2:
 #ifdef _DEBUG
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_OPERATION, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_TITLE_OPERATION, 0));
 #else
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_OPERATION, 0));
 #endif 
@@ -139,7 +139,7 @@ void TitleTransPos::titleTransPosMove(void)
 		// クレジット
 	case 3:
 #ifdef _DEBUG
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_CREDIT, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_TITLE_CREDIT, 0));
 #else
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_CREDIT, 0));
 #endif 
@@ -148,7 +148,7 @@ void TitleTransPos::titleTransPosMove(void)
 		// ゲーム終了
 	case 4:
 #ifdef _DEBUG
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_TITLE_END, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_TITLE_END, 0));
 #else
 		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_END, 0));
 #endif 
