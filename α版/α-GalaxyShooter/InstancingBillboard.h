@@ -16,16 +16,20 @@ class InstancingBillboard : public Base
 	LPD3DXEFFECT effect;
 	D3DXVECTOR3* position;
 	LPDIRECT3DTEXTURE9 texture;
-	int num;
+	int renderNum;
+	bool onRender;
 public:
 	InstancingBillboard();
 	~InstancingBillboard();
 
 	HRESULT initialize(LPDIRECT3DDEVICE9 device);
+	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 
 	//球状にランダム配置表示する
-	void createPositionSpherical(int _num, float radius);
+	void createPositionSpherical(LPDIRECT3DDEVICE9 device, int num, float radius);
 
-	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	//描画数をセットする
+	void setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList);
+
 
 };

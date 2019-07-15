@@ -18,11 +18,9 @@
 #include "PointSprite.h"
 #include "InstancingBillboard.h"
 #include "MemoryPile.h"
+#include "MemoryLine.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
-
-
-
 
 namespace gameNS
 {
@@ -88,6 +86,9 @@ private:
 	InstancingBillboard plane;
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
+
+	MemoryLine memoryLine1P;
+	MemoryLine memoryLine2P;
 
 	Object testObject;//âº
 	Object testCube;//âº
