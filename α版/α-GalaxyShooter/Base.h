@@ -38,6 +38,19 @@
 #define MFALSE(code,string) if(!(code)) {MessageBox(0,string,"error",MB_OK);return E_FAIL;}
 #define MSG(text) MessageBox(0,text,0,MB_OK);
 
+struct Vertex3D
+{
+	D3DXVECTOR3 coord;
+};
+struct Vertex2D
+{
+	D3DXVECTOR2 coord;
+};
+struct UV
+{
+	D3DXVECTOR2 coord;
+};
+
 class Base
 {
 public:

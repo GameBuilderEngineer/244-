@@ -7,6 +7,7 @@ namespace shaderNS
 		TOON,
 		INSTANCE_BILLBOARD,
 		INSTANCE_STATIC_MESH,
+		RECURSION,
 		MAX_SHADER,
 	};
 }

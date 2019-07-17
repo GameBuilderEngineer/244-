@@ -6,6 +6,7 @@ TextureLoader::TextureLoader()
 {
 	textureName[TOON_OUT_LINE] = {"outline.bmp"};
 	textureName[TOON_SHADE] = {"Shade.bmp"};
+	textureName[RECURSION] = { "starRecursion.png" };
 	textureName[UI_COLONY_HP] = {"ColonyHitPointUI.jpg"};
 	textureName[UI_MISSILE] = {"MissileUI.jpg"};
 	textureName[UI_WEAPON] = {"WeaponUI.jpg"};

@@ -6,6 +6,7 @@ namespace textureLoaderNS
 	enum TEXTURE_NUMBER {
 		TOON_OUT_LINE,
 		TOON_SHADE,
+		RECURSION,
 		UI_COLONY_HP,
 		UI_MISSILE,
 		UI_WEAPON,

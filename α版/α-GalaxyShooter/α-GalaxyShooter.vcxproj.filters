@@ -178,6 +178,12 @@
     <Filter Include="InstancingBillboard">
       <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Recursion">
+      <UniqueIdentifier>{4dd70172-110a-4d3e-bc16-0f00ae86649e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\VolumeLight">
+      <UniqueIdentifier>{74b6f84b-82c0-4d6f-b9d6-22a1efad1e83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -348,6 +354,13 @@
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>InstancingBillboard</Filter>
     </ClCompile>
+    <ClCompile Include="Recursion.cpp">
+      <Filter>Object\Recursion</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeLight.cpp">
+      <Filter>Object\VolumeLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Lambert.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -482,6 +495,13 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>InstancingBillboard</Filter>
     </ClInclude>
+    <ClInclude Include="Recursion.h">
+      <Filter>Object\Recursion</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeLight.h">
+      <Filter>Object\VolumeLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Lambert.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

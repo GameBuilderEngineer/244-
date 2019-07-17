@@ -7,6 +7,7 @@ ShaderLoader::ShaderLoader()
 	shaderName[TOON] = { "ToonShader.fx" };
 	shaderName[INSTANCE_BILLBOARD] = { "InstancingBillboard.fx" };
 	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
+	shaderName[RECURSION] = { "Recursion.fx" };
 }
 
 ShaderLoader::~ShaderLoader()

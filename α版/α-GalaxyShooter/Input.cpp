@@ -104,7 +104,7 @@ HRESULT Input::resetController()
 		else
 			virtualController[i] = new EMPTY_CONTROLLER();
 	}
-
+	return S_OK;
 }
 
 //=============================================================================

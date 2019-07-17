@@ -11,6 +11,7 @@ Game::Game()
 	intervalBullet2 = 0;
 	currentBullet1 = 0;
 	currentBullet2 = 0;
+	onRecursion1P = false;
 
 	reverseValue1PXAxis = 1;
 	reverseValue1PYAxis = 1;
@@ -415,14 +416,29 @@ void Game::update(float frameTime) {
 	//メモリーパイルの更新
 	{
 		//1Pのメモリーパイルのセット
-		if ( input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1))
+		if ( !onRecursion1P && (input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
 		{
 			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
 			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
 			memoryPile1P[currentMemoryPile1].activation();
 			memoryPile1P[currentMemoryPile1].Object::update();
 			currentMemoryPile1++;
-			if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)currentMemoryPile1 = 0;
+			//メモリーパイルを全て設置することに成功
+			if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)
+			{
+				currentMemoryPile1 = 0;//セットする対象を0番のメモリパイルに切替
+				//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
+				onRecursion1P = true;
+				//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
+				D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE];
+				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+				{
+					vertex[i] = *memoryPile1P[i].getPosition();
+				}
+				recursion1P = new Recursion;
+				recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
+			}
+
 		}
 
 		//2Pのメモリーパイルのセット
@@ -454,6 +470,8 @@ void Game::update(float frameTime) {
 		memoryLine1P.update(direct3D9->device,frameTime);
 		memoryLine2P.update(direct3D9->device,frameTime);
 	}
+
+
 
 }
 
@@ -537,6 +555,12 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	{
 		memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 		memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
+	//リカージョンの描画
+	if (onRecursion1P)
+	{
+		recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	//xFileStaticMeshテスト描画

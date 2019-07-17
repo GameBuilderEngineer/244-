@@ -144,6 +144,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KeyOpe.cpp" />
+    <ClCompile Include="Lambert.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Recursion.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="SelectCharacter.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
+    <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -201,6 +204,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Junk.h" />
     <ClInclude Include="KeyOpe.h" />
+    <ClInclude Include="Lambert.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LostThing.h" />
     <ClInclude Include="Magnet.h" />
@@ -215,6 +219,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Recursion.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Result2D.h" />
     <ClInclude Include="SelectCharacter.h" />
@@ -234,6 +239,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="VirtualController.h" />
+    <ClInclude Include="VolumeLight.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

@@ -19,6 +19,7 @@
 #include "InstancingBillboard.h"
 #include "MemoryPile.h"
 #include "MemoryLine.h"
+#include "Recursion.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -84,11 +85,13 @@ private:
 	GameMaster gameMaster;
 	PointSprite pointSprite;
 	InstancingBillboard plane;
+
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
-
 	MemoryLine memoryLine1P;
 	MemoryLine memoryLine2P;
+	Recursion* recursion1P;
+
 
 	Object testObject;//âº
 	Object testCube;//âº
@@ -101,6 +104,8 @@ private:
 	int currentMemoryPile1;//âº
 	int currentMemoryPile2;//âº
 	float FrameTime = 0.0f;//âº
+	bool onRecursion1P;
+
 
 	int reverseValue1PXAxis;
 	int reverseValue1PYAxis;
