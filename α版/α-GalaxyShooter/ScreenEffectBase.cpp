@@ -54,3 +54,4 @@ void ScreenEffectBase::inactivate(void)
 	isActive = false;
 }
 
+

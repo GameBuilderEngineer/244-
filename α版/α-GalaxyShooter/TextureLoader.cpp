@@ -26,7 +26,7 @@ TextureLoader::TextureLoader()
 	textureName[CREDIT] = { "kurezitto.png" };
 	textureName[HP_EFFECT] = { "effect2.png" };
 	textureName[TARGET] = { "kurezitto.png" };
-
+	textureName[POSE] = { "effect2.png" };
 }
 
 

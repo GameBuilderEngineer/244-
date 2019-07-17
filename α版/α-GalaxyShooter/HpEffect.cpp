@@ -3,13 +3,12 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-static int				alphaColor = 255;					// アルファ値
+static int				alphaColor = HP_EFFECT_ALPHA_MAX;	// アルファ値
 const static int		WIDTH = WINDOW_WIDTH / 2;			// 横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;				// 縦サイズ					
+const static int		HEIGHT = WINDOW_HEIGHT;				// 縦サイズ
 const static float		POSITION_X_PLAYER1 = 0.0f;			// X座標
 const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
 const static float		POSITION_Y = 0.0f;					// Y座標
-#define HP_EFFECT_COLOR		(D3DCOLOR_RGBA(255, 255, 255, alphaColor))		// エフェクトの色
 
 //*****************************************************************************
 // グローバル変数
@@ -72,6 +71,7 @@ void HpEffect::uninitialize(void)
 	}
 }
 
+
 void HpEffect::update(void)
 {
 	if (!isActive) return;
@@ -79,6 +79,7 @@ void HpEffect::update(void)
 	cntFrame++;
 	if (cntFrame < settingFrame)
 	{
+		effectFade();
 	}
 
 	if (cntFrame == settingFrame)
@@ -95,3 +96,18 @@ void HpEffect::render(LPDIRECT3DDEVICE9 device)
 	hpEffect.render(device);
 }
 
+//=============================================================================
+// フェードアウト処理
+//=============================================================================
+void HpEffect::effectFade(void)
+{
+	// アルファ減算
+	alphaColor -= HP_EFFECT_SUB_TIME;
+
+	if (alphaColor <= 0)
+	{
+		alphaColor = HP_EFFECT_ALPHA_MAX;
+	}
+
+	hpEffect.setAlpha(alphaColor);
+}

@@ -26,6 +26,7 @@ namespace textureLoaderNS
 		CREDIT,
 		HP_EFFECT,
 		TARGET,
+		POSE,
 		MAX_TEXTURE,
 	};
 }

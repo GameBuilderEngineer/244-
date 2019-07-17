@@ -22,6 +22,7 @@
 #include "MemoryPile.h"
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
+#include "Pose.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -95,6 +96,7 @@ private:
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
+	Pose pose;
 
 	bool onUI = true;
 	int currentBullet1;//âº

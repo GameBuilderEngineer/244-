@@ -2,6 +2,10 @@
 #include "Sprite.h"
 #include "TextureLoader.h"
 
+#define HP_EFFECT_COLOR		(D3DCOLOR_RGBA(255, 255, 255, alphaColor))		// エフェクトの色
+#define HP_EFFECT_ALPHA_MAX	(255)											// エフェクト最大アルファ値
+#define HP_EFFECT_SUB_TIME	(20)											// エフェクトの減算スピード
+
 class HpEffect :public ScreenEffectBase
 {
 private:
@@ -18,6 +22,6 @@ public:
 	void uninitialize();
 	void update();
 	void render(LPDIRECT3DDEVICE9 device);
-
+	void effectFade(); // エフェクト消滅処理
 
 };

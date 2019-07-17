@@ -133,6 +133,8 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	pose.initialize(direct3D9->device, 0, _textureLoader);
+
 }
 
 float difference = 1.0f;
@@ -142,6 +144,13 @@ void Game::update(float frameTime) {
 	sceneTimer += frameTime;
 	FrameTime = frameTime;
 	if (frameTime > 0.03)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
+
+	if (input->wasKeyPressed(VK_RETURN))// ポーズ解除
+	{
+		pose.poseon = false;
+	}
+
+	if (pose.poseon)return;// ポーズしてたら更新しない
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
@@ -405,7 +414,11 @@ void Game::update(float frameTime) {
 		}
 	}
 
-	//if (input->anyKeyPressed())changeScene(nextScene);
+	if (input->wasKeyPressed('P'))// ポーズ開始
+	{
+		pose.poseon = true;
+	}
+
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -663,6 +676,12 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			hpEffect[i].render(device);
 		}
 	}
+
+	if (pose.poseon )
+	{
+		pose.render(device);
+	}
+
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
@@ -713,7 +732,6 @@ void Game::collisions() {
 		}
 	}
 
-
 }
 
 void Game::AI() {
@@ -734,5 +752,7 @@ void Game::uninitialize() {
 		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
+		pose.uninitialize();
+
 	}
 }
