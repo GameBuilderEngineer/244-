@@ -28,6 +28,7 @@ class AbstractScene :public Base
 {
 protected:
 	//Data
+	Direct3D9* direct3D9;
 	Input* input;
 	Audio* audio;
 	Camera* camera;

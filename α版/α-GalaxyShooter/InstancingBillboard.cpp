@@ -1,15 +1,13 @@
 #include "InstancingBillboard.h"
 
-
-
 InstancingBillboard::InstancingBillboard()
 {
+	renderNum = 0;
+	onRender = false;
 }
-
 
 InstancingBillboard::~InstancingBillboard()
 {
-	delete[] position;
 }
 
 HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
@@ -37,8 +35,8 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
 	indexBuffer->Unlock();
 
 	//位置情報バッファの作成
-	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*num, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
-	copyVertexBuffer(sizeof(D3DXVECTOR3)*num, position, positionBuffer);
+	//device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	//copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
 
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
@@ -67,6 +65,7 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
 
 void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
+	if (renderNum <= 0)return;
 	//回転を打ち消す。
 	//D3DXMATRIX cancelRotation = view;
 	//cancelRotation._41 = cancelRotation._42 = cancelRotation._43 = 0;
@@ -80,7 +79,7 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	//インスタンス宣言
-	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | num);
+	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 
 	// 頂点宣言を通知
@@ -112,9 +111,9 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 
 }
 
-void InstancingBillboard::createPositionSpherical(int _num ,float radius)
+void InstancingBillboard::createPositionSpherical(LPDIRECT3DDEVICE9 device, int num ,float radius)
 {
-	num = _num;
+	renderNum = num;
 	//位置バッファの作成
 	position = new D3DXVECTOR3[num];
 	for (int i = 0; i < num; i++)
@@ -124,4 +123,28 @@ void InstancingBillboard::createPositionSpherical(int _num ,float radius)
 		pos *= radius;
 		position[i] = pos;
 	}
+	//位置情報バッファの作成
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
+}
+
+void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList)
+{
+	if (num <= 0) {
+		if(onRender == true)SAFE_RELEASE(positionBuffer);
+		onRender = false;
+		return;
+	}
+	renderNum = num;
+	position = new D3DXVECTOR3[num];
+	for (int i = 0; i < num; i++)
+	{
+		position[i] = positionList[i];
+	}
+	if (onRender == true)SAFE_RELEASE(positionBuffer);
+	//位置情報バッファの作成
+	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
+	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
+	onRender = true;
+	SAFE_DELETE_ARRAY(position);
 }

@@ -29,12 +29,14 @@ Game::~Game()
 }
 
 void Game::initialize(
-	Direct3D9* direct3D9,
+	Direct3D9* _direct3D9,
 	Input* _input,
 	Audio* _audio,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader) {
+	//direct3D9
+	direct3D9 = _direct3D9;
 	//Input
 	input = _input;
 	//audio
@@ -127,7 +129,7 @@ void Game::initialize(
 	pointSprite.initilaize(direct3D9->device);
 
 	//インスタンスプレーン
-	plane.createPositionSpherical(3000, 250.0f);
+	plane.createPositionSpherical(direct3D9->device,3000, 250.0f);
 	plane.initialize(direct3D9->device);
 
 	//メモリーパイルの初期化
@@ -140,6 +142,9 @@ void Game::initialize(
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	//メモリーラインの初期化
+	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1]);
+	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2]);
 
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
@@ -184,7 +189,7 @@ void Game::update(float frameTime) {
 	sceneTimer += frameTime;
 	FrameTime = frameTime;
 	if (frameTime > 0.06)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
-
+	
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
 		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
@@ -444,6 +449,12 @@ void Game::update(float frameTime) {
 		}
 	}
 
+	//メモリーラインの更新
+	{
+		memoryLine1P.update(direct3D9->device,frameTime);
+		memoryLine2P.update(direct3D9->device,frameTime);
+	}
+
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -522,10 +533,18 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		}
 	}
 
+	//メモリーラインの描画
+	{
+		memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
+	//xFileStaticMeshテスト描画
 	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
