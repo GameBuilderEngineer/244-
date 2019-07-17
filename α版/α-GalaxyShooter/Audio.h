@@ -13,19 +13,43 @@ const char SOUND_BANK[] = "Win\\SoundsBank.xsb";
 // aiueo
 
 // オーディオキュー
-//const char ENGINE1[] = "engine1";
-//const char BEEP1[] = "beep1";
-//const char BEEP2[] = "beep2";
-//const char BEEP3[] = "beep3";
-//const char BEEP4[] = "beep4";
-//const char HIT[] = "hit";
-//const char CHEER[] = "cheer";
-//const char COLLIDE[] = "collide";
-//const char EXPLODE[] = "explode";
-//const char ENGINE2[] = "engine2";
-//const char TORPEDO_CRASH[] = "torpedoCrash";
-//const char TORPEDO_FIRE[] = "torpedoFire";
-//const char TORPEDO_HIT[] = "torpedoHit";
+namespace audioCue {
+	const char SPLASH_BGM[]						= "splashBGM";						//スプラッシュシーン：BGM
+	const char TITLE_BGM[]						= "titleBGM";						//タイトルシーン：BGM
+	const char TITLE_SELECT_SE[]				= "titleSelectSE";					//タイトルシーン：選択音
+	const char TITLE_DECISION_SE[]				= "titleDecisionSE";				//タイトルシーン：決定音
+	const char TITLE_CANCEL_SE[]				= "titleCancelSE";					//タイトルシーン：キャンセル音
+	const char GAME_START_COUNTDOWN_SE[]		= "gameStartCountDownSE";			//ゲームシーン：ゲーム開始カウントダウン効果音
+	const char GAME_START_SE[]					= "gameStartSE";					//ゲームシーン：ゲーム開始効果音
+	const char GAME_END_COUNTDOWN_SE[]			= "gameEndCountDownSE";				//ゲームシーン：ゲーム終了カウントダウン効果音
+	const char GAME_END_SE[]					= "gameEndSE";						//ゲームシーン：ゲーム終了効果音
+	const char GAME_BGM_001[]					= "gameBGM001";						//ゲームシーン：BGM001
+	const char GAME_BGM_002[]					= "gameBGM002";						//ゲームシーン：BGM002
+	const char GAME_BGM_003[]					= "gameBGM003";						//ゲームシーン：BGM003
+	const char GAME_PAUSE_SE[]					= "gamePauseSE";					//ゲームシーン：ポーズ効果音
+	const char SELECT_CHARACTER_BGM[]			= "selectCharacterBGM";				//キャラクター選択シーン：BGM
+	const char SELECT_CHARACTER_SELECT_SE[]		= "selectCharacterSelectSE";		//キャラクター選択シーン：選択効果音
+	const char SELECT_CHARACTER_DECISION_SE[]	= "selectCharacterDecisionSE";		//キャラクター選択シーン：決定効果音
+	const char SELECT_CHARACTER_CANCEL_SE[]		= "selectCharacterCancelSE";		//キャラクター選択シーン：キャンセル効果音
+	const char TUTORIAL_BGM[]					= "tutorialBGM";					//チュートリアルシーン：BGM
+	const char OPERATION_SELECT_SE[]			= "operationSelectSE";				//操作方法説明シーン：切替効果音
+	const char RESULT_BGM[]						= "resultBGM";						//リザルトシーン：BGM
+	const char WALK_SE[]						= "walkSE";							//歩き効果音
+	const char DASH_SE[]						= "dashSE";							//ダッシュ効果音
+	const char JUMP_SE[]						= "jumpSE";							//ジャンプ効果音
+	const char BULLET_FIRE_SE[]					= "bulletFireSE";					//弾発射効果音
+	const char BULLET_HIT_SE[]					= "bulletHitSE";					//弾ヒット効果音
+	const char WAGE_GENERATE_SE[]				= "wageGenerateSE";					//賃金発生効果音
+	const char WAGE_GET_SE[]					= "wageGetSE";						//賃金取得効果音
+	const char SHOCK_WAVE_GENERATE_SE[]			= "shockWaveGenerateSE";			//衝撃波発生効果音
+	const char SHOCK_WAVE_HIT_SE[]				= "shockWaveHitSE";					//衝撃波ヒット効果音
+	const char MEMORY_PILE_INSTALLATION_SE[]	= "memoryPileInstallationSE";		//メモリーパイル設置効果音
+	const char MEMORY_LINE_CUTTING_SE[]			= "memoryLineCuttingSE";			//メモリーライン切断効果音
+	const char RECURSION_GENERATE_SE[]			= "recursionGenerateSE";			//リカージョン発生効果音
+	const char DOWN_REVIVAL_QTE_SE[]			= "downRevivalQuickTimeEventSE";	//ダウン復活QuickTimeEvent効果音
+	const char DOWN_REVIVAL_SE[]				= "downRevivalSE";					//ダウン復活効果音
+}
+
 class Audio
 {
 //プロパティ

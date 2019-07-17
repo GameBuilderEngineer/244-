@@ -3,7 +3,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4x4 matrixProjection;
 float4x4 matrixView;
+//float4x4 cancelRotation;
+//CPU側で演算する方法も検討中（インスタンシングにより数が多くなるので、事前計算の方が早い？？）
 texture planeTexture;
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //定義
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +14,7 @@ sampler textureSampler = sampler_state
 {
 	texture = <planeTexture>;
 	MipFilter = LINEAR;
-	MinFilter = POINT;
+	MinFilter = LINEAR;
 	MagFilter = POINT;
 };
 
@@ -32,11 +35,27 @@ VS_OUT vsMain(
 	VS_OUT Out;
 
 	Out.position = float4(
-		position.x + worldPosition.x,
-		position.y + worldPosition.y,
-		worldPosition.z,
+		position.x,
+		position.y,
+		0.0f,
 		1.0f);
-	Out.position = mul(Out.position, mul(matrixView, matrixProjection));
+
+	float4x4 matrixWorld = float4x4(
+		1.0f,0.0f,0.0f,0.0f,
+		0.0f,1.0f,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+		worldPosition.x, worldPosition.y, worldPosition.z,1.0f);
+
+	float4x4 cancelRotation = matrixView;
+	cancelRotation._41_42_43 = 0.0f;
+	cancelRotation = transpose(cancelRotation);
+	matrixWorld = mul(cancelRotation,matrixWorld);
+
+
+	matrixWorld = mul(matrixWorld,matrixView);
+	matrixWorld = mul(matrixWorld,matrixProjection);
+
+	Out.position = mul(Out.position, matrixWorld);
 
 	Out.uv = localUV;
 

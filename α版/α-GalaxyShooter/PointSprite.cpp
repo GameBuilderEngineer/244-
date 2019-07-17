@@ -15,7 +15,7 @@ HRESULT PointSprite::initilaize(LPDIRECT3DDEVICE9 device)
 {
 	setVisualDirectory();
 	//ポイントスプライトに貼るテクスチャオブジェクトを作成
-	if (FAILED(D3DXCreateTextureFromFileEx(device, "Sprite.jpg", WIDTH, HEIGHT, 0, 0, D3DFMT_UNKNOWN,
+	if (FAILED(D3DXCreateTextureFromFileEx(device, "Sprite.jpg", (UINT)WIDTH, (UINT)HEIGHT, 0, 0, D3DFMT_UNKNOWN,
 		D3DPOOL_DEFAULT, D3DX_FILTER_NONE, D3DX_DEFAULT,
 		0xff000000, NULL, NULL, &pTexture)))
 	{
@@ -24,12 +24,12 @@ HRESULT PointSprite::initilaize(LPDIRECT3DDEVICE9 device)
 	}
 	for (int i = 0; i < POINT_NUM; i++)
 	{
-		vertex[i].coord = D3DXVECTOR3((rand()%1000)-500,(rand()%1000)-500,(rand()%1000)-500);
+		vertex[i].coord = D3DXVECTOR3((float)((rand()%1000)-500),(float)((rand()%1000)-500),(float)((rand()%1000)-500));
 		vertex[i].color = D3DCOLOR_ARGB(255, 255, 255, 255);
 		vertex[i].scale = 0.001f;
-		size[i] = (rand() % 200)/1000;
+		size[i] = (float)((rand() % 200)/1000);
 	}
-
+	return S_OK;
 }
 
 void PointSprite::render(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 cameraPositon)
@@ -54,7 +54,7 @@ void PointSprite::render(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 cameraPositon)
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-	//ライティング計算はしない。　深度バッファには書き込まない
+	//ライティング計算はしない。深度バッファには書き込まない
 	device->SetRenderState(D3DRS_LIGHTING, false);
 	device->SetRenderState(D3DRS_ZWRITEENABLE, false);
 	//ポイントスプライト用のテクスチャをセット

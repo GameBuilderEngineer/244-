@@ -81,7 +81,7 @@ void Junk::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projecti
 void Junk::bound()
 {
 	changeAxisRotation();
-	float rate = rand() % 10;
+	float rate = (float)(rand() % 10);
 	rate *= 0.1;
 	acceleration += betweenField.normal*(BOUND_FORCE*rate);
 }
@@ -93,13 +93,12 @@ void Junk::roopRotation()
 
 void Junk::changeAxisRotation()
 {
-	axisRotation = D3DXVECTOR3(rand() % 10, rand() % 10, rand() % 10);
+	axisRotation = D3DXVECTOR3((float)(rand() % 10), (float)(rand() % 10), (float)(rand() % 10));
 	D3DXVec3Normalize(&axisRotation, &axisRotation);
 }
 
 void Junk::headPosition(D3DXVECTOR3 headPosition)
 {
-	onGravity == false;
 	D3DXVECTOR3 headDirection;
 	float headDistance = between2VectorDirection(&headDirection,position,headPosition);
 	//â¡ë¨ìxÇÃëùâ¡ó ÇãﬂÇ√Ç≠ÇŸÇ«è¨Ç≥Ç≠Ç∑ÇÈÅB

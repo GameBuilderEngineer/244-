@@ -148,21 +148,6 @@
     <Filter Include="PointSprite">
       <UniqueIdentifier>{edb7be5c-4d96-4e77-a32d-8717ce391e08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plane">
-      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TextureLoader">
-      <UniqueIdentifier>{8abfba9a-50b0-4e76-a76a-d54291bc1404}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="StaticMeshLoader">
-      <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SkinMeshLoader">
-      <UniqueIdentifier>{227a2aeb-6834-4f6c-b1eb-b0003ed0e189}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ShaderLoader">
-      <UniqueIdentifier>{49cb0e54-1b30-43bc-944a-283d060b8b09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\MemoryPile">
       <UniqueIdentifier>{a0d2f54e-80bf-46fb-94a7-2b3ccfe42487}</UniqueIdentifier>
     </Filter>
@@ -175,8 +160,23 @@
     <Filter Include="Object\LostThing">
       <UniqueIdentifier>{841eed46-062a-4e78-a3ee-e22c2bafa361}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window\DebugWindow">
-      <UniqueIdentifier>{667c5df3-6df3-414a-aa95-702711604679}</UniqueIdentifier>
+    <Filter Include="Loader">
+      <UniqueIdentifier>{ac8a92f7-8683-4808-b69a-5d9820877cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader\ShaderLoader">
+      <UniqueIdentifier>{49cb0e54-1b30-43bc-944a-283d060b8b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader\SkinMeshLoader">
+      <UniqueIdentifier>{227a2aeb-6834-4f6c-b1eb-b0003ed0e189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader\TextureLoader">
+      <UniqueIdentifier>{8abfba9a-50b0-4e76-a76a-d54291bc1404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader\StaticMeshLoader">
+      <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InstancingBillboard">
+      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -315,6 +315,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Object\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="DebugWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
     <ClCompile Include="GameMaster.cpp">
       <Filter>GameMaster</Filter>
     </ClCompile>
@@ -324,14 +327,11 @@
     <ClCompile Include="Billboard.cpp">
       <Filter>Billboard</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Plane</Filter>
-    </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
-      <Filter>TextureLoader</Filter>
+      <Filter>Loader\TextureLoader</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshLoader.cpp">
-      <Filter>StaticMeshLoader</Filter>
+      <Filter>Loader\StaticMeshLoader</Filter>
     </ClCompile>
     <ClCompile Include="LostThing.cpp">
       <Filter>Object\LostThing</Filter>
@@ -339,8 +339,14 @@
     <ClCompile Include="MemoryPile.cpp">
       <Filter>Object\MemoryPile</Filter>
     </ClCompile>
-    <ClCompile Include="DebugWindow.cpp">
-      <Filter>Window\DebugWindow</Filter>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Loader\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryLine.cpp">
+      <Filter>Object\MemoryLine</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp">
+      <Filter>InstancingBillboard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -443,6 +449,9 @@
     <ClInclude Include="Bullet.h">
       <Filter>Object\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="DebugWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
     <ClInclude Include="GameMaster.h">
       <Filter>GameMaster</Filter>
     </ClInclude>
@@ -452,14 +461,11 @@
     <ClInclude Include="Billboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Plane</Filter>
-    </ClInclude>
     <ClInclude Include="TextureLoader.h">
-      <Filter>TextureLoader</Filter>
+      <Filter>Loader\TextureLoader</Filter>
     </ClInclude>
     <ClInclude Include="StaticMeshLoader.h">
-      <Filter>StaticMeshLoader</Filter>
+      <Filter>Loader\StaticMeshLoader</Filter>
     </ClInclude>
     <ClInclude Include="LostThing.h">
       <Filter>Object\LostThing</Filter>
@@ -467,8 +473,14 @@
     <ClInclude Include="MemoryPile.h">
       <Filter>Object\MemoryPile</Filter>
     </ClInclude>
-    <ClInclude Include="DebugWindow.h">
-      <Filter>Window\DebugWindow</Filter>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Loader\ShaderLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLine.h">
+      <Filter>Object\MemoryLine</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>InstancingBillboard</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

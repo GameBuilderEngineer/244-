@@ -4,6 +4,8 @@
 #include <d3dx9.h>
 #include "Ray.h"
 #include "StaticMeshLoader.h"
+#include "TextureLoader.h"
+#include "ShaderLoader.h"
 
 namespace objectNS {
 
@@ -14,23 +16,8 @@ class Object:public Base
 {
 protected:
 	//Data
-
-	//描画系変数
-	//LPD3DXMESH mesh;
-	//D3DMATERIAL9* meshMaterials;
-	//LPDIRECT3DTEXTURE9* meshTextures;
-	//DWORD numMaterials;
-
 	//スタティックメッシュ
 	StaticMesh* staticMesh;
-
-	//シェーダーエフェクト
-	LPD3DXEFFECT effect;
-
-	//トゥーンシェーダー用変数
-	LPDIRECT3DTEXTURE9 textureShade;
-	LPDIRECT3DTEXTURE9 textureLine;
-	
 
 	//ステータス変数
 	D3DXVECTOR3 position;		//位置
@@ -63,26 +50,40 @@ protected:
 	D3DXMATRIX matrixRotation;
 	D3DXMATRIX matrixWorld;
 
+	//インスタンシング変数
+	//描画する数
+	int renderNum;
+	//インスタンシング描画時の各オブジェクトの位置バッファー
+	LPDIRECT3DVERTEXBUFFER9 positionBuffer;
+	LPDIRECT3DVERTEXDECLARATION9 declaration;	// 頂点宣言
+
 public:
 	//Method
 	Object();
 	~Object();
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position);
+
 	void update();
-	VOID render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	VOID toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//通常レンダー
+	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	//トゥーンレンダー
+	void toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
+		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
+	//複数レンダー（インスタンシング）
+	void multipleRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
+		LPD3DXEFFECT effect);
+
 	//取得関数
 	LPD3DXMESH* getMesh() { return &staticMesh->mesh; }
-	D3DXMATRIX getMatrixWorld() { return matrixWorld; }
-	
+	D3DXMATRIX getMatrixWorld() { return matrixWorld; }	
 	D3DXVECTOR3* getPosition() { return &position; };
 	D3DXQUATERNION getQuaternion() { return quaternion; };
 	float getRadius() { return radius; }
-	
+
 	D3DXVECTOR3 getSpeed() { return speed; }
 	D3DXVECTOR3 getAcceleration() { return acceleration; }
 	D3DXVECTOR3 getGravity() { return gravity; };
-	
+
 	Ray* getAxisX() { return &axisX; };
 	Ray* getAxisY() { return &axisY; };
 	Ray* getAxisZ() { return &axisZ; };
@@ -101,6 +102,11 @@ public:
 	void activation();			//活性化
 	void inActivation();		//不活化
 
+	//描画数をセット
+	//num:描画する数を指定
+	//positionBuffer:各オブジェクトの位置を保存した配列のポインタ
+	void setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* _positionList);
+
 	//姿勢制御
 	void postureControl(D3DXVECTOR3 currentDirection, D3DXVECTOR3 nextDirection,float t)
 	{
@@ -118,7 +124,5 @@ public:
 	{
 		Base::anyAxisRotation(&quaternion, axis, degree);
 	}
-
-
 };
 

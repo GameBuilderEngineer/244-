@@ -9,15 +9,28 @@ Tutorial::Tutorial()
 
 Tutorial::~Tutorial()
 {
+	//BGM‚Ì’âŽ~
+	audio->stopCue(audioCue::TUTORIAL_BGM);
 }
 
-void Tutorial::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Tutorial::initialize(
+	Direct3D9* direct3D9,
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -26,6 +39,9 @@ void Tutorial::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _t
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
 	tutorial2D.initialize(direct3D9->device, 0, _textureLoader);
+
+	//BGM‚ÌÄ¶
+	audio->playCue(audioCue::TUTORIAL_BGM);
 }
 
 void Tutorial::update(float frameTime) {

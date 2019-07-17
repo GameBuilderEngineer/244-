@@ -10,15 +10,27 @@ Title::Title()
 
 Title::~Title()
 {
+	//BGM‚Ì’âŽ~
+	audio->stopCue(audioCue::TITLE_BGM);
 }
 
-void Title::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Title::initialize(
+	Direct3D9* direct3D9,
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
@@ -28,6 +40,9 @@ void Title::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textu
 
 	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
+
+	//BGM‚ÌÄ¶
+	audio->playCue(audioCue::TITLE_BGM);
 }
 
 void Title::update(float frameTime) {

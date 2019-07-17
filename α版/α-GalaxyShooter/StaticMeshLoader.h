@@ -4,6 +4,7 @@
 namespace staticMeshNS {
 	enum MESH_NUMBER {
 		BULLET,
+		CUBE,
 		SAMPLE_HIERARCHY_MESH,
 		MAGNET_S,
 		MAGNET_N,

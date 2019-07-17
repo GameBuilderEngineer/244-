@@ -8,6 +8,9 @@
 #include "Game.h"
 #include "Result.h"
 
+//HINSTANCE* instancePointer = NULL;
+//void setInstance(HINSTANCE* hinstance) { instancePointer = hinstance; }
+//bool roop = true;
 Director::Director(){
 	ZeroMemory(this, sizeof(Director));
 	scene = new Splash();
@@ -18,14 +21,18 @@ Director::Director(){
 }
 
 Director::~Director(){
+	//roop = false;
 	SAFE_DELETE(window);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(input);
-	SAFE_DELETE(audio);
 	SAFE_DELETE(scene);
+	SAFE_DELETE(audio);
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
+	SAFE_DELETE(shaderLoader);
+	//thread_a->join();
+	//SAFE_DELETE(thread_a);
 	ShowCursor(TRUE);
 }
 
@@ -38,18 +45,21 @@ HRESULT Director::initialize(){
 	wnd = window->wnd;
 
 #ifdef _DEBUG
+	//thread_a = new std::thread(threadA);
+
 	//debugWindow
 	debugWindow0 = new DebugWindow;
 	if (!debugWindow0)
 		return E_FAIL;
 	MFAIL(debugWindow0->initialize(instance, window->getRect().left, window->getRect().bottom, WINDOW_WIDTH, WINDOW_HEIGHT/2, DEBUG_NAME), "デバッグウィンドウ0作成失敗");
+	
 	debugWindow1 = new DebugWindow;
 	if (!debugWindow1)
 		return E_FAIL;
 	MFAIL(debugWindow1->initialize(instance, window->getRect().right, window->getRect().top, WINDOW_WIDTH/2, WINDOW_HEIGHT, DEBUG_NAME), "デバッグウィンドウ1作成失敗");
+
 	SetForegroundWindow(wnd);
 #endif // _DEBUG
-
 
 	//direct3D9
 	d3d = new Direct3D9;
@@ -74,11 +84,15 @@ HRESULT Director::initialize(){
 	//StaticMesh
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(d3d->device);
-
 	//HierarchyMesh
 	//setVisualDirectory();
 	//SKINMESH
 	//setVisualDirectory();
+
+	//シェーダー読込
+	//Shader
+	shaderLoader = new ShaderLoader;
+	shaderLoader->load(d3d->device);
 
 	//Audio(XACTエンジン)
 	setSoundDirectory();
@@ -86,7 +100,7 @@ HRESULT Director::initialize(){
 	audio->initialize();
 
 	//scene
-	scene->initialize(d3d,input,textureLoader,staticMeshLoader);
+	scene->initialize(d3d,input,audio,textureLoader,staticMeshLoader,shaderLoader);
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -164,6 +178,10 @@ void Director::update(){
 	}
 	if (input->wasKeyPressed(VK_F2))
 		lockCursor = !lockCursor;
+#ifdef _DEBUG
+	//debugWindow0->update();
+	//debugWindow1->update();
+#endif // _DEBUG
 	audio->run();
 	scene->update(frameTime);
 	scene->collisions();
@@ -232,14 +250,11 @@ void Director::displayFPS() {
 		char str[50];
 		char name[200] = { 0 };
 		GetClassNameA(wnd, name, sizeof(name));
-		sprintf(str, "fps=%d", frame);
+		sprintf(str, " fps=%d", frame);
 		strcat(name, str);
 		SetWindowTextA(wnd, name);
 		frame = 0;
 	}
-}
-
-void Director::variableFPS(){
 }
 
 void Director::changeNextScene(){
@@ -257,6 +272,18 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	scene->initialize(d3d,input, textureLoader, staticMeshLoader);
+	scene->initialize(d3d,input,audio,textureLoader,staticMeshLoader,shaderLoader);
 	currentSceneName = scene->getSceneName();
 }
+
+//void threadA()
+//{
+//	DebugWindow* debugWindow2;				//デバッグウィンドウクラス
+//	debugWindow2 = new DebugWindow;
+//	debugWindow2->initialize(*instancePointer, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, DEBUG_NAME);
+//
+//	while (roop)
+//	{
+//		debugWindow2->update();
+//	}
+//}

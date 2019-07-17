@@ -1,8 +1,13 @@
 #include <windows.h>
 #include "Director.h"
 
+
+
+
 INT WINAPI WinMain(HINSTANCE instance,HINSTANCE,LPSTR,INT)
 {
+	//setInstance(&instance);
+
 	Director* director = new Director;
 	if (director == NULL)
 	{

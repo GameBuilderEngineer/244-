@@ -1,13 +1,13 @@
 #pragma once
 #include "Base.h"
 
-struct PlaneVertex
+struct InstancingBillboardVertex
 {
 	D3DXVECTOR2 coord;
 	D3DXVECTOR2 uv;
 };
 
-class Plane : public Base
+class InstancingBillboard : public Base
 {
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	LPDIRECT3DINDEXBUFFER9 indexBuffer;
@@ -18,8 +18,8 @@ class Plane : public Base
 	LPDIRECT3DTEXTURE9 texture;
 	int num;
 public:
-	Plane();
-	~Plane();
+	InstancingBillboard();
+	~InstancingBillboard();
 
 	HRESULT initialize(LPDIRECT3DDEVICE9 device);
 

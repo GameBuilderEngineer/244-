@@ -11,6 +11,8 @@
 #include "Audio.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
+#include "ShaderLoader.h"
+//#include <thread>
 
 enum
 {
@@ -28,6 +30,7 @@ public:
 #ifdef _DEBUG
 	DebugWindow* debugWindow0;				//デバッグウィンドウクラス
 	DebugWindow* debugWindow1;				//デバッグウィンドウクラス
+	//std::thread* thread_a;
 #endif // _DEBUG
 	HWND wnd;								//ウィンドウハンドル
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
@@ -37,6 +40,7 @@ public:
 	AbstractScene* scene;					//抽象シーンクラス
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス
+	ShaderLoader* shaderLoader;		//シェーダー読込クラス
 	std::string* currentSceneName;			//現在のシーンの名前
 	int fpsMode;							//フレームレート状態変数
 	LARGE_INTEGER timeStart;				// パフォーマンスカウンターの開始値
@@ -56,7 +60,8 @@ public:
 	void render();							//描画
 	void setFrameTime();					//frameTimeの設定
 	void displayFPS();						//FPS表示
-	void variableFPS();						//可変FPS(最大FPS)
 	void fixFPS60();						//FPS60補正
 	void changeNextScene();					//シーンの切り替え
 };
+//void setInstance(HINSTANCE* hinstance);
+//void threadA();

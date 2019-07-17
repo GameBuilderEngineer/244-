@@ -147,12 +147,13 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
+    <ClCompile Include="MemoryLine.cpp" />
     <ClCompile Include="MemoryPile.cpp" />
     <ClCompile Include="MissileUI.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="PadOpe.cpp" />
-    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SkillPointUI.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
@@ -202,12 +204,13 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LostThing.h" />
     <ClInclude Include="Magnet.h" />
+    <ClInclude Include="MemoryLine.h" />
     <ClInclude Include="MemoryPile.h" />
     <ClInclude Include="MissileUI.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="PadOpe.h" />
-    <ClInclude Include="Plane.h" />
+    <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="Result2D.h" />
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="SkillPointUI.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />
