@@ -1,7 +1,6 @@
 #pragma once
 #include "Base.h"
 
-
 class Recursion:public Base
 {
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
@@ -10,9 +9,9 @@ class Recursion:public Base
 	LPDIRECT3DVERTEXDECLARATION9 declation;
 	LPDIRECT3DTEXTURE9 texture;
 	LPD3DXEFFECT effect;
+	D3DXVECTOR3 center;//重心
 	bool onRender;
 
-	D3DXVECTOR3 center;//重心
 public:
 	Recursion();
 	~Recursion();
@@ -21,4 +20,3 @@ public:
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void calculationCenter();
 };
-

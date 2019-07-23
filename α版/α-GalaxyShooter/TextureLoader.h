@@ -25,6 +25,8 @@ namespace textureLoaderNS
 		KEY_OPE,
 		PAD_OPE,
 		CREDIT,
+		WHITE_TEXTURE,
+		LIGHT001,
 		MAX_TEXTURE,
 	};
 }

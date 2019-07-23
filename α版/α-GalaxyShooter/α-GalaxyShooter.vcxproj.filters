@@ -184,6 +184,9 @@
     <Filter Include="Object\VolumeLight">
       <UniqueIdentifier>{74b6f84b-82c0-4d6f-b9d6-22a1efad1e83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UtilityFunction">
+      <UniqueIdentifier>{396fa52a-98bc-41b9-afdf-ff7de269ac03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -361,6 +364,9 @@
       <Filter>Object\VolumeLight</Filter>
     </ClCompile>
     <ClCompile Include="Lambert.cpp" />
+    <ClCompile Include="UtilityFunction.cpp">
+      <Filter>UtilityFunction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -389,9 +395,6 @@
     </ClInclude>
     <ClInclude Include="Director.h">
       <Filter>Director</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="HitPointUI.h">
       <Filter>UI</Filter>
@@ -502,6 +505,12 @@
       <Filter>Object\VolumeLight</Filter>
     </ClInclude>
     <ClInclude Include="Lambert.h" />
+    <ClInclude Include="Game.h">
+      <Filter>Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilityFunction.h">
+      <Filter>UtilityFunction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

@@ -178,6 +178,7 @@
     <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
+    <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
+    <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VolumeLight.h" />
     <ClInclude Include="WeaponUI.h" />

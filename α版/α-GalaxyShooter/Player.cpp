@@ -2,6 +2,9 @@
 using namespace playerNS;
 
 
+//===================================================================================================================================
+//コンストラクタ
+//===================================================================================================================================
 Player::Player()
 {
 	hp = 100;
@@ -14,10 +17,16 @@ Player::Player()
 	recoveryTimer = 0.0f;
 }
 
+//===================================================================================================================================
+//デストラクタ
+//===================================================================================================================================
 Player::~Player()
 {
 }
 
+//===================================================================================================================================
+//初期化
+//===================================================================================================================================
 void Player::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
 	Object::initialize(device, _staticMesh, _position);
@@ -25,6 +34,9 @@ void Player::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXV
 	radius = bodyCollide.getRadius();
 }
 
+//===================================================================================================================================
+//更新
+//===================================================================================================================================
 void Player::update(float frameTime)
 {
 
@@ -56,6 +68,10 @@ void Player::update(float frameTime)
 	Object::update();
 }
 
+//===================================================================================================================================
+//描画
+//===================================================================================================================================
+//トゥーンレンダー
 void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
@@ -64,6 +80,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 	bodyCollide.render(device, matrixWorld);
 #endif // _DEBUG
 }
+//通常描画
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	Object::render(device,view,projection,cameraPositon);
@@ -72,11 +89,20 @@ void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//ジャンプ
+//処理内容：加速度へ加算処理を行う
+//===================================================================================================================================
 void Player::jump()
 {
 	acceleration += axisY.direction*JUMP_FORCE;
 }
 
+//===================================================================================================================================
+//移動
+//処理内容：入力された２次元ベクトルに応じてカメラ情報に基づき、速度へ加算処理を行う。
+//          合わせて
+//===================================================================================================================================
 void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVECTOR3 cameraAxisZ)
 {
 	if (operationDirection.x == 0 && operationDirection.y == 0)return;//入力値が0以下ならば移動しない
@@ -92,6 +118,9 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
+//===================================================================================================================================
+//
+//===================================================================================================================================
 void Player::reset()
 {
 	position = D3DXVECTOR3(0, 10, 0);

@@ -45,9 +45,9 @@ namespace gameNS
 	{
 		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
 #ifdef _DEBUG
-		D3DXQUATERNION(0.0f,100.0f,-500,0.0f)
+		D3DXQUATERNION(0.0f,20.0f,-40,0.0f)
 #else
-		D3DXQUATERNION(0.0f,20.0f,-400,0.0f)
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
 #endif // _DEBUG
 	};
 	
@@ -91,21 +91,22 @@ private:
 	MemoryLine memoryLine1P;
 	MemoryLine memoryLine2P;
 	Recursion* recursion1P;
+	Recursion recursion;
 
 
 	Object testObject;//仮
 	Object testCube;//仮
 
 	bool onUI = true;
-	int currentBullet1;//仮
-	int currentBullet2;//仮
+	int currentBullet1;//現在の弾番号[1P]
+	int currentBullet2;//現在の弾番号[2P]
 	float intervalBullet1;
 	float intervalBullet2;
-	int currentMemoryPile1;//仮
-	int currentMemoryPile2;//仮
-	float FrameTime = 0.0f;//仮
+	int currentMemoryPile1;//現在のメモリーパイル番号[1P]
+	int currentMemoryPile2;//現在のメモリーパイル番号[1P]
+	float frameTime = 0.0f;//フレームタイム保存変数
 	bool onRecursion1P;
-
+	bool collitionMemoryLine1P;//1Pのメモリーラインと2Pが接触しているかどうか
 
 	int reverseValue1PXAxis;
 	int reverseValue1PYAxis;

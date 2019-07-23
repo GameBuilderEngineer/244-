@@ -34,7 +34,7 @@ VS_OUT VS(
 	Out.position = float4(
 		position.x,
 		position.y,
-		0.0f,
+		position.z,
 		1.0f);
 
 	float4x4 matrixWorld = float4x4(

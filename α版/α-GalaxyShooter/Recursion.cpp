@@ -61,7 +61,7 @@ HRESULT Recursion::initialize(LPDIRECT3DDEVICE9 device, D3DXVECTOR3* vertexArray
 	//頂点宣言
 	D3DVERTEXELEMENT9 vertexElement[] = {
 		{0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0},//頂点座標
-		{0,sizeof(Vertex3D),D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},//UV
+		{1,0,D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0},//UV
 		D3DDECL_END()
 	};
 	device->CreateVertexDeclaration(vertexElement, &declation);
@@ -89,7 +89,7 @@ void Recursion::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 
 	//デバイスデータストリームにメッシュの頂点バッファをバインド
 	device->SetStreamSource(0, vertexBuffer, 0, sizeof(Vertex3D));
-	device->SetStreamSource(0, uvBuffer, sizeof(Vertex3D), sizeof(UV));
+	device->SetStreamSource(1, uvBuffer, sizeof(Vertex3D), sizeof(UV));
 	
 	//インデックスバッファをセット
 	device->SetIndices(indexBuffer);

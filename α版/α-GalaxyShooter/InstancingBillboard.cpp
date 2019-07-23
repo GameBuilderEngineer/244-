@@ -10,7 +10,7 @@ InstancingBillboard::~InstancingBillboard()
 {
 }
 
-HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
+HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device, LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9 _texture)
 {
 	InstancingBillboardVertex vertex[4] = {
 		{D3DXVECTOR2( -1.0f,  1.0f),D3DXVECTOR2(0.0f,0.0f)},
@@ -47,29 +47,39 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device)
 	};
 	device->CreateVertexDeclaration(vertexElement, &declation);
 
-	//シェーダーを読み込む
-	setShaderDirectory();
-	HRESULT hr;
-	LPD3DXBUFFER err = NULL;
-	if (FAILED(hr = D3DXCreateEffectFromFile(device, "InstancingBillboard.fx", NULL, NULL, 0, NULL, &effect, &err)))
-	{
-		MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "ERROR", MB_OK);
-	}
+	//シェーダーを設定
+	effect = _effect;
+
+	//setShaderDirectory();
+	//HRESULT hr;
+	//LPD3DXBUFFER err = NULL;
+	//if (FAILED(hr = D3DXCreateEffectFromFile(device, "InstancingBillboard.fx", NULL, NULL, 0, NULL, &effect, &err)))
+	//{
+	//	MessageBox(NULL, (LPCSTR)err->GetBufferPointer(), "ERROR", MB_OK);
+	//}
 	
-	//テクスチャを読み込む
-	setVisualDirectory();
-	D3DXCreateTextureFromFileA(device, "ring.png", &texture);
+	//テクスチャを設定
+	texture = _texture;
+	//setVisualDirectory();
+	//D3DXCreateTextureFromFileA(device, "ring.png", &texture);
 
 	return S_OK;
 }
 
 void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
+	if (!onRender)return;
 	if (renderNum <= 0)return;
 	//回転を打ち消す。
 	//D3DXMATRIX cancelRotation = view;
 	//cancelRotation._41 = cancelRotation._42 = cancelRotation._43 = 0;
 	//D3DXMatrixInverse(&cancelRotation, NULL,&cancelRotation);
+
+
+
+	//αテスト
+	device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	device->SetRenderState(D3DRS_ALPHAREF, 0x00);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -77,6 +87,8 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
@@ -108,6 +120,8 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	//後始末
 	device->SetStreamSourceFreq(0, 1);
 	device->SetStreamSourceFreq(1, 1);
+	// αブレンドを切る
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 }
 
@@ -126,6 +140,7 @@ void InstancingBillboard::createPositionSpherical(LPDIRECT3DDEVICE9 device, int 
 	//位置情報バッファの作成
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
+	onRender = true;
 }
 
 void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList)
@@ -147,4 +162,9 @@ void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DX
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
 	onRender = true;
 	SAFE_DELETE_ARRAY(position);
+}
+
+void InstancingBillboard::offRender()
+{
+	onRender = false;
 }

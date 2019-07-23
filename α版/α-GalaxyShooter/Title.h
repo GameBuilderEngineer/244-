@@ -13,6 +13,7 @@ class Title : public AbstractScene
 {
 private:
 	TitleTransition titleTrans;
+	Sprite backGround;
 	TitleTransPos titleTransPos;
 
 public:

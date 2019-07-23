@@ -17,7 +17,8 @@ private:
 	int maxHp;
 	int sp;
 	int maxSp;
-	float recoveryTimer;
+	float recoveryTimer;//自動回復時間
+	float downTimer;//ダウンタイマー[体力が切れるorメモリーラインを切断される]
 
 public:
 	BoundingSphere bodyCollide;

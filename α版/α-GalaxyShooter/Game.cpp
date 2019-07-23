@@ -131,7 +131,7 @@ void Game::initialize(
 
 	//インスタンスプレーン
 	plane.createPositionSpherical(direct3D9->device,3000, 250.0f);
-	plane.initialize(direct3D9->device);
+	plane.initialize(direct3D9->device,*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::RING));
 
 	//メモリーパイルの初期化
 	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
@@ -144,8 +144,19 @@ void Game::initialize(
 	}
 
 	//メモリーラインの初期化
-	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1]);
-	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2]);
+	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
+	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
+
+	//リカージョンの初期化
+	D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE] = {
+		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.0f,0.5f,0.0f),
+		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.375f,0.0f,0.0f),
+		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(1.0f,0.1875f,0.0f),
+		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(1.0f,0.8125f,0.0f),
+		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.375f,1.0f,0.0f)
+	};
 
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
@@ -165,8 +176,6 @@ void Game::initialize(
 	testObject.setNumOfRender(direct3D9->device, 10, positionList);
 	testObject.activation();
 
-
-
 	D3DXVECTOR3 cubeList[NUM_CUBE];
 	for (int i = 0; i < NUM_CUBE; i++)
 	{
@@ -185,10 +194,11 @@ void Game::initialize(
 
 float difference = 1.0f;
 
-void Game::update(float frameTime) {
+void Game::update(float _frameTime) {
 	
-	sceneTimer += frameTime;
-	FrameTime = frameTime;
+	sceneTimer += _frameTime;
+	frameTime = _frameTime;
+
 	if (frameTime > 0.06)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
 	
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -416,7 +426,8 @@ void Game::update(float frameTime) {
 	//メモリーパイルの更新
 	{
 		//1Pのメモリーパイルのセット
-		if ( !onRecursion1P && (input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
+		if (!onRecursion1P && 
+			(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
 		{
 			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
 			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
@@ -438,7 +449,20 @@ void Game::update(float frameTime) {
 				recursion1P = new Recursion;
 				recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
 			}
-
+		}
+		//メモリーパイルの切断処理
+		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
+		{
+			if (collitionMemoryLine1P)
+			{//[条件判定]1Pのメモリーラインと2Pが衝突
+				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+				{//メモリーパイプとメモリーラインの消失
+					memoryPile1P[i].switchLost();//消失
+					memoryLine1P.disconnect();//切断
+				}
+			}
+			
 		}
 
 		//2Pのメモリーパイルのセット
@@ -563,6 +587,13 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
+
+	//メモリーラインの切断ガイドの表示
+	if (collitionMemoryLine1P)
+	{
+
+	}
+
 	//xFileStaticMeshテスト描画
 	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
@@ -589,7 +620,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		sceneTime:%.2f\n\
 		frameTime:%.2f\n\
 		",
-		sceneTimer, FrameTime);
+		sceneTimer, frameTime);
 	text.print(10, 10, "acceleration(\t%.2f,\t%.2f,\t%.2f)",
 		player[PLAYER1].getAcceleration().x,
 		player[PLAYER1].getAcceleration().y,
@@ -625,6 +656,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
+
+	text.print(WINDOW_WIDTH / 2, 170, 
+		"collisionMemoryLine(%d)\n",
+		collitionMemoryLine1P
+	);
+	text.print(WINDOW_WIDTH / 2, 200,
+		"collisionMemoryLine(%.02f)\n",
+		memoryLine1P.calculationDistance(*player[PLAYER2].getPosition())
+	);
+	
 
 	text2.print(10, 450,
 		"1P:Controller\n\
@@ -767,7 +808,7 @@ void Game::collisions() {
 		}
 	}
 
-	//ネストが深い！！
+	//ガラクタとプレイヤー
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		for (int k = 0; k < JUNK_MAX; k++)
@@ -784,6 +825,11 @@ void Game::collisions() {
 		}
 	}
 
+	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
+	if ( memoryLine1P.collision(*player[PLAYER2].getPosition()))
+		collitionMemoryLine1P = true;
+	else 
+		collitionMemoryLine1P = false;
 
 }
 

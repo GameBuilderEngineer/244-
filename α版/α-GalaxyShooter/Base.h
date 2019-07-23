@@ -50,6 +50,11 @@ struct UV
 {
 	D3DXVECTOR2 coord;
 };
+struct Line
+{
+	D3DXVECTOR3 start;
+	D3DXVECTOR3 end;
+};
 
 class Base
 {
@@ -71,6 +76,8 @@ public:
 	float between2VectorDirection(D3DXVECTOR3* out, D3DXVECTOR3 position1, D3DXVECTOR3 position2);
 	//頂点バッファへのコピー
 	void copyVertexBuffer(unsigned size, void *sorce, IDirect3DVertexBuffer9 *buffer);
+	//ある点との線分上で最も近い点を求める
+	D3DXVECTOR3 nearestPointOnLine(D3DXVECTOR3 start,D3DXVECTOR3 end,D3DXVECTOR3 point);
 };
 
 //プロトタイプ宣言

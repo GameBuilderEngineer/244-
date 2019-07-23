@@ -38,6 +38,16 @@ void Title::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
+	backGround.initialize(
+		direct3D9->device, 
+		*textureLoader->getTexture(textureLoaderNS::WHITE_TEXTURE),
+		spriteNS::TOP_LEFT,								// Œ´“_
+		WINDOW_WIDTH,											// ‰¡•
+		WINDOW_HEIGHT,											// ‚‚³
+		D3DXVECTOR3(0, 0, 0),		// À•W
+		D3DXVECTOR3(0, 0, 0),					// ‰ñ“]
+		TITLE_TRANSPOS_COLOR							// F
+	);
 	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
@@ -96,6 +106,7 @@ void Title::render3D(Direct3D9* direct3D9) {
 
 void Title::renderUI(LPDIRECT3DDEVICE9 device) {
 
+	backGround.render(device);
 	titleTransPos.render(device);
 	titleTrans.render(device);
 }
@@ -109,7 +120,7 @@ void Title::AI(){
 }
 
 void Title::uninitialize() {
-
+	backGround.uninitialize();
 	titleTrans.uninitialize();
 	titleTransPos.uninitialize();
 }

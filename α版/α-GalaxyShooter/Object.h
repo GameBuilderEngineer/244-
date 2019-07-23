@@ -24,6 +24,7 @@ protected:
 	D3DXQUATERNION quaternion;	//回転
 	D3DXVECTOR3 scale;			//スケール
 	float radius;				//衝突半径
+	float alpha;				//透過値
 
 	//移動系変数
 	D3DXVECTOR3 speed;			//速度
@@ -34,7 +35,8 @@ protected:
 	bool onGravity;				//重力有効化フラグ
 	bool onActive;				//アクティブ化フラグ
 	bool onRender;				//描画有効化フラグ
-
+	bool onTransparent;			//透過フラグ
+	bool operationAlpha;		//透過値の操作有効フラグ
 	//方向6軸
 	Ray axisX;
 	Ray axisY;
@@ -99,8 +101,11 @@ public:
 	void setGravity(D3DXVECTOR3 source, float power);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setQuaternion(D3DXQUATERNION _quaternion) { quaternion = _quaternion; }
-	void activation();			//活性化
-	void inActivation();		//不活化
+	void setAlpha(float value);
+	void activation();								//活性化
+	void inActivation();							//不活化
+	void switchTransparent(bool flag);				//透過の切り替え
+	void switchOperationAlpha(bool flag);			//透過値操作フラグの切り替え
 
 	//描画数をセット
 	//num:描画する数を指定

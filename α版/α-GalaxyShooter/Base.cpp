@@ -118,3 +118,30 @@ void Base::copyVertexBuffer(unsigned size, void *sorce, IDirect3DVertexBuffer9 *
 	memcpy(p, sorce, size);
 	buffer->Unlock();
 }
+
+D3DXVECTOR3 Base::nearestPointOnLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXVECTOR3 point)
+{
+	//始点から終点への線分ベクトルを求める
+	D3DXVECTOR3 line = end - start;
+	//始点から点へのベクトルを求める
+	D3DXVECTOR3 toPoint = point - start;
+	//上記二つのベクトルの内積を求める
+	float dot = D3DXVec3Dot(&line, &toPoint);
+	//線分の始点から、点から線分へ垂直に下した交点との距離を求める(内積/線分の大きさ）
+	float distance = dot / D3DXVec3Length(&line);
+	//始点から交点との距離を判断して、最も近い点を戻す
+	if (distance <= 0)
+	{
+		return start;
+	}
+	else if(distance>=D3DXVec3Length(&line)){
+		return end;
+	}
+	else
+	{
+		D3DXVECTOR3 result;
+		D3DXVec3Normalize(&result, &line);
+		result = (result * distance) + start;
+		return result;
+	}
+}

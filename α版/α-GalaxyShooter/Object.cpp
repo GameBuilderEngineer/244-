@@ -3,6 +3,9 @@
 Object::Object()
 {
 	ZeroMemory(this, sizeof(Object));
+	alpha = 1.0f;
+	onTransparent = false;
+	operationAlpha = false;
 	D3DXMatrixIdentity(&matrixRotation);
 	quaternion = D3DXQUATERNION(0, 0, 0, 1);
 	axisX.initialize(D3DXVECTOR3(0, 0, 0),D3DXVECTOR3(1, 0, 0));
@@ -149,6 +152,21 @@ void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 	device->SetRenderState(D3DRS_LIGHTING, true);
 
+	if (onTransparent)
+	{
+		//αブレンディングを設定する
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+	}
+	else {
+		//αブレンディングを設定しない
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
+	}
+
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);
 
@@ -163,7 +181,14 @@ void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	// レンダリング			
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		device->SetMaterial(&staticMesh->materials[i]);
+		if (operationAlpha) {
+			D3DMATERIAL9 material = staticMesh->materials[i];
+			material.Diffuse.a = alpha;
+			device->SetMaterial(&material);
+		}
+		else {
+			device->SetMaterial(&staticMesh->materials[i]);
+		}
 		device->SetTexture(0,staticMesh->textures[i]);
 
 		device->DrawIndexedPrimitive(
@@ -248,4 +273,19 @@ void Object::inActivation()
 {
 	onRender = false;
 	onActive = false;
+}
+
+void Object::setAlpha(float value)
+{
+	alpha = value;
+}
+
+void Object::switchTransparent(bool flag)
+{
+	onTransparent = flag;
+}
+
+void Object::switchOperationAlpha(bool flag)
+{
+	operationAlpha = flag;
 }
