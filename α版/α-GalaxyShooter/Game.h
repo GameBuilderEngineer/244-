@@ -22,6 +22,8 @@
 #include "MemoryPile.h"
 #include "MemoryLine.h"
 #include "Recursion.h"
+#include "Wasuremono.h"
+#include "WasuremonoManager.h"
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
 
@@ -102,6 +104,8 @@ private:
 
 	Object testObject;//‰¼
 	Object testCube;//‰¼
+	std::vector<Wasuremono*> wasuremono;
+	WasuremonoManager wasuremonoManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
 

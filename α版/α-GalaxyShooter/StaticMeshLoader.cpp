@@ -19,6 +19,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_STATIC_MESH] = { "StaticMesh.x" };
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
 	fileName[MEMORY_PILE] = { "memoryPile.x" };
+	fileName[CUBE] = {"cube.x"};
 }
 
 StaticMeshLoader::~StaticMeshLoader()

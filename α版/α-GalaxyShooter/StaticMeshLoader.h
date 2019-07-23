@@ -19,6 +19,7 @@ namespace staticMeshNS {
 		SAMPLE_STATIC_MESH,
 		SAMPLE_TOON_MESH,
 		MEMORY_PILE,
+		CUBE,
 		MESH_NUM,
 	};
 }

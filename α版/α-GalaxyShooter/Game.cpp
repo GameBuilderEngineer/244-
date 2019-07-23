@@ -504,8 +504,14 @@ void Game::update(float _frameTime) {
 		memoryLine2P.update(direct3D9->device,frameTime);
 	}
 
+	// ƒƒXƒŒƒ‚ƒm‚ÌXV
+	wasuremonoManager.update(frameTime);
+	for (int i = 0; i < wasuremono.size(); i++)
+	{
+		wasuremono[i]->update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
+	}
 
-
+	//if (input->anyKeyPressed())changeScene(nextScene);
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -560,10 +566,10 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	for (int i = 0; i < JUNK_MAX; i++)
-	{// ƒKƒ‰ƒNƒ^‚Ì•`‰æ
-		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	//for (int i = 0; i < junk_max; i++)
+	//{// ƒKƒ‰ƒNƒ^‚Ì•`‰æ
+	//	junk[i].render(direct3d9->device, currentcamera.view, currentcamera.projection, currentcamera.position);
+	//}
 
 	//ƒtƒB[ƒ‹ƒh‚Ì•`‰æ
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -616,6 +622,11 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	// ƒƒXƒŒƒ‚ƒm‚Ì•`‰æ
+	for(int i = 0; i < wasuremono.size(); i++)
+	{
+		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -874,4 +885,5 @@ void Game::uninitialize() {
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 	}
+	wasuremonoManager.uninitialize();
 }
