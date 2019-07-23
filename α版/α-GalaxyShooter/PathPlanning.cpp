@@ -28,7 +28,7 @@ PathPlanning::~PathPlanning(void)
 //=============================================================================
 void PathPlanning::initialize(void)
 {
-	KnowledgeSourceBase::initialize();
+
 }
 
 

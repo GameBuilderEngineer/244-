@@ -39,8 +39,8 @@ namespace BB
 	enum TYPE
 	{
 		ENVIRONMENT_RECOGNITION,	// 環境認識
-		BODY,						// 身体
 		MEMORY,						// 記憶
+		BODY,						// 身体
 		NUM_MAX						// ブラックボードの数
 	};
 }
@@ -65,4 +65,16 @@ namespace Path
 		NUM_MAX,					// 経路の数
 		INVALID = -1				// 無効ルート
 	};
+}
+
+namespace StateTransition
+{
+	enum
+	{
+		OFFENSE,
+		DEFFENSE,
+		STATE_MAX,
+		INVALID = -1
+	};
+
 }

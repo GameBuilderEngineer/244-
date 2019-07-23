@@ -28,7 +28,7 @@ MotionGeneration::~MotionGeneration(void)
 //=============================================================================
 void MotionGeneration::initialize(void)
 {
-	KnowledgeSourceBase::initialize();
+
 }
 
 

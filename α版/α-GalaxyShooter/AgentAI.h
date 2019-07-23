@@ -4,6 +4,8 @@
 // 作成日：2019/6/15
 //-----------------------------------------------------------------------------
 #pragma once
+#include "Base.h"
+#include "Player.h"
 #include "arbiter.h"
 #include "Sensor.h"
 #include "EnvironmentAnalysis.h"
@@ -13,22 +15,21 @@
 #include "BlackBoardRecognition.h"
 #include "BlackBoardBody.h"
 #include "BlackBoardMemory.h"
+#include "StateMachine.h"
+#include "BehaviorTree.h"
 
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class AgentAI {
+class AgentAI: public Player {
 private:
 	// Data
 	static int	numAgent;	// AIの数  
 	int			aiID;		// AIの固有識別番号
-	// Playerクラスに必要だと思われる
-	//bool isNPC;
-	//int characterID;
 
 	// アービター：各モジュールのタイミングや切り替えを制御
-	Arbiter *arbiter;								// 調停者（Arbiter）
+	Arbiter *arbiter;								// 調停役
 
 	// AIモジュール（ナレッジソース）：ブラックボードを読み書きしながらAIを動かす
 	Sensor					*sensor; 				// センサー 
@@ -39,8 +40,8 @@ private:
 
 	// ブラックボード：AIの記憶や身体状態を記録する黒板的概念
 	RecognitionBB			*recognitionBB; 		// 環境認識
-	BodyBB					*bodyBB; 				// 身体状態
 	MemoryBB				*memoryBB; 				// 記憶
+	BodyBB					*bodyBB; 				// 身体状態
 
 public:
 	// Method

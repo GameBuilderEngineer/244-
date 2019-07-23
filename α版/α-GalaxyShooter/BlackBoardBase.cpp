@@ -39,4 +39,3 @@ void BlackBoardBase::uninitialize(void)
 {
 
 }
-

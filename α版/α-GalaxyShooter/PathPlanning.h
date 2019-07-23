@@ -5,12 +5,16 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "BlackBoardRecognition.h"
+#include "BlackBoardMemory.h"
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class PathPlanning:public KnowledgeSourceBase {
 private:
+	RecognitionBB* recognitionBB;
+	MemoryBB* memoryBB;
 
 public:
 	// Method
@@ -19,4 +23,6 @@ public:
 	void initialize(void) override;		// 初期化処理
 	void uninitialize(void) override;	// 終了処理
 	void update(void) override;			// 更新処理
+	void setBlackBoard(RecognitionBB* adr1, MemoryBB* adr2) { recognitionBB = adr1; memoryBB = adr2; }
+
 };

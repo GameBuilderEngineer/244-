@@ -28,7 +28,7 @@ EnvironmentAnalysis::~EnvironmentAnalysis(void)
 //=============================================================================
 void EnvironmentAnalysis::initialize(void)
 {
-	KnowledgeSourceBase::initialize();
+
 }
 
 

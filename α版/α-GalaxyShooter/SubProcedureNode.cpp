@@ -1,23 +1,25 @@
 //-----------------------------------------------------------------------------
-// ナレッジソース基底処理 [KnowledgeSourceBase.cpp]
+// ビヘイビアツリー サブプロシージャノード処理 [SubProcedureNode.cpp]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/15
+// 作成日：2019/7/23
 //-----------------------------------------------------------------------------
-#include "KnowledgeSourceBase.h"
+#include "SubProcedureNode.h"
+using namespace BehaviorTreeNS;
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-KnowledgeSourceBase::KnowledgeSourceBase(void)
+SubProcedureNode::SubProcedureNode(int treeType, int parentNumber, NODE_TAG tag): BehaviorNodeBase(treeType, parentNumber, tag)
 {
 
 }
 
 
 //=============================================================================
-// デストラクタ
+// 実行
 //=============================================================================
-KnowledgeSourceBase::~KnowledgeSourceBase(void)
+NODE_STATUS SubProcedureNode::run(RecognitionBB* recognitionBB,
+	MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record)
 {
-
+	return NODE_STATUS::SUCCESS;
 }

@@ -1,23 +1,24 @@
 //-----------------------------------------------------------------------------
-// ナレッジソース基底処理 [KnowledgeSourceBase.cpp]
+// ビヘイビアツリー アクションノード処理 [ActionNode.cpp]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/15
+// 作成日：2019/7/17
 //-----------------------------------------------------------------------------
-#include "KnowledgeSourceBase.h"
+#include "ActionNode.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-KnowledgeSourceBase::KnowledgeSourceBase(void)
+ActionNode::ActionNode(int treeType, int parentNumber, NODE_TAG tag): BehaviorNodeBase(treeType, parentNumber, tag)
 {
 
 }
 
 
 //=============================================================================
-// デストラクタ
+// 実行
 //=============================================================================
-KnowledgeSourceBase::~KnowledgeSourceBase(void)
+NODE_STATUS ActionNode::run(RecognitionBB* recognitionBB,
+	MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record)
 {
-
+	return NODE_STATUS::SUCCESS;
 }

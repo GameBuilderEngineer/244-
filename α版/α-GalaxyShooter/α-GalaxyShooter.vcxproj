@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -123,10 +123,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
+    <ClCompile Include="ActionNode.cpp" />
     <ClCompile Include="AgentAI.cpp" />
     <ClCompile Include="Arbiter.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BehaviorNodeBase.cpp" />
+    <ClCompile Include="BehaviorRecord.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="BlackBoardBase.cpp" />
     <ClCompile Include="BlackBoardBody.cpp" />
     <ClCompile Include="BlackBoardMemory.cpp" />
@@ -152,7 +156,6 @@
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="HpEffect.cpp" />
-    <ClCompile Include="iiduka2.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
@@ -174,6 +177,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Result2D.cpp" />
+    <ClCompile Include="RuleNode.cpp" />
     <ClCompile Include="ScreenEffectBase.cpp" />
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
@@ -183,7 +187,9 @@
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="Splash2D.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
+    <ClCompile Include="SubProcedureNode.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimerUI.cpp" />
@@ -201,11 +207,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="ActionNode.h" />
     <ClInclude Include="AgentAI.h" />
     <ClInclude Include="AICommon.h" />
     <ClInclude Include="Arbiter.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BehaviorNodeBase.h" />
+    <ClInclude Include="BehaviorRecord.h" />
+    <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BlackBoardBase.h" />
     <ClInclude Include="BlackBoardBody.h" />
@@ -251,6 +261,7 @@
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Result2D.h" />
+    <ClInclude Include="RuleNode.h" />
     <ClInclude Include="ScreenEffectBase.h" />
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="SelectCharacter2D.h" />
@@ -260,7 +271,9 @@
     <ClInclude Include="Splash.h" />
     <ClInclude Include="Splash2D.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StaticMeshLoader.h" />
+    <ClInclude Include="SubProcedureNode.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimerUI.h" />

@@ -40,17 +40,3 @@ void BodyBB::uninitialize(void)
 {
 
 }
-
-
-//=============================================================================
-// モジュールにアクセス許可を返す
-//=============================================================================
-bool BodyBB::getAccessPermission(int tag)
-{
-	if (tag == Module::MOTION_GENERATION)
-	{
-		return true;
-	}
-
-	return false;
-}

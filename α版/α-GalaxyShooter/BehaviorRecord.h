@@ -1,22 +1,22 @@
 //-----------------------------------------------------------------------------
-// 身体ブラックボード処理 [BlackBoardBody.h]
+// ビヘイビアレコード [BehaviorRecord.h]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/19
+// 作成日：2019/7/17
 //-----------------------------------------------------------------------------
-#pragma once;
-#include "BlackBoardBase.h"
+#pragma once
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class BodyBB : public BlackBoardBase {
-protected:
-	// Data
+class BehaviorRecord
+{
+private:
+	int step;	// 子ノード何番目を実行中かを記録
 
 public:
-	// Method
-	BodyBB(void);
-	~BodyBB(void);
-	void initialize(void) override;				// 初期化処理
-	void uninitialize(void) override;			// 終了処理
+	BehaviorRecord(void);
+	~BehaviorRecord();
+	int getStep(void) { return step; }
+	void setStep(int step) { this->step = step; }
 };
+

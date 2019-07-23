@@ -226,6 +226,12 @@
     <Filter Include="Effect\ScreenEffectBase">
       <UniqueIdentifier>{0621b3be-98ca-44d9-a499-42b8633761d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\BehaviorTree">
+      <UniqueIdentifier>{aaf3ace7-37b8-431a-ab3a-d69454688926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\StateMachine">
+      <UniqueIdentifier>{d2746852-c7a4-4d7a-be64-d7678a39b131}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -450,11 +456,29 @@
     <ClCompile Include="WasuremonoTable.cpp">
       <Filter>Object\Wasuremono</Filter>
     </ClCompile>
-    <ClCompile Include="iiduka2.cpp">
-      <Filter>Effect\ScreenEffectBase</Filter>
-    </ClCompile>
     <ClCompile Include="WasuremonoSeries.cpp">
       <Filter>Object\Wasuremono</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorNodeBase.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorRecord.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>AI\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SubProcedureNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -649,6 +673,27 @@
     </ClInclude>
     <ClInclude Include="WasuremonoSeries.h">
       <Filter>Object\Wasuremono</Filter>
+    </ClInclude>
+    <ClInclude Include="RuleNode.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorNodeBase.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorRecord.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>AI\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionNode.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="SubProcedureNode.h">
+      <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
