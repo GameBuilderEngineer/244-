@@ -53,7 +53,7 @@ void Game::initialize(
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getPosition());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
