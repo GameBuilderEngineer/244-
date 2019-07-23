@@ -114,7 +114,7 @@ void TitleTransPos::titleTransPosMove(void)
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_START, 0));
 #else
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_START, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_RELEASE_START, 0));
 #endif 
 		break;
 
@@ -123,7 +123,7 @@ void TitleTransPos::titleTransPosMove(void)
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_TUTORIAL, 0));
 #else
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_TUTORIAL, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_RELEASE_TUTORIAL, 0));
 #endif 
 		break;
 
@@ -132,7 +132,7 @@ void TitleTransPos::titleTransPosMove(void)
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_OPERATION, 0));
 #else
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_OPERATION, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_RELEASE_OPERATION, 0));
 #endif 
 		break;
 
@@ -141,7 +141,7 @@ void TitleTransPos::titleTransPosMove(void)
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_CREDIT, 0));
 #else
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_CREDIT, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_RELEASE_CREDIT, 0));
 #endif 
 		break;
 
@@ -150,7 +150,7 @@ void TitleTransPos::titleTransPosMove(void)
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_END, 0));
 #else
-		titleTransPos.setPosition2(D3DXVECTOR3(0, CNT_RELEASE_END, 0));
+		setPosition2(D3DXVECTOR3(0, CNT_RELEASE_END, 0));
 #endif 
 		break;
 	}
