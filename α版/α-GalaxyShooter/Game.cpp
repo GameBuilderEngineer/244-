@@ -150,7 +150,7 @@ void Game::initialize(
 
 	pose.initialize(direct3D9->device, 0, _textureLoader);
 
-}
+
 	// ƒƒXƒŒƒ‚ƒm‚Ì‰Šú‰»
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 

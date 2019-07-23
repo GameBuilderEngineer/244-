@@ -128,7 +128,10 @@ void Title::render(Direct3D9* direct3D9) {
 void Title::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		titlePlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		titlePlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
 }
 

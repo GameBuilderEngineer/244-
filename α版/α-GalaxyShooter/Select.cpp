@@ -12,13 +12,24 @@ Select::~Select()
 
 }
 
-void Select::initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) {
+void Select::initialize(Direct3D9* _direct3D9,
+	Input* _input,
+	Audio* _audio,
+	TextureLoader* _textureLoader,
+	StaticMeshLoader* _staticMeshLoader,
+	ShaderLoader* _shaderLoader) {
+	//direct3D9
+	direct3D9 = _direct3D9;
 	//Input
 	input = _input;
+	//audio
+	audio = _audio;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
+	//shaderLoader
+	shaderLoader = _shaderLoader;
 	//camera
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -77,7 +88,10 @@ void Select::render(Direct3D9* direct3D9) {
 void Select::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		selectPlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		selectPlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
 }
 

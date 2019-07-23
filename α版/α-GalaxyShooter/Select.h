@@ -29,7 +29,12 @@ private:
 public:
 	Select();
 	~Select();
-	virtual void initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) override;
+	virtual void initialize(Direct3D9* _direct3D9,
+		Input* _input,
+		Audio* _audio,
+		TextureLoader* _textureLoader,
+		StaticMeshLoader* _staticMeshLoader,
+		ShaderLoader* _shaderLoader) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;
