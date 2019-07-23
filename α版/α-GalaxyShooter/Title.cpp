@@ -32,11 +32,23 @@ void Title::initialize(
 	//shaderLoader
 	shaderLoader = _shaderLoader;
 	//camera
-	camera = new Camera;
-	camera->initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
-	camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	camera->setPosition(D3DXVECTOR3(0, 0, -1));
-	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+	camera = new Camera[NUM_PLAYER];
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		camera[i].setTarget(titlePlayer[i].getPosition());
+		camera[i].setTargetX(&titlePlayer[i].getAxisX()->direction);
+		camera[i].setTargetY(&titlePlayer[i].getAxisY()->direction);
+		camera[i].setTargetZ(&titlePlayer[i].getAxisZ()->direction);
+		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
+		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+	}
+
+	//light
+	light = new Light;
+	light->initialize(direct3D9);
 
 	backGround.initialize(
 		direct3D9->device, 
@@ -53,11 +65,15 @@ void Title::initialize(
 
 	//BGMの再生
 	audio->playCue(audioCue::TITLE_BGM);
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		titlePlayer[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)titleNS::PLAYER_POSITION[i]);
+		titlePlayer[i].setPosition(D3DXVECTOR3(-15, 100, 15));
+	}
 }
 
 void Title::update(float frameTime) {
-
-	camera->update();
 
 	// キーを押したら選択UI移動
 	if (input->wasKeyPressed(VK_DOWN))
@@ -88,20 +104,32 @@ void Title::update(float frameTime) {
 
 	titleTrans.update();
 	titleTransPos.update();
+
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		// カメラアップデート
+		camera[i].setUpVector(titlePlayer[i].getAxisY()->direction);
+		camera[i].update();
+	}
+
 }
 
 void Title::render(Direct3D9* direct3D9) {
 	//1Pカメラ・ウィンドウ
-	direct3D9->device->SetTransform(D3DTS_VIEW, &camera->view);
-	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera->projection);
+	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
+	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
 	direct3D9->changeViewportFullWindow();
-	render3D(direct3D9);
+	render3D(direct3D9, camera[0]);
 	//UI
 	renderUI(direct3D9->device);
 }
 
-void Title::render3D(Direct3D9* direct3D9) {
-
+void Title::render3D(Direct3D9* direct3D9, Camera currentCamera) {
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		titlePlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
 }
 
 void Title::renderUI(LPDIRECT3DDEVICE9 device) {
@@ -121,6 +149,10 @@ void Title::AI(){
 
 void Title::uninitialize() {
 	backGround.uninitialize();
+
+	SAFE_DELETE(light);
+	SAFE_DELETE_ARRAY(camera);
+
 	titleTrans.uninitialize();
 	titleTransPos.uninitialize();
 }
@@ -132,10 +164,10 @@ void Title::titleTransition(void)
 {
 	switch (titleTransPos.cntTitle)
 	{
-		// ゲーム開始
+		// セレクト
 	case 0:
 
-		nextScene = SceneList::SELECT_CHARACTER;
+		nextScene = SceneList::SELECT;
 		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
 		break;
 

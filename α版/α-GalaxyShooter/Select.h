@@ -1,11 +1,8 @@
 #pragma once
 #include "AbstractScene.h"
-#include "Object.h"
-#include "TitleTransition.h"
-#include "TitleTransPos.h"
 #include "Player.h"
 
-namespace titleNS
+namespace selectNS
 {
 	enum {
 		PLAYER1,
@@ -20,33 +17,19 @@ namespace titleNS
 	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
 	{
 		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
-#ifdef _DEBUG
-		D3DXQUATERNION(0.0f,100.0f,-500,0.0f)
-#else
-		D3DXQUATERNION(0.0f,20.0f,-400,0.0f)
-#endif // _DEBUG
 	};
 
 }
 
-class Title : public AbstractScene
+class Select : public AbstractScene
 {
 private:
-	TitleTransition titleTrans;
-	Sprite backGround;
-	TitleTransPos titleTransPos;
-	Player titlePlayer[titleNS::NUM_PLAYER];
+	Player selectPlayer[selectNS::NUM_PLAYER];
 
 public:
-	Title();
-	~Title();
-	virtual void initialize(
-		Direct3D9* direct3D9,
-		Input* _input,
-		Audio* _audio,
-		TextureLoader* _textureLoader,
-		StaticMeshLoader* _staticMeshLoader,
-		ShaderLoader* _shaderLoader) override;
+	Select();
+	~Select();
+	virtual void initialize(Direct3D9* direct3D9, Input* _input, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;
@@ -55,7 +38,5 @@ public:
 
 	void render3D(Direct3D9* direct3D9, Camera currentCamera);
 	void renderUI(LPDIRECT3DDEVICE9 device);
-
-	void titleTransition(void);								// ëIëUIëJà⁄èàóù
 
 };

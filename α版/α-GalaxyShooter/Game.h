@@ -26,6 +26,7 @@
 #include "WasuremonoManager.h"
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
+#include "Pose.h"
 
 #define JUNK_MAX (100) //ƒKƒ‰ƒNƒ^‚Ì”
 
@@ -108,6 +109,7 @@ private:
 	WasuremonoManager wasuremonoManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
+	Pose pose;
 
 	bool onUI = true;
 	int currentBullet1;//Œ»İ‚Ì’e”Ô†[1P]

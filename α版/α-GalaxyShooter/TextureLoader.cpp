@@ -29,7 +29,7 @@ TextureLoader::TextureLoader()
 	textureName[LIGHT001] = { "light001.png" };
 	textureName[HP_EFFECT] = { "effect2.png" };
 	textureName[TARGET] = { "kurezitto.png" };
-
+	textureName[POSE] = { "effect2.png" };
 }
 
 

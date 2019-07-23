@@ -20,7 +20,6 @@ namespace textureLoaderNS
 		TITLE_POS,
 		TITLE_TRANS,
 		TUTORIAL,
-		SELECT,
 		RESULT,
 		KEY_OPE,
 		PAD_OPE,
@@ -29,6 +28,7 @@ namespace textureLoaderNS
 		LIGHT001,
 		HP_EFFECT,
 		TARGET,
+		POSE,
 		MAX_TEXTURE,
 	};
 }

@@ -53,7 +53,7 @@ void Game::initialize(
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getPosition());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -148,6 +148,9 @@ void Game::initialize(
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	pose.initialize(direct3D9->device, 0, _textureLoader);
+
+}
 	// ワスレモノの初期化
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 
@@ -209,6 +212,13 @@ void Game::update(float _frameTime) {
 
 	if (frameTime > 0.06)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
 	
+	if (input->wasKeyPressed(VK_RETURN))// ポーズ解除
+	{
+		pose.poseon = false;
+	}
+
+	if (pose.poseon)return;// ポーズしてたら更新しない
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
 		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
@@ -514,7 +524,14 @@ void Game::update(float _frameTime) {
 		wasuremono[i]->update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
 	}
 
-	//if (input->anyKeyPressed())changeScene(nextScene);
+	if (input->wasKeyPressed('P')|| 
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN)||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+		)// ポーズ開始
+	{
+		pose.poseon = true;
+	}
+
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -811,6 +828,12 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			hpEffect[i].render(device);
 		}
 	}
+
+	if (pose.poseon )
+	{
+		pose.render(device);
+	}
+
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
@@ -887,6 +910,8 @@ void Game::uninitialize() {
 		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
+		pose.uninitialize();
+
 	}
 	wasuremonoManager.uninitialize();
 }
