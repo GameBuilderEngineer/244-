@@ -13,10 +13,10 @@ namespace SceneList
 		NONE_SCENE = -1,
 		SPLASH,
 		TITLE,
+		SELECT,
 		TUTORIAL,
 		OPERATION,
 		CREDIT,
-		SELECT_CHARACTER,
 		GAME,
 		RESULT,
 	};

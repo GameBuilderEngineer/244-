@@ -37,7 +37,7 @@ void Game::initialize(Direct3D9* direct3D9,Input* _input, TextureLoader* _textur
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		camera[i].initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		camera[i].setTarget(player[i].getPosition());
 		camera[i].setTargetX(&player[i].getAxisX()->direction);
 		camera[i].setTargetY(&player[i].getAxisY()->direction);
@@ -502,10 +502,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		}
 	}
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{
-	//	target[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	//}
 #ifdef _DEBUG
 	Ray debugRay;
 	//ñ@ê¸

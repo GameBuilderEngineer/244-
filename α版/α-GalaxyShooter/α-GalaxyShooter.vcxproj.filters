@@ -79,9 +79,6 @@
     <Filter Include="Scene\Splash">
       <UniqueIdentifier>{c158ea93-11b0-43d9-a8d0-00037b9c28ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\SelectCharacter">
-      <UniqueIdentifier>{edcabc91-3a71-4735-b36c-0c72ab3bf29e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Result">
       <UniqueIdentifier>{77746008-6b77-4523-9c21-d099946cc532}</UniqueIdentifier>
     </Filter>
@@ -105,9 +102,6 @@
     </Filter>
     <Filter Include="Scene\Splash\Splash2D">
       <UniqueIdentifier>{f8726285-6ecd-414b-b93b-c13b0d2d3dc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\SelectCharacter\SelectCharacter2D">
-      <UniqueIdentifier>{e6b12f7b-6b14-457c-8101-dd5351af80ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene\Result\Result2D">
       <UniqueIdentifier>{b467a5f0-a32d-435e-9e98-e7dc67d44d91}</UniqueIdentifier>
@@ -270,9 +264,6 @@
     <ClCompile Include="Result.cpp">
       <Filter>Scene\Result</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp">
-      <Filter>Scene\SelectCharacter</Filter>
-    </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
@@ -296,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="Splash2D.cpp">
       <Filter>Scene\Splash\Splash2D</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectCharacter2D.cpp">
-      <Filter>Scene\SelectCharacter\SelectCharacter2D</Filter>
     </ClCompile>
     <ClCompile Include="Result2D.cpp">
       <Filter>Scene\Result\Result2D</Filter>
@@ -396,6 +384,7 @@
     <ClCompile Include="Pose.cpp">
       <Filter>Scene\Game\Pose</Filter>
     </ClCompile>
+    <ClCompile Include="Select.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -451,9 +440,6 @@
     </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>Scene\Result</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter.h">
-      <Filter>Scene\SelectCharacter</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Sound</Filter>
@@ -542,6 +528,7 @@
     <ClInclude Include="Pose.h">
       <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
+    <ClInclude Include="Select.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
@@ -620,9 +607,6 @@
     </Image>
     <ClInclude Include="Splash2D.h">
       <Filter>Scene\Splash\Splash2D</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter2D.h">
-      <Filter>Scene\SelectCharacter\SelectCharacter2D</Filter>
     </ClInclude>
     <ClInclude Include="Result2D.h">
       <Filter>Scene\Result\Result2D</Filter>

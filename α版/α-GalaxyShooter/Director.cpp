@@ -1,10 +1,10 @@
 #include "Director.h"
 #include "Splash.h"
 #include "Title.h"
+#include "Select.h"
 #include "Tutorial.h"
 #include "Operation.h"
 #include "Credit.h"
-#include "SelectCharacter.h"
 #include "Game.h"
 #include "Result.h"
 
@@ -249,10 +249,10 @@ void Director::changeNextScene(){
 	{
 	case SceneList::SPLASH:					scene = new Splash(); break;
 	case SceneList::TITLE:					scene = new Title(); break;
+	case SceneList::SELECT:					scene = new Select(); break;
 	case SceneList::TUTORIAL:				scene = new Tutorial(); break;
 	case SceneList::OPERATION:				scene = new Operation(); break;
 	case SceneList::CREDIT:					scene = new Credit(); break;
-	case SceneList::SELECT_CHARACTER:		scene = new SelectCharacter(); break;
 	case SceneList::GAME:					scene = new Game(); break;
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;

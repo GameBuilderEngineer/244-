@@ -163,8 +163,7 @@
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="ScreenEffectBase.cpp" />
-    <ClCompile Include="SelectCharacter.cpp" />
-    <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="Select.cpp" />
     <ClCompile Include="SkillPointUI.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
@@ -224,8 +223,7 @@
     <ClInclude Include="Result.h" />
     <ClInclude Include="Result2D.h" />
     <ClInclude Include="ScreenEffectBase.h" />
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="Select.h" />
     <ClInclude Include="SkillPointUI.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />

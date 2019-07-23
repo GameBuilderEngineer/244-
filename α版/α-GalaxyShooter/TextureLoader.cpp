@@ -19,7 +19,6 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_POS] = { "Title_Bar.png" };
 	textureName[TITLE_TRANS] = { "Title.png" };
 	textureName[TUTORIAL] = { "tutorial.png" };
-	textureName[SELECT] = { "serect.png" };
 	textureName[RESULT] = { "result.png" };
 	textureName[KEY_OPE] = { "sousasetumei.png" };
 	textureName[PAD_OPE] = { "MissileUI.jpg" };
