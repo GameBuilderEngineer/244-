@@ -152,7 +152,6 @@
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="HpEffect.cpp" />
-    <ClCompile Include="iiduka2.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />

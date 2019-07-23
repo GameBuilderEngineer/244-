@@ -148,6 +148,9 @@ void Game::initialize(
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	// ƒƒXƒŒƒ‚ƒm‚Ì‰Šú‰»
+	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
+
 	//ƒƒ‚ƒŠ[ƒ‰ƒCƒ“‚Ì‰Šú‰»
 	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));

@@ -478,9 +478,6 @@
     <ClCompile Include="WasuremonoTable.cpp">
       <Filter>Object\Wasuremono</Filter>
     </ClCompile>
-    <ClCompile Include="iiduka2.cpp">
-      <Filter>Effect\ScreenEffectBase</Filter>
-    </ClCompile>
     <ClCompile Include="TargetDisplayEffect.cpp">
       <Filter>Effect\TargetDisplayEffect</Filter>
     </ClCompile>

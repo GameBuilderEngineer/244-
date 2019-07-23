@@ -3,8 +3,8 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		WIDTH = 1000;						// 横サイズ
-const static int		HEIGHT = 1000;						// 縦サイズ	
+const static int		WIDTH = WINDOW_WIDTH;						// 横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// 縦サイズ	
 															// X座標
 const static float		POSITION_X_PLAYER1 = 0.0f;
 const static float		POSITION_Y = WINDOW_HEIGHT - 700.0f;	// Y座標
