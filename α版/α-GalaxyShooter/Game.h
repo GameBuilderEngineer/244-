@@ -10,6 +10,8 @@
 #include "ColonyHitPointUI.h"
 #include "MissileUI.h"
 #include "WeaponUI.h"
+#include "TimerUI.h"
+#include "ChinginUI.h"
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
@@ -20,6 +22,8 @@
 #include "MemoryPile.h"
 #include "MemoryLine.h"
 #include "Recursion.h"
+#include "HpEffect.h"
+#include "TargetDisplayEffect.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -80,6 +84,8 @@ private:
 	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
 	MissileUI missileInfomation[gameNS::NUM_PLAYER];
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
+	TimerUI timerUI[gameNS::NUM_PLAYER];
+	ChinginUI chingin[gameNS::NUM_PLAYER];
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
 	GameMaster gameMaster;
@@ -96,6 +102,8 @@ private:
 
 	Object testObject;//âº
 	Object testCube;//âº
+	HpEffect hpEffect[gameNS::NUM_PLAYER];
+	TargetDisplayEffect target;
 
 	bool onUI = true;
 	int currentBullet1;//åªç›ÇÃíeî‘çÜ[1P]

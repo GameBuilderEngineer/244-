@@ -82,6 +82,11 @@ void Game::initialize(
 		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
 		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
+		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
+		chingin[i].initialize(direct3D9->device, i, _textureLoader);
+		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
+		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
+
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
 		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
@@ -387,6 +392,10 @@ void Game::update(float _frameTime) {
 			colonyHp[i].update();
 			missileInfomation[i].update();
 			weaponInfomation[i].update();
+			timerUI[i].update();
+			chingin[i].update();
+			hpEffect[i].update();
+			target.update();
 		}
 	}
 
@@ -520,6 +529,9 @@ void Game::render(Direct3D9* direct3D9) {
 }
 
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
+
+	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
 		player[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
@@ -527,6 +539,11 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
+
+	target.renderEffectImage(direct3D9->device);
+
+	target.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	for (int i = 0; i < NUM_BULLET; i++)
 	{//バレットの描画
@@ -766,6 +783,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
 	if (input->wasKeyPressed('U'))onUI = !onUI;
+
 	if (onUI) {
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -774,6 +792,9 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			colonyHp[i].render(device);
 			missileInfomation[i].render(device);
 			weaponInfomation[i].render(device);
+			timerUI[i].render(device);
+			chingin[i].render(device);
+			hpEffect[i].render(device);
 		}
 	}
 	// αテストを無効に
@@ -819,6 +840,7 @@ void Game::collisions() {
 					player[i].getMatrixWorld(),junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
+					hpEffect[i].activate(10);
 				}
 				junk[k].headPosition(*player[i].getPosition());
 			}
@@ -847,5 +869,9 @@ void Game::uninitialize() {
 		colonyHp[i].uninitialize();
 		missileInfomation[i].uninitialize();
 		weaponInfomation[i].uninitialize();
+		timerUI[i].uninitialize();
+		chingin[i].uninitialize();
+		hpEffect[i].uninitialize();
+		target.uninitialize();
 	}
 }

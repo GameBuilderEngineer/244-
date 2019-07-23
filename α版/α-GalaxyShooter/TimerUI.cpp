@@ -1,80 +1,68 @@
 //=============================================================================
-// パッド操作説明処理 [PadOpe.cpp]
+// タイマーUI処理 [TimerUI.cpp]
+//
 //=============================================================================
-#include "PadOpe.h"
+#include "TimerUI.h"
+
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-//マクロ定義
-const static int		WIDTH = WINDOW_WIDTH;						// パッド操作説明横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// パッド操作説明縦サイズ
+const static int		WIDTH = 25;							// 横サイズ
+const static int		HEIGHT = 75;						// 縦サイズ	
+															// X座標
+const static float		POSITION_X_PLAYER1 = WINDOW_WIDTH / 2.0f - 100.0f;
+const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
+const static float		POSITION_Y = WINDOW_HEIGHT - 20.0f;	// Y座標
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
 
-const static float		POSITION_X = 0.0f;							// パッド操作説明X座標
-const static float		POSITION_Y = 0.0f;							// パッド操作説明Y座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-int PadOpe::cntUI = -1;
-LPDIRECT3DTEXTURE9 PadOpe::texturePadOpe = NULL;					// パッド操作説明テクスチャ
+int TimerUI::cntUI = -1;
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-PadOpe::PadOpe()
+TimerUI::TimerUI(void)
 {
 	cntUI++;
 }
 
+
 //=============================================================================
 // デストラクタ
 //=============================================================================
-PadOpe::~PadOpe()
+TimerUI::~TimerUI(void)
 {
 }
+
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
+HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
 	playerNumber = _playerNumber;
-
-	// テクスチャを読み込む
-	setVisualDirectory();
-
-	texturePadOpe = *textureLoader->getTexture(textureLoaderNS::PAD_OPE);
-
-	Sprite::initialize(device,
-		texturePadOpe,								// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
-		WIDTH,										// 横幅
-		HEIGHT,										// 高さ
-		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 回転
-		PAD_OPE_COLOR								// 色
-	);
 
 	return S_OK;
 }
 
+
 //=============================================================================
 // 終了処理
 //=============================================================================
-void PadOpe::uninitialize(void)
+void TimerUI::uninitialize(void)
 {
-	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(texturePadOpe)
-	}
 }
+
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void PadOpe::update(void)
+void TimerUI::update(void)
 {
 }
 
@@ -82,8 +70,9 @@ void PadOpe::update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void PadOpe::render(LPDIRECT3DDEVICE9 device)
+void TimerUI::render(LPDIRECT3DDEVICE9 device)
 {
 	Sprite::render(device);
 }
+
 

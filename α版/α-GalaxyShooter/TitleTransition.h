@@ -4,7 +4,6 @@
 //=============================================================================
 #pragma once
 #include "Sprite.h"
-#include "Input.h"
 #include "AbstractScene.h"
 
 #define TITLE_TRANS_COLOR		(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイトル遷移画像の色
@@ -18,7 +17,6 @@ private:
 	int playerNumber;											// プレイヤー番号
 	static int cntUI;											// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 titleTransTex;					// タイトル遷移テクスチャ
-	Sprite titleTrans;											// タイトル遷移画像
 public:
 	TitleTransition(void);
 	~TitleTransition(void);

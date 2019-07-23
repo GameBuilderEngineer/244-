@@ -43,18 +43,10 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 
 	// テクスチャを読み込む
 	setVisualDirectory();
-	if (textureCredit2D == NULL)
-	{
-		if (FAILED(D3DXCreateTextureFromFile(device, "kurezitto.png", &textureCredit2D)))
-		{
-			MessageBox(NULL, "テクスチャの読み込みに失敗しました", "kurezitto.png", MB_OK);
-			return E_FAIL;
-		}
-	}
 
 	textureCredit2D = *textureLoader->getTexture(textureLoaderNS::CREDIT);
 
-	credit2D.initialize(device,
+	Sprite::initialize(device,
 		textureCredit2D,							// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
 		WIDTH,										// 横幅
@@ -72,7 +64,7 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 //=============================================================================
 void Credit2D::uninitialize(void)
 {
-	credit2D.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -95,6 +87,6 @@ void Credit2D::update(void)
 //=============================================================================
 void Credit2D::render(LPDIRECT3DDEVICE9 device)
 {
-	credit2D.render(device);
+	Sprite::render(device);
 }
 

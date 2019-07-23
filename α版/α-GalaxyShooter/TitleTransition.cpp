@@ -43,7 +43,7 @@ HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,
 
 	titleTransTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TRANS);
 
-	titleTrans.initialize(device,
+	Sprite::initialize(device,
 		titleTransTex,									// テクスチャ
 		spriteNS::TOP_LEFT,								// 原点
 		WIDTH,											// 横幅
@@ -60,7 +60,7 @@ HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,
 //=============================================================================
 void TitleTransition::uninitialize(void)
 {
-	titleTrans.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -83,5 +83,5 @@ void TitleTransition::update(void)
 //=============================================================================
 void TitleTransition::render(LPDIRECT3DDEVICE9 device)
 {
-	titleTrans.render(device);
+	Sprite::render(device);
 }

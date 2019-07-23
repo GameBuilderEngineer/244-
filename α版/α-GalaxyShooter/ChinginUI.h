@@ -1,27 +1,26 @@
 //=============================================================================
-// パッド操作説明処理 [PadOpe.h]
+// チンギンUI処理 [ChinginUI.h]
 //
 //=============================================================================
 #pragma once
 #include "Sprite.h"
 #include "AbstractScene.h"
 
-#define PAD_OPE_COLOR		(D3DCOLOR_RGBA(255, 255, 255, 255))			// パッド操作説明の色
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class PadOpe :public Sprite
-{
+class ChinginUI :public Sprite {
 
 private:
 	// Data
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 texturePadOpe;		// パッド操作説明テクスチャ
+	static LPDIRECT3DTEXTURE9 buffTexture;			// テクスチャ
 
 public:
-	PadOpe(void);
-	~PadOpe(void);
+	// Method
+	ChinginUI(void);
+	~ChinginUI(void);
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader);
 	void uninitialize(void);
 	void update(void);

@@ -42,20 +42,9 @@ HRESULT Splash2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 {
 	playerNumber = _playerNumber;
 
-	// テクスチャを読み込む
-	//setVisualDirectory();
-	//if (textureSplash2D == NULL)
-	//{
-	//	if (FAILED(D3DXCreateTextureFromFile(device, "Team_Logo_Texture.png", &textureSplash2D)))
-	//	{
-	//		MessageBox(NULL, "テクスチャの読み込みに失敗しました", "Team_Logo_Texture.png", MB_OK);
-	//		return E_FAIL;
-	//	}
-	//}
-
 	textureSplash2D = *textureLoader->getTexture(textureLoaderNS::SPLASH);
 
-	splash2D.initialize(device,
+	Sprite::initialize(device,
 		textureSplash2D,							// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
 		WIDTH,										// 横幅
@@ -76,7 +65,7 @@ HRESULT Splash2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 //=============================================================================
 void Splash2D::uninitialize(void)
 {
-	splash2D.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -101,7 +90,7 @@ void Splash2D::update(void)
 //=============================================================================
 void Splash2D::render(LPDIRECT3DDEVICE9 device)
 {
-	splash2D.render(device);
+	Sprite::render(device);
 }
 
 //=============================================================================
@@ -141,7 +130,7 @@ void Splash2D::fadein(void)
 		alphaColor = SPLASH_ALPHA_MAX;
 	}
 
-	splash2D.setAlpha(alphaColor);
+	setAlpha(alphaColor);
 }
 
 //=============================================================================
@@ -160,5 +149,5 @@ void Splash2D::fadeout(void)
 		gotitle = true;
 	}
 
-	splash2D.setAlpha(alphaColor);
+	setAlpha(alphaColor);
 }

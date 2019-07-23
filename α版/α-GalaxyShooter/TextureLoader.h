@@ -27,6 +27,8 @@ namespace textureLoaderNS
 		CREDIT,
 		WHITE_TEXTURE,
 		LIGHT001,
+		HP_EFFECT,
+		TARGET,
 		MAX_TEXTURE,
 	};
 }

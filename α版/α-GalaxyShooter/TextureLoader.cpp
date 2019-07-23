@@ -27,6 +27,9 @@ TextureLoader::TextureLoader()
 	textureName[CREDIT] = { "credit.png" };
 	textureName[WHITE_TEXTURE] = { "backGround1080p.png" };
 	textureName[LIGHT001] = { "light001.png" };
+	textureName[HP_EFFECT] = { "effect2.png" };
+	textureName[TARGET] = { "kurezitto.png" };
+
 }
 
 

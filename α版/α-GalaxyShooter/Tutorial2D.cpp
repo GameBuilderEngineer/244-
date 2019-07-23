@@ -46,7 +46,7 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 
 	textureTutorial2D = *textureLoader->getTexture(textureLoaderNS::TUTORIAL);
 
-	tutorial2D.initialize(device,
+	Sprite::initialize(device,
 		textureTutorial2D,							// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
 		WIDTH,										// 横幅
@@ -64,7 +64,7 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 //=============================================================================
 void Tutorial2D::uninitialize(void)
 {
-	tutorial2D.setTexture(NULL);
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -87,6 +87,6 @@ void Tutorial2D::update(void)
 //=============================================================================
 void Tutorial2D::render(LPDIRECT3DDEVICE9 device)
 {
-	tutorial2D.render(device);
+	Sprite::render(device);
 }
 
