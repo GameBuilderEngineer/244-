@@ -505,7 +505,8 @@
     <ClCompile Include="Pose.cpp">
       <Filter>Scene\Game\Pose</Filter>
     </ClCompile>
-    <ClCompile Include="Select.cpp" />
+    <ClCompile Include="SelectCharacter.cpp" />
+    <ClCompile Include="SelectCharacter2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -746,7 +747,8 @@
     <ClInclude Include="Pose.h">
       <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
-    <ClInclude Include="Select.h" />
+    <ClInclude Include="SelectCharacter.h" />
+    <ClInclude Include="SelectCharacter2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
