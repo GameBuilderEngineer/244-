@@ -7,7 +7,7 @@ const static int		WIDTH = WINDOW_WIDTH;						// 横サイズ
 const static int		HEIGHT = WINDOW_HEIGHT;						// 縦サイズ	
 															// X座標
 const static float		POSITION_X_PLAYER1 = 0.0f;
-const static float		POSITION_Y = WINDOW_HEIGHT - 700.0f;	// Y座標
+const static float		POSITION_Y = 0.0f;	// Y座標
 #define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
 
 //*****************************************************************************
