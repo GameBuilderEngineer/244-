@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "BlackBoardRecognition.h"
 #include "Fuzzy.h"
 
 //*****************************************************************************
@@ -13,6 +14,7 @@
 class EnvironmentAnalysis:public KnowledgeSourceBase {
 private:
 	Fuzzy fuzzy;						// ファジー理論処理
+	RecognitionBB* recognitionBB;
 
 public:
 	// Method
@@ -21,4 +23,7 @@ public:
 	void initialize(void) override;		// 初期化処理
 	void uninitialize(void) override;	// 終了処理
 	void update(void) override;			// 更新処理
+	void setBlackBoard(RecognitionBB* adr) { recognitionBB = adr; }
+
+	
 };

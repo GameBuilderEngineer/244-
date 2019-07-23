@@ -6,10 +6,9 @@
 #include "AgentAI.h"
 
 //*****************************************************************************
-// グローバル変数
+// 静的メンバ変数
 //*****************************************************************************
 int AgentAI::numAgent = 0;
-
 
 //=============================================================================
 // コンストラクタ
@@ -18,13 +17,17 @@ AgentAI::AgentAI(void)
 {
 	aiID = numAgent++;
 
-	// モジュールとブラックボード生成
+	// アービター
 	arbiter = new Arbiter;
+
+	// モジュール
 	sensor = new Sensor;
 	environmentAnalysis = new EnvironmentAnalysis;
 	pathPlanning = new PathPlanning;
 	decisionMaking = new DecisionMaking;
 	motionGeneration = new MotionGeneration;
+
+	// ブラックボード
 	recognitionBB = new RecognitionBB;
 	bodyBB = new BodyBB;
 	memoryBB = new MemoryBB;
@@ -37,9 +40,17 @@ AgentAI::AgentAI(void)
 	arbiter->setModule(Module::MOTION_GENERATION, motionGeneration);
 
 	// モジュールにブラックボードを接続
-    setBlackBoard(BB::ENVIRONMENT_RECOGNITION, recognitionBB);
-	setBlackBoard(BB::BODY, bodyBB);
-	setBlackBoard(BB::MEMORY, memoryBB);
+	sensor->setBlackBoard(recognitionBB);
+	environmentAnalysis->setBlackBoard(recognitionBB);
+	pathPlanning->setBlackBoard(recognitionBB, memoryBB);
+	decisionMaking->setBlackBoard(recognitionBB, memoryBB, bodyBB);
+	motionGeneration->setBlackBoard(memoryBB, bodyBB);
+
+	// ステートマシンを接続
+	decisionMaking->setStateMachine(StateMachine::getInstance());
+
+	// ビヘイビアツリーを接続
+	decisionMaking->setBehaviorTree(BehaviorTree::getInstance());
 }
 
 
@@ -49,15 +60,15 @@ AgentAI::AgentAI(void)
 AgentAI::~AgentAI(void)
 {
 	// モジュールとブラックボード破棄
-	delete arbiter;
-	delete sensor;
-	delete environmentAnalysis;
-	delete pathPlanning;
-	delete decisionMaking;
-	delete motionGeneration;
-	delete recognitionBB;
-	delete bodyBB;
-	delete memoryBB;
+	SAFE_DELETE(arbiter)
+	SAFE_DELETE(sensor)
+	SAFE_DELETE(environmentAnalysis)
+	SAFE_DELETE(pathPlanning)
+	SAFE_DELETE(decisionMaking)
+	SAFE_DELETE(motionGeneration)
+	SAFE_DELETE(recognitionBB)
+	SAFE_DELETE(bodyBB)
+	SAFE_DELETE(memoryBB)
 
 	--numAgent;
 }

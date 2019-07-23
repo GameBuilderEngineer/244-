@@ -1,14 +1,14 @@
 //-----------------------------------------------------------------------------
-// ナレッジソース基底処理 [KnowledgeSourceBase.cpp]
+// ビヘイビアレコード [BehaviorRecord.cpp]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/15
+// 作成日：2019/7/17
 //-----------------------------------------------------------------------------
-#include "KnowledgeSourceBase.h"
+#include "BehaviorRecord.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-KnowledgeSourceBase::KnowledgeSourceBase(void)
+BehaviorRecord::BehaviorRecord(void)
 {
 
 }
@@ -17,7 +17,7 @@ KnowledgeSourceBase::KnowledgeSourceBase(void)
 //=============================================================================
 // デストラクタ
 //=============================================================================
-KnowledgeSourceBase::~KnowledgeSourceBase(void)
+BehaviorRecord::~BehaviorRecord()
 {
 
 }

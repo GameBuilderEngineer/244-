@@ -28,7 +28,7 @@ DecisionMaking::~DecisionMaking(void)
 //=============================================================================
 void DecisionMaking::initialize(void)
 {
-	KnowledgeSourceBase::initialize();
+
 }
 
 
@@ -46,6 +46,6 @@ void DecisionMaking::uninitialize(void)
 //=============================================================================
 void DecisionMaking::update(void)
 {
-
+	int treeNumber = stateMachine->run(currentState, recognitionBB, memoryBB, bodyBB);
+	behaviorTree->run(treeNumber, recognitionBB, memoryBB, bodyBB, record[treeNumber]);
 }
-

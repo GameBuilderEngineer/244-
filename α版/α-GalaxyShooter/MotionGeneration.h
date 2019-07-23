@@ -5,12 +5,16 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "BlackBoardMemory.h"
+#include "BlackBoardBody.h"
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class MotionGeneration:public KnowledgeSourceBase {
 private:
+	MemoryBB* memoryBB;
+	BodyBB* bodyBB;
 
 public:
 	// Method
@@ -19,4 +23,5 @@ public:
 	void initialize(void) override;		// 初期化処理
 	void uninitialize(void) override;	// 終了処理
 	void update(void) override;			// 更新処理
+	void setBlackBoard(MemoryBB* adr1, BodyBB* adr2) { memoryBB = adr1; bodyBB = adr2; }
 };

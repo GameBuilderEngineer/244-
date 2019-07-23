@@ -1,21 +1,23 @@
 //-----------------------------------------------------------------------------
-// 記憶ブラックボード処理 [BlackBoardMemory.h]
+// ビヘイビアツリー アクションノード処理 [ActionNode.h]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/19
+// 作成日：2019/7/17
 //-----------------------------------------------------------------------------
 #pragma once
-#include "BlackBoardBase.h"
+#include "BehaviorNodeBase.h"
+using namespace BehaviorTreeNS;
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class MemoryBB : public BlackBoardBase {
+class ActionNode: public BehaviorNodeBase
+{
 private:
-
+	
 public:
-	// Method
-	MemoryBB(void);
-	~MemoryBB(void);
-	void initialize(void) override;				// 初期化処理
-	void uninitialize(void) override;			// 終了処理
+	ActionNode(int treeType, int parent, NODE_TAG);
+
+	// 実行
+	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record);
 };
+
