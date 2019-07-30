@@ -40,7 +40,7 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasurem
 
 	this->wasuremono = wasuremono;
 	wasuremono->reserve(WASUREMONO_MAX);	// vectorのメモリのみ先に確保
-	setUp();								// ワスレモノ初期配備
+	//setUp();								// ワスレモノ初期配備
 	timeCnt = 0.0f;
 	respawnMode = 0;
 }
@@ -60,10 +60,20 @@ void WasuremonoManager::uninitialize(void)
 //=============================================================================
 void WasuremonoManager::update(float frameTime)
 {
-	// リスポーンの更新間隔を調整
+	// 更新間隔を調整
 	timeCnt += frameTime;
 	if (timeCnt < RESPAWN_SURBEY_INTERVAL) { return; }
 	timeCnt = 0.0f;
+
+	// 非表示のワスレモノを解放
+	for (int i = 0; i < wasuremono->size(); i++)
+	{
+		if ((*wasuremono)[i]->getActive() == false)
+		{
+			SAFE_DELETE((*wasuremono)[i])
+			wasuremono->erase(wasuremono->begin() + i);
+		}
+	}
 
 	// 条件に当てはまればリスポーン
 	if (surbeyRespawnCondition() == true)
@@ -84,7 +94,6 @@ bool WasuremonoManager::surbeyRespawnCondition(void)
 		respawnMode = RANDOM;
 		return true;
 	}
-
 	return false;
 }
 

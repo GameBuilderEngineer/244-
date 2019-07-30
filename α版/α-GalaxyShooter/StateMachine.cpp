@@ -9,9 +9,9 @@
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
-StateMachine* StateMachine::instance;
 Offense* Offense::instance;
 Deffense* Deffense::instance;
+
 
 //=============================================================================
 // ステートごとの遷移
@@ -37,6 +37,7 @@ StateMachine::StateMachine(void)
 {
 	Offense::create();
 	Deffense::create();
+	initialState = Offense::getInstance();
 }
 
 // デストラクタ

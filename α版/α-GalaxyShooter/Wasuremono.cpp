@@ -10,6 +10,7 @@
 //*****************************************************************************
 WasuremonoTable* Wasuremono::table;		// ワスレモノテーブルを指すポインタ
 
+
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -49,12 +50,10 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 
 	float difference = 1.0f;
 
-
+	// 重力方向のベクトル&レイを作成（グラヴィティレイにおきかえできる？）
 	D3DXVECTOR3 gravityDirection;
 	D3DXVec3Normalize(&gravityDirection, &(fieldPosition - position));
 	betweenField.update(position, gravityDirection);
-
-
 
 	//フィールド補正
 	if (betweenField.rayIntersect(fieldMesh, matrix) &&
@@ -71,9 +70,14 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 		//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
 		//}
 		//bound();
+
+		// 姿勢制御……重力方向レイを当てたフィールドの法線と自分Y軸を使用
+		postureControl(axisY.direction, betweenField.normal, 3.0f * frameTime);
 	}
 	else {
 		setGravity(gravityDirection, 80.0f);
+		// 姿勢制御……重力レイ（逆方向）と自分Y軸を使用
+		postureControl(axisY.direction, -gravityDirection, 3.0f * frameTime);
 	}
 
 
@@ -82,11 +86,14 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 		speed += acceleration;
 	}
 
-	//位置更新
-	position += speed * frameTime;
+	////位置更新
+	//position += speed * frameTime;
 
 	//加速度減衰
 	acceleration *= 0.9f;
+
+
+
 
 	Object::update();
 }

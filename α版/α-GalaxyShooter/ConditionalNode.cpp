@@ -1,45 +1,52 @@
 //-----------------------------------------------------------------------------
-// ビヘイビアツリー アクションノード処理 [ActionNode.cpp]
+// ビヘイビアツリー 条件ノード処理 [ConditionalNode.h]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/7/17
+// 作成日：2019/7/23
 //-----------------------------------------------------------------------------
-#include "ActionNode.h"
+#include "ConditionalNode.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-ActionNode::ActionNode(int treeType, int parentNumber, NODE_TYPE type, NODE_TAG tag) : BehaviorNodeBase(treeType, parentNumber, type, tag)
+ConditionalNode::ConditionalNode(int treeType, int parentNumber, NODE_TYPE type, NODE_TAG tag): BehaviorNodeBase(treeType, parentNumber,type, tag)
 {
-
+		
 }
 
 
 //=============================================================================
 // 実行
 //=============================================================================
-NODE_STATUS ActionNode::run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+NODE_STATUS ConditionalNode::run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	return actionList(recognitionBB, memoryBB, bodyBB);
-}
-
-
-//=============================================================================
-// アクションリスト
-//=============================================================================
-NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
-{
-	switch (tag)
+	if (conditionList(recognitionBB, memoryBB, bodyBB))
 	{
-	case ACTION_MOVE: return actionMove(recognitionBB, memoryBB, bodyBB);
-	default: return NODE_STATUS::_NOT_FOUND;
+		return NODE_STATUS::SUCCESS;
+	}
+	else
+	{
+		return  NODE_STATUS::FAILED;
 	}
 }
 
 
 //=============================================================================
-// アクション：移動
+// 条件リスト
 //=============================================================================
-NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	return NODE_STATUS::SUCCESS;
+	switch (tag)
+	{
+	case IF_OPPONENT_NEAR: return ifOpponentNear(recognitionBB, memoryBB, bodyBB);
+	default: return false;
+	}
+}
+
+
+//=============================================================================
+// 条件：相手が近くにいたら
+//=============================================================================
+bool ConditionalNode::ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return true;
 }

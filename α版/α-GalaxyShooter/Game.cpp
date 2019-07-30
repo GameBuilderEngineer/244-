@@ -169,6 +169,9 @@ void Game::initialize(
 		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.375f,1.0f,0.0f)
 	};
 
+	// マップ初期化
+	map.initialize(direct3D9->device, &field);
+
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -531,7 +534,6 @@ void Game::update(float _frameTime) {
 	{
 		pose.poseon = true;
 	}
-
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -594,59 +596,61 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//(仮)//マグネットの描画
-	for (int i = 0; i < NUM_MAGNET; i++)
-	{
-		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)//マグネットの描画
+	//for (int i = 0; i < NUM_MAGNET; i++)
+	//{
+	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
-	//(仮)//ポイントスプライトの描画
-	pointSprite.render(direct3D9->device, currentCamera.position);
+	////(仮)//ポイントスプライトの描画
+	//pointSprite.render(direct3D9->device, currentCamera.position);
 
-	//(仮)//プレーンの描画(インスタンシング)
-	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	////(仮)//プレーンの描画(インスタンシング)
+	//plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//メモリーパイルの描画
-	{
-		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		{
-			memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		}
-		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-		{
-			memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		}
-	}
+	////メモリーパイルの描画
+	//{
+	//	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+	//	{
+	//		memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//	}
+	//	for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+	//	{
+	//		memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//	}
+	//}
 
-	//メモリーラインの描画
-	{
-		memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////メモリーラインの描画
+	//{
+	//	memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//	memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
-	//リカージョンの描画
-	if (onRecursion1P)
-	{
-		recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////リカージョンの描画
+	//if (onRecursion1P)
+	//{
+	//	recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 
-	//メモリーラインの切断ガイドの表示
-	if (collitionMemoryLine1P)
-	{
+	////メモリーラインの切断ガイドの表示
+	//if (collitionMemoryLine1P)
+	//{
 
-	}
+	//}
 
-	//xFileStaticMeshテスト描画
-	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	////xFileStaticMeshテスト描画
+	//testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	//testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	// ワスレモノの描画
 	for(int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+
+	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -866,6 +870,31 @@ void Game::collisions() {
 		}
 	}
 
+	for (int i = 0; i < wasuremono.size(); i++)
+	{
+		if (!wasuremono[i]->getActive())	continue;
+		for (int j = 0; j < NUM_BULLET; j++)
+		{
+			// ワスレモノ<->バレット1
+			if (wasuremono[i]->bodyCollide.collide(
+				bullet1[j].bodyCollide.getCenter(), bullet1[j].bodyCollide.getRadius(),
+				wasuremono[i]->getMatrixWorld(), bullet1[j].getMatrixWorld()))
+			{
+				wasuremono[i]->inActivation();
+				bullet1[j].inActivation();
+			}
+
+			// ワスレモノ<->バレット2
+			if (wasuremono[i]->bodyCollide.collide(
+				bullet2[j].bodyCollide.getCenter(), bullet2[j].bodyCollide.getRadius(),
+				wasuremono[i]->getMatrixWorld(), bullet2[j].getMatrixWorld()))
+			{
+				wasuremono[i]->inActivation();
+				bullet2[j].inActivation();
+			}
+		}
+	}
+
 	//ガラクタとプレイヤー
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
@@ -914,4 +943,5 @@ void Game::uninitialize() {
 
 	}
 	wasuremonoManager.uninitialize();
+	map.uninitialize();
 }

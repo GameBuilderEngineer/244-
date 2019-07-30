@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "BehaviorNodeBase.h"
-using namespace BehaviorTreeNS;
 
 //*****************************************************************************
 // クラス定義
@@ -13,10 +12,12 @@ using namespace BehaviorTreeNS;
 class SubProcedureNode: public BehaviorNodeBase
 {
 private:
+	NODE_STATUS subProcedureList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	
 public:
-	SubProcedureNode(int treeType, int parent, NODE_TAG);
-	// 実行
-	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record);
-};
+	SubProcedureNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
 
+	// 実行
+	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+};

@@ -27,6 +27,7 @@
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
 #include "Pose.h"
+#include "Map.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -101,7 +102,7 @@ private:
 	MemoryLine memoryLine2P;
 	Recursion* recursion1P;
 	Recursion recursion;
-
+	Map map;// âº
 
 	Object testObject;//âº
 	Object testCube;//âº

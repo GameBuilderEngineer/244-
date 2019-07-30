@@ -29,7 +29,7 @@ private:
 	int			aiID;		// AIの固有識別番号
 
 	// アービター：各モジュールのタイミングや切り替えを制御
-	Arbiter *arbiter;								// 調停役
+	Arbiter *arbiter;
 
 	// AIモジュール（ナレッジソース）：ブラックボードを読み書きしながらAIを動かす
 	Sensor					*sensor; 				// センサー 
@@ -47,7 +47,7 @@ public:
 	// Method
 	AgentAI(void);
 	~AgentAI(void);
-	void initialize(void);				// 初期化処理
-	void uninitialize(void);			// 終了処理
-	void run(void);						// 実行
+	void initialize(void);			// 初期化処理
+	void uninitialize(void);		// 終了処理
+	void update(float frameTime);	// 更新処理
 };

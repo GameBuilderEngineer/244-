@@ -32,6 +32,7 @@ void Arbiter::initialize(void)
 	sensoryTransmissionTime = 0;
 	pathPanningInterval = 0;
 	decisionMakingInterval = 0;
+	motionInterval = 0;
 
 	frameCount = 0;
 	sensorLastFrame = 0;

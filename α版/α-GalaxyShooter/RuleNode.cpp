@@ -8,7 +8,7 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-RuleNode::RuleNode(int treeType, int parentNumber, NODE_TAG tag): BehaviorNodeBase(treeType, parentNumber, tag)
+RuleNode::RuleNode(int treeType, int parentNumber, NODE_TYPE type, NODE_TAG tag): BehaviorNodeBase(treeType, parentNumber,type, tag)
 {
 		
 }
@@ -17,15 +17,18 @@ RuleNode::RuleNode(int treeType, int parentNumber, NODE_TAG tag): BehaviorNodeBa
 //=============================================================================
 // 実行
 //=============================================================================
-NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB, 
-	MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record)
+NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	// 実行可能な子ノードだけ集める
 	std::vector<BehaviorNodeBase*> activeChild;
-	for (int i = 0; i < childCount; i++)
+	for (int i = 0; i < child.size(); i++)
 	{
-		if (child[i]->getExecutionJudgement() == false) continue;
+		if (child[i]->getExecutionJudgement() == false) { continue; }
 		activeChild.push_back(child[i]);
+	}
+	if (activeChild.size() == 0)
+	{
+		return NODE_STATUS::_NOT_FOUND;
 	}
 
 	// 実行する子ノードを選ぶ
@@ -37,9 +40,11 @@ NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB,
 		break;
 
 	case ON_OFF:
+		searchNode = onOffSelect(activeChild, memoryBB);
 		break;
 
 	case RANDOM:
+		searchNode = randomSelect(activeChild);
 		break;
 
 	case SEQUENCE:
@@ -49,12 +54,6 @@ NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB,
 	case PARARELL:
 		searchNode = activeChild[0];
 		break;
-
-	case CONDITIONAL:
-		break;
-
-	default:
-		break;
 	}
 
 	// 子ノードを実行する
@@ -62,34 +61,34 @@ NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB,
 	bool isRepetition = false;
 	int executedCount = 0;
 	do {
-		result = searchNode->run(recognitionBB, memoryBB, bodyBB, record);// 再帰処理
+		// 再帰実行
+		result = searchNode->run(recognitionBB, memoryBB, bodyBB);
 		executedCount++;
+
+		// 子が条件ノードで結果が偽なら同階層ノードはこれ以上実行しない
+		if (searchNode->getType() == CONDITIONAL_NODE && result == NODE_STATUS::FAILED) { break; }
 
 		// ルールごとに結果を処理する
 		switch (tag)
 		{
 		case PRIORITY:
-			searchNode = activeChild[executedCount];
+			priorityWork(result, isRepetition, executedCount, searchNode, activeChild);
 			break;
 
 		case ON_OFF:
+			onOffWork(result, isRepetition, executedCount, searchNode, activeChild, memoryBB);
 			break;
 
 		case RANDOM:
+			randomWork(result, isRepetition, executedCount, searchNode, activeChild);
 			break;
 
 		case SEQUENCE:
-			searchNode = activeChild[executedCount];
+			sequenceWork(result, isRepetition, executedCount, searchNode, activeChild);
 			break;
 
 		case PARARELL:
-			searchNode = activeChild[executedCount];
-			break;
-
-		case CONDITIONAL:
-			break;
-
-		default:
+			pararellWork(result, isRepetition, executedCount, searchNode, activeChild);
 			break;
 		}
 	} while (isRepetition);
@@ -99,43 +98,196 @@ NODE_STATUS RuleNode::run(RecognitionBB* recognitionBB,
 }
 
 
-//
-//BehaviorNodeBase* setNode(std::vector<BehaviorNodeBase*>& activeNode, int number)
-//{
-//	activeNode[0].nu
-//	// 一番優先順位が高いノードを探す
-//	for (int i = 0; i < activeChildCount; i++)
-//	{
-//		if(i < )
-//
-//	}
-//}
-//
-//bool priority(NODE_STATUS& result, bool& isRepetition, std::vector<BehaviorNodeBase*>& activeNode)
-//{
-//	if (result == NODE_STATUS::SUCCESS)
-//	{
-//
-//	}
-//	else if (result == NODE_STATUS::FAILED)
-//	{
-//		// 次の優先子ノードを実行
-//		re
-//		(*data)[dataNo].step++;
-//		*nextNode = *(++executedNode);
-//		isRepetition = true;
-//	}
-//	else if (*result == NODE_RUNNING)
-//	{
-//		// 成功
-//		*result = NODE_SUCCESS;
-//	}
-//
-//	// 一つも子ノードを実行できていないので失敗
-//	if ((*data)[dataNo].step == cntChild)
-//	{
-//		*result = NODE_FAILED;
-//		isSameNodeRestart = FALSE;
-//	}
-//	break;
-//}
+//=============================================================================
+// ON_OFFノードが子ノードを選択
+//=============================================================================
+BehaviorNodeBase* RuleNode::onOffSelect(std::vector<BehaviorNodeBase*>& activeChild, MemoryBB* memoryBB)
+{
+	if (memoryBB->getOnOffRecord()[this] > activeChild.size() - 1)
+	{
+		memoryBB->getOnOffRecord()[this] = 0;
+	}
+	return activeChild[memoryBB->getOnOffRecord()[this]++];
+}
+
+
+//=============================================================================
+// RANDOMノードが子ノードを選択
+//=============================================================================
+BehaviorNodeBase* RuleNode::randomSelect(std::vector<BehaviorNodeBase*>& activeChild)
+{
+	int select = rand() % activeChild.size();
+	return activeChild[select];
+}
+
+
+//=============================================================================
+// PRIORITYノードの実行結果処理
+//=============================================================================
+void RuleNode::priorityWork(NODE_STATUS& result, bool& isRepetition, int& executedCount,
+	BehaviorNodeBase*& searchNode, std::vector<BehaviorNodeBase*>& activeChild)
+{
+	switch (result)
+	{
+	case NODE_STATUS::SUCCESS:
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::FAILED:
+		if (executedCount < activeChild.size())
+		{// activeChildの数以上は実行しない
+			searchNode = activeChild[executedCount];
+			isRepetition = true;
+		}
+		if (executedCount == activeChild.size())
+		{// 一つも子ノードを実行できていないので失敗
+			result = NODE_STATUS::FAILED;
+			isRepetition = false;
+		}
+		break;
+
+	case NODE_STATUS::RUNNING:
+		result = NODE_STATUS::SUCCESS;
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::_NOT_FOUND:
+		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		break;
+	}
+
+}
+
+
+//=============================================================================
+// ON_OFFノードの実行結果処理
+//=============================================================================
+void RuleNode::onOffWork(NODE_STATUS& result, bool& isRepetition, int& executedCount,
+	BehaviorNodeBase*& searchNode, std::vector<BehaviorNodeBase*>& activeChild, MemoryBB* memoryBB)
+{
+	switch (result)
+	{
+	case NODE_STATUS::SUCCESS:
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::FAILED:
+		if (executedCount < activeChild.size())
+		{// activeChildの数以上は実行しない
+			searchNode = onOffSelect(activeChild, memoryBB);
+			isRepetition = true;
+		}
+		if (executedCount == activeChild.size())
+		{// 一つも子ノードを実行できていないので失敗
+			result = NODE_STATUS::FAILED;
+			isRepetition = false;
+		}
+		break;
+
+	case NODE_STATUS::RUNNING:
+		result = NODE_STATUS::SUCCESS;
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::_NOT_FOUND:
+		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		break;
+	}
+}
+
+
+//=============================================================================
+// RANDOMノードの実行結果処理
+//=============================================================================
+void RuleNode::randomWork(NODE_STATUS& result, bool& isRepetition, int& executedCount,
+	BehaviorNodeBase*& searchNode, std::vector<BehaviorNodeBase*>& activeChild)
+{
+	switch (result)
+	{
+	case NODE_STATUS::SUCCESS:
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::FAILED:
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::RUNNING:
+		result = NODE_STATUS::SUCCESS;
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::_NOT_FOUND:
+		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		break;
+	}
+}
+
+
+//=============================================================================
+// SEQUENCEノードの実行結果処理
+//=============================================================================
+void RuleNode::sequenceWork(NODE_STATUS& result, bool& isRepetition, int& executedCount,
+	BehaviorNodeBase*& searchNode, std::vector<BehaviorNodeBase*>& activeChild)
+{
+	switch (result)
+	{
+	case NODE_STATUS::SUCCESS:
+	case NODE_STATUS::RUNNING:
+		result = NODE_STATUS::RUNNING;
+		if (executedCount < activeChild.size())
+		{// activeChildの数以上は実行しない
+			searchNode = activeChild[executedCount];
+			isRepetition = true;
+		}
+		break;
+
+	case NODE_STATUS::FAILED:
+		isRepetition = false;
+		break;
+
+	case NODE_STATUS::_NOT_FOUND:
+		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		break;
+	}
+
+	// 全ての子ノードを実行し終えたら成功
+	if (executedCount == activeChild.size())
+	{
+		result = NODE_STATUS::SUCCESS;
+		isRepetition = false;
+	}
+}
+
+
+//=============================================================================
+// PARARELLノードの実行結果処理
+//=============================================================================
+void RuleNode::pararellWork(NODE_STATUS& result, bool& isRepetition, int& executedCount,
+	BehaviorNodeBase*& searchNode, std::vector<BehaviorNodeBase*>& activeChild)
+{
+	switch (result)
+	{
+	case NODE_STATUS::SUCCESS:
+	case NODE_STATUS::FAILED:
+	case NODE_STATUS::RUNNING:
+		result = NODE_STATUS::RUNNING;
+		if (executedCount < activeChild.size())
+		{// activeChildの数以上は実行しない
+			searchNode = activeChild[executedCount];
+			isRepetition = true;
+		}
+		break;
+
+	case NODE_STATUS::_NOT_FOUND:
+		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		break;
+	}
+
+	// 全ての子ノードを実行し終えたら成功
+	if (executedCount == activeChild.size())
+	{
+		result = NODE_STATUS::SUCCESS;
+		isRepetition = false;
+	}
+}

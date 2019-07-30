@@ -129,7 +129,6 @@
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BehaviorNodeBase.cpp" />
-    <ClCompile Include="BehaviorRecord.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="BlackBoardBase.cpp" />
     <ClCompile Include="BlackBoardBody.cpp" />
@@ -142,6 +141,7 @@
     <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
+    <ClCompile Include="ConditionalNode.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
     <ClCompile Include="Credit.cpp" />
     <ClCompile Include="Credit2D.cpp" />
@@ -164,6 +164,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MemoryLine.cpp" />
     <ClCompile Include="MemoryPile.cpp" />
     <ClCompile Include="MissileUI.cpp" />
@@ -194,8 +195,8 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StaticMeshLoader.cpp" />
-    <ClCompile Include="TargetDisplayEffect.cpp" />
     <ClCompile Include="SubProcedureNode.cpp" />
+    <ClCompile Include="TargetDisplayEffect.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimerUI.cpp" />
@@ -222,7 +223,6 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BehaviorNodeBase.h" />
-    <ClInclude Include="BehaviorRecord.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BlackBoardBase.h" />
@@ -235,6 +235,7 @@
     <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
+    <ClInclude Include="ConditionalNode.h" />
     <ClInclude Include="Credit.h" />
     <ClInclude Include="Credit2D.h" />
     <ClInclude Include="DebugWindow.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="LostThing.h" />
     <ClInclude Include="Magnet.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="MemoryLine.h" />
     <ClInclude Include="MemoryPile.h" />
     <ClInclude Include="MissileUI.h" />
@@ -286,8 +288,8 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StaticMeshLoader.h" />
-    <ClInclude Include="TargetDisplayEffect.h" />
     <ClInclude Include="SubProcedureNode.h" />
+    <ClInclude Include="TargetDisplayEffect.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimerUI.h" />

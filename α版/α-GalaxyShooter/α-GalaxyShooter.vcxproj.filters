@@ -424,16 +424,10 @@
     <ClCompile Include="ScreenEffectBase.cpp">
       <Filter>Effect\ScreenEffectBase</Filter>
     </ClCompile>
-    <ClCompile Include="AgentAI.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="KnowledgeSourceBase.cpp">
       <Filter>AI\KnowledgeSource</Filter>
     </ClCompile>
     <ClCompile Include="BlackBoardBase.cpp">
-      <Filter>AI\BlackBoard</Filter>
-    </ClCompile>
-    <ClCompile Include="BlackBoardMemory.cpp">
       <Filter>AI\BlackBoard</Filter>
     </ClCompile>
     <ClCompile Include="BlackBoardRecognition.cpp">
@@ -478,27 +472,6 @@
     <ClCompile Include="WasuremonoSeries.cpp">
       <Filter>Object\Wasuremono</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorNodeBase.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="RuleNode.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="BehaviorRecord.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="StateMachine.cpp">
-      <Filter>AI\StateMachine</Filter>
-    </ClCompile>
-    <ClCompile Include="BehaviorTree.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionNode.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="SubProcedureNode.cpp">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClCompile>
     <ClCompile Include="AbstractScene.cpp">
       <Filter>Scene\AbstractScene</Filter>
     </ClCompile>
@@ -507,6 +480,36 @@
     </ClCompile>
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="AgentAI.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardMemory.cpp">
+      <Filter>AI\BlackBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>AI\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorNodeBase.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="SubProcedureNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="ConditionalNode.cpp">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -600,9 +603,6 @@
       <Filter>AI\KnowledgeSource</Filter>
     </ClInclude>
     <ClInclude Include="BlackBoardBase.h">
-      <Filter>AI\BlackBoard</Filter>
-    </ClInclude>
-    <ClInclude Include="BlackBoardMemory.h">
       <Filter>AI\BlackBoard</Filter>
     </ClInclude>
     <ClInclude Include="BlackBoardRecognition.h">
@@ -723,14 +723,13 @@
     <ClInclude Include="WasuremonoSeries.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="RuleNode.h">
-      <Filter>AI\BehaviorTree</Filter>
+    <ClInclude Include="Pose.h">
+      <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorNodeBase.h">
-      <Filter>AI\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="BehaviorRecord.h">
-      <Filter>AI\BehaviorTree</Filter>
+    <ClInclude Include="SelectCharacter.h" />
+    <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="BlackBoardMemory.h">
+      <Filter>AI\BlackBoard</Filter>
     </ClInclude>
     <ClInclude Include="StateMachine.h">
       <Filter>AI\StateMachine</Filter>
@@ -738,17 +737,24 @@
     <ClInclude Include="BehaviorTree.h">
       <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="ActionNode.h">
+    <ClInclude Include="BehaviorNodeBase.h">
       <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="SubProcedureNode.h">
       <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="Pose.h">
-      <Filter>Scene\Game\Pose</Filter>
+    <ClInclude Include="ActionNode.h">
+      <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="RuleNode.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ConditionalNode.h">
+      <Filter>AI\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
