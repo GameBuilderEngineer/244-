@@ -28,6 +28,7 @@
 #include "TargetDisplayEffect.h"
 #include "Pose.h"
 #include "Map.h"
+#include "AgentAI.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -76,7 +77,7 @@ namespace gameNS
 class Game : public AbstractScene
 {
 private:	
-	Player player[gameNS::NUM_PLAYER];
+	Player* player[gameNS::NUM_PLAYER];
 	Bullet bullet1[gameNS::NUM_BULLET];
 	Bullet bullet2[gameNS::NUM_BULLET];
 	Planet field;

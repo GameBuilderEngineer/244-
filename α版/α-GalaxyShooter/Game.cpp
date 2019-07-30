@@ -49,15 +49,21 @@ void Game::initialize(
 	//shaderLoader
 	shaderLoader = _shaderLoader;
 
+	//--------------------------
+	// プレイヤー生成
+	//--------------------------
+	player[0] = new Player;
+	player[1] = new AgentAI;
+
 	//camera
 	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
-		camera[i].setTarget(player[i].getPosition());
-		camera[i].setTargetX(&player[i].getAxisX()->direction);
-		camera[i].setTargetY(&player[i].getAxisY()->direction);
-		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
+		camera[i].setTarget(player[i]->getPosition());
+		camera[i].setTargetX(&player[i]->getAxisX()->direction);
+		camera[i].setTargetY(&player[i]->getAxisY()->direction);
+		camera[i].setTargetZ(&player[i]->getAxisZ()->direction);
 		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[i]);
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 10, 0));
@@ -76,7 +82,7 @@ void Game::initialize(
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
+		player[i]->initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
 		hp[i].initialize(direct3D9->device, i, _textureLoader);
 		sp[i].initialize(direct3D9->device, i, _textureLoader);
 		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
@@ -89,17 +95,17 @@ void Game::initialize(
 
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
-		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
-		player[i].getGravityRay()->initialize(*player[i].getPosition(), gravityDirection);
-		if (player[i].getGravityRay()->rayIntersect(*field.getMesh(), field.getMatrixWorld()))
+		between2VectorDirection(&gravityDirection, *player[i]->getPosition(), *field.getPosition());
+		player[i]->getGravityRay()->initialize(*player[i]->getPosition(), gravityDirection);
+		if (player[i]->getGravityRay()->rayIntersect(*field.getMesh(), field.getMatrixWorld()))
 		{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
-			player[i].postureControl(player[i].getAxisY()->direction, player[i].getGravityRay()->normal, 1.0f);
-			player[i].setGravity(-player[i].getGravityRay()->normal, playerNS::GRAVITY_FORCE);
+			player[i]->postureControl(player[i]->getAxisY()->direction, player[i]->getGravityRay()->normal, 1.0f);
+			player[i]->setGravity(-player[i]->getGravityRay()->normal, playerNS::GRAVITY_FORCE);
 		}
 		else 
 		{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
-			player[i].postureControl(player[i].getAxisY()->direction, gravityDirection, 1.0f);
-			player[i].setGravity(gravityDirection, playerNS::GRAVITY_FORCE);
+			player[i]->postureControl(player[i]->getAxisY()->direction, gravityDirection, 1.0f);
+			player[i]->setGravity(gravityDirection, playerNS::GRAVITY_FORCE);
 		}
 	}
 
@@ -155,9 +161,9 @@ void Game::initialize(
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 
 	//メモリーラインの初期化
-	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
+	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, player[PLAYER1], 
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
-	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
+	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, player[PLAYER2],
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
 
 	//リカージョンの初期化
@@ -224,7 +230,7 @@ void Game::update(float _frameTime) {
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの更新
-		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
+		player[i]->setSpeed(D3DXVECTOR3(0, 0, 0));
 		if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP))
 			difference += 0.01f;
 		if(input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN))
@@ -235,17 +241,17 @@ void Game::update(float _frameTime) {
 		{
 		case PLAYER1:
 			if (input->isKeyDown('W')) {
-				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('S')) {
-				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('A')) {
-				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown('D'))
 			{
-				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->wasKeyPressed(VK_SPACE)||input->getController()[i]->wasButton(virtualControllerNS::B))
 			{
@@ -253,22 +259,22 @@ void Game::update(float _frameTime) {
 			}
 			if (input->wasKeyPressed('R'))
 			{
-				player[i].reset();
+				player[i]->reset();
 			}
 			break;
 		case PLAYER2:
 			if (input->isKeyDown(VK_UP)) {
-				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_DOWN)) {
-				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_LEFT)) {
-				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->isKeyDown(VK_RIGHT))
 			{
-				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
+				player[i]->move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
 			}
 			if (input->wasKeyPressed(VK_RETURN)|| input->getController()[i]->wasButton(virtualControllerNS::B))
 			{
@@ -279,32 +285,32 @@ void Game::update(float _frameTime) {
 
 		//コントローラスティックによる移動
 		if (input->getController()[i]->checkConnect()) {
-			player[i].move(input->getController()[i]->getLeftStick()*0.001f, camera[i].getDirectionX(), camera[i].getDirectionZ());
+			player[i]->move(input->getController()[i]->getLeftStick()*0.001f, camera[i].getDirectionX(), camera[i].getDirectionZ());
 		}
 
 		//フィールド補正
-		if (player[i].getReverseAxisY()->rayIntersect(*field.getMesh(), field.getMatrixWorld()) &&
-			player[i].getRadius() >= (player[i].getReverseAxisY()->distance -difference))
+		if (player[i]->getReverseAxisY()->rayIntersect(*field.getMesh(), field.getMatrixWorld()) &&
+			player[i]->getRadius() >= (player[i]->getReverseAxisY()->distance -difference))
 		{
 			//めり込み補正
 			//現在位置+ 垂直方向*(めり込み距離)
-			player[i].setPosition(*player[i].getPosition() + player[i].getAxisY()->direction*(player[i].getRadius() - player[i].getReverseAxisY()->distance));
+			player[i]->setPosition(*player[i]->getPosition() + player[i]->getAxisY()->direction*(player[i]->getRadius() - player[i]->getReverseAxisY()->distance));
 
 			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			player[i].setSpeed(player[i].getReverseAxisY()->slip(player[i].getSpeed(), player[i].getReverseAxisY()->normal));
+			player[i]->setSpeed(player[i]->getReverseAxisY()->slip(player[i]->getSpeed(), player[i]->getReverseAxisY()->normal));
 			//Ray moveRay;//移動ベクトルを使ってレイを作成
-			//moveRay.initialize(*player[i].getPosition(), player[i].getSpeed());
-			//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && player[i].getRadius() > moveRay.distance)
+			//moveRay.initialize(*player[i]->getPosition(), player[i]->getSpeed());
+			//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && player[i]->getRadius() > moveRay.distance)
 			//{//二重チェック
-			//	player[i].setSpeed(moveRay.slip(player[i].getSpeed(),moveRay.normal));
+			//	player[i]->setSpeed(moveRay.slip(player[i]->getSpeed(),moveRay.normal));
 			//}
-			if(onJump)player[i].jump();
+			if(onJump)player[i]->jump();
 		}
 		else {
-			player[i].setGravity(-player[i].getAxisY()->direction, playerNS::GRAVITY_FORCE);
+			player[i]->setGravity(-player[i]->getAxisY()->direction, playerNS::GRAVITY_FORCE);
 		}
 
-		player[i].update(frameTime);
+		player[i]->update(frameTime);
 	}
 
 	//バレットの発射
@@ -318,13 +324,13 @@ void Game::update(float _frameTime) {
 	if ((input->getMouseLButton() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::R1))
 		&& intervalBullet1 == 0)
 	{
-		bullet1[currentBullet1].setPosition(*player[PLAYER1].getPosition());
+		bullet1[currentBullet1].setPosition(*player[PLAYER1]->getPosition());
 		//Y軸方向への成分を削除する
-		D3DXVECTOR3 front = slip(camera[PLAYER1].getDirectionZ(), player[PLAYER1].getAxisY()->direction);
+		D3DXVECTOR3 front = slip(camera[PLAYER1].getDirectionZ(), player[PLAYER1]->getAxisY()->direction);
 		D3DXVec3Normalize(&front, &front);//正規化
 		bullet1[currentBullet1].addSpeed(front*0.2);//速度を加算
-		bullet1[currentBullet1].setQuaternion(player[PLAYER1].getQuaternion());
-		bullet1[currentBullet1].postureControl(player[PLAYER1].getAxisZ()->direction, front,1.0f);
+		bullet1[currentBullet1].setQuaternion(player[PLAYER1]->getQuaternion());
+		bullet1[currentBullet1].postureControl(player[PLAYER1]->getAxisZ()->direction, front,1.0f);
 		bullet1[currentBullet1].activation();
 		bullet1[currentBullet1].Object::update();
 		currentBullet1++;
@@ -335,13 +341,13 @@ void Game::update(float _frameTime) {
 	if ((input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
 		&& intervalBullet2 == 0)
 	{
-		bullet2[currentBullet2].setPosition(*player[PLAYER2].getPosition());
+		bullet2[currentBullet2].setPosition(*player[PLAYER2]->getPosition());
 		//Y軸方向への成分を削除する
-		D3DXVECTOR3 front = slip(camera[PLAYER2].getDirectionZ(), player[PLAYER2].getAxisY()->direction);
+		D3DXVECTOR3 front = slip(camera[PLAYER2].getDirectionZ(), player[PLAYER2]->getAxisY()->direction);
 		D3DXVec3Normalize(&front, &front);//正規化
 		bullet2[currentBullet2].addSpeed(front*0.2);//速度を加算
-		bullet2[currentBullet2].setQuaternion(player[PLAYER2].getQuaternion());
-		bullet2[currentBullet2].postureControl(player[PLAYER2].getAxisZ()->direction, front,1.0f);
+		bullet2[currentBullet2].setQuaternion(player[PLAYER2]->getQuaternion());
+		bullet2[currentBullet2].postureControl(player[PLAYER2]->getAxisZ()->direction, front,1.0f);
 		bullet2[currentBullet2].activation();
 		bullet2[currentBullet2].Object::update();
 		currentBullet2++;
@@ -376,7 +382,7 @@ void Game::update(float _frameTime) {
 		}
 		//2Pをロックオン(未完)
 		if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
-			camera[PLAYER1].lockOn(*player[PLAYER2].getPosition(),frameTime);
+			camera[PLAYER1].lockOn(*player[PLAYER2]->getPosition(),frameTime);
 		}
 
 		if (input->wasKeyPressed(VK_F5))reverseValue2PXAxis*=-1;
@@ -394,7 +400,7 @@ void Game::update(float _frameTime) {
 
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{//カメラの更新
-			camera[i].setUpVector(player[i].getAxisY()->direction);
+			camera[i].setUpVector(player[i]->getAxisY()->direction);
 			camera[i].update();
 		}
 	}
@@ -403,8 +409,8 @@ void Game::update(float _frameTime) {
 	{
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hp[i].update(player[i].getHp(), player[i].getMaxHp());
-			sp[i].update(player[i].getSp(), player[i].getMaxSp());
+			hp[i].update(player[i]->getHp(), player[i]->getMaxHp());
+			sp[i].update(player[i]->getSp(), player[i]->getMaxSp());
 			colonyHp[i].update();
 			missileInfomation[i].update();
 			weaponInfomation[i].update();
@@ -432,8 +438,8 @@ void Game::update(float _frameTime) {
 		{
 			magnet[NUM_MAGNET - 1].reverseAmount();
 		}
-		magnet[NUM_MAGNET - 1].setPosition(*player[PLAYER1].getPosition());
-		magnet[1].setPosition(*player[PLAYER2].getPosition());
+		magnet[NUM_MAGNET - 1].setPosition(*player[PLAYER1]->getPosition());
+		magnet[1].setPosition(*player[PLAYER2]->getPosition());
 		for (int i = 0; i < NUM_MAGNET; i++)
 		{
 			for (int j = 0; j < NUM_MAGNET; j++)
@@ -454,8 +460,8 @@ void Game::update(float _frameTime) {
 		if (!onRecursion1P && 
 			(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
 		{
-			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
-			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
+			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1]->getPosition());
+			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1]->getQuaternion());
 			memoryPile1P[currentMemoryPile1].activation();
 			memoryPile1P[currentMemoryPile1].Object::update();
 			currentMemoryPile1++;
@@ -493,8 +499,8 @@ void Game::update(float _frameTime) {
 		//2Pのメモリーパイルのセット
 		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
 		{
-			memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2].getPosition());
-			memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2].getQuaternion());
+			memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2]->getPosition());
+			memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2]->getQuaternion());
 			memoryPile2P[currentMemoryPile2].activation();
 			memoryPile2P[currentMemoryPile2].Object::update();
 			currentMemoryPile2++;
@@ -562,7 +568,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
-		player[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 			*shaderLoader->getEffect(shaderNS::TOON),
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
@@ -656,7 +662,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	Ray debugRay;
 	//法線
 	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
-	debugRay.update(*player[PLAYER1].getPosition(), player[PLAYER1].getReverseAxisY()->normal);
+	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
 #endif
 }
@@ -674,22 +680,22 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		",
 		sceneTimer, frameTime);
 	text.print(10, 10, "acceleration(\t%.2f,\t%.2f,\t%.2f)",
-		player[PLAYER1].getAcceleration().x,
-		player[PLAYER1].getAcceleration().y,
-		player[PLAYER1].getAcceleration().z);
+		player[PLAYER1]->getAcceleration().x,
+		player[PLAYER1]->getAcceleration().y,
+		player[PLAYER1]->getAcceleration().z);
 	text.print(10, 30, "gravity(\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getGravity().x,
-		player[PLAYER1].getGravity().y,
-		player[PLAYER1].getGravity().z);
+		player[PLAYER1]->getGravity().x,
+		player[PLAYER1]->getGravity().y,
+		player[PLAYER1]->getGravity().z);
 	text.print(10, 50, "quaternion(\t%.2f,\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getQuaternion().x,
-		player[PLAYER1].getQuaternion().y,
-		player[PLAYER1].getQuaternion().z,
-		player[PLAYER1].getQuaternion().w);
+		player[PLAYER1]->getQuaternion().x,
+		player[PLAYER1]->getQuaternion().y,
+		player[PLAYER1]->getQuaternion().z,
+		player[PLAYER1]->getQuaternion().w);
 	text.print(10, 70, "normal(\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getReverseAxisY()->normal.x,
-		player[PLAYER1].getReverseAxisY()->normal.y,
-		player[PLAYER1].getReverseAxisY()->normal.z);
+		player[PLAYER1]->getReverseAxisY()->normal.x,
+		player[PLAYER1]->getReverseAxisY()->normal.y,
+		player[PLAYER1]->getReverseAxisY()->normal.z);
 	text.print(10, 90, "cameraRelative(\t%.2f,\t%.2f,\t%.2f,\t%.2f)", 
 		camera[PLAYER1].relativeQuaternion.x,
 		camera[PLAYER1].relativeQuaternion.y,
@@ -715,7 +721,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	);
 	text.print(WINDOW_WIDTH / 2, 200,
 		"collisionMemoryLine(%.02f)\n",
-		memoryLine1P.calculationDistance(*player[PLAYER2].getPosition())
+		memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
 	);
 	
 
@@ -847,11 +853,11 @@ void Game::collisions() {
 	for (int i = 0; i < NUM_BULLET; i++)
 	{	//バレット1<->プレイヤー2
 		if (!bullet1[i].getActive())continue;
-		if (player[PLAYER2].bodyCollide.collide(
+		if (player[PLAYER2]->bodyCollide.collide(
 			bullet1[i].bodyCollide.getCenter(), bullet1[i].bodyCollide.getRadius(),
-			player[PLAYER2].getMatrixWorld(), bullet1[i].getMatrixWorld()))
+			player[PLAYER2]->getMatrixWorld(), bullet1[i].getMatrixWorld()))
 		{
-			player[PLAYER2].damgae(5);
+			player[PLAYER2]->damgae(5);
 			bullet1[i].inActivation();
 		}
 	}
@@ -860,11 +866,11 @@ void Game::collisions() {
 	{
 		//バレット2<->プレイヤー1
 		if (!bullet2[i].getActive())continue;
-		if (player[PLAYER1].bodyCollide.collide(
+		if (player[PLAYER1]->bodyCollide.collide(
 			bullet2[i].bodyCollide.getCenter(), bullet2[i].bodyCollide.getRadius(),
-			player[PLAYER1].getMatrixWorld(), bullet2[i].getMatrixWorld()))
+			player[PLAYER1]->getMatrixWorld(), bullet2[i].getMatrixWorld()))
 		{
-			player[PLAYER1].damgae(5);
+			player[PLAYER1]->damgae(5);
 			bullet2[i].inActivation();
 			
 		}
@@ -900,21 +906,21 @@ void Game::collisions() {
 	{
 		for (int k = 0; k < JUNK_MAX; k++)
 		{
-			if (between2VectorLength(*player[i].getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
+			if (between2VectorLength(*player[i]->getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
 			{
-				if (player[i].bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
-					player[i].getMatrixWorld(),junk[k].getMatrixWorld()))
+				if (player[i]->bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
+					player[i]->getMatrixWorld(),junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
 					hpEffect[i].activate(10);
 				}
-				junk[k].headPosition(*player[i].getPosition());
+				junk[k].headPosition(*player[i]->getPosition());
 			}
 		}
 	}
 
 	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
-	if ( memoryLine1P.collision(*player[PLAYER2].getPosition()))
+	if ( memoryLine1P.collision(*player[PLAYER2]->getPosition()))
 		collitionMemoryLine1P = true;
 	else 
 		collitionMemoryLine1P = false;
