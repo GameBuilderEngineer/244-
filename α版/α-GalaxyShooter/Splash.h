@@ -1,7 +1,6 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Splash2D.h"
-
 namespace splashNS
 {
 
@@ -18,7 +17,7 @@ public:
 	virtual void initialize(
 		Direct3D9* direct3D9,
 		Input* _input,
-		Audio* _audio,
+		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
 		ShaderLoader* _shaderLoader) override;

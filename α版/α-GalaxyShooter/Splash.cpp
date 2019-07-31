@@ -1,4 +1,7 @@
 #include "Splash.h"
+
+#include "Sound.h"
+
 using namespace splashNS;
 
 Splash::Splash()
@@ -9,27 +12,29 @@ Splash::Splash()
 
 Splash::~Splash()
 {
-	//BGMの停止
-	audio->stopCue(audioCue::SPLASH_BGM);
+
 }
 
 void Splash::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_SPLASH_TITLE, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera;
@@ -39,9 +44,6 @@ void Splash::initialize(
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
 	splash2D.initialize(direct3D9->device,0, _textureLoader);
-
-	//スプラッシュ
-	audio->playCue(audioCue::SPLASH_BGM);
 }
 
 void Splash::update(float frameTime) {

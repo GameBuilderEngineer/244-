@@ -19,6 +19,7 @@
 #include "InstancingBillboard.h"
 #include "MemoryPile.h"
 #include "MemoryLine.h"
+#include "UIRecursion.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -79,6 +80,9 @@ private:
 	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
 	MissileUI missileInfomation[gameNS::NUM_PLAYER];
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
+
+	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
+
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
 	GameMaster gameMaster;
@@ -113,7 +117,7 @@ public:
 	virtual void initialize(
 		Direct3D9* direct3D9,
 		Input* _input,
-		Audio* _audio,
+		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
 		ShaderLoader* _shaderLoader) override;

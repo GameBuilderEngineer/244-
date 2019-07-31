@@ -8,7 +8,6 @@
 #include "Sound.h"
 #include "AbstractScene.h"
 #include "VirtualController.h"
-#include "Audio.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
@@ -36,7 +35,7 @@ public:
 	Direct3D9* d3d;							//DirectX9クラス・デバイス
 	Input* input;							//Inputクラス
 	Camera* camera;							//カメラクラス
-	Audio* audio;							//オーディオクラス
+	Sound* sound;
 	AbstractScene* scene;					//抽象シーンクラス
 	TextureLoader* textureLoader;			//テクスチャ読込クラス
 	StaticMeshLoader* staticMeshLoader;		//スタティックメッシュ読込クラス

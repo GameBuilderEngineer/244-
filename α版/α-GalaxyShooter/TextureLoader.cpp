@@ -1,11 +1,21 @@
 #include "TextureLoader.h"
 using namespace textureLoaderNS;
 
-
 TextureLoader::TextureLoader()
 {
 	textureName[TOON_OUT_LINE] = {"outline.bmp"};
 	textureName[TOON_SHADE] = {"Shade.bmp"};
+	textureName[UI_RECURSION_BICYCLE] = { "Game_Recursion_Bicycle.png" };
+	textureName[UI_RECURSION_BLACK_PHONE] = { "Game_Recursion_BlackPhone.png" };
+	textureName[UI_RECURSION_CHEWING_GUM] = { "Game_Recursion_ChewingGum.png" };
+	textureName[UI_RECURSION_FAN] = { "Game_Recursion_Fan.png" };
+	textureName[UI_RECURSION_KENDAMA] = { "Game_Recursion_Kendama.png" };
+	textureName[UI_RECURSION_NAWATOBI] = { "Game_Recursion_Nawatobi.png" };
+	textureName[UI_RECURSION_NINGEN] = { "Game_Recursion_Ningen.png" };
+	textureName[UI_RECURSION_RABBIT_DOLL] = { "Game_Recursion_RabbitDoll.png" };
+	textureName[UI_RECURSION_SOCCER_BALL] = { "Game_Recursion_SoccerBall.png" };
+	textureName[UI_RECURSION_TELEVISION] = { "Game_Recursion_Television.png" };
+	textureName[UI_RECURSION_XMAS_TREE] = { "Game_Recursion_XmasTree.png" };
 	textureName[UI_COLONY_HP] = {"ColonyHitPointUI.jpg"};
 	textureName[UI_MISSILE] = {"MissileUI.jpg"};
 	textureName[UI_WEAPON] = {"WeaponUI.jpg"};

@@ -12,21 +12,19 @@ SelectCharacter::SelectCharacter()
 
 SelectCharacter::~SelectCharacter()
 {
-	//BGM‚Ì’âŽ~
-	audio->stopCue(audioCue::SELECT_CHARACTER_BGM);
 }
 
 void SelectCharacter::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
@@ -42,10 +40,6 @@ void SelectCharacter::initialize(
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
 	selectCharacter2D.initialize(direct3D9->device, 0, _textureLoader);
-
-	//BGM‚ÌÄ¶
-	audio->playCue(audioCue::SELECT_CHARACTER_BGM);
-
 }
 
 void SelectCharacter::update(float frameTime) {

@@ -49,9 +49,6 @@
     <Filter Include="04 Sound File">
       <UniqueIdentifier>{aa274e1b-8a2d-4082-b905-c18138b84eb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio">
-      <UniqueIdentifier>{4ac8f897-e76a-46fb-bf32-80f619742dc5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Player">
       <UniqueIdentifier>{8880fccc-ba75-4d51-aee0-bd223fadc694}</UniqueIdentifier>
     </Filter>
@@ -180,9 +177,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp">
-      <Filter>Audio</Filter>
-    </ClCompile>
     <ClCompile Include="AbstractScene.cpp">
       <Filter>Scene\AbstractScene</Filter>
     </ClCompile>
@@ -251,9 +245,6 @@
     </ClCompile>
     <ClCompile Include="SkillPointUI.cpp">
       <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Sound</Filter>
     </ClCompile>
     <ClCompile Include="Splash.cpp">
       <Filter>Scene\Splash</Filter>
@@ -348,11 +339,14 @@
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>InstancingBillboard</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRecursion.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h">
-      <Filter>Audio</Filter>
-    </ClInclude>
     <ClInclude Include="AbstractScene.h">
       <Filter>Scene\AbstractScene</Filter>
     </ClInclude>
@@ -419,9 +413,6 @@
     <ClInclude Include="SkillPointUI.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Sound</Filter>
-    </ClInclude>
     <ClInclude Include="Splash.h">
       <Filter>Scene\Splash</Filter>
     </ClInclude>
@@ -481,6 +472,12 @@
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
       <Filter>InstancingBillboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRecursion.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

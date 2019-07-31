@@ -123,7 +123,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp" />
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
@@ -176,12 +175,12 @@
     <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
+    <ClCompile Include="UIRecursion.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
-    <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="BoundingSphere.h" />
@@ -233,6 +232,7 @@
     <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
+    <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />

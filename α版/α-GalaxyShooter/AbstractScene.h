@@ -2,8 +2,8 @@
 #include "Base.h"
 #include "Camera.h"
 #include "Input.h"
-#include "Audio.h"
 #include "Light.h"
+#include "Sound.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
@@ -30,7 +30,7 @@ protected:
 	//Data
 	Direct3D9* direct3D9;
 	Input* input;
-	Audio* audio;
+	Sound* sound;
 	Camera* camera;
 	Light* light;
 	TextureLoader* textureLoader;
@@ -47,7 +47,7 @@ public:
 	virtual void initialize(
 		Direct3D9* _direct3D9,
 		Input* _input,
-		Audio* _audio,
+		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
 		ShaderLoader* _shaderLoader) = 0;		//‰Šú‰»

@@ -10,21 +10,19 @@ Result::Result()
 
 Result::~Result()
 {
-	//BGM‚Ì’âŽ~
-	audio->stopCue(audioCue::RESULT_BGM);
 }
 
 void Result::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
@@ -40,9 +38,6 @@ void Result::initialize(
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
 	result2D.initialize(direct3D9->device, 0, _textureLoader);
-
-	//BGM‚ÌÄ¶
-	audio->playCue(audioCue::RESULT_BGM);
 }
 
 void Result::update(float frameTime) {

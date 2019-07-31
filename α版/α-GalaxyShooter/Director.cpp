@@ -27,7 +27,7 @@ Director::~Director(){
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(input);
 	SAFE_DELETE(scene);
-	SAFE_DELETE(audio);
+	SAFE_DELETE(sound);
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
@@ -94,13 +94,12 @@ HRESULT Director::initialize(){
 	shaderLoader = new ShaderLoader;
 	shaderLoader->load(d3d->device);
 
-	//Audio(XACTエンジン)
 	setSoundDirectory();
-	audio = new Audio;
-	audio->initialize();
+	sound = new Sound;
+	sound->initialize(window->wnd);
 
 	//scene
-	scene->initialize(d3d,input,audio,textureLoader,staticMeshLoader,shaderLoader);
+	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader);
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -182,7 +181,6 @@ void Director::update(){
 	//debugWindow0->update();
 	//debugWindow1->update();
 #endif // _DEBUG
-	audio->run();
 	scene->update(frameTime);
 	scene->collisions();
 	if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
@@ -272,7 +270,7 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	scene->initialize(d3d,input,audio,textureLoader,staticMeshLoader,shaderLoader);
+	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader);
 	currentSceneName = scene->getSceneName();
 }
 
