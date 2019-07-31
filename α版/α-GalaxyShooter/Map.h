@@ -11,17 +11,10 @@
 #include "Wasuremono.h"
 #include <vector>
 
-#if 0	// マップノードのコリジョンを表示する場合は1
-#define MAP_COLLISION_VIEW
-#endif
-#if 1	// マップノードのマークを表示する場合は1
-#define MAP_MARK_VIEW
-#endif 
-
 namespace MapNS
 {
 	const int SLICES = 8;			// 主軸に平行な方向の分割数
-	const int STACKS = 7;			// 主軸に垂直な方向の分割数
+	const int STACKS = 8;			// 主軸に垂直な方向の分割数
 }
 
 
@@ -58,17 +51,16 @@ public:
 class Map
 {
 private:
-	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
-	LPD3DXMESH mapCoodMark;					// マップノード座標マーク用メッシュ
-	D3DMATERIAL9 mapCoodMat;				// マップノード座標マーク用のマテリアルその１
-	D3DMATERIAL9 targetCoodMat;				// マップノード座標マーク用のマテリアルその２
-	static std::vector<MapNode*> mapNode;	// マップノード
-	Ray ruler;								// ノード配置につかうレイ
+	LPD3DXMESH sphere;				// バウンディングスフィア用球形メッシュ
+	LPD3DXMESH mapCoodMark;			// マップノード座標マーク用メッシュ
+	D3DMATERIAL9 mapCoodMat;		// マップノード座標マーク用のマテリアルその１
+	D3DMATERIAL9 targetCoodMat;		// マップノード座標マーク用のマテリアルその２
+	std::vector<MapNode*> mapNode;	// マップノード
+	Ray ruler;						// ノード配置につかうレイ
 
 public:
 	void initialize(LPDIRECT3DDEVICE9 device, Planet* planet);
 	void uninitialize(void);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void createNode(LPDIRECT3DDEVICE9 device);	// ノード生成
-	static std::vector<MapNode*>& getMapNode(void) { return mapNode; }
 };

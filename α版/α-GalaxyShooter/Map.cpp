@@ -6,11 +6,17 @@
 #include "Map.h"
 using namespace MapNS;
 
+#if 0	// マップノードのコリジョンを表示する場合は1
+#define MAP_COLLISION_VIEW
+#endif
+#if 1	// マップノードのマークを表示する場合は1
+#define MAP_MARK_VIEW
+#endif 
+
 //*****************************************************************************
 // 静的メンバ
 //*****************************************************************************
 int MapNode::instanceCount = -1;
-std::vector<MapNode*> Map::mapNode;
 
 
 //=============================================================================
@@ -42,24 +48,25 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 		radius = ruler.distance;
 	}
 
-	//---------------
+	//--------------
 	// ノードを配置
-	//---------------
-	// 北極点に配置
+	//--------------
+	// 北極点（北緯90度のノード配置）
 	ruler.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 	createNode(device);
 
-	// レイを回転させながら一定の緯度経度ごとに配置
+	// その他のノード（回転するレイの先端にノードを配置していく）
 	D3DXMATRIX rotationMatrix;
-	for (int i = 0; i < STACKS; i++)
+	for (int i = 1; i < STACKS; i++)
 	{
+		// ベクトル初期化
 		ruler.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 
 		// Z軸回転
 		D3DXMatrixIdentity(&rotationMatrix);
-		D3DXMatrixRotationZ(&rotationMatrix, (i + 1) * D3DX_PI / (float)STACKS);
+		D3DXMatrixRotationZ(&rotationMatrix, i * D3DX_PI / (float)STACKS);
 		D3DXVec3TransformCoord(&ruler.direction, &ruler.direction, &rotationMatrix);
 
 		for (int j = 0; j < SLICES; j++)
@@ -69,17 +76,18 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 			D3DXMatrixRotationY(&rotationMatrix, j * 2.0f * D3DX_PI / (float)SLICES);
 			D3DXVec3TransformCoord(&ruler.direction, &ruler.direction, &rotationMatrix);
 
+			// このときの座標にマップノードを生成
 			createNode(device);
 		}
 	}
 
-	// 南極点に配置
+	// 南極点（南緯90度のノード配置）
 	ruler.direction = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 	D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 	createNode(device);
 
 
-// ノードを均等に散らそうとしたができなかった残骸
+// 均等に散らそうとしたができなかった残骸
 //D3DXVECTOR2 tempVector(ruler.direction.x, ruler.direction.z);
 //float tempRadius = D3DXVec2Length(&tempVector);
 //float tempCircumference = tempRadius * 2.0f * D3DX_PI;

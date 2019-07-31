@@ -950,7 +950,4 @@ void Game::uninitialize() {
 	}
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
-
-	SAFE_DELETE(player[0])
-	SAFE_DELETE(player[1])
 }
