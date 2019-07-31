@@ -29,6 +29,7 @@ private:
 	int playerNumber;											// プレイヤー番号
 	static int cntUI;											// インスタンスの数を数える
 	static LPDIRECT3DTEXTURE9 titleTransPosTex;					// タイトル選択位置画像
+
 public:
 	TitleTransPos(void);
 	~TitleTransPos(void);
@@ -36,7 +37,6 @@ public:
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device);
-	void titleTransPosMove(void);								// タイトル選択位置移動処理
-	int	cntTitle;												// タイトル選択位置変数
+	virtual void titleTransPosMove(void);						// タイトル選択位置移動処理
 };
 

@@ -1,16 +1,24 @@
 #pragma once
 #include "AbstractScene.h"
 #include "SelectCharacter2D.h"
+#include "CharaSelectBarUI.h"
+#include "TimerUI.h"
 
 namespace selectCharacterNS
 {
-
+	enum {
+		PLAYER1,
+		PLAYER2,
+		NUM_PLAYER,
+	};
 }
 
 class SelectCharacter :public AbstractScene
 {
 private:
-	SelectCharacter2D selectCharacter2D;
+	SelectCharacter2D selectCharacter2D[selectCharacterNS::NUM_PLAYER];
+	CharaSelectBarUI charaSelectBar[selectCharacterNS::NUM_PLAYER];
+	TimerUI timerUI;
 
 public:
 	SelectCharacter();
@@ -30,4 +38,8 @@ public:
 
 	void render3D(Direct3D9* direct3D9);
 	void renderUI(LPDIRECT3DDEVICE9 device);
+
+	int selectTransition;	// セレクト画像入れ替え
+	int select2Transition;	// セレクト2画像入れ替え
+
 };

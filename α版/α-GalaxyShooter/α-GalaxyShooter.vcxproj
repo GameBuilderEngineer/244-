@@ -77,6 +77,9 @@
     <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -139,6 +142,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CharaSelectBarUI.cpp" />
     <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
@@ -233,6 +237,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CharaSelectBarUI.h" />
     <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />

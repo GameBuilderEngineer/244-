@@ -21,6 +21,7 @@ void Title::initialize(
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader) {
+
 	//Input
 	input = _input;
 	//audio
@@ -33,6 +34,7 @@ void Title::initialize(
 	shaderLoader = _shaderLoader;
 	//camera
 	camera = new Camera[NUM_PLAYER];
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -50,27 +52,16 @@ void Title::initialize(
 	light = new Light;
 	light->initialize(direct3D9);
 
-	backGround.initialize(
-		direct3D9->device, 
-		*textureLoader->getTexture(textureLoaderNS::WHITE_TEXTURE),
-		spriteNS::TOP_LEFT,								// 原点
-		WINDOW_WIDTH,											// 横幅
-		WINDOW_HEIGHT,											// 高さ
-		D3DXVECTOR3(0, 0, 0),		// 座標
-		D3DXVECTOR3(0, 0, 0),					// 回転
-		TITLE_TRANSPOS_COLOR							// 色
-	);
 	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
 	//BGMの再生
 	audio->playCue(audioCue::TITLE_BGM);
 
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		titlePlayer[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)titleNS::PLAYER_POSITION[i]);
-		titlePlayer[i].setPosition(D3DXVECTOR3(-15, 100, 15));
-	}
+	titlePlayer[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)titleNS::PLAYER_POSITION[0]);
+	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
+
+
 }
 
 void Title::update(float frameTime) {
@@ -97,6 +88,7 @@ void Title::update(float frameTime) {
 	}
 
 	// 位置記憶
+	titleTrans.cntTitle = titletransition;
 	titleTransPos.cntTitle = titletransition;
 
 	// 選択UI遷移処理
@@ -106,12 +98,9 @@ void Title::update(float frameTime) {
 	titleTransPos.update();
 
 
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		// カメラアップデート
-		camera[i].setUpVector(titlePlayer[i].getAxisY()->direction);
-		camera[i].update();
-	}
+	// カメラアップデート
+	camera[0].setUpVector(titlePlayer[0].getAxisY()->direction);
+	camera[0].update();
 
 }
 
@@ -126,18 +115,15 @@ void Title::render(Direct3D9* direct3D9) {
 }
 
 void Title::render3D(Direct3D9* direct3D9, Camera currentCamera) {
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		titlePlayer[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-			*shaderLoader->getEffect(shaderNS::TOON),
-			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	}
+
+	titlePlayer[0].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::TOON),
+		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 }
 
 void Title::renderUI(LPDIRECT3DDEVICE9 device) {
 
-	backGround.render(device);
 	titleTransPos.render(device);
 	titleTrans.render(device);
 }
@@ -151,7 +137,6 @@ void Title::AI(){
 }
 
 void Title::uninitialize() {
-	backGround.uninitialize();
 
 	SAFE_DELETE(light);
 	SAFE_DELETE_ARRAY(camera);
@@ -165,7 +150,7 @@ void Title::uninitialize() {
 //=============================================================================
 void Title::titleTransition(void)
 {
-	switch (titleTransPos.cntTitle)
+	switch (titletransition)
 	{
 		// セレクト
 	case 0:

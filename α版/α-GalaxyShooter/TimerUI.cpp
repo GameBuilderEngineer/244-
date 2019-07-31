@@ -7,18 +7,17 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		WIDTH = 25;							// 横サイズ
-const static int		HEIGHT = 75;						// 縦サイズ	
-															// X座標
-const static float		POSITION_X_PLAYER1 = WINDOW_WIDTH / 2.0f - 100.0f;
-const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;
-const static float		POSITION_Y = WINDOW_HEIGHT - 20.0f;	// Y座標
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
+const static int		WIDTH = 300;						// 横サイズ
+const static int		HEIGHT = 150;						// 縦サイズ	
+const static float		POSITION_X = 330.0f;				// X座標
+const static float		POSITION_Y = 0.0f;					// Y座標
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイマーの色
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 int TimerUI::cntUI = -1;
+LPDIRECT3DTEXTURE9 TimerUI::timerTexture = NULL;		// タイマーテクスチャ
 
 //=============================================================================
 // コンストラクタ
@@ -44,6 +43,21 @@ HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 {
 	playerNumber = _playerNumber;
 
+	// テクスチャを読み込む
+	setVisualDirectory();
+
+	timerTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_TIMER);
+
+	Sprite::initialize(device,
+		timerTexture,						// テクスチャ
+		spriteNS::TOP_LEFT,					// 原点
+		WIDTH,								// 横幅
+		HEIGHT,								// 高さ
+		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),// 座標
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
+		DEFAULT_COLOR						// 色
+	);
+
 	return S_OK;
 }
 
@@ -53,9 +67,14 @@ HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 //=============================================================================
 void TimerUI::uninitialize(void)
 {
+	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
+	if (cntUI < 0)
+	{
+		SAFE_RELEASE(timerTexture)
+	}
 }
 
 
