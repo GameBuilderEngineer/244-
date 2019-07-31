@@ -5,14 +5,14 @@ TextManager::TextManager()
 {
 	//フォントデータリソースの名前
 	//dataName[FUTURA_BLACK] = { "unicode.futurabb.ttf" };
-	dataName[NEW_RODIN] = { "FOT-NewRodinPro-EB.otf" };
+	dataName[NEW_RODIN] = { "FOT-NewRodinPro-UB.otf" };
 
 	//フォントの名前
 	//fontName[FUTURA_BLACK] = { "Futura-Black" };
 	fontName[NEW_RODIN] = { "FOT-ニューロダン Pro UB" };
 
-	setDataDirectory();
 
+	setDataDirectory();
 	// fontData読み込み
 	for (int i = 0; i < FONT_NUM; i++)
 	{
