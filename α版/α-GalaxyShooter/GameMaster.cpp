@@ -57,6 +57,7 @@ void GameMaster::setWage(int playerNo, int wage)
 int GameMaster::getWinnerPlayer()
 {
 	//playerInformation[playerNo].wage = wage;
+	return 0;
 }
 
 //===================================================================================================================================
@@ -65,5 +66,6 @@ int GameMaster::getWinnerPlayer()
 int GameMaster::getLoserPlayer()
 {
 	//playerInformation[playerNo].wage = wage;
+	return 0;
 }
 
