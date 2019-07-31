@@ -23,7 +23,8 @@ public:
 		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
-		ShaderLoader* _shaderLoader) override;
+		ShaderLoader* _shaderLoader,
+		TextManager* _textManager) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;

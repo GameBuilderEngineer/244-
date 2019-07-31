@@ -14,8 +14,8 @@
 //======================================================================================================================================================
 namespace uiRecursionNS
 {
-	const int WIDTH = (280 / 2);														//	幅（ひとまず÷２）
-	const int HEIGHT = (50 / 2);														//	高さ（ひとまず÷２）
+	const int WIDTH = (560 / 2);														//	幅（ひとまず÷２）
+	const int HEIGHT = (100 / 2);														//	高さ（ひとまず÷２）
 	const int FADE_START_TIME = (200);													//	フェード開始時間
 	const float POSITION_X_PLAYER1 = ((WINDOW_WIDTH / 2) - (uiRecursionNS::WIDTH / 2));	//	X座標
 	const float POSITION_X_PLAYER2 = (POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f);		//	X座標

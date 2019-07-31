@@ -32,7 +32,8 @@ void Game::initialize(
 	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//direct3D9
 	direct3D9 = _direct3D9;
 	//Input
@@ -45,6 +46,8 @@ void Game::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+	//textManager
+	textManager = _textManager;
 
 	// サウンドの停止
 	sound->stop(soundNS::TYPE::BGM_SPLASH_TITLE);
@@ -559,6 +562,13 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
+
+	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", sceneTimer);
+	textManager->futura->print(0.0f, 50.0f, "　%.0f", sceneTimer);
+
+	textManager->futura->print(WINDOW_WIDTH / 2, 100.0f, "　★ %.0f");
+	textManager->futura->print(0.0f, 100.0f, "　★ %.0f");
+
 #ifdef _DEBUG
 	text.print(50, 200,
 		"difference:%.3f\n",difference);

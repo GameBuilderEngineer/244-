@@ -345,6 +345,7 @@
     <ClCompile Include="UIRecursion.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="TextManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -479,6 +480,7 @@
     <ClInclude Include="UIRecursion.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="TextManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

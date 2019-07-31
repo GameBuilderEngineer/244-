@@ -18,7 +18,8 @@ void Result::initialize(
 	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//Input
 	input = _input;
 	//sound

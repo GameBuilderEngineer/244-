@@ -31,6 +31,7 @@ Director::~Director(){
 	SAFE_DELETE(textureLoader);
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
+	SAFE_DELETE(textManager);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
 	ShowCursor(TRUE);
@@ -94,12 +95,16 @@ HRESULT Director::initialize(){
 	shaderLoader = new ShaderLoader;
 	shaderLoader->load(d3d->device);
 
+	//テキストデータ読込
+	textManager = new TextManager();
+	textManager->initialize(d3d->device);
+
 	setSoundDirectory();
 	sound = new Sound;
 	sound->initialize(window->wnd);
 
 	//scene
-	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader);
+	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -270,7 +275,7 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
-	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader);
+	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
 	currentSceneName = scene->getSceneName();
 }
 
