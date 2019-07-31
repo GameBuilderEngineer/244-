@@ -75,9 +75,8 @@ namespace gameNS
 class Game : public AbstractScene
 {
 private:	
-	Player player[gameNS::NUM_PLAYER];
-	Bullet bullet1[gameNS::NUM_BULLET];
-	Bullet bullet2[gameNS::NUM_BULLET];
+	GameMaster gameMaster;
+	
 	Planet field;
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
@@ -89,22 +88,27 @@ private:
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 	TimerUI timerUI[gameNS::NUM_PLAYER];
 	ChinginUI chingin[gameNS::NUM_PLAYER];
+
+
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
-	GameMaster gameMaster;
 	PointSprite pointSprite;
 	InstancingBillboard plane;
+	Object testObject;//仮
+	Object testCube;//仮
 
+	//プレイヤー
+	Player player[gameNS::NUM_PLAYER];
+	//プレイヤークラスへ統合
+	Bullet bullet1[gameNS::NUM_BULLET];
+	Bullet bullet2[gameNS::NUM_BULLET];
 	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
 	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
 	MemoryLine memoryLine1P;
 	MemoryLine memoryLine2P;
 	Recursion* recursion1P;
-	Recursion recursion;
 
 
-	Object testObject;//仮
-	Object testCube;//仮
 	std::vector<Wasuremono*> wasuremono;
 	WasuremonoManager wasuremonoManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
@@ -119,13 +123,16 @@ private:
 	int currentMemoryPile1;//現在のメモリーパイル番号[1P]
 	int currentMemoryPile2;//現在のメモリーパイル番号[1P]
 	float frameTime = 0.0f;//フレームタイム保存変数
-	bool onRecursion1P;
-	bool collitionMemoryLine1P;//1Pのメモリーラインと2Pが接触しているかどうか
+	bool onRecursion1P;					//1Pのリカージョンが生成されたかどうか
+	bool recursion1PAnd2P;				//1Pのリカージョンと2Pが衝突したかどうか
+	bool collitionMemoryLine1P;			//1Pのメモリーラインと2Pが衝突しているかどうか
 
 	int reverseValue1PXAxis;
 	int reverseValue1PYAxis;
 	int reverseValue2PXAxis;
 	int reverseValue2PYAxis;
+
+	float difference = 1.0f;
 
 public:
 	Game();

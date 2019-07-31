@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "Direct3D9.h"
 using namespace gameNS;
-
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
 Game::Game()
 {
 	sceneName = "Scene -Game-";
@@ -12,6 +14,7 @@ Game::Game()
 	currentBullet1 = 0;
 	currentBullet2 = 0;
 	onRecursion1P = false;
+	recursion1PAnd2P = false;
 
 	reverseValue1PXAxis = 1;
 	reverseValue1PYAxis = 1;
@@ -21,6 +24,9 @@ Game::Game()
 	nextScene = SceneList::RESULT;
 }
 
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
 Game::~Game()
 {
 	//BGMの再生
@@ -29,6 +35,9 @@ Game::~Game()
 	//audio->stopCue(audioCue::GAME_BGM_003);
 }
 
+//===================================================================================================================================
+//【初期化】
+//===================================================================================================================================
 void Game::initialize(
 	Direct3D9* _direct3D9,
 	Input* _input,
@@ -160,15 +169,6 @@ void Game::initialize(
 	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
 
-	//リカージョンの初期化
-	D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE] = {
-		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.0f,0.5f,0.0f),
-		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.375f,0.0f,0.0f),
-		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(1.0f,0.1875f,0.0f),
-		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(1.0f,0.8125f,0.0f),
-		(D3DXVECTOR3)gameNS::PLAYER_POSITION[PLAYER1] + D3DXVECTOR3(0.375f,1.0f,0.0f)
-	};
-
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -203,15 +203,21 @@ void Game::initialize(
 	//audio->playCue(audioCue::GAME_BGM_003);
 }
 
-float difference = 1.0f;
-
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
 void Game::update(float _frameTime) {
 	
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	if (frameTime > 0.06)return;//フレーム時間が約30FPS時の時の時間より長い場合は、処理落ち（更新しない）※吹っ飛ぶため
+	//【処理落ち】
+	//フレーム時間が約15FPS時の時の時間より長い場合は、処理落ち（更新しない）
+	//※フレーム時間に準拠している処理が正常に機能しないため
+	if (frameTime > 0.06)return;
+
 	
+
 	if (input->wasKeyPressed(VK_RETURN))// ポーズ解除
 	{
 		pose.poseon = false;
@@ -312,7 +318,7 @@ void Game::update(float _frameTime) {
 		intervalBullet1 = 0;
 	if (intervalBullet2 > 0)intervalBullet2 -= frameTime;
 	else intervalBullet2 = 0;
-	if ((input->getMouseLButton() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::R1))
+	if ((input->getMouseLButton() || input->getController()[PLAYER1]->isButton(virtualControllerNS::R1))
 		&& intervalBullet1 == 0)
 	{
 		bullet1[currentBullet1].setPosition(*player[PLAYER1].getPosition());
@@ -329,7 +335,7 @@ void Game::update(float _frameTime) {
 		intervalBullet1 = INTERVAL_TIME_BULLET1;
 	}
 
-	if ((input->getMouseRButton() || input->getController()[PLAYER2]->wasButton(virtualControllerNS::R1))
+	if ((input->getMouseRButton() || input->getController()[PLAYER2]->isButton(virtualControllerNS::R1))
 		&& intervalBullet2 == 0)
 	{
 		bullet2[currentBullet2].setPosition(*player[PLAYER2].getPosition());
@@ -448,7 +454,7 @@ void Game::update(float _frameTime) {
 	//メモリーパイルの更新
 	{
 		//1Pのメモリーパイルのセット
-		if (!onRecursion1P && 
+		if (memoryPile1P[currentMemoryPile1].ready() &&
 			(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
 		{
 			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
@@ -468,24 +474,34 @@ void Game::update(float _frameTime) {
 				{
 					vertex[i] = *memoryPile1P[i].getPosition();
 				}
+				//リカージョンの生成
 				recursion1P = new Recursion;
 				recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
-			}
-		}
-		//メモリーパイルの切断処理
-		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
-		{
-			if (collitionMemoryLine1P)
-			{//[条件判定]1Pのメモリーラインと2Pが衝突
+				//メモリーパイルとメモリーラインの消失
 				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-				{//メモリーパイプとメモリーラインの消失
+				{
 					memoryPile1P[i].switchLost();//消失
 					memoryLine1P.disconnect();//切断
 				}
 			}
-			
 		}
+
+		//メモリーパイルの切断処理
+		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
+		{
+			if (collitionMemoryLine1P && !onRecursion1P)
+			{//[条件判定]1Pのメモリーラインと2Pが衝突
+				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+				{//メモリーパイルとメモリーラインの消失
+					memoryPile1P[i].switchLost();//消失
+					memoryLine1P.disconnect();//切断
+				}
+				player[PLAYER2].changeState(playerNS::DOWN);
+			}
+		}
+
+
 
 		//2Pのメモリーパイルのセット
 		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
@@ -534,6 +550,9 @@ void Game::update(float _frameTime) {
 
 }
 
+//===================================================================================================================================
+//【描画】
+//===================================================================================================================================
 void Game::render(Direct3D9* direct3D9) {
 
 	//1Pカメラ・ウィンドウ
@@ -554,6 +573,9 @@ void Game::render(Direct3D9* direct3D9) {
 	renderUI(direct3D9->device);
 }
 
+//===================================================================================================================================
+//【3D描画】
+//===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -657,8 +679,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 #endif
 }
 
-
-
+//===================================================================================================================================
+//【UI/2D描画】
+//===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 #ifdef _DEBUG
 	text.print(50, 200,
@@ -712,6 +735,10 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	text.print(WINDOW_WIDTH / 2, 200,
 		"collisionMemoryLine(%.02f)\n",
 		memoryLine1P.calculationDistance(*player[PLAYER2].getPosition())
+	);
+	text.print(WINDOW_WIDTH / 2, 230,
+		"recrusion1PAnd2P(%d)\n",
+		recursion1PAnd2P
 	);
 	
 
@@ -829,7 +856,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		}
 	}
 
-	if (pose.poseon )
+	if (pose.poseon)
 	{
 		pose.render(device);
 	}
@@ -839,6 +866,9 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 }
 
+//===================================================================================================================================
+//【衝突判定処理】
+//===================================================================================================================================
 void Game::collisions() {
 	for (int i = 0; i < NUM_BULLET; i++)
 	{	//バレット1<->プレイヤー2
@@ -885,17 +915,39 @@ void Game::collisions() {
 	}
 
 	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
-	if ( memoryLine1P.collision(*player[PLAYER2].getPosition()))
+	if (memoryLine1P.collision(*player[PLAYER2].getPosition(),player[PLAYER2].bodyCollide.getRadius()))
 		collitionMemoryLine1P = true;
 	else 
 		collitionMemoryLine1P = false;
 
-}
+	//1Pのリカージョン<->2Pプレイヤーの衝突検知
+	if (onRecursion1P)
+	{
+		recursion1PAnd2P = recursion1P->collide(
+				*player[PLAYER2].getPosition(),
+				player[PLAYER2].bodyCollide.getCenter(),
+				player[PLAYER2].bodyCollide.getRadius(),
+				player[PLAYER2].getMatrixWorld());
 
+		if (recursion1PAnd2P)
+		{
+			player[PLAYER2].changeState(playerNS::SKY);
+		}
+
+	}
+
+
+}
+//===================================================================================================================================
+//【AI処理】
+//===================================================================================================================================
 void Game::AI() {
 
 }
 
+//===================================================================================================================================
+//【終了処理】
+//===================================================================================================================================
 void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE_ARRAY(camera);

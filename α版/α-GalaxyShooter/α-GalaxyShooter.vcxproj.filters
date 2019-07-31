@@ -507,6 +507,9 @@
     </ClCompile>
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="Wage.cpp">
+      <Filter>Object\Wage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -749,6 +752,9 @@
     </ClInclude>
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="Wage.h">
+      <Filter>Object\Wage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

@@ -81,11 +81,6 @@ HRESULT Input::initialize(HINSTANCE instance,HWND _wnd,bool capture)
 }
 HRESULT Input::resetController()
 {
-	//for (int i = 0; i < NUM_DINPUT_CONTROLLER; i++)
-	//{//仮想コントローラの削除
-	//	SAFE_DELETE(virtualController[i]);
-	//}
-
 	//再度初期化
 	enumDInputNum = 0;
 	//利用可能なゲームコントローラーの列挙関数を実行
@@ -292,7 +287,9 @@ BOOL CALLBACK Input::enumJoysticksCallback(const DIDEVICEINSTANCE* instance, VOI
 		obj->enumDInputNum = 0;
 		return DIENUM_STOP;
 	}
+	
 	//複数列挙される場合、ユーザーに選択・確認させる
+#ifdef _DEBUG
 	TCHAR confirm[MAX_PATH + 1];
 	sprintf(confirm, "この物理デバイスでデバイスオブジェクトを作成しますか？\n%s\n%s",
 		instance->tszProductName, instance->tszInstanceName);
@@ -300,6 +297,8 @@ BOOL CALLBACK Input::enumJoysticksCallback(const DIDEVICEINSTANCE* instance, VOI
 	{
 		return DIENUM_CONTINUE;
 	}
+#endif // _DEBUG
+
 
 	//製品名を登録
 	sprintf(obj->dInputController[num].name, "%s", instance->tszProductName);

@@ -10,6 +10,7 @@ public:
 	BoundingSphere();
 	~BoundingSphere();
 	void initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* position, LPD3DXMESH ownerMesh);
+	void initialize(LPDIRECT3DDEVICE9 device, float _raidus);
 	void render(LPDIRECT3DDEVICE9 device,D3DXMATRIX owner);
 	bool collide(D3DXVECTOR3 targetCenter,float targetRadius, D3DXMATRIX ownerMatrix, D3DXMATRIX targetMatrix);
 

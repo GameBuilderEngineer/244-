@@ -206,6 +206,7 @@
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
+    <ClCompile Include="Wage.cpp" />
     <ClCompile Include="Wasuremono.cpp" />
     <ClCompile Include="WasuremonoManager.cpp" />
     <ClCompile Include="WasuremonoSeries.cpp" />
@@ -299,6 +300,7 @@
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VolumeLight.h" />
+    <ClInclude Include="Wage.h" />
     <ClInclude Include="Wasuremono.h" />
     <ClInclude Include="WasuremonoManager.h" />
     <ClInclude Include="WasuremonoSeries.h" />

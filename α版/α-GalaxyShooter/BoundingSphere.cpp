@@ -35,6 +35,15 @@ void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position,
 	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
 
 }
+
+void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,float _raidus)
+{
+	radius = _raidus;
+	//メッシュを作成
+	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
+
+}
+
 void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
 {
 	// ライティングモードを設定
@@ -81,7 +90,6 @@ void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)
 
 bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX ownerMatrix, D3DXMATRIX targetMatrix)
 {
-	
 	D3DXVECTOR3 ownerCenter;
 	D3DXVECTOR3 _targetCenter;
 	D3DXVec3TransformCoord(&ownerCenter, &center, &ownerMatrix);

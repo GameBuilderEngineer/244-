@@ -32,16 +32,19 @@ public:
 	MemoryLine();
 	~MemoryLine();
 
+	//proccessing
 	void initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Player* player, 
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 texture);
 	void unInitialize();
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void update(LPDIRECT3DDEVICE9 device, float frameTime);
-	//衝突検知
-	bool collision(D3DXVECTOR3 position);
 
-	float calculationDistance(D3DXVECTOR3 point);	//(演算)ある点とラインとの距離を戻す
-	void setLine(LPDIRECT3DDEVICE9 device);			//(更新)メモリーパイルの間のラインを設定する
-	void lost(float frameTime);						//(更新)消失処理
-	void disconnect();								//(切替)切断処理
+	//operation
+	bool collision(D3DXVECTOR3 position, float radius);	//衝突検知
+	float calculationDistance(D3DXVECTOR3 point);		//(演算)ある点とラインとの距離を戻す
+	void setLine(LPDIRECT3DDEVICE9 device);				//(更新)メモリーパイルの間のラインを設定する
+	void lost(float frameTime);							//(更新)消失処理
+	void disconnect();									//(切替)切断処理
+	//setter
+	//getter
 };

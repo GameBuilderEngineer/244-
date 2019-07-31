@@ -34,17 +34,31 @@ void MemoryPile::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 void MemoryPile::lost(float frameTime)
 {
 	if (!onLost)return;
+	lostTime += frameTime;
+	alpha -= frameTime;
 	if (lostTime > LOST_TIME)
 	{
 		inActivation();
+		reset();
 	}
-	lostTime += frameTime;
-	alpha -= frameTime;
 }
+
+void MemoryPile::reset()
+{
+	lostTime = 0.0f;
+	alpha = 1.0f;
+	onLost = false;
+}
+
 
 void MemoryPile::switchLost()
 {
 	onLost = true;
 	switchTransparent(true);
 	switchOperationAlpha(true);
+}
+
+bool MemoryPile::ready()
+{
+	return !onLost;
 }

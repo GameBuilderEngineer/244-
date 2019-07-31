@@ -269,6 +269,7 @@ void Object::activation()
 	onRender = true;
 	onActive = true;
 }
+
 void Object::inActivation()
 {
 	onRender = false;

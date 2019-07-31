@@ -2,6 +2,9 @@
 #include "UtilityFunction.h"
 using namespace memoryLineNS;
 
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
 MemoryLine::MemoryLine()
 {
 	line = NULL;
@@ -20,6 +23,9 @@ MemoryLine::MemoryLine()
 	renderNum = 0;
 }
 
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
 MemoryLine::~MemoryLine()
 {
 	SAFE_DELETE_ARRAY(line);
@@ -28,6 +34,9 @@ MemoryLine::~MemoryLine()
 	SAFE_DELETE_ARRAY(pointNum);
 }
 
+//===================================================================================================================================
+//【初期化】
+//===================================================================================================================================
 void MemoryLine::initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Player* player
 	,LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 texture)
 {
@@ -56,11 +65,17 @@ void MemoryLine::initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, in
 	initialized = true;
 }
 
+//===================================================================================================================================
+//【終了処理】
+//===================================================================================================================================
 void MemoryLine::unInitialize()
 {
 
 }
 
+//===================================================================================================================================
+//【更新】
+//===================================================================================================================================
 void MemoryLine::update(LPDIRECT3DDEVICE9 device, float frameTime)
 {
 	if (initialized == false)return;			//初期化済みでなければ終了
@@ -73,12 +88,19 @@ void MemoryLine::update(LPDIRECT3DDEVICE9 device, float frameTime)
 	}
 }
 
+//===================================================================================================================================
+//【描画】
+//===================================================================================================================================
 void MemoryLine::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	if (initialized == false)return;			//初期化済みでなければ終了
 	billboard.render(device, view, projection, cameraPosition);
 }
 
+//===================================================================================================================================
+//【描画ラインの設定】
+//メモリーパイルのアクティブ状況に応じて変動
+//===================================================================================================================================
 void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 {
 	renderNum = 0;//全体で描画する点の数を0とする。
@@ -100,6 +122,7 @@ void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 				else 
 				{//メモリーラインの終点＝プレイヤー
 					line[i].end = *joinPlayer->getPosition();
+
 				}
 			}
 		}
@@ -146,11 +169,17 @@ void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 	SAFE_DELETE_ARRAY(renderList);//全体のメモリーラインの点の位置情報リストを削除
 }
 
+//===================================================================================================================================
+//【切断】
+//===================================================================================================================================
 void MemoryLine::disconnect()
 {
 	disconnected = true;
 }
 
+//===================================================================================================================================
+//【消失】
+//===================================================================================================================================
 void MemoryLine::lost(float frameTime)
 {
 	if (!disconnected)return;
@@ -158,10 +187,22 @@ void MemoryLine::lost(float frameTime)
 
 	if (lostTime > LOST_TIME)
 	{
-		billboard.offRender();
+		disconnected = false;
+		renderNum = 0;//全体で描画する点の数を0とする。
+		for (int i = 0; i < pileNum; i++)
+		{
+			line[i].start = D3DXVECTOR3(0, 0, 0);
+			line[i].end = D3DXVECTOR3(0, 0, 0);
+			//if (pointNum[i] > 0)delete[] pointList[i];
+			pointNum[i] = 0;//ライン上の点の描画数を0にする
+		}
+		billboard.setNumOfRender(NULL, 0, renderList);
 	}
 }
 
+//===================================================================================================================================
+//【距離計算】
+//===================================================================================================================================
 float MemoryLine::calculationDistance(D3DXVECTOR3 point)
 {
 	float result = THICKNESS;
@@ -178,10 +219,15 @@ float MemoryLine::calculationDistance(D3DXVECTOR3 point)
 	return result;
 }
 
-bool MemoryLine::collision(D3DXVECTOR3 measurementPosition)
+//===================================================================================================================================
+//【距離計算】
+//（引数１）measurementPosition：測定位置
+//（引数２）radius：半径
+//===================================================================================================================================
+bool MemoryLine::collision(D3DXVECTOR3 measurementPosition,float radius)
 {
 	if (initialized == false)return false;//初期化されていなければ非衝突
-	if (!joinTarget[0].getActive())return false;//メモリーラインがアクティブでなければ非衝突
+	if (!joinTarget[0].getActive())return false;//メモリーパイルがアクティブでなければ非衝突
 	if (calculationDistance(measurementPosition) > THICKNESS)	return false;
 	//太さ+対象の半径より近い位置にいた場合衝突
 	else return true;
