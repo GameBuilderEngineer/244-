@@ -52,7 +52,6 @@ void SelectCharacter::initialize(
 	selectTransition = 0; // セレクト画像入れ替え
 	select2Transition = 0; // セレクト2画像入れ替え
 
-	selectCharacter2D.initialize(direct3D9->device, 0, _textureLoader);
 }
 
 void SelectCharacter::update(float frameTime) {
