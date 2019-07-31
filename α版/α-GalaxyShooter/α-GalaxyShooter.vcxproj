@@ -129,7 +129,6 @@
     <ClCompile Include="ActionNode.cpp" />
     <ClCompile Include="AgentAI.cpp" />
     <ClCompile Include="Arbiter.cpp" />
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BehaviorNodeBase.cpp" />
     <ClCompile Include="BehaviorRecord.cpp" />
@@ -201,6 +200,7 @@
     <ClCompile Include="TargetDisplayEffect.cpp" />
     <ClCompile Include="SubProcedureNode.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimerUI.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -215,6 +215,7 @@
     <ClCompile Include="WasuremonoManager.cpp" />
     <ClCompile Include="WasuremonoSeries.cpp" />
     <ClCompile Include="WasuremonoTable.cpp" />
+    <ClCompile Include="UIRecursion.cpp" />
     <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -224,7 +225,6 @@
     <ClInclude Include="AgentAI.h" />
     <ClInclude Include="AICommon.h" />
     <ClInclude Include="Arbiter.h" />
-    <ClInclude Include="Audio.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BehaviorNodeBase.h" />
     <ClInclude Include="BehaviorRecord.h" />
@@ -295,6 +295,7 @@
     <ClInclude Include="TargetDisplayEffect.h" />
     <ClInclude Include="SubProcedureNode.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimerUI.h" />
     <ClInclude Include="Title.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UtilityFunction.h" />
+    <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />
     <ClInclude Include="VolumeLight.h" />
     <ClInclude Include="Wage.h" />

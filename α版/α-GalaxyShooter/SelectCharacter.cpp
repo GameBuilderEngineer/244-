@@ -12,21 +12,20 @@ SelectCharacter::SelectCharacter()
 
 SelectCharacter::~SelectCharacter()
 {
-	//BGMの停止
-	audio->stopCue(audioCue::SELECT_CHARACTER_BGM);
 }
 
 void SelectCharacter::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
@@ -49,12 +48,11 @@ void SelectCharacter::initialize(
 
 	timerUI.initialize(direct3D9->device, 0, _textureLoader);
 
-	//BGMの再生
-	audio->playCue(audioCue::SELECT_CHARACTER_BGM);
 
 	selectTransition = 0; // セレクト画像入れ替え
 	select2Transition = 0; // セレクト2画像入れ替え
 
+	selectCharacter2D.initialize(direct3D9->device, 0, _textureLoader);
 }
 
 void SelectCharacter::update(float frameTime) {

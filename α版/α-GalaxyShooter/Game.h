@@ -27,6 +27,7 @@
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
 #include "Pose.h"
+#include "UIRecursion.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -90,6 +91,9 @@ private:
 	ChinginUI chingin[gameNS::NUM_PLAYER];
 
 
+
+	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
+
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
 	PointSprite pointSprite;
@@ -138,12 +142,13 @@ public:
 	Game();
 	~Game();
 	virtual void initialize(
-		Direct3D9* direct3D9,
+		Direct3D9* _direct3D9,
 		Input* _input,
-		Audio* _audio,
+		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
-		ShaderLoader* _shaderLoader) override;
+		ShaderLoader* _shaderLoader,
+		TextManager* _textManager) override;
 	virtual void update(float frameTime) override;
 	virtual void render(Direct3D9* direct3D9) override;
 	virtual void collisions() override;

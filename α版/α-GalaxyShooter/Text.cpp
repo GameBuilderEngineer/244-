@@ -18,6 +18,13 @@ void Text::initialize(LPDIRECT3DDEVICE9 device,int height,int width,D3DXCOLOR _c
 	D3DXCreateFont(device, height, width, FW_REGULAR, NULL, FALSE, SHIFTJIS_CHARSET,
 		OUT_DEFAULT_PRECIS, PROOF_QUALITY, FIXED_PITCH | FF_MODERN, "tahome", &font);
 }
+void Text::initialize(LPDIRECT3DDEVICE9 device,int height,int width,D3DXCOLOR _color,LPCSTR fontName)
+{
+	color = _color;
+	//ï∂éöóÒÉåÉìÉ_ÉäÉìÉOÇÃèâä˙âª
+	HRESULT hr = D3DXCreateFont(device, height, width, FW_REGULAR, NULL, FALSE, DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, fontName, &font);
+}
 
 void Text::print(float x,float y, const char* string, ...)
 {

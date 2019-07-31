@@ -29,10 +29,8 @@ Game::Game()
 //===================================================================================================================================
 Game::~Game()
 {
-	//BGMの再生
-	audio->stopCue(audioCue::GAME_BGM_001);
-	//audio->stopCue(audioCue::GAME_BGM_002);
-	//audio->stopCue(audioCue::GAME_BGM_003);
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_GAME);
 }
 
 //===================================================================================================================================
@@ -41,22 +39,30 @@ Game::~Game()
 void Game::initialize(
 	Direct3D9* _direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//direct3D9
 	direct3D9 = _direct3D9;
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+	//textManager
+	textManager = _textManager;
+
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_SPLASH_TITLE);
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera[NUM_PLAYER];
@@ -95,6 +101,9 @@ void Game::initialize(
 		chingin[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
+
+
+		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
@@ -196,12 +205,6 @@ void Game::initialize(
 	testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
 	testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
 	testCube.activation();
-
-
-	//BGMの再生
-	audio->playCue(audioCue::GAME_BGM_001);
-	//audio->playCue(audioCue::GAME_BGM_002);
-	//audio->playCue(audioCue::GAME_BGM_003);
 }
 
 //===================================================================================================================================
@@ -416,6 +419,8 @@ void Game::update(float _frameTime) {
 			chingin[i].update();
 			hpEffect[i].update();
 			target.update();
+
+			uiRecursion[i].update();
 		}
 	}
 
@@ -685,6 +690,13 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 //【UI/2D描画】
 //===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
+
+	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", sceneTimer);
+	textManager->futura->print(0.0f, 50.0f, "　%.0f", sceneTimer);
+
+	textManager->futura->print(WINDOW_WIDTH / 2, 100.0f, "　★ %.0f");
+	textManager->futura->print(0.0f, 100.0f, "　★ %.0f");
+
 #ifdef _DEBUG
 	text.print(50, 200,
 		"difference:%.3f\n",difference);
@@ -854,6 +866,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			weaponInfomation[i].render(device);
 			chingin[i].render(device);
 			hpEffect[i].render(device);
+			uiRecursion[i].render(device);
 		}
 	}
 
@@ -878,6 +891,7 @@ void Game::collisions() {
 			bullet1[i].bodyCollide.getCenter(), bullet1[i].bodyCollide.getRadius(),
 			player[PLAYER2].getMatrixWorld(), bullet1[i].getMatrixWorld()))
 		{
+			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER2].damgae(5);
 			bullet1[i].inActivation();
 		}
@@ -891,6 +905,7 @@ void Game::collisions() {
 			bullet2[i].bodyCollide.getCenter(), bullet2[i].bodyCollide.getRadius(),
 			player[PLAYER1].getMatrixWorld(), bullet2[i].getMatrixWorld()))
 		{
+			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER1].damgae(5);
 			bullet2[i].inActivation();
 			
@@ -964,7 +979,7 @@ void Game::uninitialize() {
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 		pose.uninitialize();
-
+		uiRecursion[i].release();
 	}
 	wasuremonoManager.uninitialize();
 }

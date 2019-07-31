@@ -10,28 +10,28 @@ Title::Title()
 
 Title::~Title()
 {
-	//BGMの停止
-	audio->stopCue(audioCue::TITLE_BGM);
+
 }
 
 void Title::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
-
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
 	//camera
 	camera = new Camera[NUM_PLAYER];
 
@@ -55,8 +55,6 @@ void Title::initialize(
 	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
-	//BGMの再生
-	audio->playCue(audioCue::TITLE_BGM);
 
 	titlePlayer[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)titleNS::PLAYER_POSITION[0]);
 	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
@@ -69,10 +67,12 @@ void Title::update(float frameTime) {
 	// キーを押したら選択UI移動
 	if (input->wasKeyPressed(VK_DOWN))
 	{
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		titletransition++;
 	}
 	else if (input->wasKeyPressed(VK_UP))
 	{
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		titletransition--;
 	}
 
@@ -156,28 +156,45 @@ void Title::titleTransition(void)
 	case 0:
 
 		nextScene = SceneList::SELECT;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+			changeScene(nextScene);
+		}
+		
 		break;
 
 		// チュートリアル
 	case 1:
 
 		nextScene = SceneList::TUTORIAL;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+			changeScene(nextScene);
+		}
 		break;
 
 		// 操作方法
 	case 2:
 
 		nextScene = SceneList::OPERATION;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+			changeScene(nextScene);
+		}
 		break;
 
 		// クレジット
 	case 3:
 
 		nextScene = SceneList::CREDIT;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+			changeScene(nextScene);
+		}
 		break;
 
 		// ゲーム終了

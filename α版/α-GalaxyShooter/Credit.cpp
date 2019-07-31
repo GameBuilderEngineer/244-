@@ -14,14 +14,15 @@ Credit::~Credit()
 void Credit::initialize(
 	Direct3D9* direct3D9, 
 	Input* _input,
-	Audio* _audio,
+	Sound* _sound,
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader) {
+	ShaderLoader* _shaderLoader,
+	TextManager* _textManager) {
 	//Input
 	input = _input;
-	//audio
-	audio = _audio;
+	//sound
+	sound = _sound;
 	//textureLoader
 	textureLoader = _textureLoader;
 	//staticMeshLoader

@@ -4,11 +4,13 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
+
 //必要なライブラリファイルのロード
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"dxguid.lib")
+
 //警告非表示
 #pragma warning(disable:4305)
 #pragma warning(disable:4996)

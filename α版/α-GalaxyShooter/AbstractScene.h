@@ -2,11 +2,12 @@
 #include "Base.h"
 #include "Camera.h"
 #include "Input.h"
-#include "Audio.h"
 #include "Light.h"
+#include "Sound.h"
 #include "TextureLoader.h"
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
+#include "TextManager.h"
 #include <string>
 
 namespace SceneList
@@ -30,12 +31,13 @@ protected:
 	//Data
 	Direct3D9* direct3D9;
 	Input* input;
-	Audio* audio;
+	Sound* sound;
 	Camera* camera;
 	Light* light;
 	TextureLoader* textureLoader;
 	StaticMeshLoader* staticMeshLoader;
 	ShaderLoader* shaderLoader;
+	TextManager* textManager;
 	float sceneTimer;
 	bool onChange;
 	int nextScene;
@@ -47,10 +49,11 @@ public:
 	virtual void initialize(
 		Direct3D9* _direct3D9,
 		Input* _input,
-		Audio* _audio,
+		Sound* _sound,
 		TextureLoader* _textureLoader,
 		StaticMeshLoader* _staticMeshLoader,
-		ShaderLoader* _shaderLoader) = 0;		//‰Šú‰»
+		ShaderLoader* _shaderLoader,
+		TextManager* _textManager) = 0;		//‰Šú‰»
 	virtual void update(float frameTime) = 0;			//XV
 	virtual void render(Direct3D9* direct3D9) = 0;		//•`‰æ
 	virtual void collisions() = 0;						//Õ“Ëˆ—
