@@ -134,13 +134,13 @@ HRESULT Direct3D9::changeViewportFullWindow()
 
 HRESULT Direct3D9::changeViewport1PWindow()
 {
-	changeViewport(0, 0, viewPort.Width/2-3, viewPort.Height);
+	changeViewport(0, 0, viewPort.Width/2, viewPort.Height);
 	return S_OK;
 }
 
 HRESULT Direct3D9::changeViewport2PWindow()
 {
-	changeViewport(viewPort.Width/2+3, 0, viewPort.Width/2-3, viewPort.Height);
+	changeViewport(viewPort.Width/2, 0, viewPort.Width/2, viewPort.Height);
 	return S_OK;
 }
 

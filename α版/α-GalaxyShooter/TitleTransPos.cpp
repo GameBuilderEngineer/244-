@@ -61,8 +61,6 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 		TITLE_TRANSPOS_COLOR							// êF
 	);
 
-	cntTitle = 0;
-
 	return S_OK;
 }
 

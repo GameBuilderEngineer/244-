@@ -148,6 +148,7 @@ void Game::initialize(
 		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	//ポーズの初期化
 	pose.initialize(direct3D9->device, 0, _textureLoader);
 
 
@@ -556,6 +557,7 @@ void Game::render(Direct3D9* direct3D9) {
 
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
+	//ステンシルマスク
 	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -568,7 +570,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	target.renderEffectImage(direct3D9->device);
 
-	target.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 
 	for (int i = 0; i < NUM_BULLET; i++)
@@ -655,6 +656,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	debugRay.update(*player[PLAYER1].getPosition(), player[PLAYER1].getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
 #endif
+
 }
 
 
@@ -823,7 +825,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			colonyHp[i].render(device);
 			missileInfomation[i].render(device);
 			weaponInfomation[i].render(device);
-			timerUI[i].render(device);
 			chingin[i].render(device);
 			hpEffect[i].render(device);
 		}

@@ -80,13 +80,6 @@ void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	
 	if (!isActive) return;
 
-	image.render(device);
-
-	// ステンシルテスト禁止
-	device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-
-	// バックバッファとフロントバッファの入れ替え
-	device->Present(NULL, NULL, NULL, NULL);
 
 }
 
@@ -96,7 +89,7 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 
 	device->Clear(0, 0, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL | D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
-	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	device->SetRenderState(D3DRS_ZWRITEENABLE,FALSE);
 
 	device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
 
@@ -117,11 +110,11 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 
 	// ステンシルテストに合格の場合ステンシル値を1にする
 	device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT);
+
 }
 
 void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
 {
-
 	// ステンシルバッファの値と比較する参照値
 	device->SetRenderState(D3DRS_STENCILREF, 0x01);
 
@@ -130,12 +123,6 @@ void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
 
 	// ステンシルテストに合格した場合ステンシル値には何もしない
 	device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
-
-	// ステンシルバッファの値と比較する参照値
-	device->SetRenderState(D3DRS_STENCILREF, 0x01);
-
-	// 比較関数の設定
-	device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
 
 	// フレームバッファへRGBを書き込めるようにする
 	device->SetRenderState(D3DRS_COLORWRITEENABLE,
@@ -146,5 +133,13 @@ void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
 
 	// Zバッファへの書き込みを許可する
 	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+	image.render(device);
+
+	// ステンシルテスト禁止
+	device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+
+	// バックバッファとフロントバッファの入れ替え
+	device->Present(NULL, NULL, NULL, NULL);
 
 }

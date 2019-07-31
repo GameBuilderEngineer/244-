@@ -8,10 +8,10 @@
 //*****************************************************************************
 //マクロ定義
 const static int		WIDTH = WINDOW_WIDTH;						// ポーズ横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// ポーズ縦サイズ
+const static int		HEIGHT = WINDOW_HEIGHT/4;					// ポーズ縦サイズ
 
 const static float		POSITION_X = 0.0f;							// ポーズX座標
-const static float		POSITION_Y = 0.0f;							// ポーズY座標
+const static float		POSITION_Y = WINDOW_HEIGHT/2;				// ポーズY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************

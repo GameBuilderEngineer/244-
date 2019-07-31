@@ -15,7 +15,7 @@ private:
 	// Data
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 buffTexture;			// テクスチャ
+	static LPDIRECT3DTEXTURE9 timerTexture;			// タイマーテクスチャ
 
 public:
 	// Method

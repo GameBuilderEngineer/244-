@@ -241,6 +241,15 @@
     <Filter Include="AI\StateMachine">
       <UniqueIdentifier>{d2746852-c7a4-4d7a-be64-d7678a39b131}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\CharacterSelect">
+      <UniqueIdentifier>{28b1a729-53b0-45e5-9d02-0418a8f5c6ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\CharacterSelect\CharacterSelect2D">
+      <UniqueIdentifier>{84aee29e-7559-47dd-b14b-57b754ae8b5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\CharaSelectBarUI">
+      <UniqueIdentifier>{be828300-170c-4286-87a2-72bb84606672}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp">
@@ -505,8 +514,15 @@
     <ClCompile Include="Pose.cpp">
       <Filter>Scene\Game\Pose</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp" />
-    <ClCompile Include="SelectCharacter2D.cpp" />
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter2D.cpp">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CharaSelectBarUI.cpp">
+      <Filter>UI\CharaSelectBarUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -532,9 +548,6 @@
     </ClInclude>
     <ClInclude Include="Director.h">
       <Filter>Director</Filter>
-    </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
@@ -747,8 +760,18 @@
     <ClInclude Include="Pose.h">
       <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter2D.h">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+    </ClInclude>
+    <ClInclude Include="HitPointUI.h">
+      <Filter>UI\HitPointUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CharaSelectBarUI.h">
+      <Filter>UI\CharaSelectBarUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
