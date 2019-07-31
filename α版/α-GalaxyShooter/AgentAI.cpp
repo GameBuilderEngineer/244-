@@ -71,9 +71,9 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 // èâä˙âªèàóù
 //=============================================================================
-void AgentAI::initialize(void)
+void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
-
+	Player::initialize(device, _staticMesh, _position);
 }
 
 
