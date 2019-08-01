@@ -1,40 +1,88 @@
+//======================================================================================================================================================
+// Document
+//======================================================================================================================================================
+// TextManager.cpp
+// HAL東京 GP-12A-332 09 亀岡竣介
+// 2019/08/02
+//======================================================================================================================================================
 #include "TextManager.h"
+//======================================================================================================================================================
+// Using Declaration
+// using宣言
+//======================================================================================================================================================
 using namespace textManagerNS;
-
-TextManager::TextManager()
+//======================================================================================================================================================
+// Constructor
+// コンストラクタ
+//======================================================================================================================================================
+TextManager::TextManager(void)
 {
-	//フォントデータリソースの名前
-	//dataName[FUTURA_BLACK] = { "unicode.futurabb.ttf" };
-	dataName[NEW_RODIN] = { "FOT-NewRodinPro-UB.otf" };
-
-	//フォントの名前
-	//fontName[FUTURA_BLACK] = { "Futura-Black" };
-	fontName[NEW_RODIN] = { "FOT-ニューロダン Pro UB" };
-
-
+	// ディレクトリの設定
 	setDataDirectory();
-	// fontData読み込み
-	for (int i = 0; i < FONT_NUM; i++)
+
+	// 初期化
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
+		switch (i)
+		{
+		case NEW_RODIN:
+			dataName[i] = { "FOT-NewRodinPro-UB.otf" };		//	フォントデータリソースの名前
+			fontName[i] = { "FOT-ニューロダン Pro UB" };	//	フォントの名前
+			break;
+		case FUTURA:
+			dataName[i] = { "unicode.futurabb.ttf" };	//	フォントデータリソースの名前
+			fontName[i] = { "Futura-Black" };			//	フォントの名前
+		default:
+			break;
+		}
+	}
+
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		// フォントデータの読み込み
 		AddFontResourceEx(dataName[i], FR_PRIVATE, NULL);
+		// インスタンス作成
+		text[i] = new Text();
 	}
 
-	futura = new Text();
+	return;
 }
-
-TextManager::~TextManager()
+//======================================================================================================================================================
+// Destructor
+// デストラクタ
+//======================================================================================================================================================
+TextManager::~TextManager(void)
 {
-	// fontData終了処理
-	for (int i = 0; i < FONT_NUM; i++)
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
+		// フォントデータ削除
 		RemoveFontResourceEx(dataName[i], FR_PRIVATE, NULL);
+		// インスタンス削除
+		SAFE_DELETE(text[i]);
 	}
 
-	SAFE_DELETE(futura);
+	return;
 }
-
-void TextManager::initialize(LPDIRECT3DDEVICE9 device)
+//======================================================================================================================================================
+// initialize
+// 初期化
+//======================================================================================================================================================
+void TextManager::initialize(LPDIRECT3DDEVICE9 _device)
 {
-	//futura->initialize(device, 48, 27, 0xffffffff,fontName[FUTURA_BLACK]);
-	futura->initialize(device, 48, 27, 0xffffffff, fontName[NEW_RODIN]);
+	// 初期化
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		switch (i)
+		{
+		case NEW_RODIN:
+			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			break;
+		case FUTURA:
+			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+		default:
+			break;
+		}
+	}
+
+	return;
 }

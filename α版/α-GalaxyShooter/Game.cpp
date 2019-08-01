@@ -92,18 +92,14 @@ void Game::initialize(
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
-		hp[i].initialize(direct3D9->device, i, _textureLoader);
-		sp[i].initialize(direct3D9->device, i, _textureLoader);
-		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
-		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
-		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
-		chingin[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
 
 
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
+		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 
 		//重力線を作成
 		D3DXVECTOR3 gravityDirection;
@@ -410,13 +406,7 @@ void Game::update(float _frameTime) {
 	{
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hp[i].update(player[i].getHp(), player[i].getMaxHp());
-			sp[i].update(player[i].getSp(), player[i].getMaxSp());
-			colonyHp[i].update();
-			missileInfomation[i].update();
-			weaponInfomation[i].update();
 			timerUI[i].update();
-			chingin[i].update();
 			hpEffect[i].update();
 			target.update();
 
@@ -690,13 +680,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 //【UI/2D描画】
 //===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
-
-	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", sceneTimer);
-	textManager->futura->print(0.0f, 50.0f, "　%.0f", sceneTimer);
-
-	textManager->futura->print(WINDOW_WIDTH / 2, 100.0f, "　★ %.0f");
-	textManager->futura->print(0.0f, 100.0f, "　★ %.0f");
-
 #ifdef _DEBUG
 	text.print(50, 200,
 		"difference:%.3f\n",difference);
@@ -857,16 +840,17 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
 	if (onUI) {
+
+		// チンギン完成までの仮
+		static int chingin = 0;
+		if (chingin < 99999) { chingin++; }
+
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hp[i].render(device);
-			sp[i].render(device);
-			colonyHp[i].render(device);
-			missileInfomation[i].render(device);
-			weaponInfomation[i].render(device);
-			chingin[i].render(device);
 			hpEffect[i].render(device);
 			uiRecursion[i].render(device);
+			uiPlayTime[i].render(device, sceneTimer);
+			uiChingin[i].render(device, sceneTimer, chingin);
 		}
 	}
 
@@ -969,17 +953,13 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(camera);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		hp[i].uninitialize();
-		sp[i].uninitialize();
-		colonyHp[i].uninitialize();
-		missileInfomation[i].uninitialize();
-		weaponInfomation[i].uninitialize();
 		timerUI[i].uninitialize();
-		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 		pose.uninitialize();
 		uiRecursion[i].release();
+		uiPlayTime[i].release();
+		uiChingin[i].release();
 	}
 	wasuremonoManager.uninitialize();
 }

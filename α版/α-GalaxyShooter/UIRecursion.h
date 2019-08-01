@@ -14,16 +14,15 @@
 //======================================================================================================================================================
 namespace uiRecursionNS
 {
-	const int WIDTH = (560 / 2);														//	幅（ひとまず÷２）
-	const int HEIGHT = (100 / 2);														//	高さ（ひとまず÷２）
-	const int FADE_START_TIME = (200);													//	フェード開始時間
-	const float POSITION_X_PLAYER1 = ((WINDOW_WIDTH / 2) - (uiRecursionNS::WIDTH / 2));	//	X座標
-	const float POSITION_X_PLAYER2 = (POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f);		//	X座標
-	//const float POSITION_Y = (WINDOW_HEIGHT / 4);										//	Y座標
-	const float POSITION_Y_POP = (130.0f);										//	Y座標
-	const float POSITION_Y_MOVE_01 = (100.0f);										//	Y座標
-	const float POSITION_Y_MOVE_02 = (70.0f);										//	Y座標
-	const float POSITION_Y_CLOSE = (40.0f);										//	Y座標
+	const int WIDTH = (280);																//	幅
+	const int HEIGHT = (50);																//	高さ
+	const int FADE_START_TIME = (200);														//	フェード開始時間
+	const float POSITION_X_PLAYER_1 = ((WINDOW_WIDTH / 2) - (uiRecursionNS::WIDTH / 2));	//	座標 x ( Player1 )
+	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2.0f));		//	座標 x ( Player2 )
+	const float POSITION_Y_POP = (140.0f);													//	Y座標
+	const float POSITION_Y_MOVE_1 = (110.0f);												//	Y座標
+	const float POSITION_Y_MOVE_2 = (80.0f);												//	Y座標
+	const float POSITION_Y_CLOSE = (50.0f);													//	Y座標
 
 	enum TYPE
 	{
@@ -50,7 +49,6 @@ namespace uiRecursionNS
 		POSITION_MAX
 	};
 }
-
 //======================================================================================================================================================
 // Class
 // クラス
@@ -58,29 +56,21 @@ namespace uiRecursionNS
 class UIRecursion
 {
 private:
-
-	Input* input;
-
 	static int instanceIndex;											//	インスタンスインデックス
 	static LPDIRECT3DTEXTURE9 texture[uiRecursionNS::TYPE::TYPE_MAX];	//	テクスチャ
 	Sprite sprite[uiRecursionNS::TYPE::TYPE_MAX];						//	スプライト
 	int playerIndex;													//	プレイヤーインデックス
-
 	int destinationIndex[uiRecursionNS::TYPE::TYPE_MAX];
+
+	Input* input;
 
 public:
 	UIRecursion(void);
 	~UIRecursion(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerNumber, TextureLoader* _textureLoader,
-		
-		Input* _input
-		
-		);
+	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerNumber, TextureLoader* _textureLoader, Input* _input);
 	void initializeSprite(LPDIRECT3DDEVICE9 _device, int _Index);
 	void release(void);
 	void update(void);
-
 	void updateMove(void);
-
 	void render(LPDIRECT3DDEVICE9 _device);
 };

@@ -142,9 +142,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharaSelectBarUI.cpp" />
-    <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
-    <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
     <ClCompile Include="Credit.cpp" />
     <ClCompile Include="Credit2D.cpp" />
@@ -157,7 +155,6 @@
     <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
-    <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="HpEffect.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Junk.cpp" />
@@ -169,7 +166,6 @@
     <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="MemoryLine.cpp" />
     <ClCompile Include="MemoryPile.cpp" />
-    <ClCompile Include="MissileUI.cpp" />
     <ClCompile Include="MotionGeneration.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Operation.cpp" />
@@ -190,7 +186,6 @@
     <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
-    <ClCompile Include="SkillPointUI.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="Splash2D.cpp" />
@@ -208,6 +203,8 @@
     <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
+    <ClCompile Include="UIChingin.cpp" />
+    <ClCompile Include="UIPlayTime.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -216,7 +213,6 @@
     <ClCompile Include="WasuremonoSeries.cpp" />
     <ClCompile Include="WasuremonoTable.cpp" />
     <ClCompile Include="UIRecursion.cpp" />
-    <ClCompile Include="WeaponUI.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -238,9 +234,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharaSelectBarUI.h" />
-    <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
-    <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="Credit.h" />
     <ClInclude Include="Credit2D.h" />
     <ClInclude Include="DebugWindow.h" />
@@ -252,7 +246,6 @@
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
-    <ClInclude Include="HitPointUI.h" />
     <ClInclude Include="HpEffect.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Junk.h" />
@@ -264,7 +257,6 @@
     <ClInclude Include="Magnet.h" />
     <ClInclude Include="MemoryLine.h" />
     <ClInclude Include="MemoryPile.h" />
-    <ClInclude Include="MissileUI.h" />
     <ClInclude Include="MotionGeneration.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Operation.h" />
@@ -285,7 +277,6 @@
     <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />
-    <ClInclude Include="SkillPointUI.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="Splash2D.h" />
@@ -303,6 +294,8 @@
     <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
+    <ClInclude Include="UIChingin.h" />
+    <ClInclude Include="UIPlayTime.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />
@@ -312,7 +305,6 @@
     <ClInclude Include="WasuremonoManager.h" />
     <ClInclude Include="WasuremonoSeries.h" />
     <ClInclude Include="WasuremonoTable.h" />
-    <ClInclude Include="WeaponUI.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

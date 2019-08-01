@@ -5,13 +5,7 @@
 #include "Player.h"
 #include "Text.h"
 #include "Magnet.h"
-#include "HitPointUI.h"
-#include "SkillPointUI.h"
-#include "ColonyHitPointUI.h"
-#include "MissileUI.h"
-#include "WeaponUI.h"
 #include "TimerUI.h"
-#include "ChinginUI.h"
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
@@ -28,6 +22,8 @@
 #include "TargetDisplayEffect.h"
 #include "Pose.h"
 #include "UIRecursion.h"
+#include "UIPlayTime.h"
+#include "UIChingin.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -82,17 +78,13 @@ private:
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
-	HitPointUI hp[gameNS::NUM_PLAYER];
-	SkillPointUI sp[gameNS::NUM_PLAYER];
-	ColonyHitPointUI colonyHp[gameNS::NUM_PLAYER];
-	MissileUI missileInfomation[gameNS::NUM_PLAYER];
-	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 	TimerUI timerUI[gameNS::NUM_PLAYER];
-	ChinginUI chingin[gameNS::NUM_PLAYER];
 
 
 
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
+	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
+	UIChingin uiChingin[gameNS::NUM_PLAYER];
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
