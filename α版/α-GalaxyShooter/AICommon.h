@@ -116,10 +116,12 @@ namespace BehaviorTreeNS
 		// アクションノード
 		_ACTION_NODE_,
 		ACTION_MOVE,
+		ACTION_JUMP,
 
 		// 副処理ノード
 		_SUBPROCEDURE_NODE_,
 		SET_TARGET_OPPONENT,
+		SET_TARGET_RANDOM_NODE,
 
 		NUM_NODE_TAG				// タグの数
 	};

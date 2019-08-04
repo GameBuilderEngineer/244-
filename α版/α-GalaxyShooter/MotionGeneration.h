@@ -7,6 +7,12 @@
 #pragma once
 #include "KnowledgeSourceBase.h"
 
+namespace MotionGenerationNS
+{
+	static const float STOP_MOVE_LENGTH = 3.0f;		// 2.0だと止まらない4.0以上だと停止位置のずれが大きい
+	static const float LANDING_JUDGE_LENGTH = 3.0f;	// いい塩梅がよくわからないからテキトー
+}
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -23,5 +29,10 @@ public:
 	void uninitialize(void) override;
 	void update(AgentAI* agentAI) override;
 	void setBlackBoard(MemoryBB* adr1, BodyBB* adr2) { memoryBB = adr1; bodyBB = adr2; }
-	void move(AgentAI* agentAI, D3DXVECTOR3 targetCoordinates);
+
+	void move(AgentAI* agentAI, D3DXVECTOR3* targetCoordinates);	// 移動
+	bool autoStop(D3DXVECTOR3* position1, D3DXVECTOR3* position2);	// 自動停止
+	void jumpFlagCycle(AgentAI* agentAI);
+
+
 };

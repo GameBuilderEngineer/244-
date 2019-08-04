@@ -9,6 +9,7 @@ struct InstancingBillboardVertex
 
 class InstancingBillboard : public Base
 {
+protected:
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	LPDIRECT3DINDEXBUFFER9 indexBuffer;
 	LPDIRECT3DVERTEXBUFFER9 positionBuffer;
@@ -18,12 +19,13 @@ class InstancingBillboard : public Base
 	LPDIRECT3DTEXTURE9 texture;
 	int renderNum;
 	bool onRender;
+
 public:
 	InstancingBillboard();
 	~InstancingBillboard();
 
-	HRESULT initialize(LPDIRECT3DDEVICE9 device,LPD3DXEFFECT effect,LPDIRECT3DTEXTURE9 texture);
-	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	virtual HRESULT initialize(LPDIRECT3DDEVICE9 device,LPD3DXEFFECT effect,LPDIRECT3DTEXTURE9 texture);
+	virtual void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 
 	void offRender();
 
@@ -32,6 +34,4 @@ public:
 
 	//ï`âÊêîÇÉZÉbÉgÇ∑ÇÈ
 	void setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList);
-
-
 };

@@ -10,12 +10,11 @@
 //=============================================================================
 void BehaviorTree::sample(void)
 {
-	addNode(SAMPLE, PARENT_IS_NOT_EXIST, ON_OFF);//0
-	addNode(SAMPLE, 0, ACTION_MOVE);//1
-	addNode(SAMPLE, 0, ACTION_MOVE);//2
-	addNode(SAMPLE, 0, ACTION_MOVE);//3
-	addNode(SAMPLE, 0, ACTION_MOVE);//4
-	addNode(SAMPLE, 0, ACTION_MOVE);//5
+	addNode(SAMPLE, PARENT_IS_NOT_EXIST, PARARELL);//0
+	addNode(SAMPLE, 0, SET_TARGET_RANDOM_NODE);//1
+	addNode(SAMPLE, 0, SEQUENCE);//2
+	addNode(SAMPLE, 2, ACTION_MOVE);//3
+	addNode(SAMPLE, 2, ACTION_JUMP);//4
 }
 
 
@@ -63,7 +62,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 	{
 		nodeType = CONDITIONAL_NODE;
 	}
-	else if (_ACTION_NODE_ < tag && _SUBPROCEDURE_NODE_)
+	else if (_ACTION_NODE_ < tag && tag < _SUBPROCEDURE_NODE_)
 	{
 		nodeType = ACTION_NODE;
 	}

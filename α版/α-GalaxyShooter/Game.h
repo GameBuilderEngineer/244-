@@ -29,6 +29,7 @@
 #include "Pose.h"
 #include "Map.h"
 #include "AgentAI.h"
+#include "ChinginManager.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -109,6 +110,7 @@ private:
 	Object testCube;//âº
 	std::vector<Wasuremono*> wasuremono;
 	WasuremonoManager wasuremonoManager;
+	ChinginManager chinginManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
 	Pose pose;
@@ -148,3 +150,4 @@ public:
 	void render3D(Direct3D9* direct3D9, Camera currentCamera);
 	void renderUI(LPDIRECT3DDEVICE9 device);
 };
+

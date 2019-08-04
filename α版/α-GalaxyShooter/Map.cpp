@@ -11,13 +11,17 @@ using namespace MapNS;
 //*****************************************************************************
 int MapNode::instanceCount = -1;
 std::vector<MapNode*> Map::mapNode;
+Planet* Map::field;// ●当座の措置
+
 
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
+void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* _field)
 {
+	field = _field;
+
 	// D3DXCreateSphere(デバイス, 球の半径, スライス数, スタック数, メッシュ, 隣接性データ)
 	// ノードのバウンディングスフィア用メッシュ
 	D3DXCreateSphere(device, 28.0f, 9, 9, &sphere, NULL);
@@ -28,7 +32,7 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 	// ライトは切るのでDiffuse, Ambientは不透明だけでよい
 	mapCoodMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
 	mapCoodMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
-	mapCoodMat.Emissive = { 0.0f, 1.0f, 0.0f, 1.0f };
+	mapCoodMat.Emissive = { 0.0f, 1.0f, 1.0f, 1.0f };
 	targetCoodMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
 	targetCoodMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
 	targetCoodMat.Emissive = { 1.0f, 0.0f, 0.0f, 1.0f };
