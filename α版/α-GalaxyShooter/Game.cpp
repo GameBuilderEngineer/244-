@@ -539,7 +539,7 @@ void Game::update(float _frameTime) {
 	}
 
 	// ƒ`ƒ“ƒMƒ“‚ÌXV
-	chinginManager.update(frameTime, player[1]);
+	chinginManager.update(frameTime, &player[1]);
 	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {

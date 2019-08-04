@@ -71,7 +71,7 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 // ‰Šú‰»ˆ—
 //=============================================================================
-void AgentAI::initialize(void)
+void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
 	sensor->initialize();
 	environmentAnalysis->initialize();

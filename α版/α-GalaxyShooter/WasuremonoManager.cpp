@@ -40,7 +40,7 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasurem
 
 	this->wasuremono = wasuremono;
 	wasuremono->reserve(WASUREMONO_MAX);	// vectorのメモリのみ先に確保
-	//setUp();								// ワスレモノ初期配備
+	setUp();								// ワスレモノ初期配備
 	timeCnt = 0.0f;
 	respawnMode = 0;
 }
