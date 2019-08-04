@@ -138,6 +138,7 @@
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ColonyHitPointUI.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="HitPointUI.cpp" />
     <ClCompile Include="HpEffect.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InstancingChingin.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
     <ClCompile Include="KeyOpe.cpp" />
@@ -232,6 +234,7 @@
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ColonyHitPointUI.h" />
@@ -250,6 +253,7 @@
     <ClInclude Include="HitPointUI.h" />
     <ClInclude Include="HpEffect.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InstancingChingin.h" />
     <ClInclude Include="Junk.h" />
     <ClInclude Include="KnowledgeSourceBase.h" />
     <ClInclude Include="KeyOpe.h" />

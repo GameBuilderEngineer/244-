@@ -17,13 +17,18 @@ using namespace MapNS;
 // 静的メンバ
 //*****************************************************************************
 int MapNode::instanceCount = -1;
+std::vector<MapNode*> Map::mapNode;
+Planet* Map::field;// ●当座の措置
+
 
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
+void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* _field)
 {
+	field = _field;
+
 	// D3DXCreateSphere(デバイス, 球の半径, スライス数, スタック数, メッシュ, 隣接性データ)
 	// ノードのバウンディングスフィア用メッシュ
 	D3DXCreateSphere(device, 28.0f, 9, 9, &sphere, NULL);
@@ -34,7 +39,7 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 	// ライトは切るのでDiffuse, Ambientは不透明だけでよい
 	mapCoodMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
 	mapCoodMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
-	mapCoodMat.Emissive = { 0.0f, 1.0f, 0.0f, 1.0f };
+	mapCoodMat.Emissive = { 0.0f, 1.0f, 1.0f, 1.0f };
 	targetCoodMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
 	targetCoodMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
 	targetCoodMat.Emissive = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -48,25 +53,24 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 		radius = ruler.distance;
 	}
 
-	//--------------
+	//---------------
 	// ノードを配置
-	//--------------
-	// 北極点（北緯90度のノード配置）
+	//---------------
+	// 北極点に配置
 	ruler.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 	createNode(device);
 
-	// その他のノード（回転するレイの先端にノードを配置していく）
+	// レイを回転させながら一定の緯度経度ごとに配置
 	D3DXMATRIX rotationMatrix;
-	for (int i = 1; i < STACKS; i++)
+	for (int i = 0; i < STACKS; i++)
 	{
-		// ベクトル初期化
 		ruler.direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 
 		// Z軸回転
 		D3DXMatrixIdentity(&rotationMatrix);
-		D3DXMatrixRotationZ(&rotationMatrix, i * D3DX_PI / (float)STACKS);
+		D3DXMatrixRotationZ(&rotationMatrix, (i + 1) * D3DX_PI / (float)STACKS);
 		D3DXVec3TransformCoord(&ruler.direction, &ruler.direction, &rotationMatrix);
 
 		for (int j = 0; j < SLICES; j++)
@@ -76,18 +80,17 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* field)
 			D3DXMatrixRotationY(&rotationMatrix, j * 2.0f * D3DX_PI / (float)SLICES);
 			D3DXVec3TransformCoord(&ruler.direction, &ruler.direction, &rotationMatrix);
 
-			// このときの座標にマップノードを生成
 			createNode(device);
 		}
 	}
 
-	// 南極点（南緯90度のノード配置）
+	// 南極点に配置
 	ruler.direction = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 	D3DXVec3Scale(&ruler.direction, &ruler.direction, ruler.distance);
 	createNode(device);
 
 
-// 均等に散らそうとしたができなかった残骸
+// ノードを均等に散らそうとしたができなかった残骸
 //D3DXVECTOR2 tempVector(ruler.direction.x, ruler.direction.z);
 //float tempRadius = D3DXVec2Length(&tempVector);
 //float tempCircumference = tempRadius * 2.0f * D3DX_PI;

@@ -27,7 +27,10 @@ public:
 	bool getIsMoving(void) { return isMoving; }
 	bool getJump(void) { return jump; }
 	bool getIsJumping(void) { return isJumping; }
+	bool getIsAir(void) { return isAir; }
 
+	void setIsMoving(bool _isMoving) { isMoving = _isMoving; }
 	void setJump(bool _jump) { jump = _jump; }
 	void setIsJumping(bool _isJumping) { isJumping = _isJumping; }
+	void setIsAir(bool _isAir) { isAir = _isAir; }
 };

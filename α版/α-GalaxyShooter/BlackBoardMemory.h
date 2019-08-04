@@ -17,7 +17,12 @@ class MemoryBB : public BlackBoardBase {
 private:
 	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFƒm[ƒh‚Ì‹L˜^
 
+
 public:
+
+	float secondCount;//œ‰¼
+	int tempRandomNode;//œ‰¼
+
 	// Method
 	MemoryBB(void);
 	~MemoryBB(void);

@@ -73,7 +73,12 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 void AgentAI::initialize(void)
 {
-
+	sensor->initialize();
+	environmentAnalysis->initialize();
+	decisionMaking->initialize();
+	pathPlanning->initialize();
+	motionGeneration->initialize();
+	Player::initialize(device, _staticMesh, _position);
 }
 
 
@@ -91,6 +96,7 @@ void AgentAI::uninitialize(void)
 //=============================================================================
 void AgentAI::update(float frameTime)
 {
+#if 0
 	arbiter->update();
 
 	if (sensor->getUpdatePermission())
@@ -117,6 +123,7 @@ void AgentAI::update(float frameTime)
 	{
 		motionGeneration->update(this);
 	}
+#endif
 
 	Player::update(frameTime);
 }

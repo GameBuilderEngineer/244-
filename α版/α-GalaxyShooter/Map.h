@@ -51,16 +51,19 @@ public:
 class Map
 {
 private:
-	LPD3DXMESH sphere;				// バウンディングスフィア用球形メッシュ
-	LPD3DXMESH mapCoodMark;			// マップノード座標マーク用メッシュ
-	D3DMATERIAL9 mapCoodMat;		// マップノード座標マーク用のマテリアルその１
-	D3DMATERIAL9 targetCoodMat;		// マップノード座標マーク用のマテリアルその２
-	std::vector<MapNode*> mapNode;	// マップノード
-	Ray ruler;						// ノード配置につかうレイ
+	static Planet* field;// ●当座の措置
+	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
+	LPD3DXMESH mapCoodMark;					// マップノード座標マーク用メッシュ
+	D3DMATERIAL9 mapCoodMat;				// マップノード座標マーク用のマテリアルその１
+	D3DMATERIAL9 targetCoodMat;				// マップノード座標マーク用のマテリアルその２
+	static std::vector<MapNode*> mapNode;	// マップノード
+	Ray ruler;								// ノード配置につかうレイ
 
 public:
 	void initialize(LPDIRECT3DDEVICE9 device, Planet* planet);
 	void uninitialize(void);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void createNode(LPDIRECT3DDEVICE9 device);	// ノード生成
+	static std::vector<MapNode*>& getMapNode(void) { return mapNode; }
+	static Planet* getField(void) { return field; }
 };

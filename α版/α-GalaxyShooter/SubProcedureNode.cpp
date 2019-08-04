@@ -19,7 +19,7 @@ SubProcedureNode::SubProcedureNode(int treeType, int parentNumber, NODE_TYPE typ
 //=============================================================================
 NODE_STATUS SubProcedureNode::run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	return NODE_STATUS::SUCCESS;
+	return subProcedureList(recognitionBB, memoryBB, bodyBB);
 }
 
 
@@ -31,6 +31,7 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 	switch (tag)
 	{
 	case SET_TARGET_OPPONENT: return setTargetOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_TARGET_RANDOM_NODE: return setTargetRandomNode(recognitionBB, memoryBB, bodyBB);
 	default: return NODE_STATUS::_NOT_FOUND;
 	}
 }
@@ -42,4 +43,24 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 NODE_STATUS SubProcedureNode::setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// 副処理：ランダムにノードを目的地に設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setTargetRandomNode(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	memoryBB->secondCount += 0.0166f;
+	if (memoryBB->secondCount > 3.0f)
+	{
+		memoryBB->secondCount= 0.0f;
+		memoryBB->tempRandomNode = rand() % Map::getMapNode().size();
+		bodyBB->setIsMoving(true);
+		return NODE_STATUS::SUCCESS;
+	}
+	else
+	{
+		return NODE_STATUS::FAILED;
+	}
 }

@@ -510,6 +510,12 @@
     <ClCompile Include="Map.cpp">
       <Filter>AI</Filter>
     </ClCompile>
+    <ClCompile Include="ChinginManager.cpp">
+      <Filter>Object\Wage</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingChingin.cpp">
+      <Filter>Object\Wage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h">
@@ -754,6 +760,12 @@
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginManager.h">
+      <Filter>Object\Wage</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingChingin.h">
+      <Filter>Object\Wage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

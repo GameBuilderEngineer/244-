@@ -154,6 +154,9 @@ void Game::initialize(
 	// ƒƒXƒŒƒ‚ƒm‚Ì‰Šú‰»
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 
+	// ƒ`ƒ“ƒMƒ“‰Šú‰»
+	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
 	//ƒƒ‚ƒŠ[ƒ‰ƒCƒ“‚Ì‰Šú‰»
 	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
@@ -534,6 +537,14 @@ void Game::update(float _frameTime) {
 	{
 		pose.poseon = true;
 	}
+
+	// ƒ`ƒ“ƒMƒ“‚ÌXV
+	chinginManager.update(frameTime, player[1]);
+	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('M')) {
+		chinginManager.generateChingin(10, unko);
+	};
 }
 
 void Game::render(Direct3D9* direct3D9) {
@@ -649,6 +660,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+
+	// ƒ`ƒ“ƒMƒ“‚Ì•`‰æ
+	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 

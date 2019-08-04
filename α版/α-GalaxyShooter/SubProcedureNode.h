@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "BehaviorNodeBase.h"
+#include "Map.h"
 
 //*****************************************************************************
 // ƒNƒ‰ƒX’è‹`
@@ -14,7 +15,8 @@ class SubProcedureNode: public BehaviorNodeBase
 private:
 	NODE_STATUS subProcedureList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	
+	NODE_STATUS setTargetRandomNode(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+
 public:
 	SubProcedureNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
 
