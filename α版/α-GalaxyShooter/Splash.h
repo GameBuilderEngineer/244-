@@ -4,7 +4,11 @@
 
 namespace splashNS
 {
-
+	enum {
+		PLAYER1,
+		PLAYER2,
+		NUM_PLAYER,
+	};
 }
 
 class Splash :public AbstractScene{

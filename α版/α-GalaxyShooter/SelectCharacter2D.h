@@ -16,11 +16,11 @@ private:
 	// Data
 	int playerNumber;									// プレイヤー番号
 	static int cntUI;									// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 SelectBgTexture;			// セレクトBGテクスチャ
-	static LPDIRECT3DTEXTURE9 SelectPlayerTexture;		// セレクトプレイヤーテクスチャ
-	static LPDIRECT3DTEXTURE9 SelectPlayer2Texture;		// セレクトプレイヤー2テクスチャ
-	static LPDIRECT3DTEXTURE9 Select2PlayerTexture;		// セレクトプレイヤーテクスチャ
-	static LPDIRECT3DTEXTURE9 Select2Player2Texture;	// セレクトプレイヤー2テクスチャ
+	static LPDIRECT3DTEXTURE9 selectBgTexture;			// セレクトBGテクスチャ
+	static LPDIRECT3DTEXTURE9 selectPlayerTexture;		// セレクトプレイヤーテクスチャ
+	static LPDIRECT3DTEXTURE9 selectPlayer2Texture;		// セレクトプレイヤー2テクスチャ
+	static LPDIRECT3DTEXTURE9 select2PlayerTexture;		// セレクトプレイヤーテクスチャ
+	static LPDIRECT3DTEXTURE9 select2Player2Texture;	// セレクトプレイヤー2テクスチャ
 	static LPDIRECT3DTEXTURE9 selectPlayerBGTexture;	// セレクトプレイヤーBGテクスチャ
 
 	Sprite selectBG;

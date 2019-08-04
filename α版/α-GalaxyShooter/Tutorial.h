@@ -4,7 +4,11 @@
 
 namespace tutorialNS
 {
-
+	enum {
+		PLAYER1,
+		PLAYER2,
+		NUM_PLAYER,
+	};
 }
 
 class Tutorial : public AbstractScene

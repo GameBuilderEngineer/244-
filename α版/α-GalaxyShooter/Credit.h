@@ -4,7 +4,11 @@
 
 namespace creditNS
 {
-
+	enum {
+		PLAYER1,
+		PLAYER2,
+		NUM_PLAYER,
+	};
 }
 
 class Credit : public AbstractScene

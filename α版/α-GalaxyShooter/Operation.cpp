@@ -48,11 +48,17 @@ void Operation::update(float frameTime) {
 	camera->update();
 
 	// ƒL[‚ð‰Ÿ‚µ‚½‚ç‘I‘ðUIˆÚ“®
-	if (input->wasKeyPressed(VK_RIGHT))
+	if (input->wasKeyPressed(VK_RIGHT)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT)
+		)
 	{
 		opeTransition++;
 	}
-	else if (input->wasKeyPressed(VK_LEFT))
+	else if (input->wasKeyPressed(VK_LEFT)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT)
+		)
 	{
 		opeTransition--;
 	}
@@ -68,7 +74,10 @@ void Operation::update(float frameTime) {
 		opeTransition = 1;
 	}
 
-	if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+	if (input->wasKeyPressed(VK_RETURN)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+		)changeScene(nextScene);
 
 }
 

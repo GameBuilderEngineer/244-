@@ -67,11 +67,17 @@ void Title::initialize(
 void Title::update(float frameTime) {
 
 	// キーを押したら選択UI移動
-	if (input->wasKeyPressed(VK_DOWN))
+	if (input->wasKeyPressed(VK_DOWN)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::DOWN)
+		)
 	{
 		titletransition++;
 	}
-	else if (input->wasKeyPressed(VK_UP))
+	else if (input->wasKeyPressed(VK_UP)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::UP)
+		)
 	{
 		titletransition--;
 	}
@@ -156,34 +162,49 @@ void Title::titleTransition(void)
 	case 0:
 
 		nextScene = SceneList::SELECT;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)changeScene(nextScene);
 		break;
 
 		// チュートリアル
 	case 1:
 
 		nextScene = SceneList::TUTORIAL;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)changeScene(nextScene);
 		break;
 
 		// 操作方法
 	case 2:
 
 		nextScene = SceneList::OPERATION;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)changeScene(nextScene);
 		break;
 
 		// クレジット
 	case 3:
 
 		nextScene = SceneList::CREDIT;
-		if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)changeScene(nextScene);
 		break;
 
 		// ゲーム終了
 	case 4:
 
-		if (input->wasKeyPressed(VK_RETURN))PostQuitMessage(0);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)PostQuitMessage(0);
 		break;
 	}
 }
