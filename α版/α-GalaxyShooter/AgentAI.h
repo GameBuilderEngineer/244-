@@ -47,7 +47,7 @@ public:
 	// Method
 	AgentAI(void);
 	~AgentAI(void);
-	void initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position);
+	void initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader);
 	void uninitialize(void);		// I—¹ˆ—
 	void update(float frameTime);	// XVˆ—
 };

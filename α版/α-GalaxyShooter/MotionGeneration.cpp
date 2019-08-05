@@ -183,7 +183,7 @@ void MotionGeneration::jumpFlagCycle(AgentAI* agentAI)
 	{
 		// ‚¢‚Ü‹ó’†H
 		if (agentAI->getReverseAxisY()->rayIntersect(
-			*Map::getField()->getMesh(), Map::getField()->getMatrixWorld()))
+			*Map::getField()->getMesh(), *Map::getField()->getMatrixWorld()))
 		{
 
 		}

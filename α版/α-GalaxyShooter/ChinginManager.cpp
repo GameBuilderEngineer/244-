@@ -49,7 +49,7 @@ void ChinginManager::update(float frameTime, Player* player)
 		// プレイヤーに当たったら終了
 		if (chingin[i].getCollider()->collide(
 			player->bodyCollide.getCenter(), player->bodyCollide.getRadius(),
-			*chingin[i].getMatrixWorld(), player->getMatrixWorld()))
+			*chingin[i].getMatrixWorld(), *player->getMatrixWorld()))
 		{
 			chingin[i].setUse(false);
 			numOfUse--;

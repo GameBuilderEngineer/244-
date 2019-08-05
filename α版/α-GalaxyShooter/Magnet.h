@@ -33,7 +33,6 @@ public:
 	//operation
 	void reverseAmount();
 	void calculationMagneticeForce(Magnet target);
-	void update();
 
 };
 

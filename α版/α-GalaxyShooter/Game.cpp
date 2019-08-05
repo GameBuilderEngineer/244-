@@ -633,7 +633,7 @@ void Game::collisions() {
 			// ワスレモノ<->バレット1
 			if (wasuremono[i]->bodyCollide.collide(
 				player[PLAYER1].bullet[j].bodyCollide.getCenter(), player[PLAYER1].bullet[j].bodyCollide.getRadius(),
-				wasuremono[i]->getMatrixWorld(), player[PLAYER1].bullet[j].getMatrixWorld()))
+				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1].bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
 				player[PLAYER1].bullet[j].inActivation();
@@ -642,7 +642,7 @@ void Game::collisions() {
 			// ワスレモノ<->バレット2
 			if (wasuremono[i]->bodyCollide.collide(
 				player[PLAYER2].bullet[j].bodyCollide.getCenter(), player[PLAYER2].bullet[j].bodyCollide.getRadius(),
-				wasuremono[i]->getMatrixWorld(), player[PLAYER2].bullet[j].getMatrixWorld()))
+				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2].bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
 				player[PLAYER2].bullet[j].inActivation();
