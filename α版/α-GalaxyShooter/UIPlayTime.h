@@ -1,38 +1,41 @@
 //======================================================================================================================================================
 // Document
 //======================================================================================================================================================
-// TextManager.h
+// UIPlayTime.h
 // HAL東京 GP-12A-332 09 亀岡竣介
-// 2019/08/02
+// 2019/08/01
 //======================================================================================================================================================
 #pragma once
-#include "Base.h"
-#include "Text.h"
+#include "Sprite.h"
+#include "AbstractScene.h"
 //======================================================================================================================================================
 // NameSpace
 // 名前空間
 //======================================================================================================================================================
-namespace textManagerNS
+namespace uiPlayTimeNS
 {
-	enum TYPE
-	{
-		NEW_RODIN,
-		FUTURA,
-		TYPE_MAX
-	};
+	const int WIDTH = (360);															//	幅
+	const int HEIGHT = (75);															//	高さ
+	const float POSITION_X_PLAYER_1 = (WIDTH / 2);										//	X座標
+	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2.0f));	//	X座標
+	const float POSITION_Y = (50.0f);													//	Y座標
 }
 //======================================================================================================================================================
 // Class
 // クラス
 //======================================================================================================================================================
-class TextManager : public Base
+class UIPlayTime
 {
 private:
-	const char* dataName[textManagerNS::TYPE::TYPE_MAX];	//	リソースデータ名
-	const char* fontName[textManagerNS::TYPE::TYPE_MAX];	//	フォント名
+	static int instanceIndex;			//	インスタンスインデックス
+	static LPDIRECT3DTEXTURE9 texture;	//	テクスチャ
+	Sprite sprite;						//	スプライト
+	TextManager* textManager;			//	テキストマネージャ
+	int playerIndex;					//	プレイヤーインデックス
 public:
-	Text* text[textManagerNS::TYPE::TYPE_MAX];				//	テキスト
-	TextManager(void);
-	~TextManager(void);
-	void initialize(LPDIRECT3DDEVICE9 _device);
+	UIPlayTime(void);
+	~UIPlayTime(void);
+	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, TextureLoader* _textureLoader, TextManager* _textManager);
+	void release(void);
+	void render(LPDIRECT3DDEVICE9 _device, float _sceneTimer);
 };

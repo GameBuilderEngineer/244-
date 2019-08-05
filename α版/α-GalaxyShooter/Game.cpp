@@ -97,11 +97,9 @@ void Game::initialize(
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		//player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
 		player[i].initialize(i, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i].setInput(input);			//入力クラスのセット
 		player[i].setCamera(&camera[i]);	//カメラのセット
-		//player[i].configurationGravityWithRay(field.getPosition(), field.getSphereMesh(), field.getMatrixWorld());	//重力を作成
 		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hp[i].initialize(direct3D9->device, i, _textureLoader);
@@ -110,10 +108,11 @@ void Game::initialize(
 		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
-		chingin[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
+		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 	}
 
 	//磁石の初期化
@@ -126,13 +125,6 @@ void Game::initialize(
 			magnet[i].initialize(direct3D9->device, staticMeshLoader ,-2.0f);
 		}
 	}
-
-	//バレットの初期化
-	//for (int i = 0; i < NUM_BULLET; i++)
-	//{
-	//	bullet1[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
-	//	bullet2[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
-	//}
 
 	//テキストの初期化
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
@@ -154,28 +146,12 @@ void Game::initialize(
 	plane.createPositionSpherical(direct3D9->device,3000, 250.0f);
 	plane.initialize(direct3D9->device,*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::RING));
 
-	//メモリーパイルの初期化
-	//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-	//{
-	//	memoryPile1P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
-	//}
-	//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-	//{
-	//	memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
-	//}
-
 	//ポーズの初期化
 	pose.initialize(direct3D9->device, 0, _textureLoader);
 
 
 	// ワスレモノの初期化
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
-
-	//メモリーラインの初期化
-	//memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
-	//	*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
-	//memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
-	//	*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
 
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
@@ -205,7 +181,7 @@ void Game::initialize(
 	testCube.activation();
 
 	//ゲームマスター
-	gameMaster->resetGameTime();
+	gameMaster->resetGameTime();//ゲーム時間のリセット
 }
 
 //===================================================================================================================================
@@ -245,13 +221,7 @@ void Game::update(float _frameTime) {
 	{
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hp[i].update(player[i].getHp(), player[i].getMaxHp());
-			sp[i].update(player[i].getSp(), player[i].getMaxSp());
-			colonyHp[i].update();
-			missileInfomation[i].update();
-			weaponInfomation[i].update();
 			timerUI[i].update();
-			chingin[i].update();
 			hpEffect[i].update();
 			target.update();
 
@@ -293,85 +263,6 @@ void Game::update(float _frameTime) {
 		}
 	}
 
-	//メモリーパイルの更新
-	{
-		////1Pのメモリーパイルのセット
-		//if (memoryPile1P[currentMemoryPile1].ready() &&
-		//	(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
-		//{
-		//	memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
-		//	memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
-		//	memoryPile1P[currentMemoryPile1].activation();
-		//	memoryPile1P[currentMemoryPile1].Object::update();
-		//	currentMemoryPile1++;
-		//	//メモリーパイルを全て設置することに成功
-		//	if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)
-		//	{
-		//		currentMemoryPile1 = 0;//セットする対象を0番のメモリパイルに切替
-		//		//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
-		//		onRecursion1P = true;
-		//		//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
-		//		D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE];
-		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		//		{
-		//			vertex[i] = *memoryPile1P[i].getPosition();
-		//		}
-		//		//リカージョンの生成
-		//		recursion1P = new Recursion;
-		//		recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
-		//		//メモリーパイルとメモリーラインの消失
-		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		//		{
-		//			memoryPile1P[i].switchLost();//消失
-		//			memoryLine1P.disconnect();//切断
-		//		}
-		//	}
-		//}
-		//
-		////メモリーパイルの切断処理
-		//if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		//	|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
-		//{
-		//	if (collitionMemoryLine1P && !onRecursion1P)
-		//	{//[条件判定]1Pのメモリーラインと2Pが衝突
-		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		//		{//メモリーパイルとメモリーラインの消失
-		//			memoryPile1P[i].switchLost();//消失
-		//			memoryLine1P.disconnect();//切断
-		//		}
-		//		player[PLAYER2].changeState(playerNS::DOWN);
-		//	}
-		//}
-		//
-		////2Pのメモリーパイルのセット
-		//if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
-		//{
-		//	memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2].getPosition());
-		//	memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2].getQuaternion());
-		//	memoryPile2P[currentMemoryPile2].activation();
-		//	memoryPile2P[currentMemoryPile2].Object::update();
-		//	currentMemoryPile2++;
-		//	if (currentMemoryPile2 >= NUM_2P_MEMORY_PILE)currentMemoryPile2 = 0;
-		//}
-		//
-		////1Pのメモリーパイルの更新
-		//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		//{
-		//	memoryPile1P[i].update(frameTime);
-		//}
-		//
-		////2Pのメモリーパイルの更新
-		//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-		//{
-		//	memoryPile2P[i].update(frameTime);
-		//}
-	}
-
-	//メモリーラインの更新
-	{
-		//memoryLine1P.update(direct3D9->device,frameTime);
-		//memoryLine2P.update(direct3D9->device,frameTime);
-	}
 
 	// ワスレモノの更新
 	wasuremonoManager.update(frameTime);
@@ -460,30 +351,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//メモリーパイルの描画
-	{
-		//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		//{
-		//	memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		//}
-		//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-		//{
-		//	memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		//}
-	}
-
-	//メモリーラインの描画
-	{
-		//memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		//memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
-
-	//リカージョンの描画
-	//if (onRecursion1P)
-	//{
-	//	recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	//}
-
 
 	//メモリーラインの切断ガイドの表示
 	if (collitionMemoryLine1P)
@@ -516,13 +383,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 //【UI/2D描画】
 //===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
-
-	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", gameMaster->getGameTime());
-	textManager->futura->print(0.0f, 50.0f, "　%.0f", gameMaster->getGameTime());
-
-	textManager->futura->print(WINDOW_WIDTH / 2, 100.0f, "　★ %.0f");
-	textManager->futura->print(0.0f, 100.0f, "　★ %.0f");
-
 #ifdef _DEBUG
 	text.print(50, 200,
 		"difference:%.3f\n",difference);
@@ -683,16 +543,17 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
 	if (onUI) {
+
+		// チンギン完成までの仮
+		static int chingin = 0;
+		if (chingin < 99999) { chingin++; }
+
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hp[i].render(device);
-			sp[i].render(device);
-			colonyHp[i].render(device);
-			missileInfomation[i].render(device);
-			weaponInfomation[i].render(device);
-			chingin[i].render(device);
 			hpEffect[i].render(device);
 			uiRecursion[i].render(device);
+			uiPlayTime[i].render(device, gameMaster->getGameTime());
+			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
 		}
 	}
 
@@ -795,17 +656,13 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(camera);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		hp[i].uninitialize();
-		sp[i].uninitialize();
-		colonyHp[i].uninitialize();
-		missileInfomation[i].uninitialize();
-		weaponInfomation[i].uninitialize();
 		timerUI[i].uninitialize();
-		chingin[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 		pose.uninitialize();
 		uiRecursion[i].release();
+		uiPlayTime[i].release();
+		uiChingin[i].release();
 	}
 	wasuremonoManager.uninitialize();
 }

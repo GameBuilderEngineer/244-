@@ -16,6 +16,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_RECURSION_SOCCER_BALL] = { "Game_Recursion_SoccerBall.png" };
 	textureName[UI_RECURSION_TELEVISION] = { "Game_Recursion_Television.png" };
 	textureName[UI_RECURSION_XMAS_TREE] = { "Game_Recursion_XmasTree.png" };
+	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[RECURSION] = { "starRecursion.png" };
 	textureName[UI_COLONY_HP] = {"ColonyHitPointUI.jpg"};
 	textureName[UI_MISSILE] = {"MissileUI.jpg"};
