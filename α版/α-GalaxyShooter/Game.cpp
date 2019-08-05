@@ -102,11 +102,6 @@ void Game::initialize(
 		player[i].setCamera(&camera[i]);	//カメラのセット
 		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
-		hp[i].initialize(direct3D9->device, i, _textureLoader);
-		sp[i].initialize(direct3D9->device, i, _textureLoader);
-		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
-		missileInfomation[i].initialize(direct3D9->device, i, _textureLoader);
-		weaponInfomation[i].initialize(direct3D9->device, i, _textureLoader);
 		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
