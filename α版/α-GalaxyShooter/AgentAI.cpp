@@ -71,14 +71,14 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 // ‰Šú‰»ˆ—
 //=============================================================================
-void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
+void AgentAI::initialize(int playerType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader)
 {
 	sensor->initialize();
 	environmentAnalysis->initialize();
 	decisionMaking->initialize();
 	pathPlanning->initialize();
 	motionGeneration->initialize();
-	Player::initialize(device, _staticMesh, _position);
+	Player::initialize(playerType, _device, staticMeshLoader, textureLoader, shaderLoader);
 }
 
 

@@ -48,7 +48,7 @@ void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* _field)
 	ruler.start = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	ruler.direction = D3DXVECTOR3(0.0f, 10000.0f, 0.0f);
 	float radius = 0.0f;
-	if (ruler.rayIntersect(*field->getMesh(), field->getMatrixWorld()))
+	if (ruler.rayIntersect(*field->getMesh(), *field->getMatrixWorld()))
 	{
 		radius = ruler.distance;
 	}
