@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E9859007-5E09-4B55-805C-08A6E9BE5A43}</ProjectGuid>
     <RootNamespace>αGalaxyShooter</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -144,7 +144,6 @@
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
-    <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
     <ClCompile Include="Credit.cpp" />
@@ -208,7 +207,9 @@
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UIChingin.cpp" />
+    <ClCompile Include="UICutMemoryLine.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
+    <ClCompile Include="UIScreenSplitLine.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -240,7 +241,6 @@
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
-    <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="ConditionalNode.h" />
     <ClInclude Include="Credit.h" />
     <ClInclude Include="Credit2D.h" />
@@ -303,7 +303,9 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UIChingin.h" />
+    <ClInclude Include="UICutMemoryLine.h" />
     <ClInclude Include="UIPlayTime.h" />
+    <ClInclude Include="UIScreenSplitLine.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />

@@ -238,6 +238,12 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{d860687a-957b-4aec-b828-5653136e072d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\CutMemoryLine">
+      <UniqueIdentifier>{2a6cf4dc-9221-492c-8b96-a1ffb073c7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\ScreenSplitLine">
+      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -388,9 +394,6 @@
     <ClCompile Include="UtilityFunction.cpp">
       <Filter>UtilityFunction</Filter>
     </ClCompile>
-    <ClCompile Include="SkillPointUI.cpp">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClCompile>
     <ClCompile Include="TimerUI.cpp">
       <Filter>UI\TimerUI</Filter>
     </ClCompile>
@@ -519,6 +522,13 @@
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ChinginUI.cpp" />
+    <ClCompile Include="UICutMemoryLine.cpp">
+      <Filter>UI\CutMemoryLine</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreenSplitLine.cpp">
+      <Filter>UI\ScreenSplitLine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -688,9 +698,6 @@
     <ClInclude Include="WasuremonoTable.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="SkillPointUI.h">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="TimerUI.h">
       <Filter>UI\TimerUI</Filter>
     </ClInclude>
@@ -750,9 +757,6 @@
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI\HitPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="CharaSelectBarUI.h">
       <Filter>UI\CharaSelectBarUI</Filter>
     </ClInclude>
@@ -774,6 +778,13 @@
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginUI.h" />
+    <ClInclude Include="UICutMemoryLine.h">
+      <Filter>UI\CutMemoryLine</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreenSplitLine.h">
+      <Filter>UI\ScreenSplitLine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

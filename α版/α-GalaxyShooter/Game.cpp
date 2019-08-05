@@ -95,6 +95,9 @@ void Game::initialize(
 	//フィールド
 	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
+	// 画面分割線の初期化
+	uiScreenSplitLine.initialize(direct3D9->device, textureLoader);
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i].initialize(i, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
@@ -578,6 +581,9 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		}
 	}
 
+	// 画面分割線
+	uiScreenSplitLine.render(device);
+
 	if (pose.poseon)
 	{
 		pose.render(device);
@@ -711,6 +717,7 @@ void Game::uninitialize() {
 		uiPlayTime[i].release();
 		uiChingin[i].release();
 	}
+	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
 }

@@ -33,6 +33,7 @@
 #include "Map.h"
 #include "AgentAI.h"
 #include "ChinginManager.h"
+#include "UIScreenSplitLine.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -90,6 +91,7 @@ private:
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
 	UIChingin uiChingin[gameNS::NUM_PLAYER];
+	UIScreenSplitLine uiScreenSplitLine;
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];

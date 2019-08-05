@@ -25,7 +25,7 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 	numOfUse = 0;
 	renderList = NULL;
 
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_MISSILE));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_GAUGE_BAR));
 }
 
 

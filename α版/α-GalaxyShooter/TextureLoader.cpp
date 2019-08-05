@@ -5,6 +5,7 @@ TextureLoader::TextureLoader()
 {
 	textureName[TOON_OUT_LINE] = {"outline.bmp"};
 	textureName[TOON_SHADE] = {"Shade.bmp"};
+	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
 	textureName[UI_RECURSION_BICYCLE] = { "Game_Recursion_Bicycle.png" };
 	textureName[UI_RECURSION_BLACK_PHONE] = { "Game_Recursion_BlackPhone.png" };
 	textureName[UI_RECURSION_CHEWING_GUM] = { "Game_Recursion_ChewingGum.png" };
@@ -18,9 +19,6 @@ TextureLoader::TextureLoader()
 	textureName[UI_RECURSION_XMAS_TREE] = { "Game_Recursion_XmasTree.png" };
 	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[RECURSION] = { "starRecursion.png" };
-	textureName[UI_COLONY_HP] = {"ColonyHitPointUI.jpg"};
-	textureName[UI_MISSILE] = {"MissileUI.jpg"};
-	textureName[UI_WEAPON] = {"WeaponUI.jpg"};
 	textureName[UI_GAUGE_BAR] = {"GaugeBar.png"};
 	textureName[UI_GAUGE_BASE] = {"GaugeBase.png"};
 	textureName[UI_GAUGE_COVER] = {"GaugeCover.png"};
@@ -63,7 +61,7 @@ TextureLoader::TextureLoader()
 	textureName[WHITE_TEXTURE] = { "backGround1080p.png" };
 	textureName[LIGHT001] = { "light001.png" };
 	textureName[HP_EFFECT] = { "effect2.png" };
-	textureName[TARGET] = { "kurezitto.png" };
+	textureName[TARGET] = { "credit.png" };
 	textureName[POSE] = { "Pause.png" };
 }
 
