@@ -31,7 +31,11 @@ TextureLoader::TextureLoader()
 	textureName[UI_CHARA_SELECT_CURSOR] = { "Character_Select_Cursor_01.png" };
 	textureName[UI_CHARA_SELECT_CURSOR2] = { "Character_Select_Cursor_02.png" };
 	textureName[UI_CHARA_SELECT_LOGO] = { "Character_Select_PLAYER.png" };
-	textureName[UI_CHARA_SELECT_BG] = { "Character_Select_Back.png" };
+	textureName[CHARA_SELECT_BG] = { "Character_Select_Back.png" };
+	textureName[EVE_NAME_ENG] = { "Character_Select_Name_EVE_ENG.png" };
+	textureName[ADAM_NAME_ENG] = { "Character_Select_Name_ADAM_ENG.png" };
+	textureName[EVE_NAME_JP] = { "Character_Select_Name_EVE_JP.png" };
+	textureName[ADAM_NAME_JP] = { "Character_Select_Name_ADAM_JP.png" };
 	textureName[UI_CHARA_SELECT_TIMER] = { "Character_Select_Time.png" };
 	textureName[SPRITE] = {"Sprite.jpg"};
 	textureName[RING] = {"ring.png"};

@@ -46,7 +46,10 @@ void Tutorial::update(float frameTime) {
 
 	tutorial2D.update();
 
-	if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+	if (input->wasKeyPressed(VK_RETURN)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+		)changeScene(nextScene);
 
 }
 

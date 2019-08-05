@@ -186,12 +186,29 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
-
-	//【ポーズ処理】
-	if (input->wasKeyPressed(VK_RETURN))// ポーズ解除
+	if (pose.poseon)
 	{
-		pose.poseon = false;
+		if (input->wasKeyPressed('P') ||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+			)// ポーズ解除
+		{
+			pose.poseon = false;
+
+		}
 	}
+	else if (!pose.poseon)
+	{
+		if (input->wasKeyPressed('P') ||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+			)// ポーズ解除
+		{
+			pose.poseon = true;
+
+		}
+	}
+
 	if (pose.poseon)return;// ポーズしてたら更新しない
 
 	//【処理落ち】
@@ -265,20 +282,13 @@ void Game::update(float _frameTime) {
 	{
 		wasuremono[i]->update(frameTime, *field.getMesh(), *field.getMatrixWorld(), *field.getPosition());
 	}
-
-	if (input->wasKeyPressed('P')|| 
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN)||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-		)// ポーズ開始
-	{
-		pose.poseon = true;
-	}
 }
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
 void Game::render(Direct3D9* direct3D9) {
+
 
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);

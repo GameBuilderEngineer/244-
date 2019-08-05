@@ -59,21 +59,25 @@ void SelectCharacter::update(float frameTime) {
 	camera->update();
 
 	// キーを押したら選択UI移動
-	if (input->wasKeyPressed('D'))
+	if (input->wasKeyPressed('D') ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT))
 	{
 		selectTransition++;
 	}
-	else if (input->wasKeyPressed('A'))
+	else if (input->wasKeyPressed('A') ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT))
 	{
 		selectTransition--;
 	}
 
 	// キーを押したら選択UI2移動
-	if (input->wasKeyPressed(VK_RIGHT))
+	if (input->wasKeyPressed(VK_RIGHT)||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT))
 	{
 		select2Transition++;
 	}
-	else if (input->wasKeyPressed(VK_LEFT))
+	else if (input->wasKeyPressed(VK_LEFT)||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT))
 	{
 		select2Transition--;
 	}
@@ -100,8 +104,10 @@ void SelectCharacter::update(float frameTime) {
 		select2Transition = 1;
 	}
 
-	if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
-
+	if (input->wasKeyPressed(VK_RETURN)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+		)changeScene(nextScene);
 }
 
 void SelectCharacter::render(Direct3D9* direct3D9) {
@@ -123,7 +129,7 @@ void SelectCharacter::renderUI(LPDIRECT3DDEVICE9 device) {
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		selectCharacter2D[i].render(device, selectTransition, select2Transition);
-		charaSelectBar[i].render(device);
+		charaSelectBar[i].render(device, selectTransition, select2Transition);
 	}
 
 	timerUI.render(device);

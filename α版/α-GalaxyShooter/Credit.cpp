@@ -46,8 +46,13 @@ void Credit::update(float frameTime) {
 
 	credit2D.update();
 
-	if (input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
-
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B)
+		)changeScene(nextScene);
 }
 
 void Credit::render(Direct3D9* direct3D9) {

@@ -16,6 +16,10 @@ const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;				// â°ÉTÉCÉY
 const static int		CURSOR_HEIGHT = 40;								// ècÉTÉCÉY
 const static int		PLAYER_LOGO_WIDTH = 80;							// â°ÉTÉCÉY
 const static int		PLAYER_LOGO_HEIGHT = 40;						// ècÉTÉCÉY
+const static int		PLAYER_NAME_ENG_WIDTH = 250;					// ÉvÉåÉCÉÑÅ[ÉlÅ[ÉÄâpåÍâ°ÉTÉCÉY
+const static int		PLAYER_NAME_ENG_HEIGHT = 82;					// ÉvÉåÉCÉÑÅ[ÉlÅ[ÉÄâpåÍècÉTÉCÉY
+const static int		PLAYER_NAME_JP_WIDTH = 250;						// ÉvÉåÉCÉÑÅ[ÉlÅ[ÉÄì˙ñ{åÍâ°ÉTÉCÉY
+const static int		PLAYER_NAME_JP_HEIGHT = 20;						// ÉvÉåÉCÉÑÅ[ÉlÅ[ÉÄì˙ñ{åÍècÉTÉCÉY
 const static float		BAR_LIGHT_POSITION_X = 0.0f;					// Xç¿ïW
 const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X+ WINDOW_WIDTH / 2;
 const static float		BAR_LIGHT_POSITION_Y = 220.0f;					// Yç¿ïW
@@ -28,7 +32,18 @@ const static float		CURSOR_POSITION_Y = 250.0f;						// Yç¿ïW
 const static float		PLAYER_LOGO_POSITION_X = 0.0f;					// Xç¿ïW
 const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;
 const static float		PLAYER_LOGO_POSITION_Y = 390.0f;				// Yç¿ïW
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))				// ÉLÉÉÉâÉZÉåÉNÉgÉoÅ[ÇÃêF
+const static float		POSITION_X_NAME_EVE_ENG = 200.0f;				// Xç¿ïW
+const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;
+const static float		POSITION_X_NAME_ADAM_ENG = 200.0f;				// Xç¿ïW
+const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;
+const static float		POSITION_Y_NAME_ENG = 304.0f;					// Yç¿ïW
+const static float		POSITION_X_NAME_EVE_JP = 200.0f;				// Xç¿ïW
+const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;
+const static float		POSITION_X_NAME_ADAM_JP = 200.0f;				// Xç¿ïW
+const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;
+const static float		POSITION_Y_NAME_JP = 390.0f;					// Yç¿ïW
+
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))				// ÉLÉÉÉâÉZÉåÉNÉgÇÃêF
 //*****************************************************************************
 // ÉOÉçÅ[ÉoÉãïœêî
 //*****************************************************************************
@@ -40,6 +55,14 @@ LPDIRECT3DTEXTURE9 CharaSelectBarUI::selectNoTexture2 = NULL;			// ÉLÉÉÉâÉZÉåÉNÉ
 LPDIRECT3DTEXTURE9 CharaSelectBarUI::selectCursorTexture = NULL;		// ÉLÉÉÉâÉZÉåÉNÉgÉJÅ[É\ÉãÉeÉNÉXÉ`ÉÉ
 LPDIRECT3DTEXTURE9 CharaSelectBarUI::selectCursorTexture2 = NULL;		// ÉLÉÉÉâÉZÉåÉNÉgÉJÅ[É\ÉãÉeÉNÉXÉ`ÉÉ2
 LPDIRECT3DTEXTURE9 CharaSelectBarUI::selectPlayerLogoTexture = NULL;	// ÉLÉÉÉâÉZÉåÉNÉgÉvÉåÉCÉÑÅ[ÉçÉSÉeÉNÉXÉ`ÉÉ
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameEveEngTexture = NULL;			// ÉCÉîñºëOâpåÍÉeÉNÉXÉ`ÉÉ
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameEveEngTexture2 = NULL;			// ÉCÉîñºëOâpåÍÉeÉNÉXÉ`ÉÉ2
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameAdamEngTexture = NULL;			// ÉAÉ_ÉÄñºëOâpåÍÉeÉNÉXÉ`ÉÉ
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameAdamEngTexture2 = NULL;		// ÉAÉ_ÉÄñºëOâpåÍÉeÉNÉXÉ`ÉÉ2
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameEveJpTexture = NULL;			// ÉCÉîñºëOì˙ñ{åÍÉeÉNÉXÉ`ÉÉ
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameEveJpTexture2 = NULL;			// ÉCÉîñºëOì˙ñ{åÍÉeÉNÉXÉ`ÉÉ2
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameAdamJpTexture = NULL;			// ÉAÉ_ÉÄñºëOì˙ñ{åÍÉeÉNÉXÉ`ÉÉ
+LPDIRECT3DTEXTURE9 CharaSelectBarUI::nameAdamJpTexture2 = NULL;			// ÉAÉ_ÉÄñºëOì˙ñ{åÍÉeÉNÉXÉ`ÉÉ2
 //=============================================================================
 // ÉRÉìÉXÉgÉâÉNÉ^
 //=============================================================================
@@ -74,6 +97,10 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 	selectCursorTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_CURSOR);
 	selectCursorTexture2 = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_CURSOR2);
 	selectPlayerLogoTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_LOGO);
+	nameEveEngTexture = *textureLoader->getTexture(textureLoaderNS::EVE_NAME_ENG);
+	nameAdamEngTexture = *textureLoader->getTexture(textureLoaderNS::ADAM_NAME_ENG);
+	nameEveJpTexture = *textureLoader->getTexture(textureLoaderNS::EVE_NAME_JP);
+	nameAdamJpTexture = *textureLoader->getTexture(textureLoaderNS::ADAM_NAME_JP);
 
 	charaSelectBar.initialize(device,
 		selectBarLightTexture,				// ÉeÉNÉXÉ`ÉÉ
@@ -145,6 +172,86 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		DEFAULT_COLOR						// êF
 	);
 
+	nameEveEng.initialize(device,
+		nameEveEngTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_ENG_WIDTH,				// â°ïù
+		PLAYER_NAME_ENG_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION_X_NAME_EVE_ENG, POSITION_Y_NAME_ENG, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameEveEng2.initialize(device,
+		nameEveEngTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_ENG_WIDTH,				// â°ïù
+		PLAYER_NAME_ENG_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION2_X_NAME_EVE_ENG, POSITION_Y_NAME_ENG, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameAdamEng.initialize(device,
+		nameAdamEngTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_ENG_WIDTH,				// â°ïù
+		PLAYER_NAME_ENG_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION_X_NAME_ADAM_ENG, POSITION_Y_NAME_ENG, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameAdamEng2.initialize(device,
+		nameAdamEngTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_ENG_WIDTH,				// â°ïù
+		PLAYER_NAME_ENG_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION2_X_NAME_ADAM_ENG, POSITION_Y_NAME_ENG, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameEveJp.initialize(device,
+		nameEveJpTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_JP_WIDTH,				// â°ïù
+		PLAYER_NAME_JP_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION_X_NAME_EVE_JP, POSITION_Y_NAME_JP, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameEveJp2.initialize(device,
+		nameEveJpTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_JP_WIDTH,				// â°ïù
+		PLAYER_NAME_JP_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION2_X_NAME_EVE_JP, POSITION_Y_NAME_JP, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameAdamJp.initialize(device,
+		nameAdamJpTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_JP_WIDTH,				// â°ïù
+		PLAYER_NAME_JP_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION_X_NAME_ADAM_JP, POSITION_Y_NAME_JP, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
+	nameAdamJp2.initialize(device,
+		nameAdamJpTexture,					// ÉeÉNÉXÉ`ÉÉ
+		spriteNS::TOP_LEFT,					// å¥ì_
+		PLAYER_NAME_JP_WIDTH,				// â°ïù
+		PLAYER_NAME_JP_HEIGHT,				// çÇÇ≥
+		D3DXVECTOR3(POSITION2_X_NAME_ADAM_JP, POSITION_Y_NAME_JP, 0.0f),// ç¿ïW
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// âÒì]
+		DEFAULT_COLOR						// êF
+	);
+
 	return S_OK;
 }
 
@@ -161,6 +268,11 @@ void CharaSelectBarUI::uninitialize(void)
 	charaSelectCursor.setTexture(NULL);
 	charaSelectCursor2.setTexture(NULL);
 	charaSelectLogo.setTexture(NULL);
+	nameEveEng.setTexture(NULL);
+	nameAdamEng.setTexture(NULL);
+	nameEveJp.setTexture(NULL);
+	nameAdamJp.setTexture(NULL);
+
 	// ÉCÉìÉXÉ^ÉìÉXÇ™ë∂ç›ÇµÇ»ÇØÇÍÇŒÉeÉNÉXÉ`ÉÉâï˙
 	cntUI--;
 	if (cntUI < 0)
@@ -172,6 +284,10 @@ void CharaSelectBarUI::uninitialize(void)
 		SAFE_RELEASE(selectCursorTexture)
 		SAFE_RELEASE(selectCursorTexture2)
 		SAFE_RELEASE(selectPlayerLogoTexture)
+		SAFE_RELEASE(nameEveEngTexture)
+		SAFE_RELEASE(nameAdamEngTexture)
+		SAFE_RELEASE(nameEveJpTexture)
+		SAFE_RELEASE(nameAdamJpTexture)
 	}
 }
 
@@ -187,7 +303,7 @@ void CharaSelectBarUI::update(void)
 //=============================================================================
 // ï`âÊèàóù
 //=============================================================================
-void CharaSelectBarUI::render(LPDIRECT3DDEVICE9 device)
+void CharaSelectBarUI::render(LPDIRECT3DDEVICE9 device, int selectNo, int select2No)
 {
 	charaSelectBar.render(device);
 	charaSelectBar2.render(device);
@@ -196,6 +312,45 @@ void CharaSelectBarUI::render(LPDIRECT3DDEVICE9 device)
 	charaSelectCursor.render(device);
 	charaSelectCursor2.render(device);
 	charaSelectLogo.render(device);
+
+	//1PÉZÉåÉNÉg
+	switch (selectNo)
+	{
+		// ÉvÉåÉCÉÑÅ[
+	case 0:
+
+		nameEveEng.render(device);
+		nameEveJp.render(device);
+
+		break;
+		// ÉvÉåÉCÉÑÅ[2
+	case 1:
+
+		nameAdamEng.render(device);
+		nameAdamJp.render(device);
+
+		break;
+	}
+
+	//2PÉZÉåÉNÉg
+	switch (select2No)
+	{
+		// ÉvÉåÉCÉÑÅ[
+	case 0:
+
+		nameEveEng2.render(device);
+		nameEveJp2.render(device);
+
+		break;
+		// ÉvÉåÉCÉÑÅ[2
+	case 1:
+
+		nameAdamEng2.render(device);
+		nameAdamJp2.render(device);
+
+		break;
+	}
+
 }
 
 

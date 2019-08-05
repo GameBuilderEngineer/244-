@@ -54,7 +54,13 @@ void Splash::update(float frameTime) {
 	splash2D.update();
 
 	// キーを押したらタイトルへ
-	if (input->wasKeyPressed(VK_SPACE)|| input->wasKeyPressed(VK_RETURN))changeScene(nextScene);
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->wasKeyPressed(VK_SPACE) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+		)changeScene(nextScene);
 
 	// フェードが終わったらタイトルへ
 	if (splash2D.gotitle)changeScene(nextScene);

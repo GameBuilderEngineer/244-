@@ -50,7 +50,10 @@ void Result::update(float frameTime) {
 
 	camera->update();
 
-	if (input->anyKeyPressed())changeScene(nextScene);
+	if (input->anyKeyPressed()||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+		)changeScene(nextScene);
 
 }
 

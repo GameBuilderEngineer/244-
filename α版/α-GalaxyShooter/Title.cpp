@@ -65,12 +65,18 @@ void Title::initialize(
 void Title::update(float frameTime) {
 
 	// キーを押したら選択UI移動
-	if (input->wasKeyPressed(VK_DOWN))
+	if (input->wasKeyPressed(VK_DOWN)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::DOWN)
+		)
 	{
 		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		titletransition++;
 	}
-	else if (input->wasKeyPressed(VK_UP))
+	else if (input->wasKeyPressed(VK_UP)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::UP)
+		)
 	{
 		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		titletransition--;
@@ -156,19 +162,20 @@ void Title::titleTransition(void)
 	case 0:
 
 		nextScene = SceneList::SELECT;
-		if (input->wasKeyPressed(VK_RETURN))
-		{
-			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-			changeScene(nextScene);
-		}
-		
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)changeScene(nextScene);
 		break;
 
 		// チュートリアル
 	case 1:
 
 		nextScene = SceneList::TUTORIAL;
-		if (input->wasKeyPressed(VK_RETURN))
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)
 		{
 			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 			changeScene(nextScene);
@@ -179,7 +186,10 @@ void Title::titleTransition(void)
 	case 2:
 
 		nextScene = SceneList::OPERATION;
-		if (input->wasKeyPressed(VK_RETURN))
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)
 		{
 			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 			changeScene(nextScene);
@@ -190,7 +200,10 @@ void Title::titleTransition(void)
 	case 3:
 
 		nextScene = SceneList::CREDIT;
-		if (input->wasKeyPressed(VK_RETURN))
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			) 
 		{
 			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 			changeScene(nextScene);
@@ -200,7 +213,10 @@ void Title::titleTransition(void)
 		// ゲーム終了
 	case 4:
 
-		if (input->wasKeyPressed(VK_RETURN))PostQuitMessage(0);
+		if (input->wasKeyPressed(VK_RETURN)||
+			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+			)PostQuitMessage(0);
 		break;
 	}
 }
