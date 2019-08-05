@@ -142,9 +142,6 @@
     <Filter Include="Object\Wage">
       <UniqueIdentifier>{d5c600e5-063e-40c7-9579-a27b7391cad2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object\LostThing">
-      <UniqueIdentifier>{841eed46-062a-4e78-a3ee-e22c2bafa361}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Loader">
       <UniqueIdentifier>{ac8a92f7-8683-4808-b69a-5d9820877cd7}</UniqueIdentifier>
     </Filter>
@@ -303,9 +300,6 @@
     <ClCompile Include="Result.cpp">
       <Filter>Scene\Result</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp">
-      <Filter>Scene\SelectCharacter</Filter>
-    </ClCompile>
     <ClCompile Include="SkillPointUI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -380,9 +374,6 @@
     </ClCompile>
     <ClCompile Include="StaticMeshLoader.cpp">
       <Filter>Loader\StaticMeshLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="LostThing.cpp">
-      <Filter>Object\LostThing</Filter>
     </ClCompile>
     <ClCompile Include="MemoryPile.cpp">
       <Filter>Object\MemoryPile</Filter>
@@ -533,6 +524,7 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="TextManager.cpp" />
+    <ClCompile Include="SelectCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -585,9 +577,6 @@
     </ClInclude>
     <ClInclude Include="Result.h">
       <Filter>Scene\Result</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter.h">
-      <Filter>Scene\SelectCharacter</Filter>
     </ClInclude>
     <ClInclude Include="SkillPointUI.h">
       <Filter>UI</Filter>
@@ -675,9 +664,6 @@
     </ClInclude>
     <ClInclude Include="StaticMeshLoader.h">
       <Filter>Loader\StaticMeshLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="LostThing.h">
-      <Filter>Object\LostThing</Filter>
     </ClInclude>
     <ClInclude Include="MemoryPile.h">
       <Filter>Object\MemoryPile</Filter>
@@ -792,6 +778,7 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="TextManager.h" />
+    <ClInclude Include="SelectCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

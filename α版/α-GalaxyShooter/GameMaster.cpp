@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yGameMaster.cppz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/07/31
+// [XV“ú]2019/08/04
+//===================================================================================================================================
 #include "GameMaster.h"
 using namespace gameMasterNS;
 
@@ -7,9 +13,7 @@ using namespace gameMasterNS;
 GameMaster::GameMaster()
 {
 	ZeroMemory(this, sizeof(GameMaster));
-	gameTimer = GAME_TIME;
 }
-
 
 //===================================================================================================================================
 //yƒfƒXƒgƒ‰ƒNƒ^z
@@ -24,7 +28,6 @@ GameMaster::~GameMaster()
 //===================================================================================================================================
 void GameMaster::initialize()
 {
-
 }
 
 //===================================================================================================================================
@@ -32,7 +35,8 @@ void GameMaster::initialize()
 //===================================================================================================================================
 void GameMaster::update(float frameTime)
 {
-
+	//ƒQ[ƒ€ƒ^ƒCƒ€‚ÌXV
+	updateGameTime(frameTime);
 }
 
 //===================================================================================================================================
@@ -44,28 +48,43 @@ void GameMaster::updateGameTime(float frameTime)
 }
 
 //===================================================================================================================================
-//yƒ`ƒ“ƒMƒ“‚ÌƒZƒbƒgz
+//yƒQ[ƒ€ŠÔ‚ÌƒŠƒZƒbƒgz
 //===================================================================================================================================
-void GameMaster::setWage(int playerNo, int wage)
+void GameMaster::resetGameTime()
 {
-	playerInformation[playerNo].wage = wage;
+	gameTimer = GAME_TIME;
+}
+
+
+//===================================================================================================================================
+//ysetterz
+//===================================================================================================================================
+void GameMaster::addWage(int playerNo, int wage){ playerInformation[playerNo].wage += wage;}
+void GameMaster::setPlayerCharacter(int playerNo,int playerType, int modelType) {
+	if (playerNo >= playerNS::NUM_PLAYER || playerNo < 0)return;
+	playerInformation[playerNo].playerType= modelType;
+	playerInformation[playerNo].modelType = modelType;
 }
 
 //===================================================================================================================================
-//yŸÒƒvƒŒƒCƒ„[‚ğæ“¾z
+//ygetterz
 //===================================================================================================================================
-int GameMaster::getWinnerPlayer()
-{
-	//playerInformation[playerNo].wage = wage;
-	return 0;
+//Ÿ”sŒ‹‰Ê‚ğæ“¾
+int GameMaster::getResult() {
+	int result = DRAW;
+	if (playerInformation[playerNS::PLAYER1].wage > playerInformation[playerNS::PLAYER2].wage)
+	{
+		result = WIN_1P;
+	}
+	else
+	{
+		result = WIN_2P;
+	}
+	return DRAW;
 }
-
-//===================================================================================================================================
-//y”sÒƒvƒŒƒCƒ„[‚ğæ“¾z
-//===================================================================================================================================
-int GameMaster::getLoserPlayer()
-{
-	//playerInformation[playerNo].wage = wage;
-	return 0;
-}
-
+//ƒvƒŒƒCƒ„[î•ñ‚Ìæ“¾
+playerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}
+//ƒQ[ƒ€§ŒÀŠÔ‚Ìæ“¾
+float GameMaster::getGameTime() {return gameTimer;}
+//ƒQ[ƒ€‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
+bool GameMaster::whetherGameOver(){	return gameTimer < 0;}

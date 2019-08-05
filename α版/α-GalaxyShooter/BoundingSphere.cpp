@@ -1,6 +1,10 @@
+//===================================================================================================================================
+//yBoundingSphere.cppz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/06/12
+// [XV“ú]2019/08/04
+//===================================================================================================================================
 #include "BoundingSphere.h"
-
-
 
 BoundingSphere::BoundingSphere()
 {
@@ -32,7 +36,7 @@ void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3* _position,
 	ownerMesh->UnlockVertexBuffer();
 
 	//ƒƒbƒVƒ…‚ğì¬
-	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
+	D3DXCreateSphere(device, radius, 12, 12, &mesh, NULL);
 
 }
 
@@ -104,3 +108,10 @@ bool BoundingSphere::collide(D3DXVECTOR3 targetCenter, float targetRadius, D3DXM
 	}
 	return false;
 }
+
+//===================================================================================================================================
+//ygetterz
+//===================================================================================================================================
+float BoundingSphere::getRadius() { return radius; }
+D3DXVECTOR3 BoundingSphere::getCenter() { return center; }
+LPD3DXMESH BoundingSphere::getMesh() { return mesh; }

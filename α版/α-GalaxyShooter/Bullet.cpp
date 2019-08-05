@@ -1,8 +1,15 @@
+//===================================================================================================================================
+//【Bullet.cpp】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/07/31
+// [更新日]2019/08/04
+//===================================================================================================================================
 #include "Bullet.h"
 using namespace bulletNS;
 
 Bullet::Bullet()
 {
+	onLighting = false;
 	onGravity = true;
 	inActivation();
 	existenceTimer = 0.0f;
@@ -20,7 +27,7 @@ void Bullet::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXV
 	radius = bodyCollide.getRadius();
 }
 
-void Bullet::update(float frameTime, LPD3DXMESH fieldMesh,D3DXMATRIX matrix)
+void Bullet::update(float frameTime)
 {
 	if (onActive == false)return;
 
@@ -34,31 +41,26 @@ void Bullet::update(float frameTime, LPD3DXMESH fieldMesh,D3DXMATRIX matrix)
 	float difference = 1.0f;
 
 	setSpeed(D3DXVECTOR3(0, 0, 0));
-	addSpeed(getAxisZ()->direction*50.0);//自動移動
+	addSpeed(getAxisZ()->direction*SPEED);//自動移動
 
-	//anyAxisRotation(axisY.direction, (rand() % 10) - 5);
-
-	//フィールド補正
-	if (reverseAxisY.rayIntersect(fieldMesh, matrix) &&
-		radius+2.0f >= (reverseAxisY.distance - difference))
+	//===========
+	//【接地処理】
+	//===========
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);
+	gravityRay.initialize(position, gravityDirection);//重力レイの初期化
+	if (radius + attractorRadius >= (between2VectorLength(position, *attractorPosition) - difference))
 	{
 		//めり込み補正
-		setPosition(position + axisY.direction*(radius + 2.0f - reverseAxisY.distance));
+		//現在位置+ 垂直方向*(めり込み距離)
+		setPosition(position + -gravityDirection * (radius + attractorRadius - between2VectorLength(position, *attractorPosition)));
 		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-		setSpeed(reverseAxisY.slip(speed, reverseAxisY.normal));
-		//Ray moveRay;//移動ベクトルを使ってレイを作成
-		//moveRay.initialize(*bullet[i].getPosition(), bullet[i].getSpeed());
-		//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && bullet[i].getRadius() > moveRay.distance)
-		//{//二重チェック
-		//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
-		//}
-		
+		setSpeed(reverseAxisY.slip(speed, -gravityDirection));
 	}
 	else {
-		setGravity(-axisY.direction, 80.0f);
+		setGravity(gravityDirection, GRAVITY_FORCE);
 	}
-
-	D3DXVECTOR3 moveDirection;
 
 	if (D3DXVec3Length(&acceleration) > 0.01f)
 	{//加速度が小さい場合、加算しない
@@ -72,7 +74,7 @@ void Bullet::update(float frameTime, LPD3DXMESH fieldMesh,D3DXMATRIX matrix)
 	acceleration *= 0.9f;
 
 	//姿勢制御
-	postureControl(axisY.direction, reverseAxisY.normal, 3.0f * frameTime);
+	postureControl(axisY.direction, -gravityRay.direction, 3.0f * frameTime);
 
 	Object::update();
 }
@@ -83,4 +85,23 @@ void Bullet::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
 #endif // _DEBUG
+}
+
+//===================================================================================================================================
+//【重力設定】
+//[内容]重力源の位置情報で重力を設定する
+//[引数]
+//D3DXVECTOR3* attractorPosition：引力発生地点
+//===================================================================================================================================
+void Bullet::configurationGravity(D3DXVECTOR3* _attractorPosition, float _attractorRadius)
+{
+	//重力処理を行うために必要な要素をセット
+	attractorPosition = _attractorPosition;
+	attractorRadius = _attractorRadius;
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);
+	gravityRay.initialize(position, gravityDirection);//重力レイの初期化
+	setGravity(gravityDirection, GRAVITY_FORCE);
+	//postureControl(axisY.direction, gravityDirection, 1.0f);
 }

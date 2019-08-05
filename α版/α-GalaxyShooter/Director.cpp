@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//【Director.cpp】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/05/16
+// [更新日]2019/08/04
+//===================================================================================================================================
 #include "Director.h"
 #include "Splash.h"
 #include "Title.h"
@@ -99,6 +105,9 @@ HRESULT Director::initialize(){
 	textManager = new TextManager();
 	textManager->initialize(d3d->device);
 
+	//ゲーム管理クラス
+	gameMaster = new GameMaster();
+
 	setSoundDirectory();
 	sound = new Sound;
 	sound->initialize(window->wnd);
@@ -188,7 +197,13 @@ void Director::update(){
 #endif // _DEBUG
 	scene->update(frameTime);
 	scene->collisions();
-	if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+	if (lockCursor)
+	{
+		if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+		{
+			SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
+	}
 }
 
 void Director::render(){
@@ -227,7 +242,11 @@ void Director::fixFPS60() {
 		Time *= (DOUBLE)1100.0 / (DOUBLE)Frq.QuadPart;
 
 		//ここに次フレームまでの待機中にさせたい処理を記述
-		if(lockCursor)SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		if (lockCursor)
+		{
+			if (input->getMouseRawX() != 0 || input->getMouseRawY() != 0)
+				SetCursorPos((int)window->getCenter().x, (int)window->getCenter().y);
+		}
 	}
 	PreviousTime = CurrentTime;
 }
@@ -262,6 +281,7 @@ void Director::displayFPS() {
 
 void Director::changeNextScene(){
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得
+	scene->copyGameMaster(gameMaster);				//ゲーム管理情報をDirectorへ保存
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{
@@ -275,6 +295,7 @@ void Director::changeNextScene(){
 	case SceneList::RESULT:					scene = new Result(); break;
 	case SceneList::NONE_SCENE:				break;
 	}
+	scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
 	currentSceneName = scene->getSceneName();
 }

@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//ÅyMemoryLine.cppÅz
+// [çÏê¨é“]HALìåãûGP12A332 11 êõñÏ é˜
+// [çÏê¨ì˙]2019/05/16
+// [çXêVì˙]2019/08/04
+//===================================================================================================================================
 #include "MemoryLine.h"
 #include "UtilityFunction.h"
 using namespace memoryLineNS;
@@ -37,7 +43,7 @@ MemoryLine::~MemoryLine()
 //===================================================================================================================================
 //Åyèâä˙âªÅz
 //===================================================================================================================================
-void MemoryLine::initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Player* player
+void MemoryLine::initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Object* player
 	,LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 texture)
 {
 	pileNum = num;

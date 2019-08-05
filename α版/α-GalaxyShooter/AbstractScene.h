@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yAbstractScene.hz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/05/16
+// [XV“ú]2019/08/04
+//===================================================================================================================================
 #pragma once
 #include "Base.h"
 #include "Camera.h"
@@ -8,6 +14,7 @@
 #include "StaticMeshLoader.h"
 #include "ShaderLoader.h"
 #include "TextManager.h"
+#include "GameMaster.h"
 #include <string>
 
 namespace SceneList
@@ -38,6 +45,7 @@ protected:
 	StaticMeshLoader* staticMeshLoader;
 	ShaderLoader* shaderLoader;
 	TextManager* textManager;
+	GameMaster* gameMaster;
 	float sceneTimer;
 	bool onChange;
 	int nextScene;
@@ -60,9 +68,11 @@ public:
 	virtual void AI() = 0;								//AIˆ—
 	virtual void uninitialize() = 0;					//I—¹ˆ—
 
+	//ƒV[ƒ“Ø‘ÖŠÖŒWŠÖ”
 	void changeScene(int i) { onChange = true; nextScene = i; };
 	bool checkChangeOrder() { return onChange; };
 	int checkNextScene() { return nextScene; }
 	std::string* getSceneName() { return &sceneName; }
-
+	void copyGameMaster(GameMaster* destination);
+	void setGameMaster(GameMaster* resorce);
 };

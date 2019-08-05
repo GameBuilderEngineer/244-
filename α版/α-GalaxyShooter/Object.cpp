@@ -1,9 +1,14 @@
 #include "Object.h"
 #include "Base.h"
+
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
 Object::Object()
 {
 	ZeroMemory(this, sizeof(Object));
 	alpha = 1.0f;
+	onLighting = true;
 	onTransparent = false;
 	operationAlpha = false;
 	D3DXMatrixIdentity(&matrixRotation);
@@ -25,6 +30,9 @@ Object::Object()
 #endif // _DEBUG
 }
 
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
 Object::~Object()
 {
 	
@@ -43,9 +51,6 @@ HRESULT Object::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3
 	return S_OK;
 }
 
-
-
-
 void Object::update()
 {
 	if (onActive == false)return;
@@ -55,8 +60,8 @@ void Object::update()
 	//クォータニオンを回転量パラメーターに使用する
 	D3DXMatrixRotationQuaternion(&matrixRotation, &quaternion);
 	D3DXMatrixMultiply(&matrixWorld, &matrixRotation, &matrixPosition);
-	//ワールド座標から自身の軸レイを更新する
 
+	//ワールド座標から自身の軸レイを更新する
 	axisX.update(position, D3DXVECTOR3(matrixWorld._11,matrixWorld._12,matrixWorld._13));
 	axisY.update(position, D3DXVECTOR3(matrixWorld._21,matrixWorld._22,matrixWorld._23));
 	axisZ.update(position, D3DXVECTOR3(matrixWorld._31,matrixWorld._32,matrixWorld._33));
@@ -150,7 +155,7 @@ void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 {
 	if (onRender == false)return;
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
-	device->SetRenderState(D3DRS_LIGHTING, true);
+	device->SetRenderState(D3DRS_LIGHTING, onLighting);
 
 	if (onTransparent)
 	{

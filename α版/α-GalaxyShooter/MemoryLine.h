@@ -1,7 +1,13 @@
+//===================================================================================================================================
+//【MemoryLine.h】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/07/11
+// [更新日]2019/08/04
+//===================================================================================================================================
 #pragma once
 #include "Base.h"
 #include "MemoryPile.h"
-#include "Player.h"
+//#include "Player.h"
 #include "InstancingBillboard.h"
 #include <vector>
 
@@ -19,7 +25,7 @@ class MemoryLine : public Base
 	Line* line;							//メモリーラインを描画する線情報(実体ではない)
 	InstancingBillboard billboard;		//メモリーラインをビルボードの点で描画する実体
 	MemoryPile* joinTarget;				//メモリーラインを形成する元になるメモリーパイルのポインタ情報
-	Player* joinPlayer;					//メモリーラインを生成したプレイヤーへのポインタ情報
+	Object* joinPlayer;					//メモリーラインを生成したプレイヤーへのポインタ情報
 	D3DXVECTOR3** pointList;			//メモリーパイルごとのメモリーラインを形成する描画する点の位置リスト
 	D3DXVECTOR3* renderList;			//メモリーライン全体の描画リスト（インスタンスビルボードが要する位置リストは一つ）
 	bool initialized;					//初期化フラグ（メモリーアクセスエラー防止）
@@ -33,7 +39,7 @@ public:
 	~MemoryLine();
 
 	//proccessing
-	void initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Player* player, 
+	void initialize(LPDIRECT3DDEVICE9 device, MemoryPile* memoryPile, int num, Object* player, 
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 texture);
 	void unInitialize();
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);

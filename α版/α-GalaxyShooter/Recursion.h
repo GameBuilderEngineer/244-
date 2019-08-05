@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//【Recursion.h】
+// 作成者：HAL東京GP12A332 11 菅野 樹
+// 作成日：2019/07/17
+// 更新日：2019/08/05
+//===================================================================================================================================
 #pragma once
 #include "Base.h"
 #include "BoundingSphere.h"
@@ -23,6 +29,7 @@ public:
 	Recursion();
 	~Recursion();
 
+	//processing
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, D3DXVECTOR3* vertexArray,LPDIRECT3DTEXTURE9 _texture, LPD3DXEFFECT _effect);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	

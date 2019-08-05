@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yRecursion.cppz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/07/17
+// [XV“ú]2019/08/05
+//===================================================================================================================================
 #include "Recursion.h"
 
 namespace recursionNS
@@ -139,8 +145,9 @@ void Recursion::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 		0.0f,0.0f,1.0f,0.0f,
 		weightCenter.x,weightCenter.y,weightCenter.z,1.0f
 	};
+#ifdef _DEBUG
 	boundingSphere.render(device, worldMatrix);
-
+#endif // _DEBUG
 }
 
 

@@ -165,7 +165,6 @@
     <ClCompile Include="KeyOpe.cpp" />
     <ClCompile Include="Lambert.cpp" />
     <ClCompile Include="Light.cpp" />
-    <ClCompile Include="LostThing.cpp" />
     <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="MemoryLine.cpp" />
     <ClCompile Include="MemoryPile.cpp" />
@@ -260,7 +259,6 @@
     <ClInclude Include="KeyOpe.h" />
     <ClInclude Include="Lambert.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="LostThing.h" />
     <ClInclude Include="Magnet.h" />
     <ClInclude Include="MemoryLine.h" />
     <ClInclude Include="MemoryPile.h" />

@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//【Game.cpp】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/05/16
+// [更新日]2019/08/04
+//===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
 using namespace gameNS;
@@ -16,10 +22,10 @@ Game::Game()
 	onRecursion1P = false;
 	recursion1PAnd2P = false;
 
-	reverseValue1PXAxis = 1;
-	reverseValue1PYAxis = 1;
-	reverseValue2PXAxis = 1;
-	reverseValue2PYAxis = 1;
+	reverseValue1PXAxis = 2;
+	reverseValue1PYAxis = 2;
+	reverseValue2PXAxis = 2;
+	reverseValue2PYAxis = 2;
 
 	nextScene = SceneList::RESULT;
 }
@@ -87,11 +93,17 @@ void Game::initialize(
 	colony[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &D3DXVECTOR3(150, 0, 300));
 	colony[1].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &D3DXVECTOR3(-150, 0, 300));
 	//フィールド
-	field.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
+	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
+		//player[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)gameNS::PLAYER_POSITION[i]);
+		player[i].initialize(i, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
+		player[i].setInput(input);			//入力クラスのセット
+		player[i].setCamera(&camera[i]);	//カメラのセット
+		//player[i].configurationGravityWithRay(field.getPosition(), field.getSphereMesh(), field.getMatrixWorld());	//重力を作成
+		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
+
 		hp[i].initialize(direct3D9->device, i, _textureLoader);
 		sp[i].initialize(direct3D9->device, i, _textureLoader);
 		colonyHp[i].initialize(direct3D9->device, i, _textureLoader);
@@ -101,28 +113,12 @@ void Game::initialize(
 		chingin[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
-
-
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
-
-		//重力線を作成
-		D3DXVECTOR3 gravityDirection;
-		between2VectorDirection(&gravityDirection, *player[i].getPosition(), *field.getPosition());
-		player[i].getGravityRay()->initialize(*player[i].getPosition(), gravityDirection);
-		if (player[i].getGravityRay()->rayIntersect(*field.getMesh(), field.getMatrixWorld()))
-		{//重力線上にポリゴンが衝突していた場合、ポリゴン法線を重力方向とし、姿勢を法線と一致させる。
-			player[i].postureControl(player[i].getAxisY()->direction, player[i].getGravityRay()->normal, 1.0f);
-			player[i].setGravity(-player[i].getGravityRay()->normal, playerNS::GRAVITY_FORCE);
-		}
-		else 
-		{//衝突ポリゴンが存在しない場合は、重力線をそのまま重力方向とし、姿勢を重力線と一致させる。
-			player[i].postureControl(player[i].getAxisY()->direction, gravityDirection, 1.0f);
-			player[i].setGravity(gravityDirection, playerNS::GRAVITY_FORCE);
-		}
 	}
 
+	//磁石の初期化
 	for (int i = 0; i < NUM_MAGNET; i++)
-	{//磁石
+	{
 		if (NUM_MAGNET / 2 > i) {
 			magnet[i].initialize(direct3D9->device, staticMeshLoader,2.0f);
 		}
@@ -131,12 +127,14 @@ void Game::initialize(
 		}
 	}
 
-	for (int i = 0; i < NUM_BULLET; i++)
-	{//バレットの初期化
-		bullet1[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
-		bullet2[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
-	}
+	//バレットの初期化
+	//for (int i = 0; i < NUM_BULLET; i++)
+	//{
+	//	bullet1[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
+	//	bullet2[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::BULLET], &D3DXVECTOR3(0,0,0));
+	//}
 
+	//テキストの初期化
 	text.initialize(direct3D9->device,10,10, 0xff00ff00);
 	text2.initialize(direct3D9->device,11,11, 0xff0000ff);
 
@@ -157,14 +155,14 @@ void Game::initialize(
 	plane.initialize(direct3D9->device,*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::RING));
 
 	//メモリーパイルの初期化
-	for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-	{
-		memoryPile1P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
-	}
-	for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-	{
-		memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
-	}
+	//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+	//{
+	//	memoryPile1P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
+	//}
+	//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+	//{
+	//	memoryPile2P[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
+	//}
 
 	//ポーズの初期化
 	pose.initialize(direct3D9->device, 0, _textureLoader);
@@ -174,10 +172,10 @@ void Game::initialize(
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 
 	//メモリーラインの初期化
-	memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
-	memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
+	//memoryLine1P.initialize(direct3D9->device, memoryPile1P, NUM_1P_MEMORY_PILE, &player[PLAYER1], 
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
+	//memoryLine2P.initialize(direct3D9->device, memoryPile2P, NUM_2P_MEMORY_PILE, &player[PLAYER2],
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::LIGHT001));
 
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
@@ -205,205 +203,42 @@ void Game::initialize(
 	testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
 	testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
 	testCube.activation();
+
+	//ゲームマスター
+	gameMaster->resetGameTime();
 }
 
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
 void Game::update(float _frameTime) {
-	
+
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-	//【処理落ち】
-	//フレーム時間が約15FPS時の時の時間より長い場合は、処理落ち（更新しない）
-	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.06)return;
-
-	
-
+	//【ポーズ処理】
 	if (input->wasKeyPressed(VK_RETURN))// ポーズ解除
 	{
 		pose.poseon = false;
 	}
-
 	if (pose.poseon)return;// ポーズしてたら更新しない
 
+	//【処理落ち】
+	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
+	//※フレーム時間に準拠している処理が正常に機能しないため
+	if (frameTime > 0.10)return;
+
+	//【ゲームマスターの更新】
+	gameMaster->update(frameTime);
+	if (gameMaster->whetherGameOver())
+	{//シーン切替
+		changeScene(SceneList::RESULT);
+	}
+
+	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
-	{//プレイヤーの更新
-		player[i].setSpeed(D3DXVECTOR3(0, 0, 0));
-		if (input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP))
-			difference += 0.01f;
-		if(input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN))
-			difference -= 0.01f;
-
-		bool onJump = false;
-		switch (i)
-		{
-		case PLAYER1:
-			if (input->isKeyDown('W')) {
-				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown('S')) {
-				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown('A')) {
-				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown('D'))
-			{
-				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->wasKeyPressed(VK_SPACE)||input->getController()[i]->wasButton(virtualControllerNS::B))
-			{
-				onJump = true;
-			}
-			if (input->wasKeyPressed('R'))
-			{
-				player[i].reset();
-			}
-			break;
-		case PLAYER2:
-			if (input->isKeyDown(VK_UP)) {
-				player[i].move(D3DXVECTOR2(0,-1), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown(VK_DOWN)) {
-				player[i].move(D3DXVECTOR2(0,1), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown(VK_LEFT)) {
-				player[i].move(D3DXVECTOR2(-1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->isKeyDown(VK_RIGHT))
-			{
-				player[i].move(D3DXVECTOR2(1,0), camera[i].getDirectionX(), camera[i].getDirectionZ());
-			}
-			if (input->wasKeyPressed(VK_RETURN)|| input->getController()[i]->wasButton(virtualControllerNS::B))
-			{
-				onJump = true;
-			}
-			break;
-		}
-
-		//コントローラスティックによる移動
-		if (input->getController()[i]->checkConnect()) {
-			player[i].move(input->getController()[i]->getLeftStick()*0.001f, camera[i].getDirectionX(), camera[i].getDirectionZ());
-		}
-
-		//フィールド補正
-		if (player[i].getReverseAxisY()->rayIntersect(*field.getMesh(), field.getMatrixWorld()) &&
-			player[i].getRadius() >= (player[i].getReverseAxisY()->distance -difference))
-		{
-			//めり込み補正
-			//現在位置+ 垂直方向*(めり込み距離)
-			player[i].setPosition(*player[i].getPosition() + player[i].getAxisY()->direction*(player[i].getRadius() - player[i].getReverseAxisY()->distance));
-
-			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			player[i].setSpeed(player[i].getReverseAxisY()->slip(player[i].getSpeed(), player[i].getReverseAxisY()->normal));
-			//Ray moveRay;//移動ベクトルを使ってレイを作成
-			//moveRay.initialize(*player[i].getPosition(), player[i].getSpeed());
-			//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && player[i].getRadius() > moveRay.distance)
-			//{//二重チェック
-			//	player[i].setSpeed(moveRay.slip(player[i].getSpeed(),moveRay.normal));
-			//}
-			if(onJump)player[i].jump();
-		}
-		else {
-			player[i].setGravity(-player[i].getAxisY()->direction, playerNS::GRAVITY_FORCE);
-		}
-
+	{
 		player[i].update(frameTime);
-	}
-
-	//バレットの発射
-	//動的生成にしたい
-	if (intervalBullet1 > 0)
-		intervalBullet1 -= frameTime;
-	else 
-		intervalBullet1 = 0;
-	if (intervalBullet2 > 0)intervalBullet2 -= frameTime;
-	else intervalBullet2 = 0;
-	if ((input->getMouseLButton() || input->getController()[PLAYER1]->isButton(virtualControllerNS::R1))
-		&& intervalBullet1 == 0)
-	{
-		bullet1[currentBullet1].setPosition(*player[PLAYER1].getPosition());
-		//Y軸方向への成分を削除する
-		D3DXVECTOR3 front = slip(camera[PLAYER1].getDirectionZ(), player[PLAYER1].getAxisY()->direction);
-		D3DXVec3Normalize(&front, &front);//正規化
-		bullet1[currentBullet1].addSpeed(front*0.2);//速度を加算
-		bullet1[currentBullet1].setQuaternion(player[PLAYER1].getQuaternion());
-		bullet1[currentBullet1].postureControl(player[PLAYER1].getAxisZ()->direction, front,1.0f);
-		bullet1[currentBullet1].activation();
-		bullet1[currentBullet1].Object::update();
-		currentBullet1++;
-		if (currentBullet1 >= NUM_BULLET)currentBullet1 = 0;
-		intervalBullet1 = INTERVAL_TIME_BULLET1;
-	}
-
-	if ((input->getMouseRButton() || input->getController()[PLAYER2]->isButton(virtualControllerNS::R1))
-		&& intervalBullet2 == 0)
-	{
-		bullet2[currentBullet2].setPosition(*player[PLAYER2].getPosition());
-		//Y軸方向への成分を削除する
-		D3DXVECTOR3 front = slip(camera[PLAYER2].getDirectionZ(), player[PLAYER2].getAxisY()->direction);
-		D3DXVec3Normalize(&front, &front);//正規化
-		bullet2[currentBullet2].addSpeed(front*0.2);//速度を加算
-		bullet2[currentBullet2].setQuaternion(player[PLAYER2].getQuaternion());
-		bullet2[currentBullet2].postureControl(player[PLAYER2].getAxisZ()->direction, front,1.0f);
-		bullet2[currentBullet2].activation();
-		bullet2[currentBullet2].Object::update();
-		currentBullet2++;
-		if (currentBullet2 >= NUM_BULLET)currentBullet2 = 0;
-		intervalBullet2 = INTERVAL_TIME_BULLET2;
-	}
-
-	for (int i = 0; i < NUM_BULLET; i++)
-	{//バレットの更新
-		bullet1[i].update(frameTime,*field.getMesh(),field.getMatrixWorld());
-		bullet2[i].update(frameTime,*field.getMesh(),field.getMatrixWorld());
-	}
-
-	//カメラの回転
-	{
-		if (input->wasKeyPressed(VK_F3))reverseValue1PXAxis*=-1;
-		if (input->wasKeyPressed(VK_F4))reverseValue1PYAxis*=-1;
-		//1Pカメラ制御
-		camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue1PXAxis));
-		camera[PLAYER1].rotation(camera[PLAYER1].getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue1PYAxis));
-
-		if (input->isKeyDown('G')) {
-			//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), -1.0f);
-		};
-		if (input->isKeyDown('J')) {
-			//camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), 1.0f);
-		};
-
-		if (input->getController()[PLAYER1]->checkConnect()) {
-			camera[PLAYER1].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER1]->getRightStick().x*0.001f*reverseValue1PXAxis);
-			camera[PLAYER1].rotation(camera->getHorizontalAxis(), input->getController()[PLAYER1]->getRightStick().y*0.001f*reverseValue1PYAxis);
-		}
-		//2Pをロックオン(未完)
-		if (GetAsyncKeyState(VK_LCONTROL) & 0x8000) {
-			camera[PLAYER1].lockOn(*player[PLAYER2].getPosition(),frameTime);
-		}
-
-		if (input->wasKeyPressed(VK_F5))reverseValue2PXAxis*=-1;
-		if (input->wasKeyPressed(VK_F6))reverseValue2PYAxis*=-1;
-		//2Pカメラ制御
-		if (input->getMouseLButton()) {
-			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), (float)(input->getMouseRawX() * reverseValue2PXAxis));
-			camera[PLAYER2].rotation(camera[PLAYER2].getHorizontalAxis(), (float)(input->getMouseRawY() * reverseValue2PYAxis));
-		};
-
-		if (input->getController()[PLAYER2]->checkConnect()) {
-			camera[PLAYER2].rotation(D3DXVECTOR3(0, 1, 0), input->getController()[PLAYER2]->getRightStick().x * 0.001f * reverseValue2PXAxis);
-			camera[PLAYER2].rotation(D3DXVECTOR3(0, 0, 1), input->getController()[PLAYER2]->getRightStick().y * 0.001f * reverseValue2PYAxis);
-		}
-
-		for (int i = 0; i < NUM_PLAYER; i++)
-		{//カメラの更新
-			camera[i].setUpVector(player[i].getAxisY()->direction);
-			camera[i].update();
-		}
 	}
 
 	//プレイヤーの更新
@@ -428,11 +263,12 @@ void Game::update(float _frameTime) {
 	{
 		colony[0].update();
 
-		for (int i = 0; i < JUNK_MAX; i++)
-		{
-			// ガラクタアップデート
-			junk[i].update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
-		}
+	}
+
+	// ガラクタアップデート
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].update(frameTime, field.getSphereMesh(), *field.getMatrixWorld(), *field.getPosition());
 	}
 
 	//磁石の更新
@@ -459,91 +295,89 @@ void Game::update(float _frameTime) {
 
 	//メモリーパイルの更新
 	{
-		//1Pのメモリーパイルのセット
-		if (memoryPile1P[currentMemoryPile1].ready() &&
-			(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
-		{
-			memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
-			memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
-			memoryPile1P[currentMemoryPile1].activation();
-			memoryPile1P[currentMemoryPile1].Object::update();
-			currentMemoryPile1++;
-			//メモリーパイルを全て設置することに成功
-			if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)
-			{
-				currentMemoryPile1 = 0;//セットする対象を0番のメモリパイルに切替
-				//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
-				onRecursion1P = true;
-				//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
-				D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE];
-				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-				{
-					vertex[i] = *memoryPile1P[i].getPosition();
-				}
-				//リカージョンの生成
-				recursion1P = new Recursion;
-				recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
-				//メモリーパイルとメモリーラインの消失
-				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-				{
-					memoryPile1P[i].switchLost();//消失
-					memoryLine1P.disconnect();//切断
-				}
-			}
-		}
-
-		//メモリーパイルの切断処理
-		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
-		{
-			if (collitionMemoryLine1P && !onRecursion1P)
-			{//[条件判定]1Pのメモリーラインと2Pが衝突
-				for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-				{//メモリーパイルとメモリーラインの消失
-					memoryPile1P[i].switchLost();//消失
-					memoryLine1P.disconnect();//切断
-				}
-				player[PLAYER2].changeState(playerNS::DOWN);
-			}
-		}
-
-
-
-		//2Pのメモリーパイルのセット
-		if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
-		{
-			memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2].getPosition());
-			memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2].getQuaternion());
-			memoryPile2P[currentMemoryPile2].activation();
-			memoryPile2P[currentMemoryPile2].Object::update();
-			currentMemoryPile2++;
-			if (currentMemoryPile2 >= NUM_2P_MEMORY_PILE)currentMemoryPile2 = 0;
-		}
-
-		//1Pのメモリーパイルの更新
-		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		{
-			memoryPile1P[i].update(frameTime);
-		}
-
-		//2Pのメモリーパイルの更新
-		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-		{
-			memoryPile2P[i].update(frameTime);
-		}
+		////1Pのメモリーパイルのセット
+		//if (memoryPile1P[currentMemoryPile1].ready() &&
+		//	(input->getMouseRButtonTrigger() || input->getController()[PLAYER1]->wasButton(virtualControllerNS::L1)))
+		//{
+		//	memoryPile1P[currentMemoryPile1].setPosition(*player[PLAYER1].getPosition());
+		//	memoryPile1P[currentMemoryPile1].setQuaternion(player[PLAYER1].getQuaternion());
+		//	memoryPile1P[currentMemoryPile1].activation();
+		//	memoryPile1P[currentMemoryPile1].Object::update();
+		//	currentMemoryPile1++;
+		//	//メモリーパイルを全て設置することに成功
+		//	if (currentMemoryPile1 >= NUM_1P_MEMORY_PILE)
+		//	{
+		//		currentMemoryPile1 = 0;//セットする対象を0番のメモリパイルに切替
+		//		//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
+		//		onRecursion1P = true;
+		//		//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
+		//		D3DXVECTOR3 vertex[NUM_1P_MEMORY_PILE];
+		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		//		{
+		//			vertex[i] = *memoryPile1P[i].getPosition();
+		//		}
+		//		//リカージョンの生成
+		//		recursion1P = new Recursion;
+		//		recursion1P->initialize(direct3D9->device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
+		//		//メモリーパイルとメモリーラインの消失
+		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		//		{
+		//			memoryPile1P[i].switchLost();//消失
+		//			memoryLine1P.disconnect();//切断
+		//		}
+		//	}
+		//}
+		//
+		////メモリーパイルの切断処理
+		//if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
+		//	|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
+		//{
+		//	if (collitionMemoryLine1P && !onRecursion1P)
+		//	{//[条件判定]1Pのメモリーラインと2Pが衝突
+		//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		//		{//メモリーパイルとメモリーラインの消失
+		//			memoryPile1P[i].switchLost();//消失
+		//			memoryLine1P.disconnect();//切断
+		//		}
+		//		player[PLAYER2].changeState(playerNS::DOWN);
+		//	}
+		//}
+		//
+		////2Pのメモリーパイルのセット
+		//if (input->getController()[PLAYER2]->wasButton(virtualControllerNS::L1))
+		//{
+		//	memoryPile2P[currentMemoryPile2].setPosition(*player[PLAYER2].getPosition());
+		//	memoryPile2P[currentMemoryPile2].setQuaternion(player[PLAYER2].getQuaternion());
+		//	memoryPile2P[currentMemoryPile2].activation();
+		//	memoryPile2P[currentMemoryPile2].Object::update();
+		//	currentMemoryPile2++;
+		//	if (currentMemoryPile2 >= NUM_2P_MEMORY_PILE)currentMemoryPile2 = 0;
+		//}
+		//
+		////1Pのメモリーパイルの更新
+		//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		//{
+		//	memoryPile1P[i].update(frameTime);
+		//}
+		//
+		////2Pのメモリーパイルの更新
+		//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+		//{
+		//	memoryPile2P[i].update(frameTime);
+		//}
 	}
 
 	//メモリーラインの更新
 	{
-		memoryLine1P.update(direct3D9->device,frameTime);
-		memoryLine2P.update(direct3D9->device,frameTime);
+		//memoryLine1P.update(direct3D9->device,frameTime);
+		//memoryLine2P.update(direct3D9->device,frameTime);
 	}
 
 	// ワスレモノの更新
 	wasuremonoManager.update(frameTime);
 	for (int i = 0; i < wasuremono.size(); i++)
 	{
-		wasuremono[i]->update(frameTime, *field.getMesh(), field.getMatrixWorld(), *field.getPosition());
+		wasuremono[i]->update(frameTime, *field.getMesh(), *field.getMatrixWorld(), *field.getPosition());
 	}
 
 	if (input->wasKeyPressed('P')|| 
@@ -553,7 +387,6 @@ void Game::update(float _frameTime) {
 	{
 		pose.poseon = true;
 	}
-
 }
 
 //===================================================================================================================================
@@ -562,16 +395,16 @@ void Game::update(float _frameTime) {
 void Game::render(Direct3D9* direct3D9) {
 
 	//1Pカメラ・ウィンドウ
-	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
-	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
+	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);
+	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER1].projection);
 	direct3D9->changeViewport1PWindow();
-	render3D(direct3D9,camera[0]);
+	render3D(direct3D9,camera[PLAYER1]);
 
 	//2Pカメラ・ウィンドウ
-	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[1].view);
-	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[1].projection);
+	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER2].view);
+	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER2].projection);
 	direct3D9->changeViewport2PWindow();
-	render3D(direct3D9,camera[1]);
+	render3D(direct3D9,camera[PLAYER2]);
 	//UI
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
@@ -597,14 +430,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	target.renderEffectImage(direct3D9->device);
 
-
-
-	for (int i = 0; i < NUM_BULLET; i++)
-	{//バレットの描画
-		bullet1[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		bullet2[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
-
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
 	for (int i = 0; i < NUM_COLONY; i++)
@@ -614,15 +439,16 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	//for (int i = 0; i < junk_max; i++)
-	//{// ガラクタの描画
-	//	junk[i].render(direct3d9->device, currentcamera.view, currentcamera.projection, currentcamera.position);
-	//}
+	//(仮)ガラクタの描画
+	for (int i = 0; i < JUNK_MAX; i++)
+	{
+		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
 
 	//フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//(仮)//マグネットの描画
+	//(仮)マグネットの描画
 	for (int i = 0; i < NUM_MAGNET; i++)
 	{
 		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -636,27 +462,27 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//メモリーパイルの描画
 	{
-		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-		{
-			memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		}
-		for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
-		{
-			memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		}
+		//for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
+		//{
+		//	memoryPile1P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		//}
+		//for (int i = 0; i < NUM_2P_MEMORY_PILE; i++)
+		//{
+		//	memoryPile2P[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		//}
 	}
 
 	//メモリーラインの描画
 	{
-		memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-		memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		//memoryLine1P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+		//memoryLine2P.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
 	//リカージョンの描画
-	if (onRecursion1P)
-	{
-		recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	//if (onRecursion1P)
+	//{
+	//	recursion1P->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 
 	//メモリーラインの切断ガイドの表示
@@ -691,8 +517,8 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
-	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", sceneTimer);
-	textManager->futura->print(0.0f, 50.0f, "　%.0f", sceneTimer);
+	textManager->futura->print(WINDOW_WIDTH / 2, 50.0f , "　%.0f", gameMaster->getGameTime());
+	textManager->futura->print(0.0f, 50.0f, "　%.0f", gameMaster->getGameTime());
 
 	textManager->futura->print(WINDOW_WIDTH / 2, 100.0f, "　★ %.0f");
 	textManager->futura->print(0.0f, 100.0f, "　★ %.0f");
@@ -884,31 +710,35 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 //【衝突判定処理】
 //===================================================================================================================================
 void Game::collisions() {
-	for (int i = 0; i < NUM_BULLET; i++)
-	{	//バレット1<->プレイヤー2
-		if (!bullet1[i].getActive())continue;
+	//1Pバレット<->プレイヤー2
+	for (int i = 0; i < playerNS::NUM_BULLET; i++)
+	{
+		if (!player[PLAYER1].bullet[i].getActive())continue;
 		if (player[PLAYER2].bodyCollide.collide(
-			bullet1[i].bodyCollide.getCenter(), bullet1[i].bodyCollide.getRadius(),
-			player[PLAYER2].getMatrixWorld(), bullet1[i].getMatrixWorld()))
+			player[PLAYER1].bullet[i].bodyCollide.getCenter(), 
+			player[PLAYER1].bullet[i].bodyCollide.getRadius(),
+			*player[PLAYER2].getMatrixWorld(), 
+			*player[PLAYER1].bullet[i].getMatrixWorld()))
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER2].damgae(5);
-			bullet1[i].inActivation();
+			player[PLAYER1].bullet[i].inActivation();
 		}
 	}
-		
-	for (int i = 0; i < NUM_BULLET; i++)
+
+	//2Pバレット<->プレイヤー1
+	for (int i = 0; i < playerNS::NUM_BULLET; i++)
 	{
-		//バレット2<->プレイヤー1
-		if (!bullet2[i].getActive())continue;
+		if (!player[PLAYER2].bullet[i].getActive())continue;
 		if (player[PLAYER1].bodyCollide.collide(
-			bullet2[i].bodyCollide.getCenter(), bullet2[i].bodyCollide.getRadius(),
-			player[PLAYER1].getMatrixWorld(), bullet2[i].getMatrixWorld()))
+			player[PLAYER2].bullet[i].bodyCollide.getCenter(), 
+			player[PLAYER2].bullet[i].bodyCollide.getRadius(),
+			*player[PLAYER1].getMatrixWorld(), 
+			*player[PLAYER2].bullet[i].getMatrixWorld()))
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER1].damgae(5);
-			bullet2[i].inActivation();
-			
+			player[PLAYER2].bullet[i].inActivation();
 		}
 	}
 
@@ -920,7 +750,7 @@ void Game::collisions() {
 			if (between2VectorLength(*player[i].getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
 			{
 				if (player[i].bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
-					player[i].getMatrixWorld(),junk[k].getMatrixWorld()))
+					*player[i].getMatrixWorld(),*junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
 					hpEffect[i].activate(10);
@@ -931,28 +761,24 @@ void Game::collisions() {
 	}
 
 	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
-	if (memoryLine1P.collision(*player[PLAYER2].getPosition(),player[PLAYER2].bodyCollide.getRadius()))
-		collitionMemoryLine1P = true;
-	else 
-		collitionMemoryLine1P = false;
+	//if (memoryLine1P.collision(*player[PLAYER2].getPosition(),player[PLAYER2].bodyCollide.getRadius()))
+	//	collitionMemoryLine1P = true;
+	//else 
+	//	collitionMemoryLine1P = false;
 
 	//1Pのリカージョン<->2Pプレイヤーの衝突検知
-	if (onRecursion1P)
-	{
-		recursion1PAnd2P = recursion1P->collide(
-				*player[PLAYER2].getPosition(),
-				player[PLAYER2].bodyCollide.getCenter(),
-				player[PLAYER2].bodyCollide.getRadius(),
-				player[PLAYER2].getMatrixWorld());
-
-		if (recursion1PAnd2P)
-		{
-			player[PLAYER2].changeState(playerNS::SKY);
-		}
-
-	}
-
-
+	//if (onRecursion1P)
+	//{
+	//	recursion1PAnd2P = recursion1P->collide(
+	//			*player[PLAYER2].getPosition(),
+	//			player[PLAYER2].bodyCollide.getCenter(),
+	//			player[PLAYER2].bodyCollide.getRadius(),
+	//			*player[PLAYER2].getMatrixWorld());
+	//	if (recursion1PAnd2P)
+	//	{
+	//		player[PLAYER2].changeState(playerNS::SKY);
+	//	}
+	//}
 }
 //===================================================================================================================================
 //【AI処理】

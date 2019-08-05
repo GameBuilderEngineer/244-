@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yGame.hz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/05/16
+// [XV“ú]2019/08/03
+//===================================================================================================================================
 #pragma once
 #include <vector>
 #include "AbstractScene.h"
@@ -75,9 +81,7 @@ namespace gameNS
 
 class Game : public AbstractScene
 {
-private:	
-	GameMaster gameMaster;
-	
+private:
 	Planet field;
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
@@ -89,8 +93,6 @@ private:
 	WeaponUI weaponInfomation[gameNS::NUM_PLAYER];
 	TimerUI timerUI[gameNS::NUM_PLAYER];
 	ChinginUI chingin[gameNS::NUM_PLAYER];
-
-
 
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 

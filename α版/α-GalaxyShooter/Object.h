@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//【Object.h】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/06/05
+// [更新日]2019/08/03
+//===================================================================================================================================
 #pragma once
 #include <stdio.h>
 #include <windows.h>
@@ -35,8 +41,10 @@ protected:
 	bool onGravity;				//重力有効化フラグ
 	bool onActive;				//アクティブ化フラグ
 	bool onRender;				//描画有効化フラグ
+	bool onLighting;			//光源処理フラグ
 	bool onTransparent;			//透過フラグ
 	bool operationAlpha;		//透過値の操作有効フラグ
+
 	//方向6軸
 	Ray axisX;
 	Ray axisY;
@@ -63,8 +71,9 @@ public:
 	//Method
 	Object();
 	~Object();
+	
+	//processing
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position);
-
 	void update();
 	//通常レンダー
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
@@ -75,17 +84,15 @@ public:
 	void multipleRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
 		LPD3DXEFFECT effect);
 
-	//取得関数
+	//getter
 	LPD3DXMESH* getMesh() { return &staticMesh->mesh; }
-	D3DXMATRIX getMatrixWorld() { return matrixWorld; }	
+	D3DXMATRIX *getMatrixWorld() { return &matrixWorld; }	
 	D3DXVECTOR3* getPosition() { return &position; };
 	D3DXQUATERNION getQuaternion() { return quaternion; };
 	float getRadius() { return radius; }
-
 	D3DXVECTOR3 getSpeed() { return speed; }
 	D3DXVECTOR3 getAcceleration() { return acceleration; }
 	D3DXVECTOR3 getGravity() { return gravity; };
-
 	Ray* getAxisX() { return &axisX; };
 	Ray* getAxisY() { return &axisY; };
 	Ray* getAxisZ() { return &axisZ; };
@@ -95,7 +102,7 @@ public:
 	Ray* getGravityRay() { return &gravityRay; };
 	bool getActive() { return onActive; }
 
-	//セット関数
+	//setter
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
 	void addSpeed(D3DXVECTOR3 add) { speed += add; }
 	void setGravity(D3DXVECTOR3 source, float power);
