@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "BehaviorNodeBase.h"
-using namespace BehaviorTreeNS;
 
 //*****************************************************************************
 // クラス定義
@@ -13,11 +12,13 @@ using namespace BehaviorTreeNS;
 class ActionNode: public BehaviorNodeBase
 {
 private:
-	
+	NODE_STATUS actionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS actionJump(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 public:
-	ActionNode(int treeType, int parent, NODE_TAG);
+	ActionNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
 
 	// 実行
-	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB, std::vector<BehaviorRecord> record);
+	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };
 

@@ -4,13 +4,26 @@
 // 作成日：2019/6/19
 //-----------------------------------------------------------------------------
 #include "DecisionMaking.h"
+#include "AgentAI.h"
+
+//*****************************************************************************
+// 静的メンバ変数
+//*****************************************************************************
+StateMachine* DecisionMaking::stateMachine = NULL;
+BehaviorTree* DecisionMaking::behaviorTree = NULL;
+
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 DecisionMaking::DecisionMaking(void)
 {
+	// ステートマシンとビヘイビアツリーを静的メンバに生成（AgentAI共用のため）
+	if (!stateMachine) { stateMachine = new StateMachine; }
+	if (!behaviorTree) { behaviorTree = new BehaviorTree; }
 
+	// 初期ステートを設定
+	currentState = stateMachine->getInitialState();
 }
 
 
@@ -19,7 +32,9 @@ DecisionMaking::DecisionMaking(void)
 //=============================================================================
 DecisionMaking::~DecisionMaking(void)
 {
-
+	// ステートマシンとビヘイビアツリーを破棄
+	SAFE_DELETE(stateMachine)
+	SAFE_DELETE(behaviorTree)
 }
 
 
@@ -44,8 +59,8 @@ void DecisionMaking::uninitialize(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void DecisionMaking::update(void)
+void DecisionMaking::update(AgentAI* agentAI)
 {
 	int treeNumber = stateMachine->run(currentState, recognitionBB, memoryBB, bodyBB);
-	behaviorTree->run(treeNumber, recognitionBB, memoryBB, bodyBB, record[treeNumber]);
+	behaviorTree->run(treeNumber, recognitionBB, memoryBB, bodyBB);
 }

@@ -15,13 +15,12 @@
 class State// 基底クラス
 {
 protected:
-	// Data
-	int number;
+	int number;					// ステート番号
 
-	// Method
 	void setNumber(int _number) { number = _number; }
 public:
 	int getNumber(void) { return number; }
+	// ステート遷移
 	virtual State* transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB) = 0;
 };
 
@@ -30,12 +29,12 @@ class Offense: public State
 private:
 	static Offense* instance;
 
-	// Method
-	Offense() { setNumber(0); }// ビヘイビアツリーの番号と合わせる
+	Offense() { setNumber(0); }	// ビヘイビアツリーの番号と合わせる
 public:
-	static void destroy(void) { SAFE_DELETE(instance) }					// インスタンス破棄
-	static State* getInstance(void) { return instance; }				// インスタンス取得
-	static void create(void) { if (!instance)instance = new Offense; }	// インスタンス生成
+	static void destroy(void) { SAFE_DELETE(instance) }
+	static State* getInstance(void) { return instance; }
+	static void create(void) { if (!instance)instance = new Offense; }
+	// ステート遷移
 	State* transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };
 
@@ -44,12 +43,12 @@ class Deffense: public State
 private:
 	static Deffense* instance;
 
-	// Method
 	Deffense() { setNumber(1); }// ビヘイビアツリーの番号と合わせる
 public:
-	static void destroy(void) { SAFE_DELETE(instance) }					// インスタンス破棄
-	static State* getInstance(void) { return instance; }				// インスタンス取得
-	static void create(void) { if (!instance)instance = new Deffense; }	// インスタンス生成
+	static void destroy(void) { SAFE_DELETE(instance) }	
+	static State* getInstance(void) { return instance; }
+	static void create(void) { if (!instance)instance = new Deffense; }
+	// ステート遷移
 	State* transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };
 
@@ -60,15 +59,12 @@ public:
 class StateMachine
 {
 private:
-	// Data
-	static StateMachine* instance;
+	State* initialState;		// 初期ステート
 
-	// Method
+public:
 	StateMachine();
 	~StateMachine();
-public:
-	static void create(void) { if (!instance)instance = new StateMachine; }	// インスタンス生成
-	static void destroy(void) { SAFE_DELETE(instance) }						// インスタンス破棄
-	static StateMachine* getInstance(void) { return instance; }				// インスタンス取得
-	int run(State* current, RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);// 実行
+	State* getInitialState(void) { return initialState; }
+	// ステートマシンの実行
+	static int run(State* current, RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };

@@ -45,12 +45,6 @@ AgentAI::AgentAI(void)
 	pathPlanning->setBlackBoard(recognitionBB, memoryBB);
 	decisionMaking->setBlackBoard(recognitionBB, memoryBB, bodyBB);
 	motionGeneration->setBlackBoard(memoryBB, bodyBB);
-
-	// ステートマシンを接続
-	decisionMaking->setStateMachine(StateMachine::getInstance());
-
-	// ビヘイビアツリーを接続
-	decisionMaking->setBehaviorTree(BehaviorTree::getInstance());
 }
 
 
@@ -77,9 +71,14 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void AgentAI::initialize(void)
+void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMesh* _staticMesh, D3DXVECTOR3* _position)
 {
-
+	sensor->initialize();
+	environmentAnalysis->initialize();
+	decisionMaking->initialize();
+	pathPlanning->initialize();
+	motionGeneration->initialize();
+	Player::initialize(device, _staticMesh, _position);
 }
 
 
@@ -93,34 +92,38 @@ void AgentAI::uninitialize(void)
 
 
 //=============================================================================
-// 実行
+// 更新処理
 //=============================================================================
-void AgentAI::run(void)
+void AgentAI::update(float frameTime)
 {
+#if 0
 	arbiter->update();
 
 	if (sensor->getUpdatePermission())
 	{
-		sensor->update();
+		sensor->update(this);
 	}
 
 	if (environmentAnalysis->getUpdatePermission())
 	{
-		environmentAnalysis->update();
+		environmentAnalysis->update(this);
 	}
 
 	if (pathPlanning->getUpdatePermission())
 	{
-		pathPlanning->update();
+		pathPlanning->update(this);
 	}
 
 	if (decisionMaking->getUpdatePermission())
 	{
-		decisionMaking->update();
+		decisionMaking->update(this);
 	}
 
 	if (motionGeneration->getUpdatePermission())
 	{
-		motionGeneration->update();
+		motionGeneration->update(this);
 	}
+#endif
+
+	Player::update(frameTime);
 }

@@ -1,25 +1,29 @@
 //-----------------------------------------------------------------------------
-// ビヘイビアツリー サブプロシージャノード処理 [SubProcedureNode.h]
+// ビヘイビアツリー 条件ノード処理 [ConditionalNode.h]
 // Author：GP12A332 32 中込和輝
 // 作成日：2019/7/23
 //-----------------------------------------------------------------------------
 #pragma once
 #include "BehaviorNodeBase.h"
-#include "Map.h"
+#include <vector>
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class SubProcedureNode: public BehaviorNodeBase
+class ConditionalNode: public BehaviorNodeBase
 {
 private:
-	NODE_STATUS subProcedureList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	NODE_STATUS setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	NODE_STATUS setTargetRandomNode(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+
+	// 条件リスト
+	bool conditionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	// 条件
+	bool ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);	// 条件：相手が近くにいたら
+
+
 
 public:
-	SubProcedureNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
-
+	ConditionalNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
 	// 実行
 	NODE_STATUS run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };
+

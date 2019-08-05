@@ -7,6 +7,12 @@
 #include "Base.h"
 #include "AICommon.h"
 #include "BlackBoardBase.h"
+#include "BlackBoardRecognition.h"
+#include "BlackBoardMemory.h"
+#include "BlackBoardBody.h"
+
+// 前方宣言(AgentAIクラスと相互参照のため)
+class AgentAI;
 
 //*****************************************************************************
 // クラス定義
@@ -25,7 +31,7 @@ public:
 	// 終了処理
 	virtual void uninitialize(void) = 0;
 	// 更新処理
-	virtual void update(void) = 0;
+	virtual void update(AgentAI* agentAI) = 0;
 	// 更新許可を設定
 	void setUpdatePermission(bool setting) { canUpdate = setting; }	
 	// 更新許可を取得

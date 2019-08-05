@@ -20,6 +20,7 @@ private:
 	int type;
 	float amount;	//Ž¥‹C—Ê
 	StaticMeshLoader* staticMeshLoader;
+
 public:
 	//Method
 	Magnet();
@@ -32,6 +33,7 @@ public:
 	//operation
 	void reverseAmount();
 	void calculationMagneticeForce(Magnet target);
+	void update();
 
 };
 

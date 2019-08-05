@@ -6,6 +6,7 @@
 #include "Sensor.h"
 #include "BlackBoardRecognition.h"
 #include <memory>
+#include "AgentAI.h"
 
 //=============================================================================
 // コンストラクタ
@@ -46,6 +47,7 @@ void Sensor::uninitialize(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void Sensor::update(void)
+void Sensor::update(AgentAI* agentAI)
 {
+
 }

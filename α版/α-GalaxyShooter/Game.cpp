@@ -147,7 +147,10 @@ void Game::initialize(
 
 	// ワスレモノの初期化
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
-
+	// チンギン初期化
+	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	// マップ初期化
+	map.initialize(direct3D9->device, &field);
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -282,6 +285,14 @@ void Game::update(float _frameTime) {
 	{
 		wasuremono[i]->update(frameTime, *field.getMesh(), *field.getMatrixWorld(), *field.getPosition());
 	}
+
+	// チンギンの更新
+	chinginManager.update(frameTime, &player[1]);
+	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('M')) {
+		chinginManager.generateChingin(10, unko);
+	};
 }
 
 //===================================================================================================================================
@@ -341,7 +352,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
-	//フィールドの描画
+	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//(仮)マグネットの描画
@@ -373,6 +384,11 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+
+	// チンギンの描画
+	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -605,6 +621,32 @@ void Game::collisions() {
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER1].damgae(5);
 			player[PLAYER2].bullet[i].inActivation();
+			
+		}
+	}
+
+	for (int i = 0; i < wasuremono.size(); i++)
+	{
+		if (!wasuremono[i]->getActive())	continue;
+		for (int j = 0; j < NUM_BULLET; j++)
+		{
+			// ワスレモノ<->バレット1
+			if (wasuremono[i]->bodyCollide.collide(
+				player[PLAYER1].bullet[j].bodyCollide.getCenter(), player[PLAYER1].bullet[j].bodyCollide.getRadius(),
+				wasuremono[i]->getMatrixWorld(), player[PLAYER1].bullet[j].getMatrixWorld()))
+			{
+				wasuremono[i]->inActivation();
+				player[PLAYER1].bullet[j].inActivation();
+			}
+
+			// ワスレモノ<->バレット2
+			if (wasuremono[i]->bodyCollide.collide(
+				player[PLAYER2].bullet[j].bodyCollide.getCenter(), player[PLAYER2].bullet[j].bodyCollide.getRadius(),
+				wasuremono[i]->getMatrixWorld(), player[PLAYER2].bullet[j].getMatrixWorld()))
+			{
+				wasuremono[i]->inActivation();
+				player[PLAYER2].bullet[j].inActivation();
+			}
 		}
 	}
 
@@ -670,4 +712,5 @@ void Game::uninitialize() {
 		uiChingin[i].release();
 	}
 	wasuremonoManager.uninitialize();
+	map.uninitialize();
 }
