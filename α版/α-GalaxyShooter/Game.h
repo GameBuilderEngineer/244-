@@ -11,7 +11,6 @@
 #include "Player.h"
 #include "Text.h"
 #include "Magnet.h"
-#include "TimerUI.h"
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
@@ -34,6 +33,7 @@
 #include "AgentAI.h"
 #include "ChinginManager.h"
 #include "UIScreenSplitLine.h"
+#include "UIRevivalGauge.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -86,11 +86,11 @@ private:
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
-	TimerUI timerUI[gameNS::NUM_PLAYER];
 
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
 	UIChingin uiChingin[gameNS::NUM_PLAYER];
+	UIRevivalGauge uiRevivalGauge[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
 
 	Colony colony[gameNS::NUM_COLONY];

@@ -105,12 +105,12 @@ void Game::initialize(
 		player[i].setCamera(&camera[i]);	//カメラのセット
 		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
-		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -237,13 +237,17 @@ void Game::update(float _frameTime) {
 
 	//プレイヤーの更新
 	{
+		// 連打復活が完成するまでの仮
+		static int revivalPoint = 0;
+		if (revivalPoint < 50000) { revivalPoint++; }
+
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			timerUI[i].update();
 			hpEffect[i].update();
 			target.update();
 
 			uiRecursion[i].update();
+			uiRevivalGauge[i].update(revivalPoint);
 		}
 	}
 
@@ -574,10 +578,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			hpEffect[i].render(device);
+			//hpEffect[i].render(device);
 			uiRecursion[i].render(device);
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
+			uiRevivalGauge[i].render(device);
 		}
 	}
 
@@ -709,13 +714,13 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(camera);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		timerUI[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 		pose.uninitialize();
 		uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
+		uiRevivalGauge[i].release();
 	}
 	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();

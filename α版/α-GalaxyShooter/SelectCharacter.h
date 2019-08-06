@@ -18,7 +18,6 @@ class SelectCharacter :public AbstractScene
 private:
 	SelectCharacter2D selectCharacter2D[selectCharacterNS::NUM_PLAYER];
 	CharaSelectBarUI charaSelectBar[selectCharacterNS::NUM_PLAYER];
-	TimerUI timerUI;
 
 public:
 	SelectCharacter();

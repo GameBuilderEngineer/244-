@@ -86,15 +86,15 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 // initializeSprite
 // 初期化 - スプライト
 //======================================================================================================================================================
-void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _Index)
+void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _index)
 {
-	switch (_Index)
+	switch (_index)
 	{
 	case TYPE::BICYCLE:
-		sprite[_Index].initialize
+		sprite[_index].initialize
 		(
 			_device,
-			texture[_Index],																			//	テクスチャ
+			texture[_index],																			//	テクスチャ
 			spriteNS::CENTER,																			//	原点
 			uiRecursionNS::WIDTH,																		//	横幅
 			uiRecursionNS::HEIGHT,																		//	高さ

@@ -244,6 +244,12 @@
     <Filter Include="UI\ScreenSplitLine">
       <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Revival">
+      <UniqueIdentifier>{2bb7f2c9-9319-484d-87f8-ff29d9f106ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\RevivalGauge">
+      <UniqueIdentifier>{cc9beee4-02db-4d30-beb4-3f774d3f811e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -523,12 +529,17 @@
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="UICutMemoryLine.cpp">
       <Filter>UI\CutMemoryLine</Filter>
     </ClCompile>
     <ClCompile Include="UIScreenSplitLine.cpp">
       <Filter>UI\ScreenSplitLine</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRevival.cpp">
+      <Filter>UI\Revival</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRevivalGauge.cpp">
+      <Filter>UI\RevivalGauge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -779,12 +790,17 @@
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="UICutMemoryLine.h">
       <Filter>UI\CutMemoryLine</Filter>
     </ClInclude>
     <ClInclude Include="UIScreenSplitLine.h">
       <Filter>UI\ScreenSplitLine</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRevival.h">
+      <Filter>UI\Revival</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRevivalGauge.h">
+      <Filter>UI\RevivalGauge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
