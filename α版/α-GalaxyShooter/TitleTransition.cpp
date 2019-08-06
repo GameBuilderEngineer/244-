@@ -1,11 +1,11 @@
 //=============================================================================
 // ƒ^ƒCƒgƒ‹‘JˆÚ‰æ‘œ‘JˆÚ‰æ‘œ‚Ì•`‰æˆ— [TitleTransition.cpp]
-////=============================================================================
+////===========================================================================
 #include "TitleTransition.h"
 //*****************************************************************************
 // ’è”Eƒ}ƒNƒ
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH / 2;						// ƒ^ƒCƒgƒ‹‘JˆÚ‰æ‘œ‰¡ƒTƒCƒY
+const static int		WIDTH = WINDOW_WIDTH / 2;					// ƒ^ƒCƒgƒ‹‘JˆÚ‰æ‘œ‰¡ƒTƒCƒY
 const static float		GAME_POSITION_X = 0.0f;						// ƒQ[ƒ€‘JˆÚ‰æ‘œXÀ•W
 const static float		TUTORIAL_POSITION_X = 0.0f;					// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ‰æ‘œXÀ•W
 const static float		OPERATION_POSITION_X = 0.0f;				// ƒIƒyƒŒ[ƒVƒ‡ƒ“‘JˆÚ‰æ‘œXÀ•W
@@ -19,7 +19,7 @@ const static float		OPERATION_POSITION_Y = TITLE_OPERATION_POS;	// ƒIƒyƒŒ[ƒVƒ‡ƒ
 const static float		CREDIT_POSITION_Y = TITLE_CREDIT_POS;		// ƒNƒŒƒWƒbƒg‘JˆÚ‰æ‘œYÀ•W
 const static float		GAMEEND_POSITION_Y = TITLE_GAMEEND_POS;		// ƒQ[ƒ€ƒGƒ“ƒh‘JˆÚ‰æ‘œYÀ•W
 #else
-const static int		HEIGHT = WINDOW_HEIGHT / 7;						// ƒ^ƒCƒgƒ‹‘JˆÚ‰æ‘œcƒTƒCƒY
+const static int		HEIGHT = WINDOW_HEIGHT / 9;						// ƒ^ƒCƒgƒ‹‘JˆÚ‰æ‘œcƒTƒCƒY
 const static float		GAME_POSITION_Y = RELEASE_START_POS;			// ƒQ[ƒ€‘JˆÚ‰æ‘œYÀ•W
 const static float		TUTORIAL_POSITION_Y = RELEASE_TUTORIAL_POS;		// ƒ`ƒ…[ƒgƒŠƒAƒ‹‘JˆÚ‰æ‘œYÀ•W
 const static float		OPERATION_POSITION_Y = RELEASE_OPERATION_POS;	// ƒIƒyƒŒ[ƒVƒ‡ƒ“‘JˆÚ‰æ‘œYÀ•W

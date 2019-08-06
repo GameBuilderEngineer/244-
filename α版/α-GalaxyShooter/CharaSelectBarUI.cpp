@@ -8,7 +8,8 @@ using namespace charaSelectBarUINS;
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
-const static int		BAR_WIDTH = WINDOW_WIDTH/2;						// 横サイズ
+#ifdef _DEBUG
+const static int		BAR_WIDTH = WINDOW_WIDTH / 2;					// 横サイズ
 const static int		BAR_HEIGHT = 250;								// 縦サイズ
 const static int		NO_WIDTH = 180;									// 横サイズ
 const static int		NO_HEIGHT = 82;									// 縦サイズ
@@ -21,7 +22,7 @@ const static int		PLAYER_NAME_ENG_HEIGHT = 82;					// プレイヤーネーム英語縦サイ
 const static int		PLAYER_NAME_JP_WIDTH = 250;						// プレイヤーネーム日本語横サイズ
 const static int		PLAYER_NAME_JP_HEIGHT = 20;						// プレイヤーネーム日本語縦サイズ
 const static float		BAR_LIGHT_POSITION_X = 0.0f;					// X座標
-const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X+ WINDOW_WIDTH / 2;
+const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;
 const static float		BAR_LIGHT_POSITION_Y = 220.0f;					// Y座標
 const static float		NO_POSITION_X = 0.0f;							// X座標
 const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;
@@ -42,6 +43,45 @@ const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WI
 const static float		POSITION_X_NAME_ADAM_JP = 200.0f;				// X座標
 const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;
 const static float		POSITION_Y_NAME_JP = 390.0f;					// Y座標
+
+#else
+
+const static int		BAR_WIDTH = WINDOW_WIDTH / 2;					// 横サイズ
+const static int		BAR_HEIGHT = 500;								// 縦サイズ
+const static int		NO_WIDTH = 360;									// 横サイズ
+const static int		NO_HEIGHT = 164;								// 縦サイズ
+const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;				// 横サイズ
+const static int		CURSOR_HEIGHT = 80;								// 縦サイズ
+const static int		PLAYER_LOGO_WIDTH = 160;						// 横サイズ
+const static int		PLAYER_LOGO_HEIGHT = 80;						// 縦サイズ
+const static int		PLAYER_NAME_ENG_WIDTH = 500;					// プレイヤーネーム英語横サイズ
+const static int		PLAYER_NAME_ENG_HEIGHT = 164;					// プレイヤーネーム英語縦サイズ
+const static int		PLAYER_NAME_JP_WIDTH = 500;						// プレイヤーネーム日本語横サイズ
+const static int		PLAYER_NAME_JP_HEIGHT = 40;						// プレイヤーネーム日本語縦サイズ
+const static float		BAR_LIGHT_POSITION_X = 0.0f;					// X座標
+const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;
+const static float		BAR_LIGHT_POSITION_Y = 440.0f;					// Y座標
+const static float		NO_POSITION_X = 0.0f;							// X座標
+const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;
+const static float		NO_POSITION_Y = 608.0f;							// Y座標
+const static float		CURSOR_POSITION_X = 0.0f;						// X座標
+const static float		CURSOR_POSITION2_X = CURSOR_POSITION_X + WINDOW_WIDTH / 2;
+const static float		CURSOR_POSITION_Y = 500.0f;						// Y座標
+const static float		PLAYER_LOGO_POSITION_X = 0.0f;					// X座標
+const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;
+const static float		PLAYER_LOGO_POSITION_Y = 780.0f;				// Y座標
+const static float		POSITION_X_NAME_EVE_ENG = 400.0f;				// X座標
+const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;
+const static float		POSITION_X_NAME_ADAM_ENG = 400.0f;				// X座標
+const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;
+const static float		POSITION_Y_NAME_ENG = 608.0f;					// Y座標
+const static float		POSITION_X_NAME_EVE_JP = 400.0f;				// X座標
+const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;
+const static float		POSITION_X_NAME_ADAM_JP = 400.0f;				// X座標
+const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;
+const static float		POSITION_Y_NAME_JP = 780.0f;					// Y座標
+
+#endif 
 
 #define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))				// キャラセレクトの色
 //*****************************************************************************

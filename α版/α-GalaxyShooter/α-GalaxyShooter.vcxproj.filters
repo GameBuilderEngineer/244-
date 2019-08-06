@@ -388,9 +388,6 @@
     <ClCompile Include="UtilityFunction.cpp">
       <Filter>UtilityFunction</Filter>
     </ClCompile>
-    <ClCompile Include="SkillPointUI.cpp">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClCompile>
     <ClCompile Include="TimerUI.cpp">
       <Filter>UI\TimerUI</Filter>
     </ClCompile>
@@ -454,8 +451,6 @@
     <ClCompile Include="Pose.cpp">
       <Filter>Scene\Game\Pose</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp" />
-    <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="AgentAI.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -519,6 +514,14 @@
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ChinginUI.cpp" />
+    <ClCompile Include="ColonyHitPointUI.cpp" />
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter2D.cpp">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -688,9 +691,6 @@
     <ClInclude Include="WasuremonoTable.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="SkillPointUI.h">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="TimerUI.h">
       <Filter>UI\TimerUI</Filter>
     </ClInclude>
@@ -709,8 +709,6 @@
     <ClInclude Include="Pose.h">
       <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="BlackBoardMemory.h">
       <Filter>AI\BlackBoard</Filter>
     </ClInclude>
@@ -750,9 +748,6 @@
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI\HitPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="CharaSelectBarUI.h">
       <Filter>UI\CharaSelectBarUI</Filter>
     </ClInclude>
@@ -774,6 +769,14 @@
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginUI.h" />
+    <ClInclude Include="ColonyHitPointUI.h" />
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter2D.h">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

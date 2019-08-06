@@ -15,13 +15,22 @@ const static int		PLAYER_BG_HEIGHT = WINDOW_HEIGHT;		// プレイヤーBG縦サイズ
 const static float		POSITION_X_BG = 0.0f;					// X座標
 const static float		POSITION_X_BG2 = POSITION_X_BG + WINDOW_WIDTH / 2;
 const static float		POSITION_Y_BG = 0.0f;					// Y座標
+const static float		PLAYER_BG_POSITION_X = 0.0f;			// X座標
+const static float		PLAYER_BG_POSITION2_X = PLAYER_BG_POSITION_X + WINDOW_WIDTH / 2;
+const static float		PLAYER_BG_POSITION_Y = 0.0f;			// Y座標
+#ifdef _DEBUG
 const static float		POSITION_X_PLAYER = 0.0f;				// X座標
 const static float		POSITION_Y_PLAYER = -20.0f;				// Y座標
 const static float		POSITION2_X_PLAYER = POSITION_X_PLAYER + WINDOW_WIDTH / 2;
 const static float		POSITION2_Y_PLAYER = -20.0f;			// Y座標
-const static float		PLAYER_BG_POSITION_X = 0.0f;			// X座標
-const static float		PLAYER_BG_POSITION2_X = PLAYER_BG_POSITION_X + WINDOW_WIDTH / 2;
-const static float		PLAYER_BG_POSITION_Y = 0.0f;			// Y座標
+#else
+const static float		POSITION_X_PLAYER = 0.0f;				// X座標
+const static float		POSITION_Y_PLAYER = -40.0f;				// Y座標
+const static float		POSITION2_X_PLAYER = POSITION_X_PLAYER + WINDOW_WIDTH / 2;
+const static float		POSITION2_Y_PLAYER = -40.0f;			// Y座標
+
+#endif 
+
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************

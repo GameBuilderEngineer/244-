@@ -7,12 +7,19 @@
 //*****************************************************************************
 // 定数・マクロ
 //*****************************************************************************
+#ifdef _DEBUG
 const static int		WIDTH = 300;						// 横サイズ
 const static int		HEIGHT = 150;						// 縦サイズ	
 const static float		POSITION_X = 330.0f;				// X座標
 const static float		POSITION_Y = 0.0f;					// Y座標
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイマーの色
+#else
+const static int		WIDTH = 600;						// 横サイズ
+const static int		HEIGHT = 300;						// 縦サイズ	
+const static float		POSITION_X = 660.0f;				// X座標
+const static float		POSITION_Y = 0.0f;					// Y座標
+#endif 
 
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイマーの色
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
