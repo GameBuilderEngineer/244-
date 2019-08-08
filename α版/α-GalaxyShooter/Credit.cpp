@@ -51,6 +51,18 @@ void Credit::update(float frameTime) {
 
 	credit2D.update();
 
+	// 前の遷移へ戻る
+	if (input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		nextScene = SceneList::TITLE;
+		changeScene(nextScene);
+		return;
+	}
+
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_BACK) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||

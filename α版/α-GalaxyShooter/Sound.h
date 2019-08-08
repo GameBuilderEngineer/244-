@@ -33,8 +33,8 @@ namespace soundNS
 		SE_DAMAGE_COVERED,		//	SE：被ダメ
 		SE_DECISION,			//	SE：決定
 		SE_PAPER,				//	SE：ペーパー
-		SE_SWITCH,				//	SE：スイッチ
 		SE_SELECT,				//	SE：セレクト
+		SE_SWITCH,				//	SE：スイッチ
 		TYPE_MAX				//	最大値
 	};
 	enum METHOD

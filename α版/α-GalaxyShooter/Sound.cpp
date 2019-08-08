@@ -202,8 +202,8 @@ LPDIRECTSOUNDBUFFER8 Sound::load(int _soundIndex)
 		"SE_Test_Ver_Damage_Covered.wav",
 		"SE_Decision.wav",
 		"SE_Paper.wav",
+		"SE_Select.wav",
 		"SE_Switch.wav",
-		"SE_Test_Ver_Select.wav"
 	};
 
 	// •Ï”éŒ¾F‰Šú‰»
