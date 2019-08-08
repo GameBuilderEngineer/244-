@@ -15,6 +15,8 @@ Result::Result()
 
 Result::~Result()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_RESULT);
 }
 
 void Result::initialize(
@@ -35,6 +37,9 @@ void Result::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_RESULT, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera;

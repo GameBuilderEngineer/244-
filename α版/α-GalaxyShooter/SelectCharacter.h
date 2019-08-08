@@ -3,6 +3,7 @@
 #include "SelectCharacter2D.h"
 #include "CharaSelectBarUI.h"
 #include "TimerUI.h"
+#include "UIScreenSplitLine.h"
 
 namespace selectCharacterNS
 {
@@ -18,6 +19,8 @@ class SelectCharacter :public AbstractScene
 private:
 	SelectCharacter2D selectCharacter2D[selectCharacterNS::NUM_PLAYER];
 	CharaSelectBarUI charaSelectBar[selectCharacterNS::NUM_PLAYER];
+	UIScreenSplitLine uiScreenSplitLine;
+	TimerUI timerUI;
 
 public:
 	SelectCharacter();

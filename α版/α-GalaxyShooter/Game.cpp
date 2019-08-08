@@ -21,6 +21,8 @@ Game::Game()
 	currentBullet2 = 0;
 	onRecursion1P = false;
 	recursion1PAnd2P = false;
+	startCountFlag = true;
+	endCountFlag = false;
 
 	reverseValue1PXAxis = 2;
 	reverseValue1PYAxis = 2;
@@ -66,7 +68,7 @@ void Game::initialize(
 	textManager = _textManager;
 
 	// サウンドの停止
-	sound->stop(soundNS::TYPE::BGM_SPLASH_TITLE);
+	sound->stop(soundNS::TYPE::BGM_TITLE);
 	// サウンドの再生
 	sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
@@ -110,7 +112,9 @@ void Game::initialize(
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
 		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
+		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -192,6 +196,7 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
+
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||
@@ -235,11 +240,10 @@ void Game::update(float _frameTime) {
 		player[i].update(frameTime);
 	}
 
-	//プレイヤーの更新
 	{
 		// 連打復活が完成するまでの仮
 		static int revivalPoint = 0;
-		if (revivalPoint < 50000) { revivalPoint++; }
+		if (revivalPoint < 1000) { revivalPoint++; }
 
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -247,6 +251,7 @@ void Game::update(float _frameTime) {
 			target.update();
 
 			uiRecursion[i].update();
+			uiCutMemoryLine[i].update(*player[0].getPosition(), *player[1].getPosition());
 			uiRevivalGauge[i].update(revivalPoint);
 		}
 	}
@@ -558,6 +563,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
 	);
+
 #endif
 	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
@@ -570,19 +576,29 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
+	// ユーザインタフェース
 	if (onUI) {
 
 		// チンギン完成までの仮
 		static int chingin = 0;
 		if (chingin < 99999) { chingin++; }
 
+		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			//hpEffect[i].render(device);
-			uiRecursion[i].render(device);
+
+			uiCutMemoryLine[i].render(device);
+			//uiRevivalGauge[i].render(device);
+			//uiRevival[i].render(device);
+		}
+
+		// 優先度：高
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
-			uiRevivalGauge[i].render(device);
+			uiRecursion[i].render(device);
 		}
 	}
 
@@ -720,7 +736,9 @@ void Game::uninitialize() {
 		uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
+		uiCutMemoryLine[i].release();
 		uiRevivalGauge[i].release();
+		uiRevival[i].release();
 	}
 	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();

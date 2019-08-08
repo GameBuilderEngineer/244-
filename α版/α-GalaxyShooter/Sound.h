@@ -9,36 +9,33 @@
 #include <dsound.h>
 #pragma comment(lib,"dsound.lib")
 //======================================================================================================================================================
-// Macro
-// マクロ
-//======================================================================================================================================================
-#define SOUND_FILE_BGM_GAME ("BGM_Test_Ver_Game.wav")					//	サウンドファイル
-#define SOUND_FILE_BGM_SPLASH_TITLE ("BGM_Test_Ver_Splash_Title.wav")	//	サウンドファイル
-#define SOUND_FILE_SE_SELECT ("SE_Test_Ver_Select.wav")					//	サウンドファイル
-#define SOUND_FILE_SE_DECISION ("SE_Test_Ver_Decision.wav")				//	サウンドファイル
-#define SOUND_FILE_SE_CANCEL ("SE_Test_Ver_Cancel.wav")					//	サウンドファイル
-#define SOUND_FILE_SE_DAMAGE_GIVE ("SE_Test_Ver_Damage_Give.wav")		//	サウンドファイル
-#define SOUND_FILE_SE_DAMAGE_COVERED ("SE_Test_Ver_Damage_Covered.wav")	//	サウンドファイル
-//======================================================================================================================================================
 // NameSpace
 // 名前空間
 //======================================================================================================================================================
 namespace soundNS
 {
-	const int CONST_FADE_VALUE = (25);				//	フェード値
-	const int CONST_VOLUME_MIN = (DSBVOLUME_MIN);	//	音量最小値
-	const int CONST_VOLUME_MAX = (DSBVOLUME_MAX);	//	音量最大値
+	const int CONST_FADE_VALUE = (25);											//	フェード値
+	const int CONST_VOLUME_MIN = (DSBVOLUME_MIN);								//	音量最小値
+	const int CONST_VOLUME_MAX = (DSBVOLUME_MAX);								//	音量最大値
 
 	enum TYPE
 	{
-		BGM_GAME,			//	BGM：ゲーム
-		BGM_SPLASH_TITLE,	//	BGM：スプラッシュ - タイトル
-		SE_SELECT,			//	SE：セレクト
-		SE_DECISION,		//	SE：決定
-		SE_CANCEL,			//	SE：キャンセル
-		SE_DAMAGE_GIVE,		//	SE：与ダメ
-		SE_DAMAGE_COVERED,	//	SE：被ダメ
-		TYPE_MAX			//	最大値
+		AGING,					//	エイジング
+		BGM_CHARACTER_SELECT,	//	BGM：キャラクターセレクト
+		BGM_CREDIT,				//	BGM：クレジット
+		BGM_GAME,				//	BGM：ゲーム
+		BGM_RESULT,				//	BGM：リザルト
+		BGM_SPLASH,				//	BGM：スプラッシュ
+		BGM_TITLE,				//	BGM：タイトル
+		BGM_TUTORIAL,			//	BGM：チュートリアル
+		SE_ATTACK,				//	SE：攻撃
+		SE_CANCEL,				//	SE：キャンセル
+		SE_DAMAGE_COVERED,		//	SE：被ダメ
+		SE_DECISION,			//	SE：決定
+		SE_PAPER,				//	SE：ペーパー
+		SE_SWITCH,				//	SE：スイッチ
+		SE_SELECT,				//	SE：セレクト
+		TYPE_MAX				//	最大値
 	};
 	enum METHOD
 	{

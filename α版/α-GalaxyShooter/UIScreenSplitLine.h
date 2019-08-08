@@ -14,8 +14,8 @@
 //======================================================================================================================================================
 namespace uiScreenSplitLineNS
 {
-	const float WIDTH = (1920.0f);	//	X座標
-	const float HEIGHT = (1080.0f);	//	Y座標
+	const int WIDTH = (1920);	//	幅
+	const int HEIGHT = (1080);	//	高さ
 }
 //======================================================================================================================================================
 // Class
@@ -24,6 +24,7 @@ namespace uiScreenSplitLineNS
 class UIScreenSplitLine
 {
 private:
+	static int instanceIndex;			//	インスタンスインデックス
 	static LPDIRECT3DTEXTURE9 texture;	//	テクスチャ
 	Sprite sprite;						//	スプライト
 public:

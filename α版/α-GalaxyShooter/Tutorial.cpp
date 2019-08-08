@@ -9,6 +9,8 @@ Tutorial::Tutorial()
 
 Tutorial::~Tutorial()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_TUTORIAL);
 }
 
 void Tutorial::initialize(
@@ -29,6 +31,9 @@ void Tutorial::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_TUTORIAL, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera;

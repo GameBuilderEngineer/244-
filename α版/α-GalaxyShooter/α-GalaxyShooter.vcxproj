@@ -206,6 +206,7 @@
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UIChingin.cpp" />
+    <ClCompile Include="UICountTime.cpp" />
     <ClCompile Include="UICutMemoryLine.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
     <ClCompile Include="UIRevival.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UIChingin.h" />
+    <ClInclude Include="UICountTime.h" />
     <ClInclude Include="UICutMemoryLine.h" />
     <ClInclude Include="UIPlayTime.h" />
     <ClInclude Include="UIRevival.h" />

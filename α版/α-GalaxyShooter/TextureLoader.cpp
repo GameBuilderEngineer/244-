@@ -20,8 +20,7 @@ TextureLoader::TextureLoader()
 	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
 	textureName[UI_REVIVAL] = { "Game_Revival.png" };
-	textureName[UI_REVIVAL_GAUGE_00] = { "Game_Revival_Gauge_00.png" };
-	textureName[UI_REVIVAL_GAUGE_01] = { "Game_Revival_Gauge_01.png" };
+	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
 	textureName[RECURSION] = { "starRecursion.png" };
 	textureName[UI_CHARA_SELECT_BAR] = { "Character_Select_Bar_01.png" };
 	textureName[UI_CHARA_SELECT_BAR2] = { "Character_Select_Bar_02.png" };

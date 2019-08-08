@@ -14,8 +14,11 @@
 //======================================================================================================================================================
 namespace uiRevivalNS
 {
-	const float WIDTH = (1920.0f);	//	X座標
-	const float HEIGHT = (1080.0f);	//	Y座標
+	const int WIDTH = (960);															//	幅
+	const int HEIGHT = (1080);															//	高さ
+	const float POSITION_X_PLAYER_1 = ((WINDOW_WIDTH / 2) - (uiRevivalNS::WIDTH / 2));	//	座標 x ( Player1 )
+	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2));		//	座標 x ( Player2 )
+	const float POSITION_Y = (WINDOW_HEIGHT / 2);										//	座標 y
 }
 //======================================================================================================================================================
 // Class
@@ -24,12 +27,13 @@ namespace uiRevivalNS
 class UIRevival
 {
 private:
+	static int instanceIndex;			//	インスタンスインデックス
 	static LPDIRECT3DTEXTURE9 texture;	//	テクスチャ
 	Sprite sprite;						//	スプライト
 public:
 	UIRevival(void);
 	~UIRevival(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader);
+	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, TextureLoader* _textureLoader);
 	void release(void);
 	void render(LPDIRECT3DDEVICE9 _device);
 };

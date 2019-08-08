@@ -8,6 +8,11 @@
 #include "Base.h"
 #include "Sound.h"
 //======================================================================================================================================================
+// Using Declaration
+// using宣言
+//======================================================================================================================================================
+using namespace soundNS;
+//======================================================================================================================================================
 // Constructor
 // コンストラクタ
 //======================================================================================================================================================
@@ -184,13 +189,21 @@ LPDIRECTSOUNDBUFFER8 Sound::load(int _soundIndex)
 	// 変数宣言：初期化 / サウンド読み込み
 	const char *Sound_File[] =	//	サウンドファイル
 	{
-		SOUND_FILE_BGM_GAME,			//	BGM_GAME
-		SOUND_FILE_BGM_SPLASH_TITLE,	//	BGM_SPLASH_TITLE
-		SOUND_FILE_SE_SELECT,			//	SE_SELECT
-		SOUND_FILE_SE_DECISION,			//	SE_DECISION
-		SOUND_FILE_SE_CANCEL,			//	SE_CANCEL
-		SOUND_FILE_SE_DAMAGE_GIVE,		//	SE_DAMAGE_GIVE
-		SOUND_FILE_SE_DAMAGE_COVERED	//	SE_DAMAGE_COVERED
+		"Aging.wav"
+		"BGM_Character_Select.wav",
+		"BGM_Credit.wav",
+		"BGM_Game.wav",
+		"BGM_Result.wav",
+		"BGM_Splash.wav",
+		"BGM_Title.wav",
+		"BGM_Tutorial.wav",
+		"SE_Test_Ver_Attack.wav",
+		"SE_Cancel.wav",
+		"SE_Test_Ver_Damage_Covered.wav",
+		"SE_Decision.wav",
+		"SE_Paper.wav",
+		"SE_Switch.wav",
+		"SE_Test_Ver_Select.wav"
 	};
 
 	// 変数宣言：初期化

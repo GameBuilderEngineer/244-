@@ -9,6 +9,8 @@ Credit::Credit()
 
 Credit::~Credit()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_CREDIT);
 }
 
 void Credit::initialize(
@@ -29,6 +31,9 @@ void Credit::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_CREDIT, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera;

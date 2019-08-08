@@ -15,11 +15,8 @@ using namespace uiRecursionNS;
 // Global Variable
 // グローバル変数
 //======================================================================================================================================================
-int UIRecursion::instanceIndex = (-1);						//	インスタンスインデックス
+int UIRecursion::instanceIndex = 0;							//	インスタンスインデックス
 LPDIRECT3DTEXTURE9 UIRecursion::texture[TYPE::TYPE_MAX];	//	テクスチャ
-
-bool moveFlag = false;
-
 //======================================================================================================================================================
 // Constructor
 // コンストラクタ
@@ -29,11 +26,15 @@ UIRecursion::UIRecursion(void)
 	// インスタンスインデックスを加算
 	instanceIndex++;
 
+	// 初期化
+	moveFlag = false;
+	moveValue = 1.5f;
+
 	// テクスチャのクリア
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
 		texture[i] = NULL;
-		destinationIndex[i] = POSITION::POP;
+		positionIndex[i] = POSITION::POP;
 	}
 
 	return;
@@ -61,9 +62,6 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 	// テクスチャローダーのリカージョンUIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
 	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_RECURSION_BICYCLE;
 
-	// プレイヤーインデックス
-	playerIndex = _playerIndex;
-
 	// ディレクトリ設定
 	setVisualDirectory();
 
@@ -77,7 +75,7 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 	// スプライト初期化
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
-		initializeSprite(_device, i);
+		initializeSprite(_device, _playerIndex, i);
 	}
 
 	return S_OK;
@@ -86,7 +84,7 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 // initializeSprite
 // 初期化 - スプライト
 //======================================================================================================================================================
-void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _index)
+void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, int _index)
 {
 	switch (_index)
 	{
@@ -94,18 +92,18 @@ void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _index)
 		sprite[_index].initialize
 		(
 			_device,
-			texture[_index],																			//	テクスチャ
-			spriteNS::CENTER,																			//	原点
-			uiRecursionNS::WIDTH,																		//	横幅
-			uiRecursionNS::HEIGHT,																		//	高さ
-			D3DXVECTOR3																					//	座標
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			uiRecursionNS::WIDTH,											//	横幅
+			uiRecursionNS::HEIGHT,											//	高さ
+			D3DXVECTOR3														//	座標
 			(
-				playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-				uiRecursionNS::POSITION_Y_POP,															//	座標 y
-				0.0f																					//	座標 z
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y_POP,												//	座標 y
+				0.0f														//	座標 z
 			),
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-			D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
 		);
 		break;
 	//case TYPE::BLACK_PHONE:
@@ -309,12 +307,6 @@ void UIRecursion::release(void)
 	// インスタンスインデックスを減算
 	instanceIndex--;
 
-	// インスタンスが存在しなければ、テクスチャを解放
-	if (instanceIndex >= 0)
-	{
-		return;
-	}
-
 	return;
 }
 //======================================================================================================================================================
@@ -328,87 +320,64 @@ void UIRecursion::update(void)
 		updateMove();
 		return;
 	}
-	else
+
+	if (input->wasKeyPressed(VK_RETURN))
 	{
-		if (input->wasKeyPressed(VK_RETURN))
-		{
-			moveFlag = true;
-		}
+		moveFlag = !moveFlag;
 	}
 
 	return;
 }
-
+//======================================================================================================================================================
+// updateMove
+// 更新 - 移動
+//======================================================================================================================================================
 void UIRecursion::updateMove(void)
 {
-	D3DXVECTOR3 position = sprite[0].getPosition();
-	static float move = 1.5f;
+	D3DXVECTOR3 spritePosition = sprite[TYPE::BICYCLE].getPosition();
 
-	switch (destinationIndex[0])
+	switch (positionIndex[TYPE::BICYCLE])
 	{
 	case POSITION::POP:
+		if (moveValue > 0.01f) { moveValue -= 0.01f; }
 
-		if (move >= 0.01f) { move -= 0.01f; }
+		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+		sprite[TYPE::BICYCLE].setVertex();
 
-		position = sprite[0].getPosition();
-		sprite[0].setPosition2(D3DXVECTOR3(position.x, position.y - move, position.z));
-		sprite[0].setVertex();
-
-		if (position.y <= POSITION_Y_MOVE_1)
+		if (spritePosition.y <= POSITION_Y_MOVE_1)
 		{
-			moveFlag = false;
-			destinationIndex[0]++;
-			move = 1.5f;
+			moveFlag = !moveFlag;
+			positionIndex[TYPE::BICYCLE]++;
+			moveValue = INITIAL_MOVE_VALUE;
 		}
-
 		break;
 	case POSITION::MOVE_01:
+		if (moveValue > 0.01f) { moveValue -= 0.01f; }
 
-		if (move >= 0.01f) { move -= 0.01f; }
+		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+		sprite[TYPE::BICYCLE].setVertex();
 
-		position = sprite[0].getPosition();
-		sprite[0].setPosition2(D3DXVECTOR3(position.x, position.y - move, position.z));
-		sprite[0].setVertex();
-
-		if (position.y <= POSITION_Y_MOVE_2)
+		if (spritePosition.y <= POSITION_Y_MOVE_2)
 		{
-			moveFlag = false;
-			destinationIndex[0]++;
-			move = 1.5f;
+			moveFlag = !moveFlag;
+			positionIndex[TYPE::BICYCLE]++;
+			moveValue = INITIAL_MOVE_VALUE;
 		}
-
 		break;
 	case POSITION::MOVE_02:
+		if (moveValue > 0.01f) { moveValue -= 0.01f; }
 
-		if (move >= 0.01f) { move -= 0.01f; }
+		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+		sprite[TYPE::BICYCLE].setVertex();
 
-		position = sprite[0].getPosition();
-		sprite[0].setPosition2(D3DXVECTOR3(position.x, position.y - move, position.z));
-		sprite[0].setVertex();
-
-		if (position.y <= POSITION_Y_CLOSE)
+		if (spritePosition.y <= POSITION_Y_CLOSE)
 		{
-			moveFlag = false;
-			destinationIndex[0]++;
-			move = 1.5f;
+			moveFlag = !moveFlag;
+			positionIndex[TYPE::BICYCLE]++;
+			moveValue = INITIAL_MOVE_VALUE;
 		}
-
 		break;
 	case POSITION::CLOSE:
-
-		//if (move >= 0.01f) { move -= 0.01f; }
-
-		//position = sprite[0].getPosition();
-		//sprite[0].setPosition2(D3DXVECTOR3(position.x, position.y - move, position.z));
-		//sprite[0].setVertex();
-
-		//if (position.y <= POSITION_Y_MOVE_01)
-		//{
-		//	moveFlag = false;
-		//	destinationIndex[0]++;
-		//	move = 1.0f;
-		//}
-
 		break;
 	default:
 		break;
@@ -416,7 +385,6 @@ void UIRecursion::updateMove(void)
 
 	return;
 }
-
 //======================================================================================================================================================
 // render
 // 描画

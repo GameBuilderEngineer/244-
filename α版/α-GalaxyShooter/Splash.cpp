@@ -12,7 +12,8 @@ Splash::Splash()
 
 Splash::~Splash()
 {
-
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_SPLASH);
 }
 
 void Splash::initialize(
@@ -35,7 +36,7 @@ void Splash::initialize(
 	shaderLoader = _shaderLoader;
 
 	// サウンドの再生
-	sound->play(soundNS::TYPE::BGM_SPLASH_TITLE, soundNS::METHOD::LOOP);
+	sound->play(soundNS::TYPE::BGM_SPLASH, soundNS::METHOD::PLAY);
 
 	//camera
 	camera = new Camera;

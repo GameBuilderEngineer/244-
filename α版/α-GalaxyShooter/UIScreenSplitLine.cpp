@@ -15,6 +15,7 @@ using namespace uiScreenSplitLineNS;
 // Global Variable
 // グローバル変数
 //======================================================================================================================================================
+int UIScreenSplitLine::instanceIndex = 0;		//	インスタンスインデックス
 LPDIRECT3DTEXTURE9 UIScreenSplitLine::texture;	//	テクスチャ
 //======================================================================================================================================================
 // Constructor
@@ -22,6 +23,9 @@ LPDIRECT3DTEXTURE9 UIScreenSplitLine::texture;	//	テクスチャ
 //======================================================================================================================================================
 UIScreenSplitLine::UIScreenSplitLine(void)
 {
+	// インスタンスインデックスを加算
+	instanceIndex++;
+
 	// テクスチャのクリア
 	texture = NULL;
 
@@ -78,6 +82,9 @@ void UIScreenSplitLine::release(void)
 {
 	// スプライトのクリア
 	sprite.setTexture(NULL);
+
+	// インスタンスインデックスを減算
+	instanceIndex--;
 
 	return;
 }

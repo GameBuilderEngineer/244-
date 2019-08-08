@@ -15,7 +15,7 @@ using namespace uiPlayTimeNS;
 // Global Variable
 // グローバル変数
 //======================================================================================================================================================
-int UIPlayTime::instanceIndex = (-1);	//	インスタンスインデックス
+int UIPlayTime::instanceIndex = 0;		//	インスタンスインデックス
 LPDIRECT3DTEXTURE9 UIPlayTime::texture;	//	テクスチャ
 //======================================================================================================================================================
 // Constructor
@@ -51,9 +51,6 @@ HRESULT UIPlayTime::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Text
 	// テキストマネージャ
 	textManager = _textManager;
 
-	// プレイヤーインデックス
-	playerIndex = _playerIndex;
-
 	// ディレクトリ設定
 	setVisualDirectory();
 
@@ -64,18 +61,18 @@ HRESULT UIPlayTime::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Text
 	sprite.initialize
 	(
 		_device,
-		texture,																														//	テクスチャ
-		spriteNS::CENTER,																												//	原点
-		WIDTH,																											//	横幅
-		HEIGHT,																											//	高さ
-		D3DXVECTOR3																														//	座標
+		texture,														//	テクスチャ
+		spriteNS::CENTER,												//	原点
+		WIDTH,															//	横幅
+		HEIGHT,															//	高さ
+		D3DXVECTOR3														//	座標
 		(
-			playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,										//	座標 x
-			POSITION_Y,																									//	座標 y
-			0.0f																														//	座標 z
-		),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																									//	回転
-		D3DCOLOR_RGBA(255, 255, 255, 255)																								//	色
+			_playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,	//	座標 x
+			POSITION_Y,													//	座標 y
+			0.0f														//	座標 z
+		),																
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+		D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
 	);
 
 	return S_OK;
@@ -92,16 +89,13 @@ void UIPlayTime::release(void)
 	// インスタンスインデックスを減算
 	instanceIndex--;
 
-	// インスタンスが存在しなければ、テクスチャを解放
-	if (instanceIndex >= 0) { return; }
-
 	return;
 }
 //======================================================================================================================================================
 // render
 // 描画
 //======================================================================================================================================================
-void UIPlayTime::render(LPDIRECT3DDEVICE9 _device, float _sceneTimer)
+void UIPlayTime::render(LPDIRECT3DDEVICE9 _device, float _time)
 {
 	// タイマー完成するまで、仮の処理
 
@@ -110,10 +104,10 @@ void UIPlayTime::render(LPDIRECT3DDEVICE9 _device, float _sceneTimer)
 
 	// Player1
 	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "TIME");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _time);
 	// Player2
 	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "TIME");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _time);
 
 	return;
 }

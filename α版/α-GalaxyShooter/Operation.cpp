@@ -44,42 +44,42 @@ void Operation::initialize(
 
 }
 
-void Operation::update(float frameTime) {
-
+void Operation::update(float frameTime)
+{
 	camera->update();
 
 	// キーを押したら選択UI移動
-	if (input->wasKeyPressed(VK_RIGHT)||
+	if (input->wasKeyPressed(VK_RIGHT) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT)
-		)
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT))
 	{
-		opeTransition++;
+		if (opeTransition < 1)
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_SWITCH, soundNS::METHOD::PLAY);
+			opeTransition++;
+		}
 	}
-	else if (input->wasKeyPressed(VK_LEFT)||
+	else if (input->wasKeyPressed(VK_LEFT) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT)
-		)
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT))
 	{
-		opeTransition--;
+		if (opeTransition > 0)
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_SWITCH, soundNS::METHOD::PLAY);
+			opeTransition--;
+		}
 	}
 
-	// 選択UI限界
-	if (opeTransition > 1)
-	{
-		opeTransition = 0;
-	}
-	// 選択UI上限
-	else if (opeTransition < 0)
-	{
-		opeTransition = 1;
-	}
-
-	if (input->wasKeyPressed(VK_RETURN)||
+	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		)changeScene(nextScene);
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
+	{
+		changeScene(nextScene);
+	}
 
+	return;
 }
 
 void Operation::render(Direct3D9* direct3D9) {
