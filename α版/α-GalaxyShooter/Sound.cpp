@@ -189,7 +189,7 @@ LPDIRECTSOUNDBUFFER8 Sound::load(int _soundIndex)
 	// 変数宣言：初期化 / サウンド読み込み
 	const char *Sound_File[] =	//	サウンドファイル
 	{
-		"Aging.wav"
+		"Aging.wav",
 		"BGM_Character_Select.wav",
 		"BGM_Credit.wav",
 		"BGM_Game.wav",
