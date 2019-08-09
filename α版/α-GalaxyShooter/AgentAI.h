@@ -17,7 +17,7 @@
 #include "BlackBoardMemory.h"
 #include "StateMachine.h"
 #include "BehaviorTree.h"
-
+#include "Sound.h"
 
 //*****************************************************************************
 // クラス定義
@@ -48,6 +48,6 @@ public:
 	AgentAI(void);
 	~AgentAI(void);
 	void initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader);
-	void uninitialize(void);		// 終了処理
-	void update(float frameTime);	// 更新処理
+	void uninitialize(void);						// 終了処理
+	void update(Sound* _sound, float frameTime);	// 更新処理
 };

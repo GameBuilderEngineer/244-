@@ -14,28 +14,40 @@
 //======================================================================================================================================================
 namespace soundNS
 {
-	const int CONST_FADE_VALUE = (25);											//	フェード値
-	const int CONST_VOLUME_MIN = (DSBVOLUME_MIN);								//	音量最小値
-	const int CONST_VOLUME_MAX = (DSBVOLUME_MAX);								//	音量最大値
+	const int CONST_FADE_VALUE = (25);				//	フェード値
+	const int CONST_VOLUME_MIN = (DSBVOLUME_MIN);	//	音量最小値
+	const int CONST_VOLUME_MAX = (DSBVOLUME_MAX);	//	音量最大値
 
 	enum TYPE
 	{
-		AGING,					//	エイジング
-		BGM_CHARACTER_SELECT,	//	BGM：キャラクターセレクト
-		BGM_CREDIT,				//	BGM：クレジット
-		BGM_GAME,				//	BGM：ゲーム
-		BGM_RESULT,				//	BGM：リザルト
-		BGM_SPLASH,				//	BGM：スプラッシュ
-		BGM_TITLE,				//	BGM：タイトル
-		BGM_TUTORIAL,			//	BGM：チュートリアル
-		SE_ATTACK,				//	SE：攻撃
-		SE_CANCEL,				//	SE：キャンセル
-		SE_DAMAGE_COVERED,		//	SE：被ダメ
-		SE_DECISION,			//	SE：決定
-		SE_PAPER,				//	SE：ペーパー
-		SE_SELECT,				//	SE：セレクト
-		SE_SWITCH,				//	SE：スイッチ
-		TYPE_MAX				//	最大値
+		AGING,							//	エイジング
+		BGM_CHARACTER_SELECT,			//	BGM：キャラクターセレクト
+		BGM_CREDIT,						//	BGM：クレジット
+		BGM_GAME,						//	BGM：ゲーム
+		BGM_RESULT,						//	BGM：リザルト
+		BGM_SPLASH,						//	BGM：スプラッシュ
+		BGM_TITLE,						//	BGM：タイトル
+		BGM_TUTORIAL,					//	BGM：チュートリアル
+		SE_ATTACK,						//	SE：攻撃
+		SE_CANCEL,						//	SE：キャンセル
+		SE_CHINGIN,						//	SE：チンギン
+		SE_COUNT,						//	SE：カウント
+		SE_CUT_MEMORY_LINE,				//	SE：メモリー・ライン切断
+		SE_DECISION,					//	SE：決定
+		SE_DESTRUCTION_WASUREMONO,		//	SE：ワスレモノ破壊
+		SE_DOWN,						//	SE：ダウン
+		SE_GAME_START,					//	SE：ゲーム - スタート
+		SE_GAME_TIME_UP,				//	SE：ゲーム - タイムアップ
+		SE_HIT,							//	SE：ヒット
+		SE_INSTALLATION_MEMORY_PILE,	//	SE：メモリー・パイル設置
+		SE_JUMP,						//	SE：ジャンプ
+		SE_LANDING,						//	SE：着地
+		SE_PAPER,						//	SE：ペーパー
+		SE_RECURSION,					//	SE：再帰回収
+		SE_REVIVAL,						//	SE：復活
+		SE_SELECT,						//	SE：セレクト
+		SE_SHOCK_WAVE,					//	SE：衝撃波
+		TYPE_MAX						//	最大値
 	};
 	enum METHOD
 	{

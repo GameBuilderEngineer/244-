@@ -94,7 +94,7 @@ void AgentAI::uninitialize(void)
 //=============================================================================
 // XVˆ—
 //=============================================================================
-void AgentAI::update(float frameTime)
+void AgentAI::update(Sound* _sound, float frameTime)
 {
 #if 0
 	arbiter->update();
@@ -125,5 +125,5 @@ void AgentAI::update(float frameTime)
 	}
 #endif
 
-	Player::update(frameTime);
+	Player::update(_sound, frameTime);
 }

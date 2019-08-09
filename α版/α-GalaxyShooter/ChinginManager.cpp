@@ -32,7 +32,7 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 //=============================================================================
 // 更新処理
 //=============================================================================
-void ChinginManager::update(float frameTime, Player* player)
+void ChinginManager::update(Sound* _sound, float frameTime, Player* player)
 {
 	// 使用中のチンギンの挙動を更新する
 	for (int i = 0; i < NUM_CHINGIN; i++)
@@ -51,6 +51,9 @@ void ChinginManager::update(float frameTime, Player* player)
 			player->bodyCollide.getCenter(), player->bodyCollide.getRadius(),
 			*chingin[i].getMatrixWorld(), *player->getMatrixWorld()))
 		{
+			// サウンドの再生
+			_sound->play(soundNS::TYPE::SE_CHINGIN, soundNS::METHOD::PLAY);
+
 			chingin[i].setUse(false);
 			numOfUse--;
 		}

@@ -68,7 +68,7 @@ void Operation::update(float frameTime)
 		if (opeTransition < 1)
 		{
 			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_SWITCH, soundNS::METHOD::PLAY);
+			sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 			opeTransition++;
 		}
 	}
@@ -79,7 +79,7 @@ void Operation::update(float frameTime)
 		if (opeTransition > 0)
 		{
 			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_SWITCH, soundNS::METHOD::PLAY);
+			sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 			opeTransition--;
 		}
 	}

@@ -237,7 +237,7 @@ void Game::update(float _frameTime) {
 	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		player[i].update(frameTime);
+		player[i].update(sound, frameTime);
 	}
 
 	{
@@ -299,7 +299,7 @@ void Game::update(float _frameTime) {
 	}
 
 	// チンギンの更新
-	chinginManager.update(frameTime, &player[1]);
+	chinginManager.update(sound, frameTime, &player[1]);
 	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {
@@ -629,7 +629,8 @@ void Game::collisions() {
 			*player[PLAYER2].getMatrixWorld(), 
 			*player[PLAYER1].bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER2].damgae(5);
 			player[PLAYER1].bullet[i].inActivation();
 		}
@@ -645,7 +646,8 @@ void Game::collisions() {
 			*player[PLAYER1].getMatrixWorld(), 
 			*player[PLAYER2].bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER1].damgae(5);
 			player[PLAYER2].bullet[i].inActivation();
 			
@@ -662,6 +664,9 @@ void Game::collisions() {
 				player[PLAYER1].bullet[j].bodyCollide.getCenter(), player[PLAYER1].bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1].bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
+
 				wasuremono[i]->inActivation();
 				player[PLAYER1].bullet[j].inActivation();
 			}
@@ -671,6 +676,9 @@ void Game::collisions() {
 				player[PLAYER2].bullet[j].bodyCollide.getCenter(), player[PLAYER2].bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2].bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
+
 				wasuremono[i]->inActivation();
 				player[PLAYER2].bullet[j].inActivation();
 			}
