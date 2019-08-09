@@ -18,6 +18,7 @@ private:
 	bool conditionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	// ğŒ
 	bool ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);	// ğŒF‘Šè‚ª‹ß‚­‚É‚¢‚½‚ç
+	bool if5secondsLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 
 
 

@@ -175,8 +175,8 @@ void Map::createNode(LPDIRECT3DDEVICE9 device)
 	newNode->setPosition(ruler.direction);
 	D3DXMatrixIdentity(newNode->getWorldMatrix());
 	D3DXMatrixTranslation(newNode->getWorldMatrix(),
-		newNode->getPosition().x, newNode->getPosition().y, newNode->getPosition().z);
+		newNode->getPosition()->x, newNode->getPosition()->y, newNode->getPosition()->z);
 	newNode->setWasuremonoCount(0);
-	newNode->boundingSphere.initialize(device, &newNode->getPosition(), sphere);
+	newNode->boundingSphere.initialize(device, newNode->getPosition(), sphere);
 	mapNode.emplace_back(newNode);
 }

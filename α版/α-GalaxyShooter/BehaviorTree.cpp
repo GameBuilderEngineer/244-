@@ -10,11 +10,11 @@
 //=============================================================================
 void BehaviorTree::sample(void)
 {
-	addNode(SAMPLE, PARENT_IS_NOT_EXIST, PARARELL);//0
-	addNode(SAMPLE, 0, SET_TARGET_RANDOM_NODE);//1
-	addNode(SAMPLE, 0, SEQUENCE);//2
-	addNode(SAMPLE, 2, ACTION_MOVE);//3
-	addNode(SAMPLE, 2, ACTION_JUMP);//4
+	addNode(SAMPLE, PARENT_IS_NOT_EXIST, PARARELL);
+	//addNode(SAMPLE, 0, SEQUENCE);
+	//addNode(SAMPLE, 1, IF_FIVE_SECONDS_LATER);
+	//addNode(SAMPLE, 1, SET_DESTINATION_RANDOM);
+	//addNode(SAMPLE, 0, ACTION_MOVE);
 }
 
 
@@ -83,7 +83,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 		break;
 
 	case CONDITIONAL_NODE:
-		if (new ActionNode(treeType, parentNumber, nodeType, tag) == NULL)
+		if (new ConditionalNode(treeType, parentNumber, nodeType, tag) == NULL)
 		{
 			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"), TEXT("SystemError"), MB_OK);
 			PostQuitMessage(0);

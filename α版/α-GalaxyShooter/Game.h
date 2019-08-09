@@ -99,7 +99,8 @@ private:
 	Object testCube;//仮
 
 	//プレイヤー
-	Player player[gameNS::NUM_PLAYER];
+	//Player player[gameNS::NUM_PLAYER];
+	Player *player[gameNS::NUM_PLAYER];
 	//プレイヤークラスへ統合
 	Bullet bullet1[gameNS::NUM_BULLET];
 	Bullet bullet2[gameNS::NUM_BULLET];

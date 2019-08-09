@@ -11,26 +11,43 @@
 //*****************************************************************************
 class BodyBB : public BlackBoardBase {
 protected:
-	// Data
 	bool isMoving;
+public:
+	D3DXVECTOR3* movingDestination;				// 移動先座標（ビヘイビアツリー中で切り替わる）
+
 	bool jump;
 	bool isJumping;
 	bool isAir;
 
+
 public:
-	// Method
 	BodyBB(void);
 	~BodyBB(void);
 	void initialize(void) override;				// 初期化処理
 	void uninitialize(void) override;			// 終了処理
 
-	bool getIsMoving(void) { return isMoving; }
+
 	bool getJump(void) { return jump; }
 	bool getIsJumping(void) { return isJumping; }
 	bool getIsAir(void) { return isAir; }
 
-	void setIsMoving(bool _isMoving) { isMoving = _isMoving; }
 	void setJump(bool _jump) { jump = _jump; }
 	void setIsJumping(bool _isJumping) { isJumping = _isJumping; }
 	void setIsAir(bool _isAir) { isAir = _isAir; }
+
+
+	// 移動状態を取得
+	bool getMove(void) { return isMoving; }
+	// 移動状態を設定
+	void setMove(bool setting) { isMoving = setting; }
+	// 移動ターゲットの座標ポインタを取得
+	D3DXVECTOR3* getMovingDestination(void)
+	{
+		return movingDestination;
+	}
+	// 移動ターゲットの座標ポインタを設定
+	void setMovingDestination(D3DXVECTOR3* _destnation) 
+	{ 
+		movingDestination = _destnation;
+	}
 };

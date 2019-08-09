@@ -16,6 +16,8 @@ class BehaviorNodeBase;
 class MemoryBB : public BlackBoardBase {
 private:
 	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFノードの記録
+	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー
+
 
 
 public:
@@ -30,4 +32,5 @@ public:
 	void uninitialize(void) override;			// 終了処理
 
 	std::unordered_map<BehaviorNodeBase*, int>& getOnOffRecord(void) { return onOffRecord; }
+	std::unordered_map<BehaviorNodeBase*, int>& getTimer(void) { return timer; }
 };

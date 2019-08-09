@@ -33,9 +33,7 @@ MotionGeneration::~MotionGeneration(void)
 //=============================================================================
 void MotionGeneration::initialize(void)
 {
-	bodyBB->setJump(true);
-
-	memoryBB->tempRandomNode = 0;
+	bodyBB->setMovingDestination(&D3DXVECTOR3(100.0f, 0.0f, 0.0f));
 }
 
 
@@ -53,29 +51,28 @@ void MotionGeneration::uninitialize(void)
 //=============================================================================
 void MotionGeneration::update(AgentAI* agentAI)
 {
-
-	std::vector<MapNode*> mapNode = Map::getMapNode();
-	D3DXVECTOR3 target = mapNode[memoryBB->tempRandomNode]->getPosition();
+	bodyBB->movingDestination = Map::getMapNode()[20]->getPosition();
+	bodyBB->setMove(true);
 
 	// 移動
-	if (bodyBB->getIsMoving())
+	if (bodyBB->getMove())
 	{
-		move(agentAI, &target);
+		move(agentAI, bodyBB->getMovingDestination());
 	}
 
-	// ジャンプ
-	jumpFlagCycle(agentAI);
+	//// ジャンプ
+	//jumpFlagCycle(agentAI);
 }
 
 
 //=============================================================================
 // 移動
 //=============================================================================
-void MotionGeneration::move(AgentAI* agentAI, D3DXVECTOR3* targetCoord)
+void MotionGeneration::move(AgentAI* agentAI, D3DXVECTOR3* movingDestination)
 {
 	// ターゲット座標へのベクトルからプレイヤーY軸方向の成分を削除して
 	// 進行方向を指すベクトルを作る
-	D3DXVECTOR3 targetDirection = *targetCoord - *agentAI->getPosition();
+	D3DXVECTOR3 targetDirection = *movingDestination - *agentAI->getPosition();
 	D3DXVECTOR3 adjustDirection = agentAI->getAxisY()->direction;
 
 	float adjustScale = D3DXVec3Length(&targetDirection);
@@ -84,35 +81,15 @@ void MotionGeneration::move(AgentAI* agentAI, D3DXVECTOR3* targetCoord)
 	D3DXVECTOR3 moveDirection = agentAI->slip(targetDirection, adjustDirection);
 	D3DXVec3Normalize(&moveDirection, &moveDirection);
 
-	//------------------------------
-	// 外積とかで頑張ろうとした残骸
-	//------------------------------
-	//// 重力方向と目的地座標から回転軸を作成
-	//D3DXVECTOR3 moveDirection = agentAI->getGravity();
-	//D3DXVECTOR3 targetDirection = targetCoord - *agentAI->getPosition();
-	//D3DXVECTOR3 rotationAxis;
-	//D3DXVec3Cross(&rotationAxis, &moveDirection, &targetDirection);
-
-	//// 目的地座標が真反対のときの境界条件
-
-
-	//// 重力方向の移動ベクトルを軸で90度回転させる
-	//D3DXQUATERNION quaternion = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
-	//D3DXMATRIX rotationMatrix;
-	//D3DXQuaternionRotationAxis(&quaternion, &rotationAxis, D3DX_PI / 2.0f);
-	//D3DXMatrixRotationQuaternion(&rotationMatrix, &quaternion);
-	//D3DXVec3TransformCoord(&moveDirection, &moveDirection, &rotationMatrix);
-
 	// 移動させる
-	D3DXVec3Normalize(&moveDirection, &moveDirection);
 	agentAI->addSpeed(moveDirection * playerNS::SPEED);
 	agentAI->postureControl(agentAI->getAxisZ()->direction, moveDirection, 0.1f);
 
-	// 目的地に着いたら自動停止
-	if (autoStop(agentAI->getPosition(), targetCoord))
-	{
-		bodyBB->setIsMoving(false);
-	}
+	//// 目的地に着いたら自動停止
+	//if (autoStop(agentAI->getPosition(), movingDestination))
+	//{
+	//	bodyBB->setMove(false);
+	//}
 }
 
 
@@ -121,7 +98,6 @@ void MotionGeneration::move(AgentAI* agentAI, D3DXVECTOR3* targetCoord)
 //=============================================================================
 bool MotionGeneration::autoStop(D3DXVECTOR3* position1, D3DXVECTOR3* position2)
 {
-	// 一番まし
 	float length = D3DXVec3Length(&(*position2 - *position1));
 	if (length < STOP_MOVE_LENGTH)
 	{
@@ -131,34 +107,6 @@ bool MotionGeneration::autoStop(D3DXVECTOR3* position1, D3DXVECTOR3* position2)
 	{
 		return false;
 	}
-
-	//if (	(position2->x - ADJUST < position1->x && position1->x < position2->x + ADJUST)
-	//	&&	(position2->y - ADJUST < position1->y && position1->y < position2->y + ADJUST)
-	//	&&	(position2->z - ADJUST < position1->z && position1->z < position2->z + ADJUST))
-	//{
-	//	return  true;
-	//}
-	//else
-	//{
-	//	return false;
-	//}
-
-	//int x1 = (int)position1.x;
-	//int y1 = (int)position1.y;
-	//int z1 = (int)position1.z;
-
-	//int x2 = (int)position2.x;
-	//int y2 = (int)position2.y;
-	//int z2 = (int)position2.z;
-
-	//if (x1 == x2 && y1 == y2 && z1 == z2)
-	//{
-	//	return true;
-	//}
-	//else
-	//{
-	//	return false;
-	//}
 }
 
 

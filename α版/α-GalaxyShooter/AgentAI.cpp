@@ -71,14 +71,18 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 // ‰Šú‰»ˆ—
 //=============================================================================
-void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader)
+void AgentAI::initialize(int playerType, 
+	PDIRECT3DDEVICE9 device,
+	StaticMeshLoader* staticMeshLoader,
+	TextureLoader* textureLoader,
+	ShaderLoader* shaderLoader)
 {
 	sensor->initialize();
 	environmentAnalysis->initialize();
 	decisionMaking->initialize();
 	pathPlanning->initialize();
 	motionGeneration->initialize();
-	Player::initialize(playerNS::PLAYER2,device, staticMeshLoader, textureLoader, shaderLoader);
+	Player::initialize(playerType, device, staticMeshLoader, textureLoader, shaderLoader);
 }
 
 
@@ -96,7 +100,6 @@ void AgentAI::uninitialize(void)
 //=============================================================================
 void AgentAI::update(float frameTime)
 {
-#if 0
 	arbiter->update();
 
 	if (sensor->getUpdatePermission())
@@ -123,7 +126,6 @@ void AgentAI::update(float frameTime)
 	{
 		motionGeneration->update(this);
 	}
-#endif
 
 	Player::update(frameTime);
 }

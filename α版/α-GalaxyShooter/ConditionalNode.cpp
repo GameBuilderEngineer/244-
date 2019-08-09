@@ -38,6 +38,8 @@ bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memo
 	switch (tag)
 	{
 	case IF_OPPONENT_NEAR: return ifOpponentNear(recognitionBB, memoryBB, bodyBB);
+	case IF_FIVE_SECONDS_LATER: return if5secondsLater(recognitionBB, memoryBB, bodyBB);
+
 	default: return false;
 	}
 }
@@ -49,4 +51,19 @@ bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memo
 bool ConditionalNode::ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	return true;
+}
+
+
+//=============================================================================
+// ğŒF5•bŒo‚Á‚½‚ç
+//=============================================================================
+bool ConditionalNode::if5secondsLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	if (memoryBB->getTimer()[this]++ > 5 * 60/*1sec = 60fps*/)
+	{
+		memoryBB->getTimer()[this] = 0;
+		return true;
+	}
+	
+	return false;
 }

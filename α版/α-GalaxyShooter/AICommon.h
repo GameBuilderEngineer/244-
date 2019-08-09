@@ -112,6 +112,7 @@ namespace BehaviorTreeNS
 		// 条件ノード
 		_CONDITIONAL_NODE_,	
 		IF_OPPONENT_NEAR,
+		IF_FIVE_SECONDS_LATER,
 
 		// アクションノード
 		_ACTION_NODE_,
@@ -121,7 +122,7 @@ namespace BehaviorTreeNS
 		// 副処理ノード
 		_SUBPROCEDURE_NODE_,
 		SET_TARGET_OPPONENT,
-		SET_TARGET_RANDOM_NODE,
+		SET_DESTINATION_RANDOM,
 
 		NUM_NODE_TAG				// タグの数
 	};

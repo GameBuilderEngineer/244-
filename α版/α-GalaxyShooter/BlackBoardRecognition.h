@@ -4,6 +4,7 @@
 // çÏê¨ì˙ÅF2019/6/19
 //-----------------------------------------------------------------------------
 #pragma once
+#include "Base.h"
 #include "BlackBoardBase.h"
 
 //*****************************************************************************
@@ -15,6 +16,8 @@ class RecognitionBB : public BlackBoardBase
 private:
 	// Data
 	float distanceOpponent;
+
+	D3DXVECTOR3 position;
 
 public:
 	// Accessor

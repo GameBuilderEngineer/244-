@@ -47,7 +47,8 @@ public:
 	// Method
 	AgentAI(void);
 	~AgentAI(void);
-	void initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader);
+	void initialize(int playerType, LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader,
+		TextureLoader* textureLoader, ShaderLoader* shaderLoader) override;
 	void uninitialize(void);		// I—¹ˆ—
 	void update(float frameTime);	// XVˆ—
 };

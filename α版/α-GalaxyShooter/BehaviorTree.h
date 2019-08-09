@@ -9,6 +9,7 @@
 #include "SubProcedureNode.h"
 #include "RuleNode.h"
 #include "ActionNode.h"
+#include "ConditionalNode.h"
 
 //*****************************************************************************
 // ’è”’è‹`
