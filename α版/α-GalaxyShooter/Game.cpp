@@ -586,11 +586,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			//hpEffect[i].render(device);
+			hpEffect[i].render(device);
 
 			uiCutMemoryLine[i].render(device);
-			//uiRevivalGauge[i].render(device);
-			//uiRevival[i].render(device);
+			uiRevivalGauge[i].render(device);
+			uiRevival[i].render(device);
 		}
 
 		// 優先度：高

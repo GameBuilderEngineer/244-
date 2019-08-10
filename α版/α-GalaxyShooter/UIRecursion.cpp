@@ -6,6 +6,7 @@
 // 2019/07/27
 //======================================================================================================================================================
 #include "UIRecursion.h"
+#include "Sprite.h"
 //======================================================================================================================================================
 // Using Declaration
 // using宣言
@@ -34,7 +35,11 @@ UIRecursion::UIRecursion(void)
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
 		texture[i] = NULL;
-		positionIndex[i] = POSITION::POP;
+	}
+
+	for (int i = 0; i < POSITION::POSITION_MAX; i++)
+	{
+		positionIndex[i] = i;
 	}
 
 	return;
@@ -73,7 +78,7 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 	}
 
 	// スプライト初期化
-	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < POSITION::POSITION_MAX; i++)
 	{
 		initializeSprite(_device, _playerIndex, i);
 	}
@@ -88,14 +93,14 @@ void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 {
 	switch (_index)
 	{
-	case TYPE::BICYCLE:
+	case POSITION::POP:
 		sprite[_index].initialize
 		(
 			_device,
 			texture[_index],												//	テクスチャ
 			spriteNS::CENTER,												//	原点
-			uiRecursionNS::WIDTH,											//	横幅
-			uiRecursionNS::HEIGHT,											//	高さ
+			WIDTH,															//	横幅
+			HEIGHT,															//	高さ
 			D3DXVECTOR3														//	座標
 			(
 				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
@@ -106,186 +111,60 @@ void UIRecursion::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
 		);
 		break;
-	//case TYPE::BLACK_PHONE:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::CHEWING_GUM:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::FAN:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::KENDAMA:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::NAWATOBI:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::NINGEN:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::RABBIT_DOLL:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::SOCCER_BALL:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::TELEVISION:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
-	//case TYPE::XMAS_TREE:
-	//	sprite[_Index].initialize
-	//	(
-	//		_device,
-	//		texture[_Index],																			//	テクスチャ
-	//		spriteNS::CENTER,																			//	原点
-	//		uiRecursionNS::WIDTH,																		//	横幅
-	//		uiRecursionNS::HEIGHT,																		//	高さ
-	//		D3DXVECTOR3																					//	座標
-	//		(
-	//			playerIndex ? uiRecursionNS::POSITION_X_PLAYER_2 : uiRecursionNS::POSITION_X_PLAYER_1,	//	座標 x
-	//			uiRecursionNS::POSITION_Y_POP,															//	座標 y
-	//			0.0f																					//	座標 z
-	//		),
-	//		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																//	回転
-	//		D3DCOLOR_RGBA(255, 255, 255, 255)															//	色
-	//	);
-	//	break;
+	case POSITION::MOVE_1:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH,															//	横幅
+			HEIGHT,															//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y_MOVE_1,											//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	case POSITION::MOVE_2:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH,															//	横幅
+			HEIGHT,															//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y_MOVE_2,											//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	case POSITION::CLOSE:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH,															//	横幅
+			HEIGHT,															//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y_CLOSE,											//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
 	default:
 		break;
 	}
@@ -334,54 +213,102 @@ void UIRecursion::update(void)
 //======================================================================================================================================================
 void UIRecursion::updateMove(void)
 {
-	D3DXVECTOR3 spritePosition = sprite[TYPE::BICYCLE].getPosition();
+	//D3DXVECTOR3 spritePosition;
 
-	switch (positionIndex[TYPE::BICYCLE])
-	{
-	case POSITION::POP:
-		if (moveValue > 0.01f) { moveValue -= 0.01f; }
+	//if (moveValue > 0.01f) { moveValue -= 0.01f; }
 
-		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
-		sprite[TYPE::BICYCLE].setVertex();
+	//for (int i = 0; i < POSITION::POSITION_MAX; i++)
+	//{
+	//	spritePosition = sprite[i].getPosition();
 
-		if (spritePosition.y <= POSITION_Y_MOVE_1)
-		{
-			moveFlag = !moveFlag;
-			positionIndex[TYPE::BICYCLE]++;
-			moveValue = INITIAL_MOVE_VALUE;
-		}
-		break;
-	case POSITION::MOVE_01:
-		if (moveValue > 0.01f) { moveValue -= 0.01f; }
+	//	switch (positionIndex[i])
+	//	{
+	//	case POSITION::POP:
+	//		sprite[i].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	//		sprite[i].setVertex();
 
-		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
-		sprite[TYPE::BICYCLE].setVertex();
+	//		if (spritePosition.y <= POSITION_Y_MOVE_1)
+	//		{
+	//			moveFlag = !moveFlag;
+	//			positionIndex[i]++;
+	//			moveValue = INITIAL_MOVE_VALUE;
+	//		}
+	//		break;
+	//	case POSITION::MOVE_1:
+	//		sprite[i].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	//		sprite[i].setVertex();
 
-		if (spritePosition.y <= POSITION_Y_MOVE_2)
-		{
-			moveFlag = !moveFlag;
-			positionIndex[TYPE::BICYCLE]++;
-			moveValue = INITIAL_MOVE_VALUE;
-		}
-		break;
-	case POSITION::MOVE_02:
-		if (moveValue > 0.01f) { moveValue -= 0.01f; }
+	//		if (spritePosition.y <= POSITION_Y_MOVE_2)
+	//		{
+	//			moveFlag = !moveFlag;
+	//			positionIndex[i]++;
+	//			moveValue = INITIAL_MOVE_VALUE;
+	//		}
+	//		break;
+	//	case POSITION::MOVE_2:
+	//		sprite[i].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	//		sprite[i].setVertex();
 
-		sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
-		sprite[TYPE::BICYCLE].setVertex();
+	//		if (spritePosition.y <= POSITION_Y_CLOSE)
+	//		{
+	//			moveFlag = !moveFlag;
+	//			positionIndex[i]++;
+	//			moveValue = INITIAL_MOVE_VALUE;
+	//		}
+	//		break;
+	//	case POSITION::CLOSE:
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 
-		if (spritePosition.y <= POSITION_Y_CLOSE)
-		{
-			moveFlag = !moveFlag;
-			positionIndex[TYPE::BICYCLE]++;
-			moveValue = INITIAL_MOVE_VALUE;
-		}
-		break;
-	case POSITION::CLOSE:
-		break;
-	default:
-		break;
-	}
+	////switch (positionIndex[TYPE::BICYCLE])
+	////{
+	////case POSITION::POP:
+	////	if (moveValue > 0.01f) { moveValue -= 0.01f; }
+
+	////	sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	////	sprite[TYPE::BICYCLE].setVertex();
+
+	////	if (spritePosition.y <= POSITION_Y_MOVE_1)
+	////	{
+	////		moveFlag = !moveFlag;
+	////		positionIndex[TYPE::BICYCLE]++;
+	////		moveValue = INITIAL_MOVE_VALUE;
+	////	}
+	////	break;
+	////case POSITION::MOVE_1:
+	////	if (moveValue > 0.01f) { moveValue -= 0.01f; }
+
+	////	sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	////	sprite[TYPE::BICYCLE].setVertex();
+
+	////	if (spritePosition.y <= POSITION_Y_MOVE_2)
+	////	{
+	////		moveFlag = !moveFlag;
+	////		positionIndex[TYPE::BICYCLE]++;
+	////		moveValue = INITIAL_MOVE_VALUE;
+	////	}
+	////	break;
+	////case POSITION::MOVE_2:
+	////	if (moveValue > 0.01f) { moveValue -= 0.01f; }
+
+	////	sprite[TYPE::BICYCLE].setPosition2(D3DXVECTOR3(spritePosition.x, spritePosition.y - moveValue, spritePosition.z));
+	////	sprite[TYPE::BICYCLE].setVertex();
+
+	////	if (spritePosition.y <= POSITION_Y_CLOSE)
+	////	{
+	////		moveFlag = !moveFlag;
+	////		positionIndex[TYPE::BICYCLE]++;
+	////		moveValue = INITIAL_MOVE_VALUE;
+	////	}
+	////	break;
+	////case POSITION::CLOSE:
+	////	break;
+	////default:
+	////	break;
+	////}
 
 	return;
 }
@@ -391,7 +318,7 @@ void UIRecursion::updateMove(void)
 //======================================================================================================================================================
 void UIRecursion::render(LPDIRECT3DDEVICE9 _device)
 {
-	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < POSITION::POSITION_MAX; i++)
 	{
 		sprite[i].render(_device);
 	}
