@@ -60,10 +60,12 @@ void SelectCharacter::initialize(
 	}
 
 	// タイマーUI初期化
-	timerUI.initialize(direct3D9->device, 0, _textureLoader);
+	timerUI.initialize(direct3D9->device, 0, _textureLoader, _textManager);
 
-	selectTransition = NULL;	// セレクト画像入れ替え
-	select2Transition = NULL;	// セレクト2画像入れ替え
+	selectTransition = NULL;				// セレクト画像入れ替え
+	select2Transition = NULL;				// セレクト2画像入れ替え
+	selectTime = SELECT_TIME_MAX;			// セレクト時間初期化
+	selectFlameTime = NULL;					// フレーム時間初期化
 }
 //=============================================================================
 // 更新処理
@@ -119,11 +121,34 @@ void SelectCharacter::update(float frameTime)
 		select2Transition = SELECT_TRANS_MAX;
 	}
 
+	// フレーム時間加算
+	selectFlameTime++;
+
+	// 60フレーム対応
+	if (selectFlameTime == SELECT_FLAME_MAX)
+	{
+		// セレクトタイム減算
+		selectTime--;
+
+		// フレーム時間初期化
+		selectFlameTime = NULL;
+	}
+
 	//Enterまたは〇ボタンでゲームへ
 	if (input->wasKeyPressed(VK_RETURN)||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
 		)changeScene(nextScene);
+
+	// タイムアウト時
+	if (selectTime <= NULL)
+	{
+		// セレクトタイム初期化
+		selectTime = NULL;
+
+		// ゲームへ
+		changeScene(nextScene);
+	}
 }
 //=============================================================================
 // 描画処理
@@ -158,7 +183,7 @@ void SelectCharacter::renderUI(LPDIRECT3DDEVICE9 device)
 		charaSelectBar[i].render(device, selectTransition, select2Transition);
 	}
 	// タイマーUI描画
-	timerUI.render(device);
+	timerUI.render(device, selectTime);
 }
 //=============================================================================
 // コリジョン処理
