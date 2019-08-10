@@ -157,9 +157,6 @@
     <Filter Include="Loader\StaticMeshLoader">
       <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InstancingBillboard">
-      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Recursion">
       <UniqueIdentifier>{4dd70172-110a-4d3e-bc16-0f00ae86649e}</UniqueIdentifier>
     </Filter>
@@ -237,6 +234,9 @@
     </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{d860687a-957b-4aec-b828-5653136e072d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\InstancingBillboard">
+      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -376,7 +376,7 @@
       <Filter>Object\MemoryLine</Filter>
     </ClCompile>
     <ClCompile Include="InstancingBillboard.cpp">
-      <Filter>InstancingBillboard</Filter>
+      <Filter>Sound\InstancingBillboard</Filter>
     </ClCompile>
     <ClCompile Include="Recursion.cpp">
       <Filter>Object\Recursion</Filter>
@@ -667,7 +667,7 @@
       <Filter>Object\MemoryLine</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
-      <Filter>InstancingBillboard</Filter>
+      <Filter>Sound\InstancingBillboard</Filter>
     </ClInclude>
     <ClInclude Include="Recursion.h">
       <Filter>Object\Recursion</Filter>

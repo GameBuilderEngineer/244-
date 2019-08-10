@@ -1,25 +1,31 @@
 //=============================================================================
-// キャラクターセレクトバーUI処理 [CharaSelectBarUI.h]
-//
+// キャラクターセレクトバーUIヘッダー [CharaSelectBarUI.h]
+// 制作者 飯塚春輝
 //=============================================================================
 #pragma once
 #include "Sprite.h"
 #include "AbstractScene.h"
-
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))				// キャラセレクトの色
+//=============================================================================
+// 名前空間
+//=============================================================================
 namespace charaSelectBarUINS
 {
+	// プレイヤー人数
 	enum {
 		PLAYER1,
 		PLAYER2,
 		NUM_PLAYER,
 	};
 }
-
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class CharaSelectBarUI :public Sprite {
-
+class CharaSelectBarUI :public Sprite
+{
 private:
 	// Data
 	int playerNumber;									// プレイヤー番号
@@ -40,21 +46,21 @@ private:
 	static LPDIRECT3DTEXTURE9 nameAdamJpTexture;		// アダム名前日本語テクスチャ
 	static LPDIRECT3DTEXTURE9 nameAdamJpTexture2;		// アダム名前日本語テクスチャ2
 
-	Sprite charaSelectBar;
-	Sprite charaSelectBar2;
-	Sprite charaSelectNo;
-	Sprite charaSelectNo2;
-	Sprite charaSelectCursor;
-	Sprite charaSelectCursor2;
-	Sprite charaSelectLogo;
-	Sprite nameEveEng;
-	Sprite nameEveEng2;
-	Sprite nameAdamEng;
-	Sprite nameAdamEng2;
-	Sprite nameEveJp;
-	Sprite nameEveJp2;
-	Sprite nameAdamJp;
-	Sprite nameAdamJp2;
+	Sprite charaSelectBar;								// セレクトバーライトテクスチャ
+	Sprite charaSelectBar2;								// セレクトバーライトテクスチャ2
+	Sprite charaSelectNo;								// セレクトナンバーテクスチャ
+	Sprite charaSelectNo2;								// セレクトナンバーテクスチャ2
+	Sprite charaSelectCursor;							// セレクトカーソルテクスチャ
+	Sprite charaSelectCursor2;							// セレクトカーソルテクスチャ2
+	Sprite charaSelectLogo;								// セレクトプレイヤーロゴテクスチャ
+	Sprite nameEveEng;									// イヴ名前英語テクスチャ
+	Sprite nameEveEng2;									// イヴ名前英語テクスチャ2
+	Sprite nameAdamEng;									// アダム名前英語テクスチャ
+	Sprite nameAdamEng2;								// アダム名前英語テクスチャ2
+	Sprite nameEveJp;									// イヴ名前日本語テクスチャ
+	Sprite nameEveJp2;									// イヴ名前日本語テクスチャ2
+	Sprite nameAdamJp;									// アダム名前日本語テクスチャ
+	Sprite nameAdamJp2;									// アダム名前日本語テクスチャ2
 
 public:
 	// Method

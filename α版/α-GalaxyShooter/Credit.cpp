@@ -1,16 +1,29 @@
+//=============================================================================
+// クレジット処理 [Credit.cpp]
+// 制作者 飯塚春輝
+////===========================================================================
 #include "Credit.h"
+// クレジット名前空間有効
 using namespace creditNS;
-
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 Credit::Credit()
 {
+	// 現在のシーン(クレジット)
 	sceneName = "Scene -Credit-";
+	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 }
-
+//=============================================================================
+// デストラクタ
+//=============================================================================
 Credit::~Credit()
 {
 }
-
+//=============================================================================
+// 初期化処理
+//=============================================================================
 void Credit::initialize(
 	Direct3D9* direct3D9, 
 	Input* _input,
@@ -18,7 +31,8 @@ void Credit::initialize(
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader,
-	TextManager* _textManager) {
+	TextManager* _textManager)
+{
 	//Input
 	input = _input;
 	//sound
@@ -37,15 +51,21 @@ void Credit::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
+	// クレジット2D初期化
 	credit2D.initialize(direct3D9->device, 0, _textureLoader);
 }
-
-void Credit::update(float frameTime) {
-
+//=============================================================================
+// 更新処理
+//=============================================================================
+void Credit::update(float frameTime)
+{
+	// カメラ更新
 	camera->update();
 
+	// クレジット2D更新
 	credit2D.update();
 
+	//Enter,BackSpaceまたは〇ボタン,×ボタンでタイトルへ
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_BACK) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -54,8 +74,11 @@ void Credit::update(float frameTime) {
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B)
 		)changeScene(nextScene);
 }
-
-void Credit::render(Direct3D9* direct3D9) {
+//=============================================================================
+// 描画処理
+//=============================================================================
+void Credit::render(Direct3D9* direct3D9)
+{
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera->view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera->projection);
@@ -64,25 +87,37 @@ void Credit::render(Direct3D9* direct3D9) {
 	//UI
 	renderUI(direct3D9->device);
 }
-
-void Credit::render3D(Direct3D9* direct3D9) {
-
+//=============================================================================
+// 3D描画処理
+//=============================================================================
+void Credit::render3D(Direct3D9* direct3D9)
+{
 }
-
-void Credit::renderUI(LPDIRECT3DDEVICE9 device) {
-
+//=============================================================================
+// 2D描画処理
+//=============================================================================
+void Credit::renderUI(LPDIRECT3DDEVICE9 device)
+{
+	// クレジット2D描画
 	credit2D.render(device);
 }
-
-void Credit::collisions() {
-
+//=============================================================================
+// コリジョン処理
+//=============================================================================
+void Credit::collisions()
+{
 }
-
-void Credit::AI() {
-
+//=============================================================================
+// AI処理
+//=============================================================================
+void Credit::AI()
+{
 }
-
-void Credit::uninitialize() {
-
+//=============================================================================
+// 終了処理
+//=============================================================================
+void Credit::uninitialize()
+{
+	// クレジット2D終了
 	credit2D.uninitialize();
 }

@@ -1,20 +1,29 @@
+//=============================================================================
+// チュートリアルヘッダー [Tutorial.h]
+// 制作者 飯塚春輝
+//=============================================================================
 #pragma once
 #include "AbstractScene.h"
 #include "Tutorial2D.h"
-
+//=============================================================================
+// 名前空間
+//=============================================================================
 namespace tutorialNS
 {
+	// プレイヤー人数
 	enum {
 		PLAYER1,
 		PLAYER2,
 		NUM_PLAYER,
 	};
 }
-
+//*****************************************************************************
+// クラス定義
+//*****************************************************************************
 class Tutorial : public AbstractScene
 {
 private:
-
+	// チュートリアル2D
 	Tutorial2D tutorial2D;
 
 public:
@@ -33,7 +42,6 @@ public:
 	virtual void collisions() override;
 	virtual void AI() override;
 	virtual void uninitialize() override;
-
 	void render3D(Direct3D9* direct3D9);
 	void renderUI(LPDIRECT3DDEVICE9 device);
 };

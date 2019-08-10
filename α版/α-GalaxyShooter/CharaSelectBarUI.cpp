@@ -1,89 +1,84 @@
 //=============================================================================
 // キャラセレクトバーUI処理 [CharaSelectBarUI.cpp]
-//
+// 制作者 飯塚春輝
 //=============================================================================
 #include "CharaSelectBarUI.h"
+// キャラクターセレクトバー名前空間有効
 using namespace charaSelectBarUINS;
-
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
 #ifdef _DEBUG
-const static int		BAR_WIDTH = WINDOW_WIDTH / 2;					// 横サイズ
-const static int		BAR_HEIGHT = 250;								// 縦サイズ
-const static int		NO_WIDTH = 180;									// 横サイズ
-const static int		NO_HEIGHT = 82;									// 縦サイズ
-const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;				// 横サイズ
-const static int		CURSOR_HEIGHT = 40;								// 縦サイズ
-const static int		PLAYER_LOGO_WIDTH = 80;							// 横サイズ
-const static int		PLAYER_LOGO_HEIGHT = 40;						// 縦サイズ
-const static int		PLAYER_NAME_ENG_WIDTH = 250;					// プレイヤーネーム英語横サイズ
-const static int		PLAYER_NAME_ENG_HEIGHT = 82;					// プレイヤーネーム英語縦サイズ
-const static int		PLAYER_NAME_JP_WIDTH = 250;						// プレイヤーネーム日本語横サイズ
-const static int		PLAYER_NAME_JP_HEIGHT = 20;						// プレイヤーネーム日本語縦サイズ
-const static float		BAR_LIGHT_POSITION_X = 0.0f;					// X座標
-const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;
-const static float		BAR_LIGHT_POSITION_Y = 220.0f;					// Y座標
-const static float		NO_POSITION_X = 0.0f;							// X座標
-const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;
-const static float		NO_POSITION_Y = 304.0f;							// Y座標
-const static float		CURSOR_POSITION_X = 0.0f;						// X座標
-const static float		CURSOR_POSITION2_X = CURSOR_POSITION_X + WINDOW_WIDTH / 2;
-const static float		CURSOR_POSITION_Y = 250.0f;						// Y座標
-const static float		PLAYER_LOGO_POSITION_X = 0.0f;					// X座標
-const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;
-const static float		PLAYER_LOGO_POSITION_Y = 390.0f;				// Y座標
-const static float		POSITION_X_NAME_EVE_ENG = 200.0f;				// X座標
-const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;
-const static float		POSITION_X_NAME_ADAM_ENG = 200.0f;				// X座標
-const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;
-const static float		POSITION_Y_NAME_ENG = 304.0f;					// Y座標
-const static float		POSITION_X_NAME_EVE_JP = 200.0f;				// X座標
-const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;
-const static float		POSITION_X_NAME_ADAM_JP = 200.0f;				// X座標
-const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;
-const static float		POSITION_Y_NAME_JP = 390.0f;					// Y座標
-
+const static int		BAR_WIDTH = WINDOW_WIDTH / 2;											// セレクトバーライト横サイズ
+const static int		BAR_HEIGHT = 250;														// セレクトバーライトサイズ
+const static int		NO_WIDTH = 180;															// セレクトナンバー横サイズ
+const static int		NO_HEIGHT = 82;															// セレクトナンバー縦サイズ
+const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;										// セレクトカーソル横サイズ
+const static int		CURSOR_HEIGHT = 40;														// セレクトカーソル縦サイズ
+const static int		PLAYER_LOGO_WIDTH = 80;													// セレクトプレイヤーロゴ横サイズ
+const static int		PLAYER_LOGO_HEIGHT = 40;												// セレクトプレイヤーロゴ縦サイズ
+const static int		PLAYER_NAME_ENG_WIDTH = 250;											// プレイヤーネーム英語横サイズ
+const static int		PLAYER_NAME_ENG_HEIGHT = 82;											// プレイヤーネーム英語縦サイズ
+const static int		PLAYER_NAME_JP_WIDTH = 250;												// プレイヤーネーム日本語横サイズ
+const static int		PLAYER_NAME_JP_HEIGHT = 20;												// プレイヤーネーム日本語縦サイズ
+const static float		BAR_LIGHT_POSITION_X = 0.0f;											// セレクトバーライトX座標
+const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;		// セレクトバーライト2X座標
+const static float		BAR_LIGHT_POSITION_Y = 220.0f;											// セレクトバーライトY座標
+const static float		NO_POSITION_X = 0.0f;													// セレクトナンバーX座標
+const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;						// セレクトナンバー2X座標
+const static float		NO_POSITION_Y = 304.0f;													// セレクトナンバーY座標
+const static float		CURSOR_POSITION_X = 0.0f;												// セレクトカーソルX座標
+const static float		CURSOR_POSITION2_X = CURSOR_POSITION_X + WINDOW_WIDTH / 2;				// セレクトカーソル2X座標
+const static float		CURSOR_POSITION_Y = 250.0f;												// セレクトカーソルY座標
+const static float		PLAYER_LOGO_POSITION_X = 0.0f;											// セレクトプレイヤーロゴX座標
+const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;	// セレクトプレイヤーロゴ2X座標
+const static float		PLAYER_LOGO_POSITION_Y = 390.0f;										// セレクトプレイヤーロゴY座標
+const static float		POSITION_X_NAME_EVE_ENG = 200.0f;										// イヴ名前英語テクスチャX座標
+const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;	// イヴ名前英語テクスチャ2X座標
+const static float		POSITION_X_NAME_ADAM_ENG = 200.0f;										// アダム名前英語テクスチャX座標
+const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;// アダム名前英語テクスチャ2X座標
+const static float		POSITION_Y_NAME_ENG = 304.0f;											// 名前英語テクスチャY座標
+const static float		POSITION_X_NAME_EVE_JP = 200.0f;										// イヴ名前日本語テクスチャX座標
+const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;	// イヴ名前日本語テクスチャ2X座標
+const static float		POSITION_X_NAME_ADAM_JP = 200.0f;										// アダム名前日本語テクスチャX座標
+const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;	// アダム名前日本語テクスチャ2X座標
+const static float		POSITION_Y_NAME_JP = 390.0f;											// 名前日本語テクスチャY座標
 #else
-
-const static int		BAR_WIDTH = WINDOW_WIDTH / 2;					// 横サイズ
-const static int		BAR_HEIGHT = 500;								// 縦サイズ
-const static int		NO_WIDTH = 360;									// 横サイズ
-const static int		NO_HEIGHT = 164;								// 縦サイズ
-const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;				// 横サイズ
-const static int		CURSOR_HEIGHT = 80;								// 縦サイズ
-const static int		PLAYER_LOGO_WIDTH = 160;						// 横サイズ
-const static int		PLAYER_LOGO_HEIGHT = 80;						// 縦サイズ
-const static int		PLAYER_NAME_ENG_WIDTH = 500;					// プレイヤーネーム英語横サイズ
-const static int		PLAYER_NAME_ENG_HEIGHT = 164;					// プレイヤーネーム英語縦サイズ
-const static int		PLAYER_NAME_JP_WIDTH = 500;						// プレイヤーネーム日本語横サイズ
-const static int		PLAYER_NAME_JP_HEIGHT = 40;						// プレイヤーネーム日本語縦サイズ
-const static float		BAR_LIGHT_POSITION_X = 0.0f;					// X座標
-const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;
-const static float		BAR_LIGHT_POSITION_Y = 440.0f;					// Y座標
-const static float		NO_POSITION_X = 0.0f;							// X座標
-const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;
-const static float		NO_POSITION_Y = 608.0f;							// Y座標
-const static float		CURSOR_POSITION_X = 0.0f;						// X座標
-const static float		CURSOR_POSITION2_X = CURSOR_POSITION_X + WINDOW_WIDTH / 2;
-const static float		CURSOR_POSITION_Y = 500.0f;						// Y座標
-const static float		PLAYER_LOGO_POSITION_X = 0.0f;					// X座標
-const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;
-const static float		PLAYER_LOGO_POSITION_Y = 780.0f;				// Y座標
-const static float		POSITION_X_NAME_EVE_ENG = 400.0f;				// X座標
-const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;
-const static float		POSITION_X_NAME_ADAM_ENG = 400.0f;				// X座標
-const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;
-const static float		POSITION_Y_NAME_ENG = 608.0f;					// Y座標
-const static float		POSITION_X_NAME_EVE_JP = 400.0f;				// X座標
-const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;
-const static float		POSITION_X_NAME_ADAM_JP = 400.0f;				// X座標
-const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;
-const static float		POSITION_Y_NAME_JP = 780.0f;					// Y座標
-
+const static int		BAR_WIDTH = WINDOW_WIDTH / 2;											// リリース時セレクトバーライト横サイズ
+const static int		BAR_HEIGHT = 500;														// リリース時セレクトバーライト縦サイズ
+const static int		NO_WIDTH = 360;															// リリース時セレクトナンバー横サイズ
+const static int		NO_HEIGHT = 164;														// リリース時セレクトナンバー縦サイズ
+const static int		CURSOR_WIDTH = WINDOW_WIDTH / 2;										// リリース時セレクトカーソル横サイズ
+const static int		CURSOR_HEIGHT = 80;														// リリース時セレクトカーソル縦サイズ
+const static int		PLAYER_LOGO_WIDTH = 160;												// リリース時セレクトプレイヤーロゴ横サイズ
+const static int		PLAYER_LOGO_HEIGHT = 80;												// リリース時セレクトプレイヤーロゴ縦サイズ
+const static int		PLAYER_NAME_ENG_WIDTH = 500;											// リリース時プレイヤーネーム英語横サイズ
+const static int		PLAYER_NAME_ENG_HEIGHT = 164;											// リリース時プレイヤーネーム英語縦サイズ
+const static int		PLAYER_NAME_JP_WIDTH = 500;												// リリース時プレイヤーネーム日本語横サイズ
+const static int		PLAYER_NAME_JP_HEIGHT = 40;												// リリース時プレイヤーネーム日本語縦サイズ
+const static float		BAR_LIGHT_POSITION_X = 0.0f;											// リリース時セレクトバーライトX座標
+const static float		BAR_LIGHT_POSITION2_X = BAR_LIGHT_POSITION_X + WINDOW_WIDTH / 2;		// リリース時セレクトバーライト2X座標
+const static float		BAR_LIGHT_POSITION_Y = 440.0f;											// リリース時セレクトバーライトY座標
+const static float		NO_POSITION_X = 0.0f;													// リリース時セレクトナンバーX座標
+const static float		NO_POSITION2_X = NO_POSITION_X + WINDOW_WIDTH / 2;						// リリース時セレクトナンバー2X座標
+const static float		NO_POSITION_Y = 608.0f;													// リリース時セレクトナンバーY座標
+const static float		CURSOR_POSITION_X = 0.0f;												// リリース時セレクトカーソルX座標
+const static float		CURSOR_POSITION2_X = CURSOR_POSITION_X + WINDOW_WIDTH / 2;				// リリース時セレクトカーソル2X座標
+const static float		CURSOR_POSITION_Y = 500.0f;												// リリース時セレクトカーソルY座標
+const static float		PLAYER_LOGO_POSITION_X = 0.0f;											// リリース時セレクトプレイヤーロゴX座標
+const static float		PLAYER_LOGO_POSITION2_X = PLAYER_LOGO_POSITION_X + WINDOW_WIDTH / 2;	// リリース時セレクトプレイヤーロゴ2X座標
+const static float		PLAYER_LOGO_POSITION_Y = 780.0f;										// リリース時セレクトプレイヤーロゴY座標
+const static float		POSITION_X_NAME_EVE_ENG = 400.0f;										// リリース時イヴ名前英語テクスチャX座標
+const static float		POSITION2_X_NAME_EVE_ENG = POSITION_X_NAME_EVE_ENG + WINDOW_WIDTH / 2;	// リリース時イヴ名前英語テクスチャ2X座標
+const static float		POSITION_X_NAME_ADAM_ENG = 400.0f;										// リリース時アダム名前英語テクスチャX座標
+const static float		POSITION2_X_NAME_ADAM_ENG = POSITION_X_NAME_ADAM_ENG + WINDOW_WIDTH / 2;// リリース時アダム名前英語テクスチャ2X座標
+const static float		POSITION_Y_NAME_ENG = 608.0f;											// リリース時名前英語テクスチャY座標
+const static float		POSITION_X_NAME_EVE_JP = 400.0f;										// リリース時イヴ名前日本語テクスチャX座標
+const static float		POSITION2_X_NAME_EVE_JP = POSITION_X_NAME_EVE_JP + WINDOW_WIDTH / 2;	// リリース時イヴ名前日本語テクスチャ2X座標
+const static float		POSITION_X_NAME_ADAM_JP = 400.0f;										// リリース時アダム名前日本語テクスチャX座標
+const static float		POSITION2_X_NAME_ADAM_JP = POSITION_X_NAME_ADAM_JP + WINDOW_WIDTH / 2;	// リリース時アダム名前日本語テクスチャ2X座標
+const static float		POSITION_Y_NAME_JP = 780.0f;											// リリース時名前日本語テクスチャY座標
 #endif 
-
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))				// キャラセレクトの色
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -110,21 +105,18 @@ CharaSelectBarUI::CharaSelectBarUI(void)
 {
 	cntUI++;
 }
-
-
 //=============================================================================
 // デストラクタ
 //=============================================================================
 CharaSelectBarUI::~CharaSelectBarUI(void)
 {
 }
-
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
+	// プレイヤーナンバー
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
@@ -142,6 +134,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 	nameEveJpTexture = *textureLoader->getTexture(textureLoaderNS::EVE_NAME_JP);
 	nameAdamJpTexture = *textureLoader->getTexture(textureLoaderNS::ADAM_NAME_JP);
 
+	// セレクトバーライト初期化
 	charaSelectBar.initialize(device,
 		selectBarLightTexture,				// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -151,7 +144,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトバーライト2初期化
 	charaSelectBar2.initialize(device,
 		selectBarLightTexture2,				// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -161,7 +154,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトナンバー初期化
 	charaSelectNo.initialize(device,
 		selectNoTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -171,7 +164,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトナンバー2初期化
 	charaSelectNo2.initialize(device,
 		selectNoTexture2,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -181,7 +174,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトカーソル初期化
 	charaSelectCursor.initialize(device,
 		selectCursorTexture,				// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -191,7 +184,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトカーソル2初期化
 	charaSelectCursor2.initialize(device,
 		selectCursorTexture2,				// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -201,7 +194,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// セレクトプレイヤーロゴ初期化
 	charaSelectLogo.initialize(device,
 		selectPlayerLogoTexture,			// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -211,7 +204,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// イヴ名前英語テクスチャ初期化
 	nameEveEng.initialize(device,
 		nameEveEngTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -221,7 +214,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// イヴ名前英語テクスチャ2初期化
 	nameEveEng2.initialize(device,
 		nameEveEngTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -231,7 +224,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// アダム名前英語テクスチャ初期化
 	nameAdamEng.initialize(device,
 		nameAdamEngTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -241,7 +234,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// アダム名前英語テクスチャ2初期化
 	nameAdamEng2.initialize(device,
 		nameAdamEngTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -251,7 +244,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// イヴ名前日本語テクスチャ初期化
 	nameEveJp.initialize(device,
 		nameEveJpTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -261,7 +254,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// イヴ名前日本語テクスチャ2初期化
 	nameEveJp2.initialize(device,
 		nameEveJpTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -271,7 +264,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// アダム名前日本語テクスチャ初期化
 	nameAdamJp.initialize(device,
 		nameAdamJpTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -281,7 +274,7 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
 		DEFAULT_COLOR						// 色
 	);
-
+	// アダム名前日本語テクスチャ2初期化
 	nameAdamJp2.initialize(device,
 		nameAdamJpTexture,					// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -294,24 +287,22 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 
 	return S_OK;
 }
-
-
 //=============================================================================
 // 終了処理
 //=============================================================================
 void CharaSelectBarUI::uninitialize(void)
 {
-	charaSelectBar.setTexture(NULL);
-	charaSelectBar2.setTexture(NULL);
-	charaSelectNo.setTexture(NULL);
-	charaSelectNo2.setTexture(NULL);
-	charaSelectCursor.setTexture(NULL);
-	charaSelectCursor2.setTexture(NULL);
-	charaSelectLogo.setTexture(NULL);
-	nameEveEng.setTexture(NULL);
-	nameAdamEng.setTexture(NULL);
-	nameEveJp.setTexture(NULL);
-	nameAdamJp.setTexture(NULL);
+	charaSelectBar.setTexture(NULL);			// セレクトバーライトテクスチャ解放
+	charaSelectBar2.setTexture(NULL);			// セレクトバーライトテクスチャ2解放
+	charaSelectNo.setTexture(NULL);				// セレクトナンバーテクスチャ解放
+	charaSelectNo2.setTexture(NULL);			// セレクトナンバーテクスチャ2解放
+	charaSelectCursor.setTexture(NULL);			// セレクトカーソルテクスチャ解放
+	charaSelectCursor2.setTexture(NULL);		// セレクトカーソルテクスチャ2解放
+	charaSelectLogo.setTexture(NULL);			// セレクトプレイヤーロゴテクスチャ解放
+	nameEveEng.setTexture(NULL);				// イヴ名前英語テクスチャ解放
+	nameAdamEng.setTexture(NULL);				// アダム名前英語テクスチャ解放
+	nameEveJp.setTexture(NULL);					// イヴ名前日本語テクスチャ解放
+	nameAdamJp.setTexture(NULL);				// アダム名前日本語テクスチャ解放
 
 	// インスタンスが存在しなければテクスチャ解放
 	cntUI--;
@@ -330,44 +321,40 @@ void CharaSelectBarUI::uninitialize(void)
 		SAFE_RELEASE(nameAdamJpTexture)
 	}
 }
-
-
 //=============================================================================
 // 更新処理
 //=============================================================================
 void CharaSelectBarUI::update(void)
 {
 }
-
-
 //=============================================================================
 // 描画処理
 //=============================================================================
 void CharaSelectBarUI::render(LPDIRECT3DDEVICE9 device, int selectNo, int select2No)
 {
-	charaSelectBar.render(device);
-	charaSelectBar2.render(device);
-	charaSelectNo.render(device);
-	charaSelectNo2.render(device);
-	charaSelectCursor.render(device);
-	charaSelectCursor2.render(device);
-	charaSelectLogo.render(device);
+	charaSelectBar.render(device);			// セレクトバーライトテクスチャ描画
+	charaSelectBar2.render(device);			// セレクトバーライトテクスチャ2描画
+	charaSelectNo.render(device);			// セレクトナンバーテクスチャ描画
+	charaSelectNo2.render(device);			// セレクトナンバーテクスチャ2描画
+	charaSelectCursor.render(device);		// セレクトカーソルテクスチャ描画
+	charaSelectCursor2.render(device);		// セレクトカーソルテクスチャ2描画
+	charaSelectLogo.render(device);			// セレクトプレイヤーロゴテクスチャ描画
 
 	//1Pセレクト
 	switch (selectNo)
 	{
-		// プレイヤー
+		// プレイヤー1
 	case 0:
 
-		nameEveEng.render(device);
-		nameEveJp.render(device);
+		nameEveEng.render(device);			// イヴ名前英語テクスチャ描画
+		nameEveJp.render(device);			// イヴ名前日本語テクスチャ描画
 
 		break;
 		// プレイヤー2
 	case 1:
 
-		nameAdamEng.render(device);
-		nameAdamJp.render(device);
+		nameAdamEng.render(device);			// アダム名前英語テクスチャ描画
+		nameAdamJp.render(device);			// アダム名前日本語テクスチャ描画
 
 		break;
 	}
@@ -375,22 +362,19 @@ void CharaSelectBarUI::render(LPDIRECT3DDEVICE9 device, int selectNo, int select
 	//2Pセレクト
 	switch (select2No)
 	{
-		// プレイヤー
+		// プレイヤー1
 	case 0:
 
-		nameEveEng2.render(device);
-		nameEveJp2.render(device);
+		nameEveEng2.render(device);			// イヴ名前英語テクスチャ2描画
+		nameEveJp2.render(device);			// イヴ名前日本語テクスチャ2描画
 
 		break;
 		// プレイヤー2
 	case 1:
 
-		nameAdamEng2.render(device);
-		nameAdamJp2.render(device);
+		nameAdamEng2.render(device);		// アダム名前英語テクスチャ2描画
+		nameAdamJp2.render(device);			// アダム名前日本語テクスチャ2描画
 
 		break;
 	}
-
 }
-
-

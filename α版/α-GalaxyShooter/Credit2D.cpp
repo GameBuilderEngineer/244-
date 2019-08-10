@@ -1,24 +1,20 @@
 //=============================================================================
-// Creditの描画処理 [Credit2D.cpp]
+// クレジットの描画処理 [Credit2D.cpp]
+// 制作者 飯塚春輝
 ////=============================================================================
 #include "Credit2D.h"
-
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
-//マクロ定義
 const static int		WIDTH = WINDOW_WIDTH;						// クレジット2D横サイズ
 const static int		HEIGHT = WINDOW_HEIGHT;						// クレジット2D縦サイズ
-
 const static float		POSITION_X = 0.0f;							// クレジット2DX座標
 const static float		POSITION_Y = 0.0f;							// クレジット2DY座標
-
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 int Credit2D::cntUI = -1;
-LPDIRECT3DTEXTURE9 Credit2D::textureCredit2D = NULL;			// クレジット2Dテクスチャ
-
+LPDIRECT3DTEXTURE9 Credit2D::textureCredit2D = NULL;				// クレジット2Dテクスチャ
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -26,19 +22,18 @@ Credit2D::Credit2D()
 {
 	cntUI++;
 }
-
 //=============================================================================
 // デストラクタ
 //=============================================================================
 Credit2D::~Credit2D()
 {
 }
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
+	// プレイヤーナンバー
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
@@ -46,6 +41,7 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 
 	textureCredit2D = *textureLoader->getTexture(textureLoaderNS::CREDIT);
 
+	// クレジット2D初期化
 	Sprite::initialize(device,
 		textureCredit2D,							// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
@@ -53,17 +49,17 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 回転
-		CREDIT2D_COLOR
+		CREDIT2D_COLOR								// 色
 	);
 
 	return S_OK;
 }
-
 //=============================================================================
 // 終了処理
 //=============================================================================
 void Credit2D::uninitialize(void)
 {
+	// クレジット2D画像解放
 	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
@@ -73,20 +69,18 @@ void Credit2D::uninitialize(void)
 		SAFE_RELEASE(textureCredit2D)
 	}
 }
-
 //=============================================================================
 // 更新処理
 //=============================================================================
 void Credit2D::update(void)
 {
 }
-
-
 //=============================================================================
 // 描画処理
 //=============================================================================
 void Credit2D::render(LPDIRECT3DDEVICE9 device)
 {
+	// クレジット2D描画
 	Sprite::render(device);
 }
 

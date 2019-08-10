@@ -1,25 +1,40 @@
+//=============================================================================
+// セレクトキャラクターヘッダー [SelectCharacter.h]
+// 制作者 飯塚春輝
+//=============================================================================
 #pragma once
 #include "AbstractScene.h"
 #include "SelectCharacter2D.h"
 #include "CharaSelectBarUI.h"
 #include "TimerUI.h"
-
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define SELECT_TRANS_MAX (1) // セレクト移動限界
+//=============================================================================
+// 名前空間
+//=============================================================================
 namespace selectCharacterNS
 {
+	// プレイヤー人数
 	enum {
 		PLAYER1,
 		PLAYER2,
 		NUM_PLAYER,
 	};
 }
-
+//*****************************************************************************
+// クラス定義
+//*****************************************************************************
 class SelectCharacter :public AbstractScene
 {
 private:
+	// セレクトキャラクター2D
 	SelectCharacter2D selectCharacter2D[selectCharacterNS::NUM_PLAYER];
+	// キャラクターセレクトバー
 	CharaSelectBarUI charaSelectBar[selectCharacterNS::NUM_PLAYER];
+	// タイマーUI
 	TimerUI timerUI;
-
 public:
 	SelectCharacter();
 	~SelectCharacter();
@@ -42,5 +57,4 @@ public:
 
 	int selectTransition;	// セレクト画像入れ替え
 	int select2Transition;	// セレクト2画像入れ替え
-
 };

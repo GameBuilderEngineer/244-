@@ -1,12 +1,14 @@
 //=============================================================================
-// SelectCharacter描画処理 [SelectCharacter.h]
-//
+// セレクトキャラクター描画ヘッダー [SelectCharacter.h]
+// 制作者 飯塚春輝
 //=============================================================================
 #pragma once
 #include "Sprite.h"
 #include "AbstractScene.h"
-
-#define DEFAULT_COLOR			(D3DCOLOR_RGBA(255, 255, 255, 255))	// セレクトの色
+//*****************************************************************************
+// マクロ定義
+//*****************************************************************************
+#define SELECT2D_COLOR			(D3DCOLOR_RGBA(255, 255, 255, 255))	// セレクト2Dの色
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -19,16 +21,16 @@ private:
 	static LPDIRECT3DTEXTURE9 selectBgTexture;			// セレクトBGテクスチャ
 	static LPDIRECT3DTEXTURE9 selectPlayerTexture;		// セレクトプレイヤーテクスチャ
 	static LPDIRECT3DTEXTURE9 selectPlayer2Texture;		// セレクトプレイヤー2テクスチャ
-	static LPDIRECT3DTEXTURE9 select2PlayerTexture;		// セレクトプレイヤーテクスチャ
-	static LPDIRECT3DTEXTURE9 select2Player2Texture;	// セレクトプレイヤー2テクスチャ
+	static LPDIRECT3DTEXTURE9 select2PlayerTexture;		// セレクト2プレイヤーテクスチャ
+	static LPDIRECT3DTEXTURE9 select2Player2Texture;	// セレクト2プレイヤー2テクスチャ
 	static LPDIRECT3DTEXTURE9 selectPlayerBGTexture;	// セレクトプレイヤーBGテクスチャ
 
-	Sprite selectBG;
-	Sprite selectPlayer;
-	Sprite selectPlayer2;
-	Sprite select2Player;
-	Sprite select2Player2;
-	Sprite charaSelectBG;
+	Sprite selectBG;									// セレクトBG
+	Sprite selectPlayer;								// セレクトプレイヤー
+	Sprite selectPlayer2;								// セレクトプレイヤー2
+	Sprite select2Player;								// セレクト2プレイヤー
+	Sprite select2Player2;								// セレクト2プレイヤー2
+	Sprite charaSelectBG;								// キャラクターセレクトBG
 
 public:
 	SelectCharacter2D(void);
