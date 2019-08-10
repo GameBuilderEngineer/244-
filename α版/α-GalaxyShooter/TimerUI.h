@@ -27,6 +27,6 @@ public:
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader, TextManager* _textManager);
 	void uninitialize(void);
 	void update(void);
-	void render(LPDIRECT3DDEVICE9 device, float _uiTimer);
+	void render(LPDIRECT3DDEVICE9 device, float _uiOneTimer, float _uiTenTimer);
 };
 

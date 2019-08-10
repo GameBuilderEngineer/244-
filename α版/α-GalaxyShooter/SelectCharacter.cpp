@@ -65,7 +65,10 @@ void SelectCharacter::initialize(
 	selectTransition = NULL;				// セレクト画像入れ替え
 	select2Transition = NULL;				// セレクト2画像入れ替え
 	selectTime = SELECT_TIME_MAX;			// セレクト時間初期化
-	selectFlameTime = NULL;					// フレーム時間初期化
+	selectOneTime = SELECT_ONE_TIME_MAX;	// セレクト時間1桁初期化
+	selectTenTime = SELECT_TEN_TIME_MAX;	// セレクト時間10桁初期化
+	selectOneFlameTime = NULL;				// フレーム時間1桁初期化
+	selectTenFlameTime = NULL;				// フレーム時間10初期化
 }
 //=============================================================================
 // 更新処理
@@ -122,16 +125,35 @@ void SelectCharacter::update(float frameTime)
 	}
 
 	// フレーム時間加算
-	selectFlameTime++;
+	selectOneFlameTime++;
+
+	selectTenFlameTime++;
 
 	// 60フレーム対応
-	if (selectFlameTime == SELECT_FLAME_MAX)
+	if (selectOneFlameTime == SELECT_ONE_FLAME_MAX)
 	{
 		// セレクトタイム減算
 		selectTime--;
 
+		// セレクトタイム1桁減算
+		selectOneTime--;
+
 		// フレーム時間初期化
-		selectFlameTime = NULL;
+		selectOneFlameTime = NULL;
+
+		if (selectOneTime < NULL)
+		{
+			selectOneTime = SELECT_ONE_TIME_MAX;
+		}
+	}
+
+	if (selectTenFlameTime == SELECT_TEN_FLAME_MAX)
+	{
+		// セレクトタイム10桁減算
+		selectTenTime--;
+
+		// フレーム時間初期化
+		selectTenFlameTime = NULL;
 	}
 
 	//Enterまたは〇ボタンでゲームへ
@@ -144,7 +166,10 @@ void SelectCharacter::update(float frameTime)
 	if (selectTime <= NULL)
 	{
 		// セレクトタイム初期化
-		selectTime = NULL;
+		selectOneTime = NULL;
+
+		// セレクトタイム初期化
+		selectTenTime = NULL;
 
 		// ゲームへ
 		changeScene(nextScene);
@@ -183,7 +208,7 @@ void SelectCharacter::renderUI(LPDIRECT3DDEVICE9 device)
 		charaSelectBar[i].render(device, selectTransition, select2Transition);
 	}
 	// タイマーUI描画
-	timerUI.render(device, selectTime);
+	timerUI.render(device, selectOneTime, selectTenTime);
 }
 //=============================================================================
 // コリジョン処理

@@ -11,15 +11,19 @@ const static int		WIDTH = 300;						// タイマーUI横サイズ
 const static int		HEIGHT = 150;						// タイマーUI縦サイズ	
 const static float		POSITION_X = 330.0f;				// タイマーUIX座標
 const static float		POSITION_Y = 0.0f;					// タイマーUIY座標
-const static float		TIMER_POSITION_X = 460.0f;			// タイマーX座標
-const static float		TIMER_POSITION_Y = 0.0f;			// タイマーY座標
+const static float		TIMER_ONE_POSITION_X = 490.0f;		// 1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = 0.0f;		// 1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 450.0f;		// 10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = 0.0f;		// 10桁タイマーY座標
 #else
 const static int		WIDTH = 600;						// リリース時タイマーUIサイズ
 const static int		HEIGHT = 300;						// リリース時タイマーUI縦サイズ	
 const static float		POSITION_X = 660.0f;				// リリース時タイマーUIX座標
 const static float		POSITION_Y = 0.0f;					// リリース時タイマーUIY座標
-const static float		TIMER_POSITION_X = 940.0f;			// リリース時タイマーX座標
-const static float		TIMER_POSITION_Y = 30.0f;			// リリース時タイマーY座標
+const static float		TIMER_ONE_POSITION_X = 980.0f;		// リリース時1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = 30.0f;		// リリース時1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 920.0f;		// リリース時10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = 30.0f;		// リリース時10桁タイマーY座標
 #endif 
 //*****************************************************************************
 // グローバル変数
@@ -92,11 +96,12 @@ void TimerUI::update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void TimerUI::render(LPDIRECT3DDEVICE9 device, float _uiTimer)
+void TimerUI::render(LPDIRECT3DDEVICE9 device, float _uiOneTimer, float _uiTenTimer)
 {
 	// タイマーUI描画
 	Sprite::render(device);
 
 	// タイム描画
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_POSITION_X, TIMER_POSITION_Y, "%.0f", _uiTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
 }
