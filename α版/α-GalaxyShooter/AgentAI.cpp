@@ -15,23 +15,22 @@ int AgentAI::numAgent = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-AgentAI::AgentAI(Player* _opponentPlayer)
+AgentAI::AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fieldOfView)
 {
 	aiID = numAgent++;
-	opponentPlayer = _opponentPlayer;
 
 	// アービター
 	arbiter = new Arbiter;
 
 	// モジュール
-	sensor = new Sensor;
+	sensor = new Sensor(cameraPosition, fieldOfView);
 	environmentAnalysis = new EnvironmentAnalysis;
 	pathPlanning = new PathPlanning;
 	decisionMaking = new DecisionMaking;
 	motionGeneration = new MotionGeneration;
 
 	// ブラックボード
-	recognitionBB = new RecognitionBB;
+	recognitionBB = new RecognitionBB(opponentPlayer);
 	bodyBB = new BodyBB;
 	memoryBB = new MemoryBB;
 
@@ -83,6 +82,9 @@ void AgentAI::initialize(
 {
 	Player::initialize(playerType, device, staticMeshLoader, textureLoader, shaderLoader);
 
+	// アービター初期化
+	arbiter->initialize();
+
 	// モジュール初期化
 	sensor->initialize();
 	environmentAnalysis->initialize();
@@ -97,7 +99,6 @@ void AgentAI::initialize(
 
 	// 初期設定項目を埋める
 	recognitionBB->setMyPosition(&position);
-	recognitionBB->setOpponentPlayer(opponentPlayer);
 	bodyBB->configMovingDestination(opponent->getPosition());
 }
 

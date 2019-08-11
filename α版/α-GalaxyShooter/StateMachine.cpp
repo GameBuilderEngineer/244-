@@ -29,6 +29,7 @@ State* Offense::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, Bod
 
 State* Deffense::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	Player* a = opponent;
 	if (D3DXVec3Length(&(*opponent->getPosition() - *recognitionBB->getMyPosition())) <= TEMPLENGTH)
 	{
 		return Offense::getInstance();

@@ -22,11 +22,9 @@ private:
 	bool isDown;								// ダウン中か
 
 public:
-	RecognitionBB(void);
+	RecognitionBB(Player* _opponentPlayer);
 	void initialize(void) override;				// 初期化処理
 
-	// 対戦相手をセット
-	void setOpponentPlayer(Player* _opponentPlayer) { opponentPlayer = _opponentPlayer; }
 	// 対戦相手を取得
 	Player* getOpponentPlayer(void) { return opponentPlayer; }
 

@@ -27,7 +27,6 @@ class AgentAI: public Player
 private:
 	static int				numAgent;				// AIの数  
 	int						aiID;					// AIの固有識別番号
-	Player*					opponentPlayer;			// 対戦相手
 	float					frameTime;				// 1フレームあたりの時間
 
 	// アービター：			各モジュールのタイミングや切り替えを制御
@@ -53,7 +52,7 @@ private:
 	void updateAgentSelfData(void);
 
 public:
-	AgentAI(Player* opponentPlayer);
+	AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fieldOfView);
 	~AgentAI(void);
 
 	// 初期化処理

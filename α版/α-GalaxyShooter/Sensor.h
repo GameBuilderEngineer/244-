@@ -12,13 +12,16 @@
 class Sensor:public KnowledgeSourceBase {
 private:
 	RecognitionBB* recognitionBB;			// 環境認識ブラックボード
+	D3DXVECTOR3* cameraPosition;				// カメラの位置
+	float cameraFieldOfView;				// カメラの視野角情報
 
 public:
 	// Method
-	Sensor(void);
+	Sensor(D3DXVECTOR3* _cameraPosition, float _cameraFieldOfView);
 	~Sensor(void);
 	void initialize(void) override;			// 初期化処理
 	void uninitialize(void) override;		// 終了処理
 	void update(AgentAI* agentAI) override;	// 更新処理
 	void setBlackBoard(RecognitionBB* adr) { recognitionBB = adr; }
+
 };

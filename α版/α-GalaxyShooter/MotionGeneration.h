@@ -29,6 +29,5 @@ public:
 	void setBlackBoard(MemoryBB* adr1, BodyBB* adr2) { memoryBB = adr1; bodyBB = adr2; }
 
 	void move(AgentAI* agentAI, D3DXVECTOR3* targetCoordinates);	// 移動
-	void locatePile(AgentAI*);// メモリーパイルを設置
 
 };

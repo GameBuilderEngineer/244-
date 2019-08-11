@@ -8,9 +8,10 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-RecognitionBB::RecognitionBB(void)
+RecognitionBB::RecognitionBB(Player* _opponentPlayer): opponentPlayer(_opponentPlayer)
 {
 	// No Process
+	opponentPlayer;
 }
 
 
@@ -19,7 +20,7 @@ RecognitionBB::RecognitionBB(void)
 //=============================================================================
 void RecognitionBB::initialize(void)
 {
-	opponentPlayer = NULL;
+	// opponentPlayer = コンストラクタで設定済
 	myPosition = NULL;
 	inAir = false;
 	isDown = false;

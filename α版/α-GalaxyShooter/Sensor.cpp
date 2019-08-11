@@ -11,7 +11,8 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Sensor::Sensor(void)
+Sensor::Sensor(D3DXVECTOR3* _cameraPosition, float _cameraFieldOfView)
+	: cameraPosition(_cameraPosition), cameraFieldOfView(_cameraFieldOfView)
 {
 
 }
@@ -49,5 +50,5 @@ void Sensor::uninitialize(void)
 //=============================================================================
 void Sensor::update(AgentAI* agentAI)
 {
-	
+
 }

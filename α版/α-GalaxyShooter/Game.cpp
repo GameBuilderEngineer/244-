@@ -70,20 +70,23 @@ void Game::initialize(
 	// サウンドの再生
 	sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
+	//camera
+	camera = new Camera[NUM_PLAYER];
+
 //--------------------------------------------------------------------
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
+// 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
 #if 1
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI(player[0]);
+	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
 #else
 	player[0] = new Player;
 	player[1] = new Player;
 #endif
 
 	//camera
-	camera = new Camera[NUM_PLAYER];
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
@@ -300,10 +303,10 @@ void Game::update(float _frameTime) {
 
 	// チンギンの更新
 	chinginManager.update(frameTime, player[1]);
-	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(10, unko);
+		chinginManager.generateChingin(10, temp);
 	};
 }
 
