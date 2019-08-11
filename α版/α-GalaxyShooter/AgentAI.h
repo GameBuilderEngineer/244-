@@ -22,33 +22,49 @@
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class AgentAI: public Player {
+class AgentAI: public Player
+{
 private:
-	// Data
-	static int	numAgent;	// AIの数  
-	int			aiID;		// AIの固有識別番号
+	static int				numAgent;				// AIの数  
+	int						aiID;					// AIの固有識別番号
+	Player*					opponentPlayer;			// 対戦相手
+	float					frameTime;				// 1フレームあたりの時間
 
-	// アービター：各モジュールのタイミングや切り替えを制御
-	Arbiter *arbiter;
+	// アービター：			各モジュールのタイミングや切り替えを制御
+	Arbiter					*arbiter;
 
-	// AIモジュール（ナレッジソース）：ブラックボードを読み書きしながらAIを動かす
+	// ナレッジソース：		ブラックボードを読み書きしながらAIを動かす
 	Sensor					*sensor; 				// センサー 
 	EnvironmentAnalysis		*environmentAnalysis; 	// 環境解析
 	PathPlanning			*pathPlanning;			// 経路探索
 	DecisionMaking			*decisionMaking;		// 意思決定　
 	MotionGeneration		*motionGeneration;		// 運動生成
 
-	// ブラックボード：AIの記憶や身体状態を記録する黒板的概念
+	// ブラックボード：		AIの記憶や身体状態を記録する黒板的概念
 	RecognitionBB			*recognitionBB; 		// 環境認識
 	MemoryBB				*memoryBB; 				// 記憶
 	BodyBB					*bodyBB; 				// 身体状態
 
+	// プレイヤー処理の事前更新
+	void updatePlayerBefore(float frameTime);
+	// プレイヤー処理の事後更新
+	void updatePlayerAfter(float frameTime);
+	// プレイヤー自己情報→AIに送信 
+	void updateAgentSelfData(void);
+
 public:
-	// Method
-	AgentAI(void);
+	AgentAI(Player* opponentPlayer);
 	~AgentAI(void);
-	void initialize(int playerType, LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader,
+
+	// 初期化処理
+	void initialize(int playerType, PDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader,
 		TextureLoader* textureLoader, ShaderLoader* shaderLoader) override;
-	void uninitialize(void);		// 終了処理
-	void update(float frameTime);	// 更新処理
+	// 終了処理
+	void uninitialize(void);
+	// 更新処理
+	void update(float frameTime) override;
+	// バレットの発射
+	void shootBullet(D3DXVECTOR3 targetDirection);
+	// メモリーパイルの設置
+	void locateMemoryPile(void);
 };

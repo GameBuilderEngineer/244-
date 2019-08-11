@@ -15,6 +15,9 @@ private:
 	NODE_STATUS actionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS actionJump(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS actionShoot(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS actionPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+
 public:
 	ActionNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);
 

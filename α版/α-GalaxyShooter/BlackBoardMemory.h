@@ -17,19 +17,12 @@ class MemoryBB : public BlackBoardBase {
 private:
 	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFノードの記録
 	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー
-
-
+	// ●アロケータだけにする初期化をねんのためいれておくよてい
 
 public:
-
-	float secondCount;//●仮
-	int tempRandomNode;//●仮
-
 	// Method
 	MemoryBB(void);
-	~MemoryBB(void);
 	void initialize(void) override;				// 初期化処理
-	void uninitialize(void) override;			// 終了処理
 
 	std::unordered_map<BehaviorNodeBase*, int>& getOnOffRecord(void) { return onOffRecord; }
 	std::unordered_map<BehaviorNodeBase*, int>& getTimer(void) { return timer; }

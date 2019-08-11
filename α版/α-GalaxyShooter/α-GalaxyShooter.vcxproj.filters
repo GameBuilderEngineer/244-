@@ -238,6 +238,9 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{d860687a-957b-4aec-b828-5653136e072d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\Map">
+      <UniqueIdentifier>{76dff474-7b1b-49bf-93b9-b66f8bd81143}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -388,9 +391,6 @@
     <ClCompile Include="UtilityFunction.cpp">
       <Filter>UtilityFunction</Filter>
     </ClCompile>
-    <ClCompile Include="SkillPointUI.cpp">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClCompile>
     <ClCompile Include="TimerUI.cpp">
       <Filter>UI\TimerUI</Filter>
     </ClCompile>
@@ -483,9 +483,6 @@
     <ClCompile Include="ConditionalNode.cpp">
       <Filter>AI\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="ChinginManager.cpp">
       <Filter>Object\Wage</Filter>
     </ClCompile>
@@ -519,6 +516,11 @@
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ChinginUI.cpp" />
+    <ClCompile Include="ColonyHitPointUI.cpp" />
+    <ClCompile Include="Map.cpp">
+      <Filter>AI\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -688,9 +690,6 @@
     <ClInclude Include="WasuremonoTable.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="SkillPointUI.h">
-      <Filter>UI\SkillPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="TimerUI.h">
       <Filter>UI\TimerUI</Filter>
     </ClInclude>
@@ -735,9 +734,6 @@
     <ClInclude Include="ConditionalNode.h">
       <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="ChinginManager.h">
       <Filter>Object\Wage</Filter>
     </ClInclude>
@@ -749,9 +745,6 @@
     </ClInclude>
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
-    </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI\HitPointUI</Filter>
     </ClInclude>
     <ClInclude Include="CharaSelectBarUI.h">
       <Filter>UI\CharaSelectBarUI</Filter>
@@ -774,6 +767,11 @@
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginUI.h" />
+    <ClInclude Include="ColonyHitPointUI.h" />
+    <ClInclude Include="Map.h">
+      <Filter>AI\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

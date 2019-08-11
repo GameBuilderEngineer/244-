@@ -6,15 +6,37 @@
 #include "BehaviorTree.h"
 
 //=============================================================================
-// サンプルツリー
+// サンプルツリー1　オフェンス
 //=============================================================================
-void BehaviorTree::sample(void)
+void BehaviorTree::offense(void)
 {
-	addNode(SAMPLE, PARENT_IS_NOT_EXIST, PARARELL);
-	//addNode(SAMPLE, 0, SEQUENCE);
-	//addNode(SAMPLE, 1, IF_FIVE_SECONDS_LATER);
-	//addNode(SAMPLE, 1, SET_DESTINATION_RANDOM);
-	//addNode(SAMPLE, 0, ACTION_MOVE);
+	addNode(OFFENSE, PARENT_IS_NOT_EXIST, PARARELL);
+	addNode(OFFENSE, 0, SET_DESTINATION_OPPONENT);
+	addNode(OFFENSE, 0, SEQUENCE);
+	addNode(OFFENSE, 2, IF_THREE_SECONDS_LATER);
+	addNode(OFFENSE, 2, ACTION_PILE);
+	addNode(OFFENSE, 0, ACTION_MOVE);
+}
+
+
+//=============================================================================
+// サンプルツリー1　ディフェンス
+//=============================================================================
+void BehaviorTree::deffense(void)
+{
+	addNode(DEFFENSE, PARENT_IS_NOT_EXIST, PARARELL);
+
+	addNode(DEFFENSE, 0, SEQUENCE);
+	addNode(DEFFENSE, 1, IF_FIVE_SECONDS_LATER);
+	addNode(DEFFENSE, 1, SET_DESTINATION_RANDOM);
+	addNode(DEFFENSE, 1, SET_TARGET_OPPONENT);
+	addNode(DEFFENSE, 1, ACTION_SHOOT);
+
+	addNode(DEFFENSE, 0, SEQUENCE);
+	addNode(DEFFENSE, 6, IF_THREE_SECONDS_LATER);
+	addNode(DEFFENSE, 6, ACTION_JUMP);
+
+	addNode(DEFFENSE, 0, ACTION_MOVE);
 }
 
 
@@ -23,7 +45,8 @@ void BehaviorTree::sample(void)
 //=============================================================================
 BehaviorTree::BehaviorTree(void)
 {
-	sample();
+	offense();
+	deffense();
 }
 
 

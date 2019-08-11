@@ -11,7 +11,7 @@
 //*****************************************************************************
 class Sensor:public KnowledgeSourceBase {
 private:
-	RecognitionBB* recognitionBB;		// 環境認識ブラックボード
+	RecognitionBB* recognitionBB;			// 環境認識ブラックボード
 
 public:
 	// Method

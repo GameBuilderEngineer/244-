@@ -76,7 +76,7 @@ void Game::initialize(
 #if 1
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI;
+	player[1] = new AgentAI(player[0]);
 #else
 	player[0] = new Player;
 	player[1] = new Player;

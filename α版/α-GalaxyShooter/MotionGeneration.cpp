@@ -6,7 +6,6 @@
 #include "MotionGeneration.h"
 #include "AbstractScene.h"
 #include "AgentAI.h"
-#include "Map.h"// ●
 #include "input.h"
 using namespace MotionGenerationNS;
 
@@ -33,7 +32,7 @@ MotionGeneration::~MotionGeneration(void)
 //=============================================================================
 void MotionGeneration::initialize(void)
 {
-	bodyBB->setMovingDestination(&D3DXVECTOR3(100.0f, 0.0f, 0.0f));
+
 }
 
 
@@ -51,17 +50,35 @@ void MotionGeneration::uninitialize(void)
 //=============================================================================
 void MotionGeneration::update(AgentAI* agentAI)
 {
-	bodyBB->movingDestination = Map::getMapNode()[20]->getPosition();
-	bodyBB->setMove(true);
-
 	// 移動
 	if (bodyBB->getMove())
 	{
 		move(agentAI, bodyBB->getMovingDestination());
 	}
 
-	//// ジャンプ
-	//jumpFlagCycle(agentAI);
+	// ジャンプ
+	if (bodyBB->getJump())
+	{
+		agentAI->jump();
+	}
+
+	// バレットを打つ
+	if (bodyBB->getShootingBullet())
+	{
+		agentAI->shootBullet(bodyBB->getTargetCoordValue());
+	}
+
+	// メモリーパイルの設置
+	if (bodyBB->getLocatingPile())
+	{
+		agentAI->locateMemoryPile();
+	}
+
+	// フラグのリセット
+	bodyBB->setMove(false);
+	bodyBB->setJump(false);				//（これが無くても別フラグで止まる）
+	bodyBB->setShootingBullet(false);
+	bodyBB->setLocatingPile(false);
 }
 
 
@@ -82,72 +99,6 @@ void MotionGeneration::move(AgentAI* agentAI, D3DXVECTOR3* movingDestination)
 	D3DXVec3Normalize(&moveDirection, &moveDirection);
 
 	// 移動させる
-	agentAI->addSpeed(moveDirection * playerNS::SPEED);
+	agentAI->addSpeed(moveDirection * bodyBB->getSpeed());
 	agentAI->postureControl(agentAI->getAxisZ()->direction, moveDirection, 0.1f);
-
-	//// 目的地に着いたら自動停止
-	//if (autoStop(agentAI->getPosition(), movingDestination))
-	//{
-	//	bodyBB->setMove(false);
-	//}
-}
-
-
-//=============================================================================
-// 自動停止
-//=============================================================================
-bool MotionGeneration::autoStop(D3DXVECTOR3* position1, D3DXVECTOR3* position2)
-{
-	float length = D3DXVec3Length(&(*position2 - *position1));
-	if (length < STOP_MOVE_LENGTH)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-
-//=============================================================================
-// ジャンプのフラグ循環
-//=============================================================================
-void MotionGeneration::jumpFlagCycle(AgentAI* agentAI)
-{
-	// ジャンプ中でなければジャンプ命令を受け付ける
-	if (bodyBB->getIsJumping() == false)
-	{
-		if (bodyBB->getJump())
-		{
-			bodyBB->setJump(false);
-			bodyBB->setIsJumping(true);
-			agentAI->jump();// ここでアクション
-		}
-	}
-
-	// ジャンプ中の場合地上に接したタイミングでジャンプ中状態を解除する
-	else
-	{
-		// いま空中？
-		if (agentAI->getReverseAxisY()->rayIntersect(
-			*Map::getField()->getMesh(), *Map::getField()->getMatrixWorld()))
-		{
-
-		}
-		else
-		{
-			bodyBB->setIsAir(true);
-		}
-
-		// 空中じゃないなら
-		if (bodyBB->getIsAir() == false) return;
-
-		// 空中なら地面に近いとジャンプ終了とみなす
-		if (agentAI->getReverseAxisY()->distance < 3.0f)
-		{
-			bodyBB->setIsAir(false);
-			bodyBB->setIsJumping(false);
-		}
-	}
 }

@@ -14,8 +14,10 @@ class SubProcedureNode: public BehaviorNodeBase
 {
 private:
 	NODE_STATUS subProcedureList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	NODE_STATUS setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS setMovingDestinationOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setMovingDestinationRandom(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS setShootingTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+
 
 public:
 	SubProcedureNode(int treeType, int parent, NODE_TYPE type, NODE_TAG tag);

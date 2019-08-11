@@ -14,8 +14,6 @@ protected:
 
 public:
 	// Method
-	BlackBoardBase(void);				// 
-	~BlackBoardBase(void);				// 
+	BlackBoardBase(void);
 	virtual void initialize(void);		// ‰Šú‰»ˆ—
-	virtual void uninitialize(void);	// I—¹ˆ—
 };

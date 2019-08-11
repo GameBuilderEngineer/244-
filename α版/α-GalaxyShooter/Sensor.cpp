@@ -49,5 +49,5 @@ void Sensor::uninitialize(void)
 //=============================================================================
 void Sensor::update(AgentAI* agentAI)
 {
-
+	
 }
