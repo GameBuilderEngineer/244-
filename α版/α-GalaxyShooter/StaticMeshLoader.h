@@ -2,13 +2,15 @@
 //【StaticMeshLoader.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/12
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
 
 namespace staticMeshNS {
 	enum MESH_NUMBER {
+		ADULT,
+		CHILD,
 		BULLET,
 		CUBE,
 		SAMPLE_HIERARCHY_MESH,

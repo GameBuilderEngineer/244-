@@ -238,6 +238,12 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{d860687a-957b-4aec-b828-5653136e072d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lambert">
+      <UniqueIdentifier>{18393f96-a573-44b3-81f6-7cd14c7afa4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\ShockWave">
+      <UniqueIdentifier>{78411b82-821b-4d40-80c5-d40bb89c743f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -384,12 +390,8 @@
     <ClCompile Include="VolumeLight.cpp">
       <Filter>Object\VolumeLight</Filter>
     </ClCompile>
-    <ClCompile Include="Lambert.cpp" />
     <ClCompile Include="UtilityFunction.cpp">
       <Filter>UtilityFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="SkillPointUI.cpp">
-      <Filter>UI\SkillPointUI</Filter>
     </ClCompile>
     <ClCompile Include="TimerUI.cpp">
       <Filter>UI\TimerUI</Filter>
@@ -519,6 +521,14 @@
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ChinginUI.cpp" />
+    <ClCompile Include="ColonyHitPointUI.cpp" />
+    <ClCompile Include="Lambert.cpp">
+      <Filter>Lambert</Filter>
+    </ClCompile>
+    <ClCompile Include="ShockWave.cpp">
+      <Filter>Object\ShockWave</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -672,7 +682,6 @@
     <ClInclude Include="VolumeLight.h">
       <Filter>Object\VolumeLight</Filter>
     </ClInclude>
-    <ClInclude Include="Lambert.h" />
     <ClInclude Include="Game.h">
       <Filter>Scene\Game</Filter>
     </ClInclude>
@@ -687,9 +696,6 @@
     </ClInclude>
     <ClInclude Include="WasuremonoTable.h">
       <Filter>Object\Wasuremono</Filter>
-    </ClInclude>
-    <ClInclude Include="SkillPointUI.h">
-      <Filter>UI\SkillPointUI</Filter>
     </ClInclude>
     <ClInclude Include="TimerUI.h">
       <Filter>UI\TimerUI</Filter>
@@ -750,9 +756,6 @@
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
-    <ClInclude Include="HitPointUI.h">
-      <Filter>UI\HitPointUI</Filter>
-    </ClInclude>
     <ClInclude Include="CharaSelectBarUI.h">
       <Filter>UI\CharaSelectBarUI</Filter>
     </ClInclude>
@@ -774,6 +777,14 @@
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginUI.h" />
+    <ClInclude Include="ColonyHitPointUI.h" />
+    <ClInclude Include="Lambert.h">
+      <Filter>Lambert</Filter>
+    </ClInclude>
+    <ClInclude Include="ShockWave.h">
+      <Filter>Object\ShockWave</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

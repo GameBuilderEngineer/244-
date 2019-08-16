@@ -2,12 +2,11 @@
 //【MemoryLine.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/11
-// [更新日]2019/08/04
+// [更新日]2019/08/12
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
 #include "MemoryPile.h"
-//#include "Player.h"
 #include "InstancingBillboard.h"
 #include <vector>
 

@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yUtiltyFunction.hz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/08/07
+// [XV“ú]2019/08/07
+//===================================================================================================================================
 #pragma once
 #include <stdio.h>
 #include <crtdbg.h>
@@ -18,6 +24,16 @@
 #pragma warning(disable:4018)
 #pragma warning(disable:4111)
 
+namespace utility
+{
+	struct Polar3D
+	{
+		float radius;	//“®Œa			[’è‹`ˆæ] 0<= raduys <= ‡
+		float theta;	//‹ÉŠp(“V’¸Šp)  [’è‹`ˆæ] 0<= theta  <= ƒÎ
+		float phi;		//•ûˆÊŠp(•ÎŠp)  [’è‹`ˆæ] 0<= phi    <  2ƒÎ
+	};
+}
+
 class UtilityFunction
 {
 public:
@@ -28,4 +44,12 @@ public:
 	static float wrap(float x, float low, float high);
 	template<typename T>
 	static T clamp(T x, T low, T high);
+
+	//y•ÏŠ·z‹ÉÀ•W->’¼ŒğÀ•W
+	//Polar Coordinates Transformation
+	static D3DXVECTOR3 fromTransformationPolar3D(float radius, float theta, float phi);
+	//y•ÏŠ·z’¼ŒğÀ•W->‹ÉÀ•W
+	static utility::Polar3D fromRectangular3D(D3DXVECTOR3 coordinate);
+	//1Ÿ•âŠÔŠÖ”
+	static float lerp(float start, float end, float time);
 };

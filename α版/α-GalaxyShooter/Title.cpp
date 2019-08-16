@@ -56,7 +56,7 @@ void Title::initialize(
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
 
-	titlePlayer[0].initialize(playerNS::TITLE_PLAYER,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
+	titlePlayer[0].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[0].modelType,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
 	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
 
 

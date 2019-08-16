@@ -78,7 +78,7 @@ void AgentAI::initialize(LPDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshL
 	decisionMaking->initialize();
 	pathPlanning->initialize();
 	motionGeneration->initialize();
-	Player::initialize(playerNS::PLAYER2,device, staticMeshLoader, textureLoader, shaderLoader);
+	Player::initialize(playerNS::PLAYER2,staticMeshNS::ADULT, device, staticMeshLoader, textureLoader, shaderLoader);
 }
 
 

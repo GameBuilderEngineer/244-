@@ -1,3 +1,9 @@
+//===================================================================================================================================
+//yShaderLoader.cppz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/07/16
+// [XV“ú]2019/08/07
+//===================================================================================================================================
 #include "ShaderLoader.h"
 using namespace shaderNS;
 
@@ -8,6 +14,7 @@ ShaderLoader::ShaderLoader()
 	shaderName[INSTANCE_BILLBOARD] = { "InstancingBillboard.fx" };
 	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
 	shaderName[RECURSION] = { "Recursion.fx" };
+	shaderName[SHOCK_WAVE] = { "ShockWave.fx" };
 }
 
 ShaderLoader::~ShaderLoader()

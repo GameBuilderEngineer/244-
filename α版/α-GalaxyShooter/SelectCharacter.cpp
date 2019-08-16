@@ -104,10 +104,29 @@ void SelectCharacter::update(float frameTime) {
 		select2Transition = 1;
 	}
 
-	if (input->wasKeyPressed(VK_RETURN)||
+	int selectModel1P = 0;
+	int selectModel2P = 0;
+	//ƒ‚ƒfƒ‹‘I‘ð
+	switch (selectTransition)
+	{
+	case 0:	selectModel1P = gameMasterNS::MODEL_ADAM; break;
+	case 1:	selectModel1P = gameMasterNS::MODEL_EVE; break;
+	} 
+	switch (select2Transition)
+	{
+	case 0:	selectModel2P = gameMasterNS::MODEL_ADAM; break;
+	case 1:	selectModel2P = gameMasterNS::MODEL_EVE; break;
+	} 
+
+	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		)changeScene(nextScene);
+		)
+	{
+		gameMaster->setPlayerCharacter(playerNS::PLAYER1, gameMasterNS::PLAYER_CHARACTER, selectModel1P);
+		gameMaster->setPlayerCharacter(playerNS::PLAYER1, gameMasterNS::PLAYER_CHARACTER, selectModel2P);
+		changeScene(nextScene);
+	}
 }
 
 void SelectCharacter::render(Direct3D9* direct3D9) {

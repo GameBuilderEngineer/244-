@@ -190,6 +190,7 @@
     <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="ShockWave.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
     <ClCompile Include="Splash2D.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />
+    <ClInclude Include="ShockWave.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />
     <ClInclude Include="Splash2D.h" />

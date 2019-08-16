@@ -10,7 +10,7 @@
 #include "Player.h"
 
 namespace gameMasterNS {
-	const float GAME_TIME = 60.0f * 0.5f;	//4•ª
+	const float GAME_TIME = 60.0f * 2.0f;	//4•ª
 	const float COUNT_DOWN_TIME = 3.0f;		//3•b
 
 	enum PLAYER_TYPE
@@ -27,8 +27,8 @@ namespace gameMasterNS {
 		DRAW,
 	};
 
-	const int MODEL_ADAM = staticMeshNS::SAMPLE_ROBOT001;
-	const int MODEL_EVE = staticMeshNS::SAMPLE_ROBOT002;
+	const int MODEL_ADAM = staticMeshNS::ADULT;
+	const int MODEL_EVE = staticMeshNS::CHILD;
 
 }
 

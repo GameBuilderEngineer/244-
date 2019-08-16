@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/12
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -13,19 +13,6 @@ using namespace gameNS;
 Game::Game()
 {
 	sceneName = "Scene -Game-";
-	currentMemoryPile1 = 0;
-	currentMemoryPile2 = 0;
-	intervalBullet1 = 0;
-	intervalBullet2 = 0;
-	currentBullet1 = 0;
-	currentBullet2 = 0;
-	onRecursion1P = false;
-	recursion1PAnd2P = false;
-
-	reverseValue1PXAxis = 2;
-	reverseValue1PYAxis = 2;
-	reverseValue2PXAxis = 2;
-	reverseValue2PYAxis = 2;
 
 	nextScene = SceneList::RESULT;
 }
@@ -97,7 +84,7 @@ void Game::initialize(
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i].initialize(i, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
+		player[i].initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i].setInput(input);			//入力クラスのセット
 		player[i].setCamera(&camera[i]);	//カメラのセット
 		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
@@ -325,7 +312,7 @@ void Game::render(Direct3D9* direct3D9) {
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//ステンシルマスク
-	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
@@ -335,7 +322,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
 
-	target.renderEffectImage(direct3D9->device);
+	//target.renderEffectImage(direct3D9->device);
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
@@ -366,13 +353,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-
-	//メモリーラインの切断ガイドの表示
-	if (collitionMemoryLine1P)
-	{
-
-	}
 
 	//xFileStaticMeshテスト描画
 	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
@@ -405,8 +385,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 //===================================================================================================================================
 void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 #ifdef _DEBUG
-	text.print(50, 200,
-		"difference:%.3f\n",difference);
 	text.print(10, 150,
 		"\
 		sceneTime:%.2f\n\
@@ -448,20 +426,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
-
-	text.print(WINDOW_WIDTH / 2, 170, 
-		"collisionMemoryLine(%d)\n",
-		collitionMemoryLine1P
-	);
-	text.print(WINDOW_WIDTH / 2, 200,
-		"collisionMemoryLine(%.02f)\n",
-		memoryLine1P.calculationDistance(*player[PLAYER2].getPosition())
-	);
-	text.print(WINDOW_WIDTH / 2, 230,
-		"recrusion1PAnd2P(%d)\n",
-		recursion1PAnd2P
-	);
-	
 
 	text2.print(10, 450,
 		"1P:Controller\n\
@@ -625,6 +589,40 @@ void Game::collisions() {
 		}
 	}
 
+	// リカージョン1<->ワスレモノ
+	if (player[PLAYER1].whetherGenerationRecursion()) {
+		for (int i = 0; i < wasuremono.size(); i++)
+		{
+			if (!wasuremono[i]->getActive())	continue;
+			if (player[PLAYER1].getRecursion()->collide(
+				*wasuremono[i]->getPosition(),
+				wasuremono[i]->bodyCollide.getCenter(),
+				wasuremono[i]->bodyCollide.getRadius(),
+				*wasuremono[i]->getMatrixWorld()))
+			{
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				wasuremono[i]->inActivation();
+			}
+		}
+	}
+	// リカージョン2<->ワスレモノ
+	if (player[PLAYER2].whetherGenerationRecursion()) {
+		for (int i = 0; i < wasuremono.size(); i++) 
+		{
+			if (!wasuremono[i]->getActive())	continue;
+			if (player[PLAYER2].getRecursion()->collide(
+				*wasuremono[i]->getPosition(),
+				wasuremono[i]->bodyCollide.getCenter(),
+				wasuremono[i]->bodyCollide.getRadius(),
+				*wasuremono[i]->getMatrixWorld()))
+			{
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				wasuremono[i]->inActivation();
+			}
+		}
+	}
+
+
 	for (int i = 0; i < wasuremono.size(); i++)
 	{
 		if (!wasuremono[i]->getActive())	continue;
@@ -669,24 +667,54 @@ void Game::collisions() {
 	}
 
 	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
-	//if (memoryLine1P.collision(*player[PLAYER2].getPosition(),player[PLAYER2].bodyCollide.getRadius()))
-	//	collitionMemoryLine1P = true;
-	//else 
-	//	collitionMemoryLine1P = false;
+	if (player[PLAYER1].getMemoryLine()->collision(*player[PLAYER2].getPosition(), player[PLAYER2].bodyCollide.getRadius()))
+	{
+		player[PLAYER2].setCollidedMemoryLine(true);
+		if (player[PLAYER2].messageDisconnectOpponentMemoryLine())
+		{
+			//1Pのメモリーラインの切断処理
+			player[PLAYER1].disconnectMemoryLine();
+		}
+	}else{
+		player[PLAYER2].setCollidedMemoryLine(false);
+	}
+	//2Pのメモリーライン<->1Pプレイヤーの衝突検知
+	if (player[PLAYER2].getMemoryLine()->collision(*player[PLAYER1].getPosition(), player[PLAYER1].bodyCollide.getRadius()))
+	{
+		player[PLAYER1].setCollidedMemoryLine(true);
+		if (player[PLAYER1].messageDisconnectOpponentMemoryLine())
+		{
+			//2Pのメモリーラインの切断処理
+			player[PLAYER2].disconnectMemoryLine();
+		}
+	}else{
+		player[PLAYER1].setCollidedMemoryLine(false);
+	}
 
 	//1Pのリカージョン<->2Pプレイヤーの衝突検知
-	//if (onRecursion1P)
-	//{
-	//	recursion1PAnd2P = recursion1P->collide(
-	//			*player[PLAYER2].getPosition(),
-	//			player[PLAYER2].bodyCollide.getCenter(),
-	//			player[PLAYER2].bodyCollide.getRadius(),
-	//			*player[PLAYER2].getMatrixWorld());
-	//	if (recursion1PAnd2P)
-	//	{
-	//		player[PLAYER2].changeState(playerNS::SKY);
-	//	}
-	//}
+	if (player[PLAYER1].whetherGenerationRecursion())
+	{
+		if(player[PLAYER1].getRecursion()->collide(
+				*player[PLAYER2].getPosition(),
+				player[PLAYER2].bodyCollide.getCenter(),
+				player[PLAYER2].bodyCollide.getRadius(),
+				*player[PLAYER2].getMatrixWorld()))
+		{
+			player[PLAYER2].changeState(playerNS::SKY);
+		}
+	}
+	//2Pのリカージョン<->1Pプレイヤーの衝突検知
+	if (player[PLAYER2].whetherGenerationRecursion())
+	{
+		if(player[PLAYER2].getRecursion()->collide(
+				*player[PLAYER1].getPosition(),
+				player[PLAYER1].bodyCollide.getCenter(),
+				player[PLAYER1].bodyCollide.getRadius(),
+				*player[PLAYER1].getMatrixWorld()))
+		{
+			player[PLAYER1].changeState(playerNS::SKY);
+		}
+	}
 }
 //===================================================================================================================================
 //【AI処理】

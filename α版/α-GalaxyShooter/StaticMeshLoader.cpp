@@ -1,8 +1,16 @@
+//===================================================================================================================================
+//yStaticMeshLoader.cppz
+// [ì¬Ò]HAL“Œ‹GP12A332 11 ›–ì ÷
+// [ì¬“ú]2019/05/16
+// [XV“ú]2019/08/12
+//===================================================================================================================================
 #include "StaticMeshLoader.h"
 using namespace staticMeshNS;
 
 StaticMeshLoader::StaticMeshLoader()
 {
+	fileName[ADULT] = { "adult.x" };
+	fileName[CHILD] = { "child.x" };
 	fileName[BULLET] = { "bullet.x" };
 	fileName[CUBE] = { "cube.x" };
 	fileName[SAMPLE_HIERARCHY_MESH] = { "HierarchyMesh.x" };
