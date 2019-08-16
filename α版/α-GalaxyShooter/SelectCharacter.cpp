@@ -180,7 +180,6 @@ void SelectCharacter::update(float frameTime)
 		gameMaster->setPlayerCharacter(playerNS::PLAYER1, gameMasterNS::PLAYER_CHARACTER, selectModel2P);
 		changeScene(nextScene);
 	}
-}
 
 	// タイムアウト時
 	if (selectTime <= NULL)
