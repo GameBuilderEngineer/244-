@@ -75,12 +75,13 @@ AgentAI::~AgentAI(void)
 //=============================================================================
 void AgentAI::initialize(
 	int playerType, 
+	int modelType,
 	PDIRECT3DDEVICE9 device,
 	StaticMeshLoader* staticMeshLoader,
 	TextureLoader* textureLoader,
 	ShaderLoader* shaderLoader)
 {
-	Player::initialize(playerType, device, staticMeshLoader, textureLoader, shaderLoader);
+	Player::initialize(playerType, modelType,device, staticMeshLoader, textureLoader, shaderLoader);
 
 	// アービター初期化
 	arbiter->initialize();
