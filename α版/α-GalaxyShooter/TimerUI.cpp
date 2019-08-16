@@ -1,24 +1,35 @@
 //=============================================================================
 // タイマーUI処理 [TimerUI.cpp]
-//
+// 制作者 飯塚春輝
 //=============================================================================
 #include "TimerUI.h"
-
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
-const static int		WIDTH = 300;						// 横サイズ
-const static int		HEIGHT = 150;						// 縦サイズ	
-const static float		POSITION_X = 330.0f;				// X座標
-const static float		POSITION_Y = 0.0f;					// Y座標
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// タイマーの色
-
+#ifdef _DEBUG
+const static int		WIDTH = 300;						// タイマーUI横サイズ
+const static int		HEIGHT = 150;						// タイマーUI縦サイズ	
+const static float		POSITION_X = 330.0f;				// タイマーUIX座標
+const static float		POSITION_Y = 0.0f;					// タイマーUIY座標
+const static float		TIMER_ONE_POSITION_X = 490.0f;		// 1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = 0.0f;		// 1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 450.0f;		// 10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = 0.0f;		// 10桁タイマーY座標
+#else
+const static int		WIDTH = 600;						// リリース時タイマーUIサイズ
+const static int		HEIGHT = 300;						// リリース時タイマーUI縦サイズ	
+const static float		POSITION_X = 660.0f;				// リリース時タイマーUIX座標
+const static float		POSITION_Y = 0.0f;					// リリース時タイマーUIY座標
+const static float		TIMER_ONE_POSITION_X = 980.0f;		// リリース時1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = 30.0f;		// リリース時1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 920.0f;		// リリース時10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = 30.0f;		// リリース時10桁タイマーY座標
+#endif 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 int TimerUI::cntUI = -1;
-LPDIRECT3DTEXTURE9 TimerUI::timerTexture = NULL;		// タイマーテクスチャ
-
+LPDIRECT3DTEXTURE9 TimerUI::timerTexture = NULL;			// タイマーテクスチャ
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -26,28 +37,29 @@ TimerUI::TimerUI(void)
 {
 	cntUI++;
 }
-
-
 //=============================================================================
 // デストラクタ
 //=============================================================================
 TimerUI::~TimerUI(void)
 {
 }
-
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
+HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader, TextManager* _textManager)
 {
+	// プレイヤーナンバー
 	playerNumber = _playerNumber;
+
+	// テキストマネージャ
+	textManager = _textManager;
 
 	// テクスチャを読み込む
 	setVisualDirectory();
 
 	timerTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_TIMER);
 
+	// タイマーUI初期化
 	Sprite::initialize(device,
 		timerTexture,						// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -55,18 +67,17 @@ HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 		HEIGHT,								// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),// 座標
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
-		DEFAULT_COLOR						// 色
+		TIMER_UI_COLOR						// 色
 	);
 
 	return S_OK;
 }
-
-
 //=============================================================================
 // 終了処理
 //=============================================================================
 void TimerUI::uninitialize(void)
 {
+	// タイマーUI画像解放
 	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
@@ -76,22 +87,21 @@ void TimerUI::uninitialize(void)
 		SAFE_RELEASE(timerTexture)
 	}
 }
-
-
 //=============================================================================
 // 更新処理
 //=============================================================================
 void TimerUI::update(void)
 {
 }
-
-
 //=============================================================================
 // 描画処理
 //=============================================================================
-void TimerUI::render(LPDIRECT3DDEVICE9 device)
+void TimerUI::render(LPDIRECT3DDEVICE9 device, float _uiOneTimer, float _uiTenTimer)
 {
+	// タイマーUI描画
 	Sprite::render(device);
+
+	// タイム描画
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
 }
-
-

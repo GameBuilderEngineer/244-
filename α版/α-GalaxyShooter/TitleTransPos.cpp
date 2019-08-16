@@ -1,29 +1,27 @@
 //=============================================================================
 // タイトル選択位置描画処理 [TitleTransPos.cpp]
+// 制作者 飯塚春輝
 ////=============================================================================
 #include "TitleTransPos.h"
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
 #ifdef _DEBUG
-const static int		WIDTH = 600;								// タイトル選択位置画像横サイズ
-const static int		HEIGHT = 50;								// タイトル選択位置画像縦サイズ
-
-const static float		POSITION_X = 0.0f;							// タイトル選択位置画像X座標
-static float			POSITION_Y = CNT_TITLE_START;				// タイトル選択位置画像Y座標
+const static int		WIDTH = 600;										// タイトル選択位置画像横サイズ
+const static int		HEIGHT = 50;										// タイトル選択位置画像縦サイズ
+const static float		POSITION_X = 0.0f;									// タイトル選択位置画像X座標
+static float			POSITION_Y = CNT_TITLE_START;						// タイトル選択位置画像Y座標
 #else
-const static int		WIDTH = 800;								// タイトル選択位置画像横サイズ
-const static int		HEIGHT = 80;								// タイトル選択位置画像縦サイズ
-
-const static float		POSITION_X = 0.0f;							// タイトル選択位置画像X座標
-static float			POSITION_Y = CNT_RELEASE_START;				// タイトル選択位置画像Y座標
+const static int		WIDTH = 800;										// リリース時タイトル選択位置画像横サイズ
+const static int		HEIGHT = 80;										// リリース時タイトル選択位置画像縦サイズ
+const static float		POSITION_X = 0.0f;									// リリース時タイトル選択位置画像X座標
+static float			POSITION_Y = CNT_RELEASE_START;						// リリース時タイトル選択位置画像Y座標
 #endif 
-
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 int TitleTransPos::cntUI = -1;
-LPDIRECT3DTEXTURE9 TitleTransPos::titleTransPosTex = NULL;			// タイトル選択位置画像テクスチャ
+LPDIRECT3DTEXTURE9 TitleTransPos::titleTransPosTex = NULL;					// タイトル選択位置画像テクスチャ
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -31,19 +29,18 @@ TitleTransPos::TitleTransPos()
 {
 	cntUI++;
 }
-
 //=============================================================================
 // デストラクタ
 //=============================================================================
 TitleTransPos::~TitleTransPos()
 {
 }
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
+	//	プレイヤーナンバー
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
@@ -51,6 +48,7 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 
 	titleTransPosTex = *textureLoader->getTexture(textureLoaderNS::TITLE_POS);
 
+	// タイトル選択位置描画処理初期化
 	Sprite::initialize(device,
 		titleTransPosTex,								// テクスチャ
 		spriteNS::TOP_LEFT,								// 原点
@@ -63,12 +61,12 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 
 	return S_OK;
 }
-
 //=============================================================================
 // 終了処理
 //=============================================================================
 void TitleTransPos::uninitialize(void)
 {
+	// タイトル選択位置描画処理終了
 	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
@@ -78,7 +76,6 @@ void TitleTransPos::uninitialize(void)
 		SAFE_RELEASE(titleTransPosTex)
 	}
 }
-
 //=============================================================================
 // 更新処理
 //=============================================================================
@@ -90,16 +87,14 @@ void TitleTransPos::update(void)
 	// 位置設定
 	setVertex();
 }
-
-
 //=============================================================================
 // 描画処理
 //=============================================================================
 void TitleTransPos::render(LPDIRECT3DDEVICE9 device)
 {
+	// タイトル選択位置描画処理描画
 	Sprite::render(device);
 }
-
 //=============================================================================
 // タイトル選択位置画像移動処理
 //=============================================================================
@@ -107,7 +102,7 @@ void TitleTransPos::titleTransPosMove(void)
 {
 	switch (cntTitle)
 	{
-		// ゲーム開始
+		// セレクト
 	case 0:
 #ifdef _DEBUG
 		setPosition2(D3DXVECTOR3(0, CNT_TITLE_START, 0));

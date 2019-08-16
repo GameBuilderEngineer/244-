@@ -89,7 +89,6 @@ void Game::initialize(
 		player[i].setCamera(&camera[i]);	//カメラのセット
 		player[i].configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
-		timerUI[i].initialize(direct3D9->device, i, _textureLoader);
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
@@ -223,7 +222,6 @@ void Game::update(float _frameTime) {
 	{
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
-			timerUI[i].update();
 			hpEffect[i].update();
 			target.update();
 
@@ -731,7 +729,6 @@ void Game::uninitialize() {
 	SAFE_DELETE_ARRAY(camera);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		timerUI[i].uninitialize();
 		hpEffect[i].uninitialize();
 		target.uninitialize();
 		pose.uninitialize();

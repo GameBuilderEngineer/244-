@@ -1,16 +1,29 @@
+//=============================================================================
+// オペレーション処理 [Operation.cpp]
+// 制作者 飯塚春輝
+////===========================================================================
 #include "Operation.h"
+// オペレーション名前空間有効
 using namespace operationNS;
-
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 Operation::Operation()
 {
+	// 現在のシーン(オペレーション)
 	sceneName = "Scene -Operation-";
+	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 }
-
+//=============================================================================
+// デストラクタ
+//=============================================================================
 Operation::~Operation()
 {
 }
-
+//=============================================================================
+// 初期化処理
+//=============================================================================
 void Operation::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
@@ -18,7 +31,8 @@ void Operation::initialize(
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader, 
-	TextManager* _textManager) {
+	TextManager* _textManager)
+{
 	//Input
 	input = _input;
 	//sound
@@ -29,6 +43,7 @@ void Operation::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -36,16 +51,18 @@ void Operation::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
+	// キーボード説明初期化
 	keyOpe.initialize(direct3D9->device, 0, _textureLoader);
+
+	// パッド説明初期化
 	padOpe.initialize(direct3D9->device, 0, _textureLoader);
 
-	opeTransition = 0; // オペレーション画像入れ替え
-
-
+	opeTransition = NULL; // オペレーション画像入れ替え
 }
 
-void Operation::update(float frameTime) {
-
+void Operation::update(float frameTime)
+{
+	// カメラ更新
 	camera->update();
 
 	// キーを押したら選択UI移動
@@ -64,25 +81,28 @@ void Operation::update(float frameTime) {
 		opeTransition--;
 	}
 
-	// 選択UI限界
-	if (opeTransition > 1)
+	// 選択UI下限
+	if (opeTransition > OPE_MAX)
 	{
 		opeTransition = 0;
 	}
 	// 選択UI上限
 	else if (opeTransition < 0)
 	{
-		opeTransition = 1;
+		opeTransition = OPE_MAX;
 	}
 
+	//Enterまたは〇ボタンでリザルトへ
 	if (input->wasKeyPressed(VK_RETURN)||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
 		)changeScene(nextScene);
-
 }
-
-void Operation::render(Direct3D9* direct3D9) {
+//=============================================================================
+// 描画処理
+//=============================================================================
+void Operation::render(Direct3D9* direct3D9)
+{
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera->view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera->projection);
@@ -91,13 +111,17 @@ void Operation::render(Direct3D9* direct3D9) {
 	//UI
 	renderUI(direct3D9->device);
 }
-
-void Operation::render3D(Direct3D9* direct3D9) {
-
+//=============================================================================
+// 3D描画処理
+//=============================================================================
+void Operation::render3D(Direct3D9* direct3D9)
+{
 }
-
-void Operation::renderUI(LPDIRECT3DDEVICE9 device) {
-
+//=============================================================================
+// 2D描画処理
+//=============================================================================
+void Operation::renderUI(LPDIRECT3DDEVICE9 device)
+{
 	switch (opeTransition)
 	{
 		// パッド説明
@@ -116,17 +140,26 @@ void Operation::renderUI(LPDIRECT3DDEVICE9 device) {
 		break;
 	}
 }
-
-void Operation::collisions() {
-
+//=============================================================================
+// コリジョン処理
+//=============================================================================
+void Operation::collisions()
+{
 }
-
-void Operation::AI() {
-
+//=============================================================================
+// AI処理
+//=============================================================================
+void Operation::AI()
+{
 }
-
-void Operation::uninitialize() {
-
+//=============================================================================
+// 終了処理
+//=============================================================================
+void Operation::uninitialize()
+{
+	// キーボード説明終了
 	keyOpe.uninitialize();
+
+	// パッド説明終了
 	padOpe.uninitialize();
 }

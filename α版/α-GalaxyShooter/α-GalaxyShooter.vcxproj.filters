@@ -157,9 +157,6 @@
     <Filter Include="Loader\StaticMeshLoader">
       <UniqueIdentifier>{a818e9a9-7ad1-4291-b9ca-52feff8c93ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InstancingBillboard">
-      <UniqueIdentifier>{0e74e9e2-e817-485b-9e4e-9d38e56981b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object\Recursion">
       <UniqueIdentifier>{4dd70172-110a-4d3e-bc16-0f00ae86649e}</UniqueIdentifier>
     </Filter>
@@ -382,7 +379,7 @@
       <Filter>Object\MemoryLine</Filter>
     </ClCompile>
     <ClCompile Include="InstancingBillboard.cpp">
-      <Filter>InstancingBillboard</Filter>
+      <Filter>Sound\InstancingBillboard</Filter>
     </ClCompile>
     <ClCompile Include="Recursion.cpp">
       <Filter>Object\Recursion</Filter>
@@ -456,8 +453,6 @@
     <ClCompile Include="Pose.cpp">
       <Filter>Scene\Game\Pose</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp" />
-    <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="AgentAI.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -529,6 +524,12 @@
     </ClCompile>
     <ClCompile Include="ShockWave.cpp">
       <Filter>Object\ShockWave</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter2D.cpp">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -674,7 +675,7 @@
       <Filter>Object\MemoryLine</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
-      <Filter>InstancingBillboard</Filter>
+      <Filter>Sound\InstancingBillboard</Filter>
     </ClInclude>
     <ClInclude Include="Recursion.h">
       <Filter>Object\Recursion</Filter>
@@ -715,8 +716,6 @@
     <ClInclude Include="Pose.h">
       <Filter>Scene\Game\Pose</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="BlackBoardMemory.h">
       <Filter>AI\BlackBoard</Filter>
     </ClInclude>
@@ -785,6 +784,12 @@
     </ClInclude>
     <ClInclude Include="ShockWave.h">
       <Filter>Object\ShockWave</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectCharacter2D.h">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

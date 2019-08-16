@@ -85,7 +85,6 @@ private:
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
-	TimerUI timerUI[gameNS::NUM_PLAYER];
 
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
