@@ -241,6 +241,9 @@
     <Filter Include="Object\ShockWave">
       <UniqueIdentifier>{78411b82-821b-4d40-80c5-d40bb89c743f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\Map">
+      <UniqueIdentifier>{76dff474-7b1b-49bf-93b9-b66f8bd81143}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -480,9 +483,6 @@
     <ClCompile Include="ConditionalNode.cpp">
       <Filter>AI\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="ChinginManager.cpp">
       <Filter>Object\Wage</Filter>
     </ClCompile>
@@ -530,6 +530,9 @@
     </ClCompile>
     <ClCompile Include="SelectCharacter2D.cpp">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>AI\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -740,9 +743,6 @@
     <ClInclude Include="ConditionalNode.h">
       <Filter>AI\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="ChinginManager.h">
       <Filter>Object\Wage</Filter>
     </ClInclude>
@@ -790,6 +790,9 @@
     </ClInclude>
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>AI\Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

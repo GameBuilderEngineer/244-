@@ -12,20 +12,30 @@
 Offense* Offense::instance;
 Deffense* Deffense::instance;
 
+static const float TEMPLENGTH = 50.0f;
 
 //=============================================================================
 // ステートごとの遷移
 //=============================================================================
 State* Offense::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	if (D3DXVec3Length(&(*opponent->getPosition() - *recognitionBB->getMyPosition())) > TEMPLENGTH)
+	{
+		return Deffense::getInstance();
+	}
+
 	return this;
-	//return Deffense::getInstance();
 }
 
 State* Deffense::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	Player* a = opponent;
+	if (D3DXVec3Length(&(*opponent->getPosition() - *recognitionBB->getMyPosition())) <= TEMPLENGTH)
+	{
+		return Offense::getInstance();
+	}
+
 	return this;
-	//return Offense::getInstance();
 }
 
 
@@ -37,7 +47,7 @@ StateMachine::StateMachine(void)
 {
 	Offense::create();
 	Deffense::create();
-	initialState = Offense::getInstance();
+	initialState = Deffense::getInstance();
 }
 
 // デストラクタ

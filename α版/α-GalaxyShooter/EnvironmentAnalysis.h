@@ -15,6 +15,8 @@ private:
 	Fuzzy fuzzy;						// ファジー理論処理
 	RecognitionBB* recognitionBB;
 
+	
+
 public:
 	// Method
 	EnvironmentAnalysis(void);

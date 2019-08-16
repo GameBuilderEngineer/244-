@@ -8,7 +8,6 @@
 
 namespace MotionGenerationNS
 {
-	static const float STOP_MOVE_LENGTH = 3.0f;		// 2.0だと止まらない4.0以上だと停止位置のずれが大きい
 	static const float LANDING_JUDGE_LENGTH = 3.0f;	// いい塩梅がよくわからないからテキトー
 }
 
@@ -24,14 +23,11 @@ public:
 	// Method
 	MotionGeneration(void);
 	~MotionGeneration(void);
-	void initialize(void) override;		// 初期化処理
-	void uninitialize(void) override;	// 終了処理
-	void update(AgentAI* agentAI) override;// 更新処理
+	void initialize(void) override;			// 初期化処理
+	void uninitialize(void) override;		// 終了処理
+	void update(AgentAI* agentAI) override;	// 更新処理
 	void setBlackBoard(MemoryBB* adr1, BodyBB* adr2) { memoryBB = adr1; bodyBB = adr2; }
 
 	void move(AgentAI* agentAI, D3DXVECTOR3* targetCoordinates);	// 移動
-	bool autoStop(D3DXVECTOR3* position1, D3DXVECTOR3* position2);	// 自動停止
-	void jumpFlagCycle(AgentAI* agentAI);
-
 
 };

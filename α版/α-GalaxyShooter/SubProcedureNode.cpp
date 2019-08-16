@@ -30,18 +30,20 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 {
 	switch (tag)
 	{
-	case SET_TARGET_OPPONENT: return setTargetOpponent(recognitionBB, memoryBB, bodyBB);
-	case SET_TARGET_RANDOM_NODE: return setTargetRandomNode(recognitionBB, memoryBB, bodyBB);
-	default: return NODE_STATUS::_NOT_FOUND;
+	case SET_DESTINATION_OPPONENT:	return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_RANDOM:	return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
+	case SET_TARGET_OPPONENT:		return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
+	default:						return NODE_STATUS::_NOT_FOUND;
 	}
 }
 
 
 //=============================================================================
-// 副処理：移動ターゲットを相手に設定
+// 副処理：目的地を相手に設定
 //=============================================================================
-NODE_STATUS SubProcedureNode::setTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+NODE_STATUS SubProcedureNode::setMovingDestinationOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	bodyBB->configMovingDestination(opponent->getPosition());
 	return NODE_STATUS::SUCCESS;
 }
 
@@ -49,18 +51,22 @@ NODE_STATUS SubProcedureNode::setTargetOpponent(RecognitionBB* recognitionBB, Me
 //=============================================================================
 // 副処理：ランダムにノードを目的地に設定する
 //=============================================================================
-NODE_STATUS SubProcedureNode::setTargetRandomNode(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+NODE_STATUS SubProcedureNode::setMovingDestinationRandom(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	memoryBB->secondCount += 0.0166f;
-	if (memoryBB->secondCount > 3.0f)
-	{
-		memoryBB->secondCount= 0.0f;
-		memoryBB->tempRandomNode = rand() % Map::getMapNode().size();
-		bodyBB->setIsMoving(true);
-		return NODE_STATUS::SUCCESS;
-	}
-	else
-	{
-		return NODE_STATUS::FAILED;
-	}
+	int number = rand() % Map::getMapNode().size();
+	D3DXVECTOR3* newDestination = Map::getMapNode()[number]->getPosition();
+	bodyBB->configMovingDestination(Map::getMapNode()[number]->getPosition());
+	return NODE_STATUS::SUCCESS;
 }
+
+
+//=============================================================================
+// 副処理：ショットターゲットを相手に設定
+//=============================================================================
+NODE_STATUS SubProcedureNode::setShootingTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	bodyBB->setTargetCoordValue(*opponent->getPosition());
+	return NODE_STATUS::SUCCESS;
+}
+
+

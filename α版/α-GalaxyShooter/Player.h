@@ -113,7 +113,7 @@ namespace playerNS{
 
 class Player : public Object
 {
-private:
+protected:
 	LPDIRECT3DDEVICE9 device;
 	TextureLoader* textureLoader;
 	ShaderLoader* shaderLoader;

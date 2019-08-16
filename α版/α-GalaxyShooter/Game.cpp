@@ -59,13 +59,28 @@ void Game::initialize(
 
 	//camera
 	camera = new Camera[NUM_PLAYER];
+
+//--------------------------------------------------------------------
+// キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
+//--------------------------------------------------------------------
+// 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
+#if 1
+#define USING_AI
+	player[0] = new Player;
+	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
+#else
+	player[0] = new Player;
+	player[1] = new Player;
+#endif
+
+	//camera
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH/2, WINDOW_HEIGHT);
-		camera[i].setTarget(player[i].getPosition());
-		camera[i].setTargetX(&player[i].getAxisX()->direction);
-		camera[i].setTargetY(&player[i].getAxisY()->direction);
-		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
+		camera[i].setTarget(player[i]->getPosition());
+		camera[i].setTargetX(&player[i]->getAxisX()->direction);
+		camera[i].setTargetY(&player[i]->getAxisY()->direction);
+		camera[i].setTargetZ(&player[i]->getAxisZ()->direction);
 		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[i]);
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 10, 0));
@@ -215,7 +230,7 @@ void Game::update(float _frameTime) {
 	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		player[i].update(frameTime);
+		player[i]->update(frameTime);
 	}
 
 	//プレイヤーの更新
@@ -247,8 +262,8 @@ void Game::update(float _frameTime) {
 		{
 			magnet[NUM_MAGNET - 1].reverseAmount();
 		}
-		magnet[NUM_MAGNET - 1].setPosition(*player[PLAYER1].getPosition());
-		magnet[1].setPosition(*player[PLAYER2].getPosition());
+		magnet[NUM_MAGNET - 1].setPosition(*player[PLAYER1]->getPosition());
+		magnet[1].setPosition(*player[PLAYER2]->getPosition());
 		for (int i = 0; i < NUM_MAGNET; i++)
 		{
 			for (int j = 0; j < NUM_MAGNET; j++)
@@ -272,11 +287,11 @@ void Game::update(float _frameTime) {
 	}
 
 	// チンギンの更新
-	chinginManager.update(frameTime, &player[1]);
-	D3DXVECTOR3 unko = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+	chinginManager.update(frameTime, player[1]);
+	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(10, unko);
+		chinginManager.generateChingin(10, temp);
 	};
 }
 
@@ -314,7 +329,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
-		player[i].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 			*shaderLoader->getEffect(shaderNS::TOON),
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
@@ -372,7 +387,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	Ray debugRay;
 	//法線
 	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
-	debugRay.update(*player[PLAYER1].getPosition(), player[PLAYER1].getReverseAxisY()->normal);
+	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
 #endif
 
@@ -390,22 +405,22 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		",
 		sceneTimer, frameTime);
 	text.print(10, 10, "acceleration(\t%.2f,\t%.2f,\t%.2f)",
-		player[PLAYER1].getAcceleration().x,
-		player[PLAYER1].getAcceleration().y,
-		player[PLAYER1].getAcceleration().z);
+		player[PLAYER1]->getAcceleration().x,
+		player[PLAYER1]->getAcceleration().y,
+		player[PLAYER1]->getAcceleration().z);
 	text.print(10, 30, "gravity(\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getGravity().x,
-		player[PLAYER1].getGravity().y,
-		player[PLAYER1].getGravity().z);
+		player[PLAYER1]->getGravity().x,
+		player[PLAYER1]->getGravity().y,
+		player[PLAYER1]->getGravity().z);
 	text.print(10, 50, "quaternion(\t%.2f,\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getQuaternion().x,
-		player[PLAYER1].getQuaternion().y,
-		player[PLAYER1].getQuaternion().z,
-		player[PLAYER1].getQuaternion().w);
+		player[PLAYER1]->getQuaternion().x,
+		player[PLAYER1]->getQuaternion().y,
+		player[PLAYER1]->getQuaternion().z,
+		player[PLAYER1]->getQuaternion().w);
 	text.print(10, 70, "normal(\t%.2f,\t%.2f,\t%.2f)", 
-		player[PLAYER1].getReverseAxisY()->normal.x,
-		player[PLAYER1].getReverseAxisY()->normal.y,
-		player[PLAYER1].getReverseAxisY()->normal.z);
+		player[PLAYER1]->getReverseAxisY()->normal.x,
+		player[PLAYER1]->getReverseAxisY()->normal.y,
+		player[PLAYER1]->getReverseAxisY()->normal.z);
 	text.print(10, 90, "cameraRelative(\t%.2f,\t%.2f,\t%.2f,\t%.2f)", 
 		camera[PLAYER1].relativeQuaternion.x,
 		camera[PLAYER1].relativeQuaternion.y,
@@ -424,6 +439,20 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
+
+	text.print(WINDOW_WIDTH / 2, 170, 
+		"collisionMemoryLine(%d)\n",
+		collitionMemoryLine1P
+	);
+	text.print(WINDOW_WIDTH / 2, 200,
+		"collisionMemoryLine(%.02f)\n",
+		memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
+	);
+	text.print(WINDOW_WIDTH / 2, 230,
+		"recrusion1PAnd2P(%d)\n",
+		recursion1PAnd2P
+	);
+	
 
 	text2.print(10, 450,
 		"1P:Controller\n\
@@ -557,32 +586,32 @@ void Game::collisions() {
 	//1Pバレット<->プレイヤー2
 	for (int i = 0; i < playerNS::NUM_BULLET; i++)
 	{
-		if (!player[PLAYER1].bullet[i].getActive())continue;
-		if (player[PLAYER2].bodyCollide.collide(
-			player[PLAYER1].bullet[i].bodyCollide.getCenter(), 
-			player[PLAYER1].bullet[i].bodyCollide.getRadius(),
-			*player[PLAYER2].getMatrixWorld(), 
-			*player[PLAYER1].bullet[i].getMatrixWorld()))
+		if (!player[PLAYER1]->bullet[i].getActive())continue;
+		if (player[PLAYER2]->bodyCollide.collide(
+			player[PLAYER1]->bullet[i].bodyCollide.getCenter(), 
+			player[PLAYER1]->bullet[i].bodyCollide.getRadius(),
+			*player[PLAYER2]->getMatrixWorld(), 
+			*player[PLAYER1]->bullet[i].getMatrixWorld()))
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
-			player[PLAYER2].damgae(5);
-			player[PLAYER1].bullet[i].inActivation();
+			player[PLAYER2]->damgae(5);
+			player[PLAYER1]->bullet[i].inActivation();
 		}
 	}
 
 	//2Pバレット<->プレイヤー1
 	for (int i = 0; i < playerNS::NUM_BULLET; i++)
 	{
-		if (!player[PLAYER2].bullet[i].getActive())continue;
-		if (player[PLAYER1].bodyCollide.collide(
-			player[PLAYER2].bullet[i].bodyCollide.getCenter(), 
-			player[PLAYER2].bullet[i].bodyCollide.getRadius(),
-			*player[PLAYER1].getMatrixWorld(), 
-			*player[PLAYER2].bullet[i].getMatrixWorld()))
+		if (!player[PLAYER2]->bullet[i].getActive())continue;
+		if (player[PLAYER1]->bodyCollide.collide(
+			player[PLAYER2]->bullet[i].bodyCollide.getCenter(), 
+			player[PLAYER2]->bullet[i].bodyCollide.getRadius(),
+			*player[PLAYER1]->getMatrixWorld(), 
+			*player[PLAYER2]->bullet[i].getMatrixWorld()))
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
-			player[PLAYER1].damgae(5);
-			player[PLAYER2].bullet[i].inActivation();
+			player[PLAYER1]->damgae(5);
+			player[PLAYER2]->bullet[i].inActivation();
 			
 		}
 	}
@@ -628,20 +657,20 @@ void Game::collisions() {
 		{
 			// ワスレモノ<->バレット1
 			if (wasuremono[i]->bodyCollide.collide(
-				player[PLAYER1].bullet[j].bodyCollide.getCenter(), player[PLAYER1].bullet[j].bodyCollide.getRadius(),
-				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1].bullet[j].getMatrixWorld()))
+				player[PLAYER1]->bullet[j].bodyCollide.getCenter(), player[PLAYER1]->bullet[j].bodyCollide.getRadius(),
+				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1]->bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
-				player[PLAYER1].bullet[j].inActivation();
+				player[PLAYER1]->bullet[j].inActivation();
 			}
 
 			// ワスレモノ<->バレット2
 			if (wasuremono[i]->bodyCollide.collide(
-				player[PLAYER2].bullet[j].bodyCollide.getCenter(), player[PLAYER2].bullet[j].bodyCollide.getRadius(),
-				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2].bullet[j].getMatrixWorld()))
+				player[PLAYER2]->bullet[j].bodyCollide.getCenter(), player[PLAYER2]->bullet[j].bodyCollide.getRadius(),
+				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2]->bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
-				player[PLAYER2].bullet[j].inActivation();
+				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}
 	}
@@ -651,15 +680,15 @@ void Game::collisions() {
 	{
 		for (int k = 0; k < JUNK_MAX; k++)
 		{
-			if (between2VectorLength(*player[i].getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
+			if (between2VectorLength(*player[i]->getPosition(), *junk[k].getPosition()) <= junkNS::HEAD_DISTANCE)
 			{
-				if (player[i].bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
-					*player[i].getMatrixWorld(),*junk[k].getMatrixWorld()))
+				if (player[i]->bodyCollide.collide(junk[k].bodyCollide.getCenter(),junk[k].getRadius(),
+					*player[i]->getMatrixWorld(),*junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
 					hpEffect[i].activate(10);
 				}
-				junk[k].headPosition(*player[i].getPosition());
+				junk[k].headPosition(*player[i]->getPosition());
 			}
 		}
 	}
@@ -718,7 +747,8 @@ void Game::collisions() {
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
-
+#ifdef USING_AI
+#endif
 }
 
 //===================================================================================================================================
@@ -738,4 +768,6 @@ void Game::uninitialize() {
 	}
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
+	SAFE_DELETE(player[0])
+	SAFE_DELETE(player[1])
 }

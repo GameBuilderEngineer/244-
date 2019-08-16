@@ -37,7 +37,7 @@ public:
 	// Method
 	MapNode(void) { instanceCount++; }
 	int getInstanceCount(void) { return instanceCount; }	// Getter
-	D3DXVECTOR3 getPosition(void) { return position; }
+	D3DXVECTOR3* getPosition(void) { return &position; }
 	D3DXMATRIX* getWorldMatrix(void) { return &worldMatrix; }
 	void setNumber(int _number) { number = _number; }		// Setter
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }

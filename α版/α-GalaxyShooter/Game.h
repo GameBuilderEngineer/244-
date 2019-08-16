@@ -98,7 +98,8 @@ private:
 	Object testCube;//仮
 
 	//プレイヤー
-	Player player[gameNS::NUM_PLAYER];
+	//Player player[gameNS::NUM_PLAYER];
+	Player *player[gameNS::NUM_PLAYER];
 	//プレイヤークラスへ統合
 	Map map;// 仮
 

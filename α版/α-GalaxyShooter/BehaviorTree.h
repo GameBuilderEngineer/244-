@@ -9,6 +9,7 @@
 #include "SubProcedureNode.h"
 #include "RuleNode.h"
 #include "ActionNode.h"
+#include "ConditionalNode.h"
 
 //*****************************************************************************
 // 定数定義
@@ -21,7 +22,8 @@
 class BehaviorTree
 {
 private:
-	void sample(void);												// サンプルツリー
+	void offense(void);												// サンプルツリー1
+	void deffense(void);											// サンプルツリー2
 	void addNode(int treeType, int parentNumber, NODE_TAG tag);		// ノードの追加
 
 public:
