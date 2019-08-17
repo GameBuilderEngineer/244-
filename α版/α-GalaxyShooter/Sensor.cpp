@@ -32,7 +32,6 @@ Sensor::~Sensor(void)
 //=============================================================================
 void Sensor::initialize(void)
 {
-
 }
 
 
@@ -50,5 +49,26 @@ void Sensor::uninitialize(void)
 //=============================================================================
 void Sensor::update(AgentAI* agentAI)
 {
+	std::vector<MapNode*>& mapNode = Map::getMapNode();
 
+	for (size_t i = 0; mapNode.size(); i++)
+	{
+		// 自分の反対側の半球にあるマップノードは処理しない
+		float radius = Map::getField()->getRadius();
+		D3DXVECTOR3 vec = *mapNode[i]->getPosition() - *agentAI->getPosition();
+		float len = D3DXVec3LengthSq(&vec);
+		if (len > radius * radius * 2/*三平方の定理*/) { continue; }
+
+		// カメラの視野角内にあるか検知
+		D3DXVECTOR3 adjustDirection = agentAI->getAxisY()->direction;
+		D3DXVec3Scale(&adjustDirection, &adjustDirection, len);
+
+		Base::slip(*mapNode[i]->getPosition(), agentAI->getAxisY()->direction);
+		ray.update(*getCameraPosition(), *mapNode[i]->getPosition() - *getCameraPosition());
+		D3DXVec3Dot(agent->.direction
+	}
+
+	agentAI->getAxisZ()->direction - *getCameraPosition();
+
+	
 }

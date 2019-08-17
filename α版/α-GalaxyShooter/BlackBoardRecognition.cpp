@@ -11,7 +11,6 @@
 RecognitionBB::RecognitionBB(Player* _opponentPlayer): opponentPlayer(_opponentPlayer)
 {
 	// No Process
-	opponentPlayer;
 }
 
 

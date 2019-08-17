@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "Ray.h"
 
 //*****************************************************************************
 // クラス定義
@@ -12,8 +13,10 @@
 class Sensor:public KnowledgeSourceBase {
 private:
 	RecognitionBB* recognitionBB;			// 環境認識ブラックボード
-	D3DXVECTOR3* cameraPosition;				// カメラの位置
+	D3DXVECTOR3* cameraPosition;			// カメラの位置
 	float cameraFieldOfView;				// カメラの視野角情報
+	float fieldRadius;						// フィールドの半径
+	Ray ray;								// レイ
 
 public:
 	// Method
@@ -24,4 +27,5 @@ public:
 	void update(AgentAI* agentAI) override;	// 更新処理
 	void setBlackBoard(RecognitionBB* adr) { recognitionBB = adr; }
 
+	D3DXVECTOR3* getCameraPosition(void) { return cameraPosition; }
 };
