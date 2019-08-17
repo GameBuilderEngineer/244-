@@ -107,6 +107,7 @@ void Game::initialize(
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
+		player[i]->setSound(sound);		//	サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
@@ -239,7 +240,7 @@ void Game::update(float _frameTime) {
 	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		player[i]->update(sound, frameTime);
+		player[i]->update(frameTime);
 	}
 
 	{
@@ -253,7 +254,7 @@ void Game::update(float _frameTime) {
 			target.update();
 
 			uiRecursion[i].update();
-			uiCutMemoryLine[i].update(*player[0].getPosition(), *player[1].getPosition());
+			uiCutMemoryLine[i].update(*player[PLAYER1]->getPosition(), *player[PLAYER2]->getPosition());
 			uiRevivalGauge[i].update(revivalPoint);
 		}
 	}
@@ -581,9 +582,9 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			hpEffect[i].render(device);
 
-			uiCutMemoryLine[i].render(device);
-			uiRevivalGauge[i].render(device);
-			uiRevival[i].render(device);
+			//uiCutMemoryLine[i].render(device);
+			//uiRevivalGauge[i].render(device);
+			//uiRevival[i].render(device);
 		}
 
 		// 優先度：高
