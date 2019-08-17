@@ -253,7 +253,7 @@ void Game::update(float _frameTime) {
 			target.update();
 
 			uiRecursion[i].update();
-			uiCutMemoryLine[i].update(*player[0].getPosition(), *player[1].getPosition());
+			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
 			uiRevivalGauge[i].update(revivalPoint);
 		}
 	}

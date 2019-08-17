@@ -396,9 +396,6 @@
     <ClCompile Include="MemoryLine.cpp">
       <Filter>Object\MemoryLine</Filter>
     </ClCompile>
-    <ClCompile Include="InstancingBillboard.cpp">
-      <Filter>Sound\InstancingBillboard</Filter>
-    </ClCompile>
     <ClCompile Include="Recursion.cpp">
       <Filter>Object\Recursion</Filter>
     </ClCompile>
@@ -529,8 +526,6 @@
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
-    <ClCompile Include="ChinginUI.cpp" />
-    <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="Lambert.cpp">
       <Filter>Lambert</Filter>
     </ClCompile>
@@ -570,6 +565,7 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -713,9 +709,6 @@
     <ClInclude Include="MemoryLine.h">
       <Filter>Object\MemoryLine</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h">
-      <Filter>Sound\InstancingBillboard</Filter>
-    </ClInclude>
     <ClInclude Include="Recursion.h">
       <Filter>Object\Recursion</Filter>
     </ClInclude>
@@ -810,8 +803,6 @@
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
-    <ClInclude Include="ChinginUI.h" />
-    <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="Lambert.h">
       <Filter>Lambert</Filter>
     </ClInclude>
@@ -845,6 +836,7 @@
     <ClInclude Include="Sound.h">
       <Filter>Sound</Filter>
     </ClInclude>
+    <ClInclude Include="InstancingBillboard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
