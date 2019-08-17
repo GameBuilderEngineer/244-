@@ -1,24 +1,20 @@
 //=============================================================================
-// Tutorialの描画処理 [Tutorial2D.cpp]
-////=============================================================================
+// チュートリアルの描画処理 [Tutorial2D.cpp]
+// 制作者 飯塚春輝
+////===========================================================================
 #include "Tutorial2D.h"
-
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
-//マクロ定義
 const static int		WIDTH = WINDOW_WIDTH;						// チュートリアル2D横サイズ
 const static int		HEIGHT = WINDOW_HEIGHT;						// チュートリアル2D縦サイズ
-
 const static float		POSITION_X = 0.0f;							// チュートリアル2DX座標
 const static float		POSITION_Y = 0.0f;							// チュートリアル2DY座標
-
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 int Tutorial2D::cntUI = -1;
 LPDIRECT3DTEXTURE9 Tutorial2D::textureTutorial2D = NULL;			// チュートリアル2Dテクスチャ
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -26,19 +22,18 @@ Tutorial2D::Tutorial2D()
 {
 	cntUI++;
 }
-
 //=============================================================================
 // デストラクタ
 //=============================================================================
 Tutorial2D::~Tutorial2D()
 {
 }
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
 {
+	// プレイヤーナンバー
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
@@ -46,6 +41,7 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 
 	textureTutorial2D = *textureLoader->getTexture(textureLoaderNS::TUTORIAL);
 
+	// チュートリアル2D初期化
 	Sprite::initialize(device,
 		textureTutorial2D,							// テクスチャ
 		spriteNS::TOP_LEFT,							// 原点
@@ -53,17 +49,17 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 回転
-		TUTORIAL2D_COLOR
+		TUTORIAL2D_COLOR							// 色
 	);
 
 	return S_OK;
 }
-
 //=============================================================================
 // 終了処理
 //=============================================================================
 void Tutorial2D::uninitialize(void)
 {
+	// チュートリアル2D画像解放
 	setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
@@ -73,20 +69,17 @@ void Tutorial2D::uninitialize(void)
 		SAFE_RELEASE(textureTutorial2D)
 	}
 }
-
 //=============================================================================
 // 更新処理
 //=============================================================================
 void Tutorial2D::update(void)
 {
 }
-
-
 //=============================================================================
 // 描画処理
 //=============================================================================
 void Tutorial2D::render(LPDIRECT3DDEVICE9 device)
 {
+	// チュートリアル2D描画
 	Sprite::render(device);
 }
-

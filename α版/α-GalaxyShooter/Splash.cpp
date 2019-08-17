@@ -1,20 +1,30 @@
+//=============================================================================
+// スプラッシュ処理 [Splash.cpp]
+// 制作者 飯塚春輝
+////===========================================================================
 #include "Splash.h"
-
 #include "Sound.h"
-
+// スプラッシュ名前空間有効
 using namespace splashNS;
-
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 Splash::Splash()
 {
+	// 現在のシーン(スプラッシュ)
 	sceneName = "Scene -Splash-";
+	// 次のシーン(タイトル)
 	nextScene = SceneList::TITLE;
 }
-
+//=============================================================================
+// デストラクタ
+//=============================================================================
 Splash::~Splash()
 {
-
 }
-
+//=============================================================================
+// 初期化処理
+//=============================================================================
 void Splash::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
@@ -22,7 +32,8 @@ void Splash::initialize(
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader, 
-	TextManager* _textManager) {
+	TextManager* _textManager)
+{
 	//Input
 	input = _input;
 	//sound
@@ -44,16 +55,21 @@ void Splash::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
+	// スプラッシュ2D初期化
 	splash2D.initialize(direct3D9->device,0, _textureLoader);
 }
-
-void Splash::update(float frameTime) {
-
+//=============================================================================
+// 更新処理
+//=============================================================================
+void Splash::update(float frameTime)
+{
+	// カメラ更新
 	camera->update();
 
+	// スプラッシュ2D更新
 	splash2D.update();
 
-	// キーを押したらタイトルへ
+	//Enter,Spaceまたは〇ボタン,Optionsでタイトルへ
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_SPACE) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -64,12 +80,12 @@ void Splash::update(float frameTime) {
 
 	// フェードが終わったらタイトルへ
 	if (splash2D.gotitle)changeScene(nextScene);
-
 }
-
-void Splash::render(Direct3D9* direct3D9) {
-
-
+//=============================================================================
+// 描画処理
+//=============================================================================
+void Splash::render(Direct3D9* direct3D9)
+{
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera->view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera->projection);
@@ -78,13 +94,17 @@ void Splash::render(Direct3D9* direct3D9) {
 	//UI
 	renderUI(direct3D9->device);
 }
-
-void Splash::render3D(Direct3D9* direct3D9) {
-
+//=============================================================================
+// 3D描画処理
+//=============================================================================
+void Splash::render3D(Direct3D9* direct3D9)
+{
 }
-
-void Splash::renderUI(LPDIRECT3DDEVICE9 device) {
-
+//=============================================================================
+// 2D描画処理
+//=============================================================================
+void Splash::renderUI(LPDIRECT3DDEVICE9 device)
+{
 	// αテストを有効に
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
@@ -94,23 +114,29 @@ void Splash::renderUI(LPDIRECT3DDEVICE9 device) {
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	// スプラッシュ2D描画
 	splash2D.render(device);
 
 	// αテストを無効に
 	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
 }
-
-void Splash::collisions() {
-
+//=============================================================================
+// コリジョン処理
+//=============================================================================
+void Splash::collisions()
+{
 }
-
-void Splash::AI() {
-
+//=============================================================================
+// AI処理
+//=============================================================================
+void Splash::AI()
+{
 }
-
-void Splash::uninitialize() {
-
+//=============================================================================
+// 終了処理
+//=============================================================================
+void Splash::uninitialize()
+{
+	// スプラッシュ2D終了
 	splash2D.uninitialize();
-
 }

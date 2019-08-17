@@ -1,18 +1,31 @@
+//=============================================================================
+// タイトル処理 [title.cpp]
+// 制作者 飯塚春輝
+////===========================================================================
 #include "Title.h"
+// タイトル名前空間有効
 using namespace titleNS;
-
-static int titletransition = 0;	//選択位置記憶変数
-
+//*****************************************************************************
+// 定数
+//*****************************************************************************
+static int titletransition = NULL;	//選択位置記憶変数
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 Title::Title()
 {
+	// 現在のシーン(タイトル)
 	sceneName = "Scene -Title-";
 }
-
+//=============================================================================
+// デストラクタ
+//=============================================================================
 Title::~Title()
 {
-
 }
-
+//=============================================================================
+// 初期化処理
+//=============================================================================
 void Title::initialize(
 	Direct3D9* direct3D9,
 	Input* _input,
@@ -20,7 +33,8 @@ void Title::initialize(
 	TextureLoader* _textureLoader,
 	StaticMeshLoader* _staticMeshLoader,
 	ShaderLoader* _shaderLoader,
-	TextManager* _textManager) {
+	TextManager* _textManager)
+{
 	//Input
 	input = _input;
 	//sound
@@ -52,18 +66,21 @@ void Title::initialize(
 	light = new Light;
 	light->initialize(direct3D9);
 
+	// タイトル遷移画像描画処理初期化
 	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
+
+	// タイトル指定位置描画処理初期化
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
 
-	titlePlayer[0].initialize(playerNS::TITLE_PLAYER,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
+	titlePlayer[0].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[0].modelType,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
 	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
-
-
 }
-
-void Title::update(float frameTime) {
-
+//=============================================================================
+// 更新処理
+//=============================================================================
+void Title::update(float frameTime)
+{
 	// キーを押したら選択UI移動
 	if (input->wasKeyPressed(VK_DOWN)||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN) ||
@@ -82,7 +99,7 @@ void Title::update(float frameTime) {
 		titletransition--;
 	}
 
-	// 選択UI限界
+	// 選択UI下限
 	if (titletransition > CNT_TITLE_MAX)
 	{
 		titletransition = 0;
@@ -98,19 +115,23 @@ void Title::update(float frameTime) {
 	titleTransPos.cntTitle = titletransition;
 
 	// 選択UI遷移処理
-	titleTransition();
+	titleTransitionPos();
 
+	// タイトル遷移画像描画処理更新
 	titleTrans.update();
-	titleTransPos.update();
 
+	// タイトル指定位置描画処理更新
+	titleTransPos.update();
 
 	// カメラアップデート
 	camera[0].setUpVector(titlePlayer[0].getAxisY()->direction);
 	camera[0].update();
-
 }
-
-void Title::render(Direct3D9* direct3D9) {
+//=============================================================================
+// 描画処理
+//=============================================================================
+void Title::render(Direct3D9* direct3D9)
+{
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
@@ -119,48 +140,67 @@ void Title::render(Direct3D9* direct3D9) {
 	//UI
 	renderUI(direct3D9->device);
 }
-
-void Title::render3D(Direct3D9* direct3D9, Camera currentCamera) {
-
+//=============================================================================
+// 3D描画処理
+//=============================================================================
+void Title::render3D(Direct3D9* direct3D9, Camera currentCamera)
+{
+	// タイトルプレイヤー描画
 	titlePlayer[0].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::TOON),
 		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 }
-
-void Title::renderUI(LPDIRECT3DDEVICE9 device) {
-
+//=============================================================================
+// 2D描画処理
+//=============================================================================
+void Title::renderUI(LPDIRECT3DDEVICE9 device)
+{
+	// タイトル遷移画像描画処理描画
 	titleTransPos.render(device);
+
+	// タイトル指定位置描画処理描画
 	titleTrans.render(device);
 }
-
-void Title::collisions() {
-
+//=============================================================================
+// コリジョン処理
+//=============================================================================
+void Title::collisions()
+{
 }
-
-void Title::AI(){
-
+//=============================================================================
+// AI処理
+//=============================================================================
+void Title::AI()
+{
 }
-
-void Title::uninitialize() {
-
+//=============================================================================
+// 終了処理
+//=============================================================================
+void Title::uninitialize()
+{
+	// ライト解放
 	SAFE_DELETE(light);
+
+	// カメラ解放
 	SAFE_DELETE_ARRAY(camera);
 
+	// タイトル遷移画像描画処理終了
 	titleTrans.uninitialize();
+
+	// タイトル指定位置描画処理終了
 	titleTransPos.uninitialize();
 }
-
 //=============================================================================
 // 選択UI遷移処理
 //=============================================================================
-void Title::titleTransition(void)
+void Title::titleTransitionPos(void)
 {
 	switch (titletransition)
 	{
 		// セレクト
 	case 0:
-
+		//Enterまたは〇ボタンでセレクトへ
 		nextScene = SceneList::SELECT;
 		if (input->wasKeyPressed(VK_RETURN)||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -170,7 +210,7 @@ void Title::titleTransition(void)
 
 		// チュートリアル
 	case 1:
-
+		//Enterまたは〇ボタンでチュートリアルへ
 		nextScene = SceneList::TUTORIAL;
 		if (input->wasKeyPressed(VK_RETURN)||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -184,7 +224,7 @@ void Title::titleTransition(void)
 
 		// 操作方法
 	case 2:
-
+		//Enterまたは〇ボタンでオペレーションへ
 		nextScene = SceneList::OPERATION;
 		if (input->wasKeyPressed(VK_RETURN)||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -198,7 +238,7 @@ void Title::titleTransition(void)
 
 		// クレジット
 	case 3:
-
+		//Enterまたは〇ボタンでクレジットへ
 		nextScene = SceneList::CREDIT;
 		if (input->wasKeyPressed(VK_RETURN)||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
@@ -212,7 +252,7 @@ void Title::titleTransition(void)
 
 		// ゲーム終了
 	case 4:
-
+		//Enterまたは〇ボタンでゲーム終了
 		if (input->wasKeyPressed(VK_RETURN)||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)

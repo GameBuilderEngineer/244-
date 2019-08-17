@@ -1,34 +1,39 @@
+//=============================================================================
+// ステンシル処理 [TargetDisplayEffect.cpp]
+// 制作者 飯塚春輝
+//=============================================================================
 #include "TargetDisplayEffect.h"
-
 //*****************************************************************************
-// 定数・マクロ
+// 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// 横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// 縦サイズ	
-															// X座標
-const static float		POSITION_X_PLAYER1 = 0.0f;
-const static float		POSITION_Y = 0.0f;	// Y座標
-#define DEFAULT_COLOR	(D3DCOLOR_RGBA(255, 255, 255, 255))	// バーの色
-
+const static int		WIDTH = WINDOW_WIDTH;						// ステンシル横サイズ
+const static int		HEIGHT = WINDOW_HEIGHT;						// ステンシル縦サイズ	
+const static float		POSITION_X_PLAYER1 = 0.0f;					// ステンシルX座標
+const static float		POSITION_Y = 0.0f;							// ステンシルY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-LPDIRECT3DTEXTURE9 TargetDisplayEffect::TargetTexture = NULL;	// テクスチャ
+LPDIRECT3DTEXTURE9 TargetDisplayEffect::TargetTexture = NULL;		// ステンシルテクスチャ
 int TargetDisplayEffect::cntUI = -1;
-
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 TargetDisplayEffect::TargetDisplayEffect()
 {
-
+	cntUI++;
 }
-
-
+//=============================================================================
+// デストラクタ
+//=============================================================================
 TargetDisplayEffect::~TargetDisplayEffect()
 {
-
 }
-
+//=============================================================================
+// 初期化処理
+//=============================================================================
 HRESULT TargetDisplayEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader *textureLoader, StaticMeshLoader* _staticMeshLoader)
 {
+	// プレイヤーナンバー
 	playerNumber = _playerNumber;
 
 	// テクスチャを読み込む
@@ -39,6 +44,7 @@ HRESULT TargetDisplayEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNum
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
 
+	// ステンシル初期化
 	image.initialize(device,
 		TargetTexture,						// テクスチャ
 		spriteNS::TOP_LEFT,					// 原点
@@ -46,18 +52,20 @@ HRESULT TargetDisplayEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNum
 		HEIGHT,								// 高さ
 		D3DXVECTOR3(POSITION_X_PLAYER1, POSITION_Y, 0.0f),// 座標
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
-		DEFAULT_COLOR						// 色
+		TRGET_COLOR							// 色
 	);
 
+	// ステンシル有効
 	isActive = true;
-
-
 
 return S_OK;
 }
-
+//=============================================================================
+// 終了処理
+//=============================================================================
 void TargetDisplayEffect::uninitialize(void)
 {
+	// ステンシル画像解放
 	image.setTexture(NULL);
 
 	// インスタンスが存在しなければテクスチャ解放
@@ -67,22 +75,24 @@ void TargetDisplayEffect::uninitialize(void)
 		SAFE_RELEASE(TargetTexture)
 	}
 
+	// ステンシル終了
 	inactivate();
 }
-
+//=============================================================================
+// 更新処理
+//=============================================================================
 void TargetDisplayEffect::update(void)
 {
-
 }
-
+//=============================================================================
+// 描画処理
+//=============================================================================
 void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	
-	if (!isActive) return;
-
-
 }
-
+//=============================================================================
+// ステンシルマスク処理
+//=============================================================================
 void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	device->SetRenderState(D3DRS_ZENABLE, TRUE);						// Zバッファを使用
@@ -112,7 +122,9 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 	device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_INCRSAT);
 
 }
-
+//=============================================================================
+// ステンシル描画処理
+//=============================================================================
 void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
 {
 	// ステンシルバッファの値と比較する参照値

@@ -2,7 +2,7 @@
 //【MemoryLine.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/12
 //===================================================================================================================================
 #include "MemoryLine.h"
 #include "UtilityFunction.h"
@@ -128,7 +128,6 @@ void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 				else 
 				{//メモリーラインの終点＝プレイヤー
 					line[i].end = *joinPlayer->getPosition();
-
 				}
 			}
 		}
@@ -194,6 +193,7 @@ void MemoryLine::lost(float frameTime)
 	if (lostTime > LOST_TIME)
 	{
 		disconnected = false;
+		lostTime = 0;
 		renderNum = 0;//全体で描画する点の数を0とする。
 		for (int i = 0; i < pileNum; i++)
 		{

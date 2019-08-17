@@ -62,7 +62,7 @@ void GameMaster::resetGameTime()
 void GameMaster::addWage(int playerNo, int wage){ playerInformation[playerNo].wage += wage;}
 void GameMaster::setPlayerCharacter(int playerNo,int playerType, int modelType) {
 	if (playerNo >= playerNS::NUM_PLAYER || playerNo < 0)return;
-	playerInformation[playerNo].playerType= modelType;
+	playerInformation[playerNo].playerType= playerType;
 	playerInformation[playerNo].modelType = modelType;
 }
 

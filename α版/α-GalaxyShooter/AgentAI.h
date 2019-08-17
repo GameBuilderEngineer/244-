@@ -56,7 +56,7 @@ public:
 	~AgentAI(void);
 
 	// ‰Šú‰»ˆ—
-	void initialize(int playerType, PDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader,
+	void initialize(int playerType, int modelType, PDIRECT3DDEVICE9 device, StaticMeshLoader* staticMeshLoader,
 		TextureLoader* textureLoader, ShaderLoader* shaderLoader) override;
 	// I—¹ˆ—
 	void uninitialize(void);

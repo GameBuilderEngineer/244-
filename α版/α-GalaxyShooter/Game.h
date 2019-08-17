@@ -85,7 +85,6 @@ private:
 	Magnet magnet[gameNS::NUM_MAGNET];
 	Text text;
 	Text text2;
-	TimerUI timerUI[gameNS::NUM_PLAYER];
 
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
@@ -102,14 +101,6 @@ private:
 	//Player player[gameNS::NUM_PLAYER];
 	Player *player[gameNS::NUM_PLAYER];
 	//プレイヤークラスへ統合
-	Bullet bullet1[gameNS::NUM_BULLET];
-	Bullet bullet2[gameNS::NUM_BULLET];
-	MemoryPile memoryPile1P[gameNS::NUM_1P_MEMORY_PILE];
-	MemoryPile memoryPile2P[gameNS::NUM_2P_MEMORY_PILE];
-	MemoryLine memoryLine1P;
-	MemoryLine memoryLine2P;
-	Recursion* recursion1P;
-	Recursion recursion;
 	Map map;// 仮
 
 	std::vector<Wasuremono*> wasuremono;
@@ -120,23 +111,7 @@ private:
 	Pose pose;
 
 	bool onUI = true;
-	int currentBullet1;//現在の弾番号[1P]
-	int currentBullet2;//現在の弾番号[2P]
-	float intervalBullet1;
-	float intervalBullet2;
-	int currentMemoryPile1;//現在のメモリーパイル番号[1P]
-	int currentMemoryPile2;//現在のメモリーパイル番号[1P]
 	float frameTime = 0.0f;//フレームタイム保存変数
-	bool onRecursion1P;					//1Pのリカージョンが生成されたかどうか
-	bool recursion1PAnd2P;				//1Pのリカージョンと2Pが衝突したかどうか
-	bool collitionMemoryLine1P;			//1Pのメモリーラインと2Pが衝突しているかどうか
-
-	int reverseValue1PXAxis;
-	int reverseValue1PYAxis;
-	int reverseValue2PXAxis;
-	int reverseValue2PYAxis;
-
-	float difference = 1.0f;
 
 public:
 	Game();

@@ -13,6 +13,8 @@
 #include "Bullet.h"
 #include "Input.h"
 #include "Camera.h"
+#include "ShockWave.h"
+
 
 namespace playerNS{
 
@@ -33,6 +35,7 @@ namespace playerNS{
 		BYTE jump;
 		BYTE cameraX;
 		BYTE cameraY;
+		BYTE provisional;
 	};
 
 	const OperationKeyTable KEY_TABLE_1P = {
@@ -44,6 +47,7 @@ namespace playerNS{
 		VK_SPACE,	//JUMP
 		VK_F3,		//CameraAxisX
 		VK_F4,		//CameraAxisY
+		'G',		//Provisional
 	};
 
 	const OperationKeyTable KEY_TABLE_2P = {
@@ -55,6 +59,7 @@ namespace playerNS{
 		VK_RETURN,		//JUMP
 		VK_F5,			//CameraAxisX
 		VK_F6,			//CameraAxisY
+		'T',		//Provisional
 	};
 	const OperationKeyTable NON_CONTOROL = {
 		VK_ESCAPE,		//FRONT
@@ -71,8 +76,9 @@ namespace playerNS{
 	const BYTE BUTTON_BULLET = virtualControllerNS::R1;
 
 	enum STATE {
-		DEFAULT,
+		GROUND,
 		DOWN,
+		FALL,
 		SKY,
 		REVIVAL,
 		STATE_NUM
@@ -86,11 +92,14 @@ namespace playerNS{
 	const float GRAVITY_FORCE = 80.0f;		//重力
 	const float DIFFERENCE_FIELD = 1.0f;	//フィールド補正差分
 	const float DOWN_TIME = 5.0f;			//ダウン時間
+	const float FALL_TIME = 0.5f;			//落下時間
 	const float INVINCIBLE_TIME = 3.0f;		//無敵時間
 	const float SKY_TIME = 10.0f;			//上空モード時間
 	const float INTERVAL_RECOVERY = 1.0f;	//自動回復インターバル
 	const float INTERVAL_BULLET = 0.2f;		//弾の発射インターバル
 	const float CAMERA_SPEED = 2.5f;		//弾の発射インターバル
+	const float SKY_HEIGHT = 80.0f;			//上空モードの高さ
+
 
 	//プレイヤーのスタートポジション
 	const D3DXVECTOR3 START_POSITION[NUM_PLAYER] =
@@ -111,6 +120,7 @@ protected:
 
 	//ステータス
 	int type;											//プレイヤータイプ
+	int modelType;										//キャラクターモデルタイプ
 	int hp;												//体力
 	int maxHp;											//最大体力
 	int sp;												//削除予定
@@ -134,6 +144,8 @@ protected:
 	float invincibleTimer;								//無敵時間
 	float skyTimer;										//上空モード制限時間
 	float downTimer;									//ダウンタイマー[体力が切れるorメモリーラインを切断される]
+	float transitionTimer;								//遷移時間
+	float fallTimer;									//落下時間
 
 	//操作関係
 	float reverseValueXAxis;							//操作X軸
@@ -147,6 +159,9 @@ protected:
 	float difference;									//フィールド補正差分
 	bool onGround;										//接地判定
 
+	//上空モード関係
+	float skyHeight;									//上空モード時高さ
+
 	//メモリーアイテム関係
 	MemoryPile memoryPile[playerNS::NUM_MEMORY_PILE];	//メモリーパイル
 	MemoryLine memoryLine;								//メモリーライン
@@ -155,20 +170,32 @@ protected:
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
 
+	//衝撃波
+	ShockWave* shockWave;								//衝撃波
+	bool onShockWave;									//衝撃波生成フラグ
+
+	//衝突情報
+	bool collidedOpponentMemoryLine;					//相手のメモリーラインとの衝突フラグ
+
+	//アクションフラグ
+	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
+
 public:
-	BoundingSphere bodyCollide;	//球コリジョン
+	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
+
 
 	Player();
 	~Player();
 
 	//processing
-	virtual void initialize(int playerType,LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader,ShaderLoader* shaderLoader);
+	virtual void initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader,ShaderLoader* shaderLoader);
 	virtual void update(float frameTime);
 	void toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	
+	void otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+
 	//operation
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);
 	void configurationGravity(D3DXVECTOR3* attractorPosition,float _attractorRadius);
@@ -178,13 +205,18 @@ public:
 	void jump();
 	void reset();
 	void changeState(int _state);
+	void ground();
+	void fall();
 	void down();
 	void sky(); 
 	void revival();
 	void updateBullet(float frameTime);
 	void controlCamera(float frameTime);
 	void updateMemoryItem(float frameTime);
-
+	void triggerShockWave();
+	void deleteShockWave();
+	void updateShockWave(float frameTime);
+	void disconnectMemoryLine();
 
 	//setter
 	void setInput(Input* _input);
@@ -193,6 +225,7 @@ public:
 	void recoveryHp(int value);
 	void lostSp(int value);
 	void recoverySp(int value);
+	void setCollidedMemoryLine(bool frag);
 
 	//getter
 	int getHp();
@@ -203,5 +236,11 @@ public:
 	int getWage();
 	bool whetherDown();
 	bool whetherDeath();
-	bool whetherInvincible();
+	bool whetherInvincible(); 
+	bool whetherSky();
+	bool whetherFall();
+	bool whetherGenerationRecursion();
+	bool messageDisconnectOpponentMemoryLine();
+	Recursion* getRecursion();
+	MemoryLine* getMemoryLine();
 };
