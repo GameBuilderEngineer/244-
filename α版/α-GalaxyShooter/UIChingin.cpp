@@ -15,7 +15,7 @@ using namespace uiChinginNS;
 // Global Variable
 // グローバル変数
 //======================================================================================================================================================
-int UIChingin::instanceIndex = (-1);	//	インスタンスインデックス
+int UIChingin::instanceIndex = 0;		//	インスタンスインデックス
 LPDIRECT3DTEXTURE9 UIChingin::texture;	//	テクスチャ
 //======================================================================================================================================================
 // Constructor
@@ -51,9 +51,6 @@ HRESULT UIChingin::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 	// テキストマネージャ
 	textManager = _textManager;
 
-	// プレイヤーインデックス
-	playerIndex = _playerIndex;
-
 	// ディレクトリ設定
 	setVisualDirectory();
 
@@ -64,18 +61,18 @@ HRESULT UIChingin::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 	sprite.initialize
 	(
 		_device,
-		texture,																														//	テクスチャ
-		spriteNS::CENTER,																												//	原点
-		WIDTH,																												//	横幅
-		HEIGHT,																											//	高さ
-		D3DXVECTOR3																														//	座標
+		texture,														//	テクスチャ
+		spriteNS::CENTER,												//	原点
+		WIDTH,															//	横幅
+		HEIGHT,															//	高さ
+		D3DXVECTOR3														//	座標
 		(
-			playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,											//	座標 x
-			POSITION_Y,																									//	座標 y
-			0.0f																														//	座標 z
+			_playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,	//	座標 x
+			POSITION_Y,													//	座標 y
+			0.0f														//	座標 z
 		),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),																									//	回転
-		D3DCOLOR_RGBA(255, 255, 255, 255)																								//	色
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+		D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
 	);
 
 	return S_OK;
@@ -92,16 +89,13 @@ void UIChingin::release(void)
 	// インスタンスインデックスを減算
 	instanceIndex--;
 
-	// インスタンスが存在しなければ、テクスチャを解放
-	if (instanceIndex >= 0) { return; }
-
 	return;
 }
 //======================================================================================================================================================
 // render
 // 描画
 //======================================================================================================================================================
-void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _sceneTimer, int _chingin)
+void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin)
 {
 	// UI背景
 	sprite.render(_device);
@@ -112,7 +106,7 @@ void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _sceneTimer, int _chingi
 
 	// ゲーム時間が半分（２分）を切ったら、チンギンを隠す（表示を「???」に変更）…現在はタイマーの完成待ちなので、とりあえず条件を「シーンタイマーが30秒を超えたら」に設定
 	// タイマーが完成次第、条件文を再設定すること
-	if (_sceneTimer < 30.0f)
+	if (_time < 30.0f)
 	{
 		textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
 		textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);

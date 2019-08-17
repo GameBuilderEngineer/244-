@@ -9,6 +9,7 @@
 #include "TextureLoader.h"
 #include "BoundingSphere.h"
 #include "Player.h"
+#include "Sound.h"
 
 static const int NUM_CHINGIN = 100;	// “¯‚É•\¦‚·‚é‚¤‚¦‚Å‘Ã“–‚»‚¤‚È”
 
@@ -62,7 +63,7 @@ private:
 
 public:
 	void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
-	void update(float frameTime, Player* player);
+	void update(Sound* _sound, float frameTime, Player* player);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	// ƒ`ƒ“ƒMƒ“‚ğ”­¶‚³‚¹‚é

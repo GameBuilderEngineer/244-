@@ -9,17 +9,6 @@
 #include <dsound.h>
 #pragma comment(lib,"dsound.lib")
 //======================================================================================================================================================
-// Macro
-// マクロ
-//======================================================================================================================================================
-#define SOUND_FILE_BGM_GAME ("BGM_Test_Ver_Game.wav")					//	サウンドファイル
-#define SOUND_FILE_BGM_SPLASH_TITLE ("BGM_Test_Ver_Splash_Title.wav")	//	サウンドファイル
-#define SOUND_FILE_SE_SELECT ("SE_Test_Ver_Select.wav")					//	サウンドファイル
-#define SOUND_FILE_SE_DECISION ("SE_Test_Ver_Decision.wav")				//	サウンドファイル
-#define SOUND_FILE_SE_CANCEL ("SE_Test_Ver_Cancel.wav")					//	サウンドファイル
-#define SOUND_FILE_SE_DAMAGE_GIVE ("SE_Test_Ver_Damage_Give.wav")		//	サウンドファイル
-#define SOUND_FILE_SE_DAMAGE_COVERED ("SE_Test_Ver_Damage_Covered.wav")	//	サウンドファイル
-//======================================================================================================================================================
 // NameSpace
 // 名前空間
 //======================================================================================================================================================
@@ -31,14 +20,34 @@ namespace soundNS
 
 	enum TYPE
 	{
-		BGM_GAME,			//	BGM：ゲーム
-		BGM_SPLASH_TITLE,	//	BGM：スプラッシュ - タイトル
-		SE_SELECT,			//	SE：セレクト
-		SE_DECISION,		//	SE：決定
-		SE_CANCEL,			//	SE：キャンセル
-		SE_DAMAGE_GIVE,		//	SE：与ダメ
-		SE_DAMAGE_COVERED,	//	SE：被ダメ
-		TYPE_MAX			//	最大値
+		AGING,							//	エイジング
+		BGM_CHARACTER_SELECT,			//	BGM：キャラクターセレクト
+		BGM_CREDIT,						//	BGM：クレジット
+		BGM_GAME,						//	BGM：ゲーム
+		BGM_RESULT,						//	BGM：リザルト
+		BGM_SPLASH,						//	BGM：スプラッシュ
+		BGM_TITLE,						//	BGM：タイトル
+		BGM_TUTORIAL,					//	BGM：チュートリアル
+		SE_ATTACK,						//	SE：攻撃
+		SE_CANCEL,						//	SE：キャンセル
+		SE_CHINGIN,						//	SE：チンギン
+		SE_COUNT,						//	SE：カウント
+		SE_CUT_MEMORY_LINE,				//	SE：メモリー・ライン切断
+		SE_DECISION,					//	SE：決定
+		SE_DESTRUCTION_WASUREMONO,		//	SE：ワスレモノ破壊
+		SE_DOWN,						//	SE：ダウン
+		SE_GAME_START,					//	SE：ゲーム - スタート
+		SE_GAME_TIME_UP,				//	SE：ゲーム - タイムアップ
+		SE_HIT,							//	SE：ヒット
+		SE_INSTALLATION_MEMORY_PILE,	//	SE：メモリー・パイル設置
+		SE_JUMP,						//	SE：ジャンプ
+		SE_LANDING,						//	SE：着地
+		SE_PAPER,						//	SE：ペーパー
+		SE_RECURSION,					//	SE：再帰回収
+		SE_REVIVAL,						//	SE：復活
+		SE_SELECT,						//	SE：セレクト
+		SE_SHOCK_WAVE,					//	SE：衝撃波
+		TYPE_MAX						//	最大値
 	};
 	enum METHOD
 	{

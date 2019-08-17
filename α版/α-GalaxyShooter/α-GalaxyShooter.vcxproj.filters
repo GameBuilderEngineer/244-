@@ -16,9 +16,6 @@
     <Filter Include="Direct3D9">
       <UniqueIdentifier>{fb16c361-8e36-40aa-b42c-9ad96910d0fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sound">
-      <UniqueIdentifier>{37b89136-d3b7-4a31-94cc-5d3da36148f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{59baf1aa-b1b2-4624-97a1-f181b60278bb}</UniqueIdentifier>
     </Filter>
@@ -243,6 +240,24 @@
     </Filter>
     <Filter Include="AI\Map">
       <UniqueIdentifier>{76dff474-7b1b-49bf-93b9-b66f8bd81143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\CutMemoryLine">
+      <UniqueIdentifier>{2a6cf4dc-9221-492c-8b96-a1ffb073c7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\ScreenSplitLine">
+      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Revival">
+      <UniqueIdentifier>{2bb7f2c9-9319-484d-87f8-ff29d9f106ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\RevivalGauge">
+      <UniqueIdentifier>{cc9beee4-02db-4d30-beb4-3f774d3f811e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\CountTime">
+      <UniqueIdentifier>{eb97fa15-af69-40de-b36c-b06fd7cf5df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{37b89136-d3b7-4a31-94cc-5d3da36148f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -501,9 +516,6 @@
     <ClCompile Include="Wage.cpp">
       <Filter>Object\Wage</Filter>
     </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Sound</Filter>
-    </ClCompile>
     <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="UIChingin.cpp">
       <Filter>UI\Chingin</Filter>
@@ -533,6 +545,30 @@
     </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>AI\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="UICutMemoryLine.cpp">
+      <Filter>UI\CutMemoryLine</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreenSplitLine.cpp">
+      <Filter>UI\ScreenSplitLine</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRevival.cpp">
+      <Filter>UI\Revival</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRevivalGauge.cpp">
+      <Filter>UI\RevivalGauge</Filter>
+    </ClCompile>
+    <ClCompile Include="UICountTime.cpp">
+      <Filter>UI\CountTime</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter2D.cpp">
+      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectCharacter.cpp">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -761,9 +797,6 @@
     <ClInclude Include="Wage.h">
       <Filter>Object\Wage</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Sound</Filter>
-    </ClInclude>
     <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="UIChingin.h">
       <Filter>UI\Chingin</Filter>
@@ -785,14 +818,32 @@
     <ClInclude Include="ShockWave.h">
       <Filter>Object\ShockWave</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h">
-      <Filter>Scene\CharacterSelect</Filter>
+    <ClInclude Include="Map.h">
+      <Filter>AI\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="UICutMemoryLine.h">
+      <Filter>UI\CutMemoryLine</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreenSplitLine.h">
+      <Filter>UI\ScreenSplitLine</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRevival.h">
+      <Filter>UI\Revival</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRevivalGauge.h">
+      <Filter>UI\RevivalGauge</Filter>
+    </ClInclude>
+    <ClInclude Include="UICountTime.h">
+      <Filter>UI\CountTime</Filter>
     </ClInclude>
     <ClInclude Include="SelectCharacter2D.h">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>AI\Map</Filter>
+    <ClInclude Include="SelectCharacter.h">
+      <Filter>Scene\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,8 @@ Credit::Credit()
 //=============================================================================
 Credit::~Credit()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_CREDIT);
 }
 //=============================================================================
 // 初期化処理
@@ -44,6 +46,9 @@ void Credit::initialize(
 	//shaderLoader
 	shaderLoader = _shaderLoader;
 
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_CREDIT, soundNS::METHOD::LOOP);
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -66,13 +71,21 @@ void Credit::update(float frameTime)
 	credit2D.update();
 
 	//Enter,BackSpaceまたは〇ボタン,×ボタンでタイトルへ
+	// 前の遷移へ戻る
 	if (input->wasKeyPressed(VK_RETURN) ||
 		input->wasKeyPressed(VK_BACK) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B)
-		)changeScene(nextScene);
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B) )
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		nextScene = SceneList::TITLE;
+		changeScene(nextScene);
+		return;
+	}
+
 }
 //=============================================================================
 // 描画処理
