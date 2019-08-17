@@ -44,6 +44,7 @@ Player::Player()
 	intervalBullet = 0;						//発弾間隔
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	recursion = NULL;						//リカージョンNULL
+	recursionTimer = 0.0f;					//リカージョンの生存時間
 }
 
 //===================================================================================================================================
@@ -608,6 +609,7 @@ void Player::updateMemoryItem(float frameTime)
 			elementMemoryPile = 0;//セットする対象を0番のメモリパイルに切替
 			//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
 			onRecursion = true;
+			recursionTimer = RECURSION_TIME;
 			//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
 			D3DXVECTOR3 vertex[NUM_MEMORY_PILE];
 			for (int i = 0; i < NUM_MEMORY_PILE; i++)
@@ -641,6 +643,13 @@ void Player::updateMemoryItem(float frameTime)
 	
 	//メモリーラインの更新
 	memoryLine.update(device, frameTime);
+
+
+	//リカージョンの更新
+	if (onRecursion)
+	{
+		recursion->update(frameTime);
+	}
 }
 
 //===================================================================================================================================

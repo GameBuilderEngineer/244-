@@ -84,22 +84,22 @@ namespace playerNS{
 		STATE_NUM
 	};
 
-	const int NUM_BULLET = 30;				//弾の数
-	const int NUM_MEMORY_PILE = 5;			//メモリーパイルの数
-	const int AMOUNT_RECOVERY = 2;			//回復料
-	const float SPEED = 30.0f;				//速度
-	const float JUMP_FORCE = 200.0f;		//ジャンプ力
-	const float GRAVITY_FORCE = 80.0f;		//重力
-	const float DIFFERENCE_FIELD = 1.0f;	//フィールド補正差分
-	const float DOWN_TIME = 5.0f;			//ダウン時間
-	const float FALL_TIME = 0.5f;			//落下時間
-	const float INVINCIBLE_TIME = 3.0f;		//無敵時間
-	const float SKY_TIME = 10.0f;			//上空モード時間
-	const float INTERVAL_RECOVERY = 1.0f;	//自動回復インターバル
-	const float INTERVAL_BULLET = 0.2f;		//弾の発射インターバル
-	const float CAMERA_SPEED = 2.5f;		//弾の発射インターバル
-	const float SKY_HEIGHT = 80.0f;			//上空モードの高さ
-
+	const int NUM_BULLET			= 30;		//弾の数
+	const int NUM_MEMORY_PILE		= 5;		//メモリーパイルの数
+	const int AMOUNT_RECOVERY		= 2;		//回復料
+	const float SPEED				= 30.0f;	//速度
+	const float JUMP_FORCE			= 200.0f;	//ジャンプ力
+	const float GRAVITY_FORCE		= 80.0f;	//重力
+	const float DIFFERENCE_FIELD	= 1.0f;		//フィールド補正差分
+	const float DOWN_TIME			= 5.0f;		//ダウン時間
+	const float FALL_TIME			= 0.5f;		//落下時間
+	const float INVINCIBLE_TIME		= 3.0f;		//無敵時間
+	const float SKY_TIME			= 10.0f;	//上空モード時間
+	const float INTERVAL_RECOVERY	= 1.0f;		//自動回復インターバル
+	const float INTERVAL_BULLET		= 0.2f;		//弾の発射インターバル
+	const float CAMERA_SPEED		= 2.5f;		//弾の発射インターバル
+	const float SKY_HEIGHT			= 80.0f;	//上空モードの高さ
+	const float RECURSION_TIME		= 3.0f;		//リカージョンの生存時間
 
 	//プレイヤーのスタートポジション
 	const D3DXVECTOR3 START_POSITION[NUM_PLAYER] =
@@ -169,6 +169,7 @@ protected:
 	LPDIRECT3DTEXTURE9 recrusionTexture;				//リカージョン用テクスチャ
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
+	float recursionTimer;								//リカージョン生存時間
 
 	//衝撃波
 	ShockWave* shockWave;								//衝撃波
@@ -240,6 +241,7 @@ public:
 	bool whetherSky();
 	bool whetherFall();
 	bool whetherGenerationRecursion();
+
 	bool messageDisconnectOpponentMemoryLine();
 	Recursion* getRecursion();
 	MemoryLine* getMemoryLine();
