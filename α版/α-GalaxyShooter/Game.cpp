@@ -13,6 +13,8 @@ using namespace gameNS;
 Game::Game()
 {
 	sceneName = "Scene -Game-";
+	startCountFlag = true;
+	endCountFlag = false;
 
 	nextScene = SceneList::RESULT;
 }
@@ -53,7 +55,7 @@ void Game::initialize(
 	textManager = _textManager;
 
 	// サウンドの停止
-	sound->stop(soundNS::TYPE::BGM_SPLASH_TITLE);
+	sound->stop(soundNS::TYPE::BGM_TITLE);
 	// サウンドの再生
 	sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
@@ -97,6 +99,9 @@ void Game::initialize(
 	//フィールド
 	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
+	// 画面分割線の初期化
+	uiScreenSplitLine.initialize(direct3D9->device, textureLoader);
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
@@ -109,6 +114,9 @@ void Game::initialize(
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
+		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
+		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -190,6 +198,7 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
+
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||
@@ -230,17 +239,22 @@ void Game::update(float _frameTime) {
 	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		player[i]->update(frameTime);
+		player[i]->update(sound, frameTime);
 	}
 
-	//プレイヤーの更新
 	{
+		// 連打復活が完成するまでの仮
+		static int revivalPoint = 0;
+		if (revivalPoint < 1000) { revivalPoint++; }
+
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].update();
 			target.update();
 
 			uiRecursion[i].update();
+			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
+			uiRevivalGauge[i].update(revivalPoint);
 		}
 	}
 
@@ -287,7 +301,7 @@ void Game::update(float _frameTime) {
 	}
 
 	// チンギンの更新
-	chinginManager.update(frameTime, player[1]);
+	chinginManager.update(sound, frameTime, player[1]);
 	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {
@@ -542,6 +556,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
 	);
+
 #endif
 	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
@@ -554,20 +569,34 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
+	// ユーザインタフェース
 	if (onUI) {
 
 		// チンギン完成までの仮
 		static int chingin = 0;
 		if (chingin < 99999) { chingin++; }
 
+		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].render(device);
-			uiRecursion[i].render(device);
+
+			uiCutMemoryLine[i].render(device);
+			uiRevivalGauge[i].render(device);
+			uiRevival[i].render(device);
+		}
+
+		// 優先度：高
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
+			uiRecursion[i].render(device);
 		}
 	}
+
+	// 画面分割線
+	uiScreenSplitLine.render(device);
 
 	if (pose.poseon)
 	{
@@ -593,7 +622,8 @@ void Game::collisions() {
 			*player[PLAYER2]->getMatrixWorld(), 
 			*player[PLAYER1]->bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER2]->damgae(5);
 			player[PLAYER1]->bullet[i].inActivation();
 		}
@@ -609,7 +639,8 @@ void Game::collisions() {
 			*player[PLAYER1]->getMatrixWorld(), 
 			*player[PLAYER2]->bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER1]->damgae(5);
 			player[PLAYER2]->bullet[i].inActivation();
 			
@@ -660,6 +691,9 @@ void Game::collisions() {
 				player[PLAYER1]->bullet[j].bodyCollide.getCenter(), player[PLAYER1]->bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1]->bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
+
 				wasuremono[i]->inActivation();
 				player[PLAYER1]->bullet[j].inActivation();
 			}
@@ -669,6 +703,9 @@ void Game::collisions() {
 				player[PLAYER2]->bullet[j].bodyCollide.getCenter(), player[PLAYER2]->bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2]->bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
+
 				wasuremono[i]->inActivation();
 				player[PLAYER2]->bullet[j].inActivation();
 			}
@@ -765,7 +802,11 @@ void Game::uninitialize() {
 		uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
+		uiCutMemoryLine[i].release();
+		uiRevivalGauge[i].release();
+		uiRevival[i].release();
 	}
+	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
 	SAFE_DELETE(player[0])

@@ -121,7 +121,7 @@ void AgentAI::uninitialize(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void AgentAI::update(float frameTime)
+void AgentAI::update(Sound* _sound, float frameTime)
 {
 	// プレイヤー処理の事前更新
 	updatePlayerBefore(frameTime);
@@ -154,6 +154,8 @@ void AgentAI::update(float frameTime)
 
 	// プレイヤー自己情報→AIに送信 
 	updateAgentSelfData();
+
+	Player::update(_sound, frameTime);
 }
 
 

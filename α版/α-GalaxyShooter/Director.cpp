@@ -108,9 +108,13 @@ HRESULT Director::initialize(){
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
 
+	// サウンド読み込み
 	setSoundDirectory();
 	sound = new Sound;
 	sound->initialize(window->wnd);
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::AGING, soundNS::METHOD::PLAY);
 
 	//scene
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);

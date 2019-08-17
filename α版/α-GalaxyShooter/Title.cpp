@@ -22,6 +22,8 @@ Title::Title()
 //=============================================================================
 Title::~Title()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_TITLE);
 }
 //=============================================================================
 // 初期化処理
@@ -45,6 +47,9 @@ void Title::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
 
 	//camera
 	camera = new Camera[NUM_PLAYER];
@@ -202,10 +207,14 @@ void Title::titleTransitionPos(void)
 	case 0:
 		//Enterまたは〇ボタンでセレクトへ
 		nextScene = SceneList::SELECT;
-		if (input->wasKeyPressed(VK_RETURN)||
+		if (input->wasKeyPressed(VK_RETURN) ||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			)changeScene(nextScene);
+			)
+		{
+			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+			changeScene(nextScene);
+		}
 		break;
 
 		// チュートリアル

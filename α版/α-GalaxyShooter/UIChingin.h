@@ -31,11 +31,10 @@ private:
 	static LPDIRECT3DTEXTURE9 texture;	//	テクスチャ
 	Sprite sprite;						//	スプライト
 	TextManager* textManager;			//	テキストマネージャ
-	int playerIndex;					//	プレイヤーインデックス
 public:
 	UIChingin(void);
 	~UIChingin(void);
 	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, TextureLoader* _textureLoader, TextManager* _textManager);
 	void release(void);
-	void render(LPDIRECT3DDEVICE9 _device, float _sceneTimer, int _chingin);
+	void render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin);
 };

@@ -11,7 +11,6 @@
 #include "Player.h"
 #include "Text.h"
 #include "Magnet.h"
-#include "TimerUI.h"
 #include "Colony.h"
 #include "Junk.h"
 #include "GameMaster.h"
@@ -33,6 +32,10 @@
 #include "Map.h"
 #include "AgentAI.h"
 #include "ChinginManager.h"
+#include "UIScreenSplitLine.h"
+#include "UIRevival.h"
+#include "UIRevivalGauge.h"
+#include "UICutMemoryLine.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -89,6 +92,10 @@ private:
 	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
 	UIChingin uiChingin[gameNS::NUM_PLAYER];
+	UICutMemoryLine uiCutMemoryLine[gameNS::NUM_PLAYER];
+	UIRevival uiRevival[gameNS::NUM_PLAYER];
+	UIRevivalGauge uiRevivalGauge[gameNS::NUM_PLAYER];
+	UIScreenSplitLine uiScreenSplitLine;
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
@@ -110,6 +117,8 @@ private:
 	TargetDisplayEffect target;
 	Pose pose;
 
+	bool startCountFlag;
+	bool endCountFlag;
 	bool onUI = true;
 	float frameTime = 0.0f;//フレームタイム保存変数
 

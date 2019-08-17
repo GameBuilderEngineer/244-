@@ -109,7 +109,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 //[処理内容5]接地処理
 //[処理内容6]メモリーパイル・メモリーライン・リカージョンの処理
 //===================================================================================================================================
-void Player::update(float frameTime)
+void Player::update(Sound* _sound, float frameTime)
 {
 #ifdef _DEBUG
 	//調整用
@@ -139,6 +139,8 @@ void Player::update(float frameTime)
 	if (input->wasKeyPressed(keyTable.jump) ||
 		input->getController()[type]->wasButton(BUTTON_JUMP))
 	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_JUMP, soundNS::METHOD::PLAY);
 		onJump = true;
 	}
 
@@ -245,7 +247,7 @@ void Player::update(float frameTime)
 	//===========
 	//【弾の更新】
 	//===========
-	updateBullet(frameTime);
+	updateBullet(_sound, frameTime);
 
 	//===========
 	//【カメラの操作】
@@ -255,7 +257,7 @@ void Player::update(float frameTime)
 	//===========
 	//【メモリーパイル・メモリーライン・リカージョンの更新】
 	//===========
-	updateMemoryItem(frameTime);
+	updateMemoryItem(_sound, frameTime);
 
 	//===========
 	//【衝撃波の更新】
@@ -532,7 +534,7 @@ void Player::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXM
 //===================================================================================================================================
 //【弾の更新】
 //===================================================================================================================================
-void Player::updateBullet(float frameTime)
+void Player::updateBullet(Sound* _sound, float frameTime)
 {
 	intervalBullet = max(intervalBullet - frameTime, 0);//インターバルの更新
 	//バレットの更新
@@ -546,6 +548,9 @@ void Player::updateBullet(float frameTime)
 	if ((input->getMouseLButton() || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
+
 		bullet[elementBullet].setPosition(position);
 		//Y軸方向への成分を削除する
 		D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
@@ -591,13 +596,16 @@ void Player::controlCamera(float frameTime)
 //===================================================================================================================================
 //【カメラの操作/更新】
 //===================================================================================================================================
-void Player::updateMemoryItem(float frameTime)
+void Player::updateMemoryItem(Sound* _sound, float frameTime)
 {
 	//1Pのメモリーパイルのセット
 	if (onGround && 
 		memoryPile[elementMemoryPile].ready() &&
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
 		memoryPile[elementMemoryPile].activation();

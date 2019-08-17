@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "ShockWave.h"
+#include "Sound.h"
 
 
 namespace playerNS{
@@ -191,7 +192,7 @@ public:
 
 	//processing
 	virtual void initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader,ShaderLoader* shaderLoader);
-	virtual void update(float frameTime);
+	virtual void update(Sound* _sound, float frameTime);
 	void toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon,
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
@@ -211,9 +212,9 @@ public:
 	void down();
 	void sky(); 
 	void revival();
-	void updateBullet(float frameTime);
+	void updateBullet(Sound* _sound, float frameTime);
 	void controlCamera(float frameTime);
-	void updateMemoryItem(float frameTime);
+	void updateMemoryItem(Sound* _sound, float frameTime);
 	void triggerShockWave();
 	void deleteShockWave();
 	void updateShockWave(float frameTime);

@@ -65,20 +65,40 @@ void Operation::update(float frameTime)
 	// カメラ更新
 	camera->update();
 
-	// キーを押したら選択UI移動
-	if (input->wasKeyPressed(VK_RIGHT)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT)
-		)
+	// 前の遷移へ戻る
+	if (input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
 	{
-		opeTransition++;
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		nextScene = SceneList::TITLE;
+		changeScene(nextScene);
+		return;
 	}
-	else if (input->wasKeyPressed(VK_LEFT)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT)
-		)
+
+	// キーを押したら選択UI移動
+	if (input->wasKeyPressed(VK_RIGHT) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT))
 	{
-		opeTransition--;
+		if (opeTransition < 1)
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
+			opeTransition++;
+		}
+	}
+	else if (input->wasKeyPressed(VK_LEFT) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT))
+	{
+		if (opeTransition > 0)
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
+			opeTransition--;
+		}
 	}
 
 	// 選択UI下限
@@ -93,10 +113,13 @@ void Operation::update(float frameTime)
 	}
 
 	//Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN)||
+	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		)changeScene(nextScene);
+		)
+	{
+		changeScene(nextScene);
+	}
 }
 //=============================================================================
 // 描画処理
