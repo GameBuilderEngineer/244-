@@ -15,7 +15,7 @@ int AgentAI::numAgent = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-AgentAI::AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fieldOfView)
+AgentAI::AgentAI(Player* opponentPlayer, Camera* camera)
 {
 	aiID = numAgent++;
 
@@ -23,7 +23,7 @@ AgentAI::AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fiel
 	arbiter = new Arbiter;
 
 	// モジュール
-	sensor = new Sensor(cameraPosition, fieldOfView);
+	sensor = new Sensor(&camera->position, &camera->gazePosition, &camera->fieldOfView);
 	environmentAnalysis = new EnvironmentAnalysis;
 	pathPlanning = new PathPlanning;
 	decisionMaking = new DecisionMaking;
@@ -99,6 +99,7 @@ void AgentAI::initialize(
 	bodyBB->initialize();
 
 	// 初期設定項目を埋める
+	recognitionBB->setMemoryBB(memoryBB);
 	recognitionBB->setMyPosition(&position);
 	bodyBB->configMovingDestination(opponent->getPosition());
 }
@@ -132,22 +133,22 @@ void AgentAI::update(float frameTime)
 	{
 		sensor->update(this);
 	}
-	if (environmentAnalysis->getUpdatePermission())
-	{
-		environmentAnalysis->update(this);
-	}
-	if (pathPlanning->getUpdatePermission())
-	{
-		pathPlanning->update(this);
-	}
-	if (decisionMaking->getUpdatePermission())
-	{
-		decisionMaking->update(this);
-	}
-	if (motionGeneration->getUpdatePermission())
-	{
-		motionGeneration->update(this);
-	}
+	//if (environmentAnalysis->getUpdatePermission())
+	//{
+	//	environmentAnalysis->update(this);
+	//}
+	//if (pathPlanning->getUpdatePermission())
+	//{
+	//	pathPlanning->update(this);
+	//}
+	//if (decisionMaking->getUpdatePermission())
+	//{
+	//	decisionMaking->update(this);
+	//}
+	//if (motionGeneration->getUpdatePermission())
+	//{
+	//	motionGeneration->update(this);
+	//}
 
 	// プレイヤー処理の事後更新
 	updatePlayerAfter(frameTime);
@@ -185,7 +186,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	recorvery(frameTime);
 
-#ifdef _DEBUG
+//#ifdef _DEBUG●
 // デバッグモードのときはコントローラの入力を一部受け付ける
 // 特段理由はない　せっかくだから
 
@@ -203,7 +204,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	{
 		onJump = true;
 	}
-#endif
+//#endif
 
 	//===========
 	//【接地処理】

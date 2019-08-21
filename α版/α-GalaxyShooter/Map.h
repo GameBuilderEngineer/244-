@@ -33,6 +33,9 @@ private:
 
 public:
 	BoundingSphere boundingSphere;	// バウンディングスフィア
+#ifdef _DEBUG
+	bool isRed;						// ノードのデバッグ表示が赤色
+#endif
 
 	// Method
 	MapNode(void) { instanceCount++; }
@@ -51,7 +54,7 @@ public:
 class Map
 {
 private:
-	static Planet* field;// ●当座の措置
+	static Planet* field;
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 	LPD3DXMESH mapCoodMark;					// マップノード座標マーク用メッシュ
 	D3DMATERIAL9 mapCoodMat;				// マップノード座標マーク用のマテリアルその１

@@ -7,24 +7,27 @@
 #include "Base.h"
 #include "AICommon.h"
 #include "BlackBoardBase.h"
+#include "BlackBoardMemory.h"
 #include "Player.h"
+#include "Map.h"
 
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-
 class RecognitionBB : public BlackBoardBase
 {
 private:
+	MemoryBB* memoryBB;							// 記憶領域ブラックボード
 	Player* opponentPlayer;						// 対戦相手
 	D3DXVECTOR3 *myPosition;					// 自分の座標
 	bool inAir;									// true 空中にいる  false 地上にいる
 	bool isDown;								// ダウン中か
+	float distanceBetweenPlayers;
 
 public:
 	RecognitionBB(Player* _opponentPlayer);
+	void setMemoryBB(MemoryBB* _memoryBB) { memoryBB = _memoryBB; }
 	void initialize(void) override;				// 初期化処理
-
 	// 対戦相手を取得
 	Player* getOpponentPlayer(void) { return opponentPlayer; }
 
@@ -34,4 +37,6 @@ public:
 	void setWhetherInAir(bool setting) { inAir = setting; }
 	bool getIsDown(void) { return isDown; }
 	void setIsDown(bool setting) { isDown = setting; }
+	std::vector<MapNode*>& getMemorizedMap(void) { return memoryBB->getMemorizedMap(); }
+	void setDistanceBetweenPlayers(float setting) { distanceBetweenPlayers = setting; }
 };

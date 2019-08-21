@@ -6,6 +6,8 @@
 #pragma once
 #include "BlackBoardBase.h"
 #include <unordered_map>
+#include "Map.h"
+
 
 // 前方宣言
 class BehaviorNodeBase;
@@ -19,6 +21,9 @@ private:
 	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー
 	// ●アロケータだけにする初期化をねんのためいれておくよてい
 
+	std::vector<MapNode*> memorizedMap;
+
+
 public:
 	// Method
 	MemoryBB(void);
@@ -26,4 +31,6 @@ public:
 
 	std::unordered_map<BehaviorNodeBase*, int>& getOnOffRecord(void) { return onOffRecord; }
 	std::unordered_map<BehaviorNodeBase*, int>& getTimer(void) { return timer; }
+	std::vector<MapNode*>& getMemorizedMap(void) { return memorizedMap; }
+
 };

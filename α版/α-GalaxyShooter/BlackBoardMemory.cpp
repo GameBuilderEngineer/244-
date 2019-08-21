@@ -20,5 +20,6 @@ MemoryBB::MemoryBB(void)
 //=============================================================================
 void MemoryBB::initialize(void)
 {
-
+	std::vector<MapNode*> temp;
+	memorizedMap.swap(temp);	// 一時オブジェクトと交換しメモリ解放
 }

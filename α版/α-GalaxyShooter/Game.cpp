@@ -67,7 +67,7 @@ void Game::initialize(
 #if 1
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
+	player[1] = new AgentAI(player[0], &camera[1]);
 #else
 	player[0] = new Player;
 	player[1] = new Player;
@@ -325,7 +325,7 @@ void Game::render(Direct3D9* direct3D9) {
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
@@ -335,7 +335,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
 
-	//target.renderEffectImage(direct3D9->device);
+	target.renderEffectImage(direct3D9->device);
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
@@ -346,20 +346,20 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	//(仮)ガラクタの描画
-	for (int i = 0; i < JUNK_MAX; i++)
-	{
-		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)ガラクタの描画
+	//for (int i = 0; i < JUNK_MAX; i++)
+	//{
+	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//(仮)マグネットの描画
-	for (int i = 0; i < NUM_MAGNET; i++)
-	{
-		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)マグネットの描画
+	//for (int i = 0; i < NUM_MAGNET; i++)
+	//{
+	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device, currentCamera.position);
@@ -372,11 +372,17 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+
 	// ワスレモノの描画
+#if 1
 	for(int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+#else
+	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// インスタンシング描画をやろうしたが上手くいっていない
+#endif
 
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -440,18 +446,18 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
 
-	text.print(WINDOW_WIDTH / 2, 170, 
-		"collisionMemoryLine(%d)\n",
-		collitionMemoryLine1P
-	);
-	text.print(WINDOW_WIDTH / 2, 200,
-		"collisionMemoryLine(%.02f)\n",
-		memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
-	);
-	text.print(WINDOW_WIDTH / 2, 230,
-		"recrusion1PAnd2P(%d)\n",
-		recursion1PAnd2P
-	);
+	//text.print(WINDOW_WIDTH / 2, 170, 
+	//	"collisionMemoryLine(%d)\n",
+	//	collitionMemoryLine1P
+	//);
+	//text.print(WINDOW_WIDTH / 2, 200,
+	//	"collisionMemoryLine(%.02f)\n",
+	//	memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
+	//);
+	//text.print(WINDOW_WIDTH / 2, 230,
+	//	"recrusion1PAnd2P(%d)\n",
+	//	recursion1PAnd2P
+	//);
 	
 
 	text2.print(10, 450,
@@ -661,6 +667,7 @@ void Game::collisions() {
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1]->bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER1]->bullet[j].inActivation();
 			}
 
@@ -670,6 +677,7 @@ void Game::collisions() {
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2]->bullet[j].getMatrixWorld()))
 			{
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}

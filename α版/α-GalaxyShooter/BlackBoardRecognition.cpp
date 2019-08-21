@@ -19,6 +19,7 @@ RecognitionBB::RecognitionBB(Player* _opponentPlayer): opponentPlayer(_opponentP
 //=============================================================================
 void RecognitionBB::initialize(void)
 {
+	memoryBB = NULL;
 	// opponentPlayer = コンストラクタで設定済
 	myPosition = NULL;
 	inAir = false;

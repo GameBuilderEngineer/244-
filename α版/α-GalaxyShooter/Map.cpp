@@ -18,9 +18,7 @@ using namespace MapNS;
 //*****************************************************************************
 int MapNode::instanceCount = -1;
 std::vector<MapNode*> Map::mapNode;
-Planet* Map::field;// œ“–À‚Ì‘[’u
-
-
+Planet* Map::field;
 
 //=============================================================================
 // ‰Šú‰»ˆ—
@@ -146,7 +144,7 @@ void Map::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projectio
 	device->LightEnable(0, false);
 	for (size_t i = 0; i < mapNode.size(); i++)
 	{
-		if (i == 5)
+		if (mapNode[i]->isRed)
 		{
 			device->SetMaterial(&targetCoodMat);
 		}

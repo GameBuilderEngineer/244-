@@ -47,7 +47,6 @@ void EnvironmentAnalysis::uninitialize(void)
 //=============================================================================
 void EnvironmentAnalysis::update(AgentAI* agentAI)
 {
-
 	
 }
 
