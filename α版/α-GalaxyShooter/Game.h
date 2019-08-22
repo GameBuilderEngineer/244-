@@ -96,7 +96,6 @@ private:
 	InstancingBillboard plane;
 	Object testObject;//‰¼
 	Object testCube;//‰¼
-
 	//ƒvƒŒƒCƒ„[
 	//Player player[gameNS::NUM_PLAYER];
 	Player *player[gameNS::NUM_PLAYER];

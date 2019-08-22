@@ -440,18 +440,18 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
 
-	text.print(WINDOW_WIDTH / 2, 170, 
-		"collisionMemoryLine(%d)\n",
-		collitionMemoryLine1P
-	);
-	text.print(WINDOW_WIDTH / 2, 200,
-		"collisionMemoryLine(%.02f)\n",
-		memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
-	);
-	text.print(WINDOW_WIDTH / 2, 230,
-		"recrusion1PAnd2P(%d)\n",
-		recursion1PAnd2P
-	);
+	//text.print(WINDOW_WIDTH / 2, 170, 
+	//	"collisionMemoryLine(%d)\n",
+	//	collitionMemoryLine1P
+	//);
+	//text.print(WINDOW_WIDTH / 2, 200,
+	//	"collisionMemoryLine(%.02f)\n",
+	//	memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
+	//);
+	//text.print(WINDOW_WIDTH / 2, 230,
+	//	"recrusion1PAnd2P(%d)\n",
+	//	recursion1PAnd2P
+	//);
 	
 
 	text2.print(10, 450,
@@ -595,6 +595,7 @@ void Game::collisions() {
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER2]->damgae(5);
+			hpEffect[PLAYER2].activate(20);
 			player[PLAYER1]->bullet[i].inActivation();
 		}
 	}
@@ -611,6 +612,7 @@ void Game::collisions() {
 		{
 			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
 			player[PLAYER1]->damgae(5);
+			hpEffect[PLAYER1].activate(20);
 			player[PLAYER2]->bullet[i].inActivation();
 			
 		}
@@ -686,7 +688,6 @@ void Game::collisions() {
 					*player[i]->getMatrixWorld(),*junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
-					hpEffect[i].activate(10);
 				}
 				junk[k].headPosition(*player[i]->getPosition());
 			}

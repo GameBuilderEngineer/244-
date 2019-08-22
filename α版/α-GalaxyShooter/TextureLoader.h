@@ -61,6 +61,9 @@ namespace textureLoaderNS
 		TITLE_GAMEEND_B,
 		TUTORIAL,
 		RESULT,
+		WIN,
+		DRAW,
+		LOSE,
 		KEY_OPE,
 		PAD_OPE,
 		CREDIT,
@@ -72,6 +75,9 @@ namespace textureLoaderNS
 		SELECT,
 		SELECT_PLAYER,
 		SELECT_PLAYER2,
+		SELECT_PLAYER_NUMBER,
+		SELECT_PLAYER2_NUMBER,
+		CHARA_RESULT_BG,
 		MAX_TEXTURE,
 	};
 }

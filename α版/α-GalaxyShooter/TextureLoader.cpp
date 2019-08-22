@@ -62,15 +62,21 @@ TextureLoader::TextureLoader()
 	textureName[SELECT] = { "Title_BackGround.png" };
 	textureName[SELECT_PLAYER] = { "Chara1.png" };
 	textureName[SELECT_PLAYER2] = { "Chara2.png" };
-	textureName[RESULT] = { "result.png" };
+	textureName[SELECT_PLAYER_NUMBER] = { "Result_Player_01.png" };
+	textureName[SELECT_PLAYER2_NUMBER] = { "Result_Player_02.png" };
+	textureName[RESULT] = { "mahoujinn.png" };
+	textureName[WIN] = { "Result_WIN.png" };
+	textureName[DRAW] = { "Result_DRAW.png" };
+	textureName[LOSE] = { "Result_LOSE.png" };
 	textureName[KEY_OPE] = { "Operation_KeyBoard.png" };
 	textureName[PAD_OPE] = { "Operation_GamePad.png" };
 	textureName[CREDIT] = { "credit.png" };
 	textureName[WHITE_TEXTURE] = { "backGround1080p.png" };
 	textureName[LIGHT001] = { "light001.png" };
-	textureName[HP_EFFECT] = { "effect2.png" };
+	textureName[HP_EFFECT] = { "HP.png" };
 	textureName[TARGET] = { "kurezitto.png" };
 	textureName[POSE] = { "Pause.png" };
+	textureName[CHARA_RESULT_BG] = { "Result_Window.png" };
 }
 
 
