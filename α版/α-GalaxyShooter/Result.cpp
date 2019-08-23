@@ -57,6 +57,9 @@ void Result::initialize(
 		result2D[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
+	// 賃金数初期化
+	chinginCnt.initialize(direct3D9->device, 0, _textureLoader, _textManager);
+
 	resultTransition = NULL;				// リザルト画像入れ替え
 	result2Transition = NULL;				// リザルト2画像入れ替え
 }
@@ -103,6 +106,11 @@ void Result::renderUI(LPDIRECT3DDEVICE9 device)
 		// リザルト2D描画
 		result2D[i].render(device, resultTransition, result2Transition);
 	}
+
+	static float chinginResult = 99999;
+
+	// 賃金数描画
+	chinginCnt.render(device, chinginResult, chinginResult);
 }
 //=============================================================================
 // コリジョン処理
@@ -126,4 +134,6 @@ void Result::uninitialize()
 		// リザルト2D終了
 		result2D[i].uninitialize();
 	}
+	// 賃金数終了
+	chinginCnt.uninitialize();
 }

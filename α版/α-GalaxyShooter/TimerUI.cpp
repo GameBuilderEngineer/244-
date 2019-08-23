@@ -8,7 +8,7 @@
 //*****************************************************************************
 #ifdef _DEBUG
 const static int		WIDTH = 300;						// タイマーUI横サイズ
-const static int		HEIGHT = 150;						// タイマーUI縦サイズ	
+const static int		HEIGHT = 150;						// タイマーUI縦サイズ
 const static float		POSITION_X = 330.0f;				// タイマーUIX座標
 const static float		POSITION_Y = 0.0f;					// タイマーUIY座標
 const static float		TIMER_ONE_POSITION_X = 490.0f;		// 1桁タイマーX座標
@@ -102,6 +102,6 @@ void TimerUI::render(LPDIRECT3DDEVICE9 device, float _uiOneTimer, float _uiTenTi
 	Sprite::render(device);
 
 	// タイム描画
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
 }

@@ -14,7 +14,7 @@ protected:
 	int	settingFrame;					// エフェクト生存時間
 	int	cntFrame;						// エフェクト生存時間加算
 	Camera *camera;
-	D3DXVECTOR3 position;				//位置
+	D3DXVECTOR3 position;				// 位置
 
 public:
 	ScreenEffectBase();

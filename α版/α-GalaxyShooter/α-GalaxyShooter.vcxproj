@@ -141,6 +141,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharaSelectBarUI.cpp" />
+    <ClCompile Include="ChinginCnt.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharaSelectBarUI.h" />
+    <ClInclude Include="ChinginCnt.h" />
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />

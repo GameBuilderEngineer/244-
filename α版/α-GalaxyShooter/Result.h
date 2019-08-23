@@ -5,6 +5,7 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Result2D.h"
+#include "ChinginCnt.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -29,6 +30,8 @@ class Result : public AbstractScene
 private:
 	// リザルト2D
 	Result2D result2D[resultNS::NUM_PLAYER];
+	// 賃金数表示
+	ChinginCnt chinginCnt;
 public:
 	Result();
 	~Result();

@@ -109,11 +109,11 @@ void UIPlayTime::render(LPDIRECT3DDEVICE9 _device, float _sceneTimer)
 	sprite.render(_device);
 
 	// Player1
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "TIME");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "TIME");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
 	// Player2
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "TIME");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "TIME");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "0：%.0f", _sceneTimer);
 
 	return;
 }

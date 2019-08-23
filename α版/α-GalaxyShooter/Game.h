@@ -131,5 +131,6 @@ public:
 
 	void render3D(Direct3D9* direct3D9, Camera currentCamera);
 	void renderUI(LPDIRECT3DDEVICE9 device);
+
 };
 
