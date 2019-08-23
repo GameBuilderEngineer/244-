@@ -274,6 +274,9 @@
     <Filter Include="Scene\Title\Title2D">
       <UniqueIdentifier>{2f26ad2b-811f-4d04-aea5-827a11101804}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\RecursionRecognition">
+      <UniqueIdentifier>{07c8ecdc-da00-49b6-a7d6-e13cc966a32a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -599,6 +602,9 @@
     <ClCompile Include="Title2D.cpp">
       <Filter>Scene\Title\Title2D</Filter>
     </ClCompile>
+    <ClCompile Include="RecursionRecognition.cpp">
+      <Filter>AI\RecursionRecognition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -888,6 +894,10 @@
     </ClInclude>
     <ClInclude Include="Title2D.h">
       <Filter>Scene\Title\Title2D</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h" />
+    <ClInclude Include="RecursionRecognition.h">
+      <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

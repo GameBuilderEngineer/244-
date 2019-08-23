@@ -9,6 +9,7 @@
 #include "WasuremonoTable.h"
 #include "Wasuremono.h" 
 #include "Planet.h"
+using namespace WasuremonoNS;
 
 // インクルードは
 // WasuremonoTable→Wasuremono, WasuremonoSeries, WasuremonoManager
@@ -46,7 +47,8 @@ private:
 	int respawnMode;						// リスポーンのモード
 	LPDIRECT3DDEVICE9 device;				// デバイス
 	Planet *field;							// フィールド情報
-		
+	int typeCount[NUM_WASUREMONO];			// ワスレモノごとの数
+
 	// タイプ初期化
 	void setUpInitialType(std::vector<int> &type);
 	// 座標初期化
@@ -74,6 +76,9 @@ public:
 	void setUp(void);
 	// ワスレモノ一斉破棄
 	void clear(void);
+
+	void instancingRender(LPDIRECT3DDEVICE9 device,
+		D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon, LPD3DXEFFECT effect);
 };
 
 

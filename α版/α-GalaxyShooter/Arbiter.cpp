@@ -28,7 +28,7 @@ Arbiter::~Arbiter(void)
 //=============================================================================
 void Arbiter::initialize(void)
 {
-	sensorInterval = 0;
+	sensorInterval = 5;
 	sensoryTransmissionTime = 0;
 	pathPanningInterval = 0;
 	decisionMakingInterval = 0;
@@ -62,7 +62,12 @@ void Arbiter::uninitialize(void)
 //=============================================================================
 void Arbiter::update(void)
 {
-	// 各モジュールの更新を管理している
+	// 各モジュールの更新をオフ
+	module[Module::SENSOR]->setUpdatePermission(false);
+	module[Module::ENVIRONMENT_ANSLYSIS]->setUpdatePermission(false);
+	module[Module::PATH_PLANNING]->setUpdatePermission(false);
+	module[Module::DECISION_MAKING]->setUpdatePermission(false);
+	module[Module::MOTION_GENERATION]->setUpdatePermission(false);
 
 	frameCount++;
 

@@ -69,7 +69,7 @@ void Game::initialize(
 #if 0
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
+	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
 #else
 	player[0] = new Player;
 	player[1] = new Player;
@@ -178,9 +178,19 @@ void Game::initialize(
 		D3DXVECTOR3(-100,-100,100),
 		D3DXVECTOR3(-100,100,0),
 		D3DXVECTOR3(-100,100,-100),
+		D3DXVECTOR3(100,50,50),
+		D3DXVECTOR3(-100,-100,-50),
+		D3DXVECTOR3(100,-50,10),
+		D3DXVECTOR3(100,50,10),
+		D3DXVECTOR3(100,0,100),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(-100,100,100),
+		D3DXVECTOR3(-100,-100,100),
+		D3DXVECTOR3(-100,100,0),
+		D3DXVECTOR3(-100,100,-100),
 	};
 	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
-	testObject.setNumOfRender(direct3D9->device, 10, positionList);
+	testObject.setNumOfRender(direct3D9->device, 20, positionList);
 	testObject.activation();
 
 	D3DXVECTOR3 cubeList[NUM_CUBE];
@@ -326,6 +336,9 @@ void Game::update(float _frameTime) {
 		effectManager.generateEffect(100, temp2);
 	};
 
+
+	// マップの更新
+	map.update(frameTime, wasuremono);
 }
 
 //===================================================================================================================================
@@ -357,6 +370,19 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
+	//ステンシルマスク
+	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
+
+	//target.renderEffectImage(direct3D9->device);
+
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
 	for (int i = 0; i < NUM_COLONY; i++)
@@ -366,20 +392,20 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	//(仮)ガラクタの描画
-	for (int i = 0; i < JUNK_MAX; i++)
-	{
-		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)ガラクタの描画
+	//for (int i = 0; i < JUNK_MAX; i++)
+	//{
+	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//(仮)マグネットの描画
-	for (int i = 0; i < NUM_MAGNET; i++)
-	{
-		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)マグネットの描画
+	//for (int i = 0; i < NUM_MAGNET; i++)
+	//{
+	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device, currentCamera.position);
@@ -392,11 +418,17 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+
 	// ワスレモノの描画
+#if 1
 	for(int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+#else
+	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// インスタンシング描画をやろうしたが上手くいっていない
+#endif
 
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -404,6 +436,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// エフェクトの描画
 	effectManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//ステンシルマスク
@@ -718,6 +751,7 @@ void Game::collisions() {
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER1]->bullet[j].inActivation();
 			}
 
@@ -729,6 +763,7 @@ void Game::collisions() {
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}
@@ -800,13 +835,45 @@ void Game::collisions() {
 			player[PLAYER1]->changeState(playerNS::SKY);
 		}
 	}
+
+	//// マップノードとワスレモノ
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	map.getMapNode()[i]->clearWasuremonoCount();
+	//	map.getMapNode()[i]->clearAmount();
+	//}
+	//bool* already = new bool[wasuremono.size()];
+	//ZeroMemory(already, sizeof(bool) * wasuremono.size());
+
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	for (size_t k = 0; k < wasuremono.size(); k++)
+	//	{
+	//		if (already[k] == true) { continue; }
+	//		already[k] = true;
+
+	//		if (map.getMapNode()[i]->boundingSphere.collide(
+	//				wasuremono[k]->bodyCollide.getCenter(),
+	//				wasuremono[k]->bodyCollide.getRadius(),
+	//				*map.getMapNode()[i]->getWorldMatrix(),
+	//				*wasuremono[k]->getMatrixWorld()))
+	//		{
+	//			map.getMapNode()[i]->addWasuremonoCount();
+	//			map.getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
+	//		}
+	//	}
+	//}
+
+	//SAFE_DELETE_ARRAY(already)
 }
+
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
 #ifdef USING_AI
-#endif
+
+#endif// USING_AI
 }
 
 //===================================================================================================================================

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Base.h"
+#include "Camera.h"
 #include "Player.h"
 #include "arbiter.h"
 #include "Sensor.h"
@@ -52,7 +53,7 @@ private:
 	void updateAgentSelfData(void);
 
 public:
-	AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fieldOfView);
+	AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono);
 	~AgentAI(void);
 
 	// ‰Šú‰»ˆ—

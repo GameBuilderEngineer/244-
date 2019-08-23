@@ -20,5 +20,8 @@ MemoryBB::MemoryBB(void)
 //=============================================================================
 void MemoryBB::initialize(void)
 {
-
+	memorizedMap.clear();
+	memorizedBullet.clear();
+	onOffRecord.clear();
+	timer.clear();
 }

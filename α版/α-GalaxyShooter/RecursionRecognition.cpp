@@ -1,27 +1,29 @@
 //-----------------------------------------------------------------------------
-// 環境認識ブラックボード処理 [BlackBoardRecognition.cpp]
+// リカージョンのAI認識 [RecursionRecognition.cpp]
 // Author：GP12A332 32 中込和輝
-// 作成日：2019/6/19
+// 作成日：2019/8/22
 //-----------------------------------------------------------------------------
-#include "BlackBoardRecognition.h"
+#include "RecursionRecognition.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-RecognitionBB::RecognitionBB(Player* _opponentPlayer): opponentPlayer(_opponentPlayer)
+RecursionRecognition::RecursionRecognition(void)
 {
-	// No Process
+	totalHit = 0;
+	totalAmount = 0;
+	center = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	radius = 0.0f;
+	wasuremonoInArea.reserve(15);	// 適度にキャパシティーを増やしておく
+	ZeroMemory(pilePosition, sizeof(D3DXVECTOR3) * 5);
+	fuzzySelectionWeight = 0.0f;
 }
 
 
 //=============================================================================
-// 初期化処理
+// デストラクタ
 //=============================================================================
-void RecognitionBB::initialize(void)
+RecursionRecognition::~RecursionRecognition()
 {
-	memoryBB = NULL;
-	// opponentPlayer = コンストラクタで設定済
-	myPosition = NULL;
-	inAir = false;
-	isDown = false;
+	// ベクターは自動で解放される
 }
