@@ -113,8 +113,6 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 //===================================================================================================================================
 void Player::update(float frameTime)
 {
-	// サウンドポインタのセット
-	if (sound == NULL)sound = _sound;
 
 #ifdef _DEBUG
 	//調整用

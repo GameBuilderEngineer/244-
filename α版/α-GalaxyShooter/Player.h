@@ -140,7 +140,6 @@ protected:
 	int revivalPoint;									//復活ポイント
 	int wage;											//チンギン
 	Camera* camera;										//カメラへのポインタ
-	Sound* sound;										//	サウンド
 	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
 
 	int state;											//状態変数
@@ -230,9 +229,9 @@ public:
 	void updateDown(float frameTime);
 	void updateSky(float frameTime);
 	void updateRevival(float frameTime);
-	void updateBullet(Sound* _sound, float frameTime);
+	void updateBullet(float frameTime);
 	void controlCamera(float frameTime);
-	void updateMemoryItem(Sound* _sound, float frameTime);
+	void updateMemoryItem(float frameTime);
 	void deleteMemoryItem();
 	void triggerShockWave();
 	void deleteShockWave();
