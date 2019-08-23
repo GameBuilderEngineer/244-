@@ -200,6 +200,8 @@ void Game::update(float _frameTime) {
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+
+
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||

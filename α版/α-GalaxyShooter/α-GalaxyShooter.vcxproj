@@ -128,6 +128,8 @@
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="ActionNode.cpp" />
     <ClCompile Include="AgentAI.cpp" />
+    <ClCompile Include="AllocateHierarchy.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Arbiter.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BehaviorNodeBase.cpp" />
@@ -228,6 +230,8 @@
     <ClInclude Include="ActionNode.h" />
     <ClInclude Include="AgentAI.h" />
     <ClInclude Include="AICommon.h" />
+    <ClInclude Include="AllocateHierarchy.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Arbiter.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BehaviorNodeBase.h" />

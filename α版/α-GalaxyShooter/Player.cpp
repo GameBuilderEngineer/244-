@@ -476,6 +476,9 @@ void Player::sky()
 //===================================================================================================================================
 void Player::revival()
 {
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
+
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 }
 
