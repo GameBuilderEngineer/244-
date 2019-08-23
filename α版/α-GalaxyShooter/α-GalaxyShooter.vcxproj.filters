@@ -262,6 +262,18 @@
     <Filter Include="Animation">
       <UniqueIdentifier>{d1caccd4-9775-4a08-a2c5-d6366b204d3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\ChinginCnt">
+      <UniqueIdentifier>{ddd4da09-ad1b-440d-bb81-52d0a644eace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\InstancingEffect">
+      <UniqueIdentifier>{3ced9445-db18-4deb-a3df-273c95d6de79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\EffectManager">
+      <UniqueIdentifier>{2fd1ef0f-9f1f-404b-bb29-a4f9354e9659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Title\Title2D">
+      <UniqueIdentifier>{2f26ad2b-811f-4d04-aea5-827a11101804}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -575,6 +587,18 @@
     <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
+    <ClCompile Include="ChinginCnt.cpp">
+      <Filter>UI\ChinginCnt</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Effect\EffectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingEffect.cpp">
+      <Filter>Effect\InstancingEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Title2D.cpp">
+      <Filter>Scene\Title\Title2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -851,6 +875,19 @@
     </ClInclude>
     <ClInclude Include="AllocateHierarchy.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h" />
+    <ClInclude Include="ChinginCnt.h">
+      <Filter>UI\ChinginCnt</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Effect\EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingEffect.h">
+      <Filter>Effect\InstancingEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Title2D.h">
+      <Filter>Scene\Title\Title2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

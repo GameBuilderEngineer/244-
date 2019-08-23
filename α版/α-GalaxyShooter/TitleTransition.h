@@ -15,10 +15,10 @@
 #define TITLE_CREDIT_POS		(385)							// クレジット選択位置
 #define TITLE_GAMEEND_POS		(435)							// ゲームエンド選択位置
 #define RELEASE_START_POS		(470)							// リリース時タイトル選択位置スタート値
-#define RELEASE_TUTORIAL_POS	(570)							//リリース時タイトル選択位置チュートリアル値
+#define RELEASE_TUTORIAL_POS	(570)							// リリース時タイトル選択位置チュートリアル値
 #define RELEASE_OPERATION_POS	(670)							// リリース時タイトル選択位置操作方法値
-#define RELEASE_CREDIT_POS		(870)							// リリース時タイトル選択位置クレジット値
-#define RELEASE_GAMEEND_POS		(970)							// リリース時タイトル選択位置終了値
+#define RELEASE_CREDIT_POS		(770)							// リリース時タイトル選択位置クレジット値
+#define RELEASE_GAMEEND_POS		(870)							// リリース時タイトル選択位置終了値
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************

@@ -1,85 +1,67 @@
 //=============================================================================
-// タイトルの描画処理 [Title2D.cpp]
+// 賃金数表示処理 [ChinginCnt.cpp]
 // 制作者 飯塚春輝
-////=============================================================================
-#include "Title2D.h"
+//=============================================================================
+#include "ChinginCnt.h"
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// タイトル2D横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// タイトル2D縦サイズ
-const static float		POSITION_X = 0.0f;							// タイトル2DX座標
-const static float		POSITION_Y = 0.0f;							// タイトル2DY座標
+#ifdef _DEBUG
+const static float		CHINGIN_CNT_POSITION_X = 150.0f;		// 賃金数X座標
+const static float		CHINGIN_CNT_POSITION_Y = 300.0f;		// 賃金数Y座標
+const static float		CHINGIN2_CNT_POSITION_X = 620.0f;		// 賃金数X座標2
+const static float		CHINGIN2_CNT_POSITION_Y = 300.0f;		// 賃金数Y座標2
+#else
+const static float		CHINGIN_CNT_POSITION_X = 300.0f;	// リリース時賃金数X座標
+const static float		CHINGIN_CNT_POSITION_Y = 600.0f;	// リリース時賃金数Y座標
+const static float		CHINGIN2_CNT_POSITION_X = 1240.0f;	// リリース時賃金数X座標2
+const static float		CHINGIN2_CNT_POSITION_Y = 600.0f;	// リリース時賃金数Y座標2
+#endif 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-int Title2D::cntUI = -1;
-LPDIRECT3DTEXTURE9 Title2D::textureTitle2D = NULL;				// タイトル2Dテクスチャ
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Title2D::Title2D()
+ChinginCnt::ChinginCnt(void)
 {
-	cntUI++;
 }
 //=============================================================================
 // デストラクタ
 //=============================================================================
-Title2D::~Title2D()
+ChinginCnt::~ChinginCnt(void)
 {
 }
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT Title2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
+HRESULT ChinginCnt::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader, TextManager* _textManager)
 {
-	// プレイヤーナンバー
-	playerNumber = _playerNumber;
-
-	// テクスチャを読み込む
-	setVisualDirectory();
-
-	textureTitle2D = *textureLoader->getTexture(textureLoaderNS::TITLE2D);
-
-	// タイトル2D初期化
-	Sprite::initialize(device,
-		textureTitle2D,							// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
-		WIDTH,										// 横幅
-		HEIGHT,										// 高さ
-		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 回転
-		TITLE2D_COLOR
-	);
-
+	// テキストマネージャ
+	textManager = _textManager;
 	return S_OK;
 }
 //=============================================================================
 // 終了処理
 //=============================================================================
-void Title2D::uninitialize(void)
+void ChinginCnt::uninitialize(void)
 {
-	// タイトル2D画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(textureTitle2D)
-	}
 }
 //=============================================================================
 // 更新処理
 //=============================================================================
-void Title2D::update(void)
+void ChinginCnt::update(void)
 {
 }
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Title2D::render(LPDIRECT3DDEVICE9 device)
+void ChinginCnt::render(LPDIRECT3DDEVICE9 device, float _chinginCnt, float _chinginCnt2)
 {
-	// タイトル2D描画
-	Sprite::render(device);
+	// 賃金数描画
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(CHINGIN_CNT_POSITION_X, CHINGIN_CNT_POSITION_Y, "★ %.0f", _chinginCnt);
+
+	// 賃金数描画2
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(CHINGIN2_CNT_POSITION_X, CHINGIN2_CNT_POSITION_Y, "★ %.0f", _chinginCnt2);
+
 }

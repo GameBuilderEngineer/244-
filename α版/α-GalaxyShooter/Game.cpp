@@ -159,6 +159,10 @@ void Game::initialize(
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	// エフェクト初期化
+	effectManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
 	//xFile読込meshのインスタンシング描画のテスト
@@ -313,6 +317,15 @@ void Game::update(float _frameTime) {
 	if (input->isKeyDown('M')) {
 		chinginManager.generateChingin(10, temp);
 	};
+
+	// エフェクトの更新
+	effectManager.update(frameTime, player[0]);
+	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('E')) {
+		effectManager.generateEffect(100, temp2);
+	};
+
 }
 
 //===================================================================================================================================
@@ -387,6 +400,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// エフェクトの描画
+	effectManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -630,6 +646,7 @@ void Game::collisions() {
 			// サウンドの再生
 			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER2]->damgae(5);
+			hpEffect[PLAYER2].activate(20);
 			player[PLAYER1]->bullet[i].inActivation();
 		}
 	}
@@ -647,6 +664,7 @@ void Game::collisions() {
 			// サウンドの再生
 			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER1]->damgae(5);
+			hpEffect[PLAYER1].activate(20);
 			player[PLAYER2]->bullet[i].inActivation();
 			
 		}
@@ -727,7 +745,6 @@ void Game::collisions() {
 					*player[i]->getMatrixWorld(),*junk[k].getMatrixWorld()))
 				{//プレイヤーとガラクタが衝突したら
 					junk[k].inActivation();
-					hpEffect[i].activate(10);
 				}
 				junk[k].headPosition(*player[i]->getPosition());
 			}

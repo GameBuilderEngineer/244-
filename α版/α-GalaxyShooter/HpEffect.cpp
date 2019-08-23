@@ -93,6 +93,7 @@ void HpEffect::update(void)
 	if (cntFrame == settingFrame)
 	{
 		isActive = false;
+		alphaColor = HP_EFFECT_ALPHA_MAX;
 		cntFrame = 0;
 	}
 }

@@ -101,19 +101,19 @@ void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin)
 	sprite.render(_device);
 
 	// テキスト
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "SCORE");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "SCORE");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "SCORE");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "SCORE");
 
 	// ゲーム時間が半分（２分）を切ったら、チンギンを隠す（表示を「???」に変更）…現在はタイマーの完成待ちなので、とりあえず条件を「シーンタイマーが30秒を超えたら」に設定
 	// タイマーが完成次第、条件文を再設定すること
 	if (_time < 30.0f)
 	{
-		textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
-		textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
+		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
+		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
 		return;
 	}
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "?????");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "?????");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "?????");
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "?????");
 
 	return;
 }

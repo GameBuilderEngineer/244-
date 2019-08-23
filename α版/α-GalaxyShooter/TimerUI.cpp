@@ -8,22 +8,22 @@
 //*****************************************************************************
 #ifdef _DEBUG
 const static int		WIDTH = 300;						// タイマーUI横サイズ
-const static int		HEIGHT = 150;						// タイマーUI縦サイズ	
+const static int		HEIGHT = 150;						// タイマーUI縦サイズ
 const static float		POSITION_X = 330.0f;				// タイマーUIX座標
 const static float		POSITION_Y = 0.0f;					// タイマーUIY座標
-const static float		TIMER_ONE_POSITION_X = 490.0f;		// 1桁タイマーX座標
-const static float		TIMER_ONE_POSITION_Y = 0.0f;		// 1桁タイマーY座標
-const static float		TIMER_TEN_POSITION_X = 450.0f;		// 10桁タイマーX座標
-const static float		TIMER_TEN_POSITION_Y = 0.0f;		// 10桁タイマーY座標
+const static float		TIMER_ONE_POSITION_X = 480.0f;		// 1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = -20.0f;		// 1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 440.0f;		// 10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = -20.0f;		// 10桁タイマーY座標
 #else
 const static int		WIDTH = 600;						// リリース時タイマーUIサイズ
 const static int		HEIGHT = 300;						// リリース時タイマーUI縦サイズ	
 const static float		POSITION_X = 660.0f;				// リリース時タイマーUIX座標
 const static float		POSITION_Y = 0.0f;					// リリース時タイマーUIY座標
-const static float		TIMER_ONE_POSITION_X = 980.0f;		// リリース時1桁タイマーX座標
-const static float		TIMER_ONE_POSITION_Y = 30.0f;		// リリース時1桁タイマーY座標
-const static float		TIMER_TEN_POSITION_X = 920.0f;		// リリース時10桁タイマーX座標
-const static float		TIMER_TEN_POSITION_Y = 30.0f;		// リリース時10桁タイマーY座標
+const static float		TIMER_ONE_POSITION_X = 970.0f;		// リリース時1桁タイマーX座標
+const static float		TIMER_ONE_POSITION_Y = 10.0f;		// リリース時1桁タイマーY座標
+const static float		TIMER_TEN_POSITION_X = 910.0f;		// リリース時10桁タイマーX座標
+const static float		TIMER_TEN_POSITION_Y = 10.0f;		// リリース時10桁タイマーY座標
 #endif 
 //*****************************************************************************
 // グローバル変数
@@ -102,6 +102,6 @@ void TimerUI::render(LPDIRECT3DDEVICE9 device, float _uiOneTimer, float _uiTenTi
 	Sprite::render(device);
 
 	// タイム描画
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
-	textManager->text[textManagerNS::TYPE::NEW_RODIN]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(TIMER_ONE_POSITION_X, TIMER_ONE_POSITION_Y, "%.0f", _uiOneTimer);
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(TIMER_TEN_POSITION_X, TIMER_TEN_POSITION_Y, "%.0f", _uiTenTimer);
 }

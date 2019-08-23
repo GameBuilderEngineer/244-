@@ -143,6 +143,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharaSelectBarUI.cpp" />
+    <ClCompile Include="ChinginCnt.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
     <ClCompile Include="Fuzzy.cpp" />
@@ -161,6 +163,7 @@
     <ClCompile Include="HpEffect.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InstancingChingin.cpp" />
+    <ClCompile Include="InstancingEffect.cpp" />
     <ClCompile Include="Junk.cpp" />
     <ClCompile Include="KnowledgeSourceBase.cpp" />
     <ClCompile Include="KeyOpe.cpp" />
@@ -204,6 +207,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimerUI.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Title2D.cpp" />
     <ClCompile Include="TitleTransition.cpp" />
     <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -245,6 +249,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharaSelectBarUI.h" />
+    <ClInclude Include="ChinginCnt.h" />
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ConditionalNode.h" />
@@ -255,6 +260,7 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
@@ -262,6 +268,7 @@
     <ClInclude Include="HpEffect.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstancingChingin.h" />
+    <ClInclude Include="InstancingEffect.h" />
     <ClInclude Include="Junk.h" />
     <ClInclude Include="KnowledgeSourceBase.h" />
     <ClInclude Include="KeyOpe.h" />
@@ -305,6 +312,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimerUI.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Title2D.h" />
     <ClInclude Include="TitleTransition.h" />
     <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />

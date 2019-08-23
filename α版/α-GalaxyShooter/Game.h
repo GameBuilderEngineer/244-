@@ -36,6 +36,7 @@
 #include "UIRevival.h"
 #include "UIRevivalGauge.h"
 #include "UICutMemoryLine.h"
+#include "EffectManager.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -103,7 +104,6 @@ private:
 	InstancingBillboard plane;
 	Object testObject;//仮
 	Object testCube;//仮
-
 	//プレイヤー
 	//Player player[gameNS::NUM_PLAYER];
 	Player *player[gameNS::NUM_PLAYER];
@@ -113,6 +113,7 @@ private:
 	std::vector<Wasuremono*> wasuremono;
 	WasuremonoManager wasuremonoManager;
 	ChinginManager chinginManager;
+	EffectManager effectManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
 	Pose pose;
@@ -141,5 +142,6 @@ public:
 
 	void render3D(Direct3D9* direct3D9, Camera currentCamera);
 	void renderUI(LPDIRECT3DDEVICE9 device);
+
 };
 

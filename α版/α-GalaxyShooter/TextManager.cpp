@@ -25,7 +25,11 @@ TextManager::TextManager(void)
 	{
 		switch (i)
 		{
-		case NEW_RODIN:
+		case NEW_RODIN_GAME_TIME:
+			dataName[i] = { "FOT-NewRodinPro-UB.otf" };		//	フォントデータリソースの名前
+			fontName[i] = { "FOT-ニューロダン Pro UB" };	//	フォントの名前
+			break;
+		case NEW_RODIN_CHARACTER_SELECT_TIME:
 			dataName[i] = { "FOT-NewRodinPro-UB.otf" };		//	フォントデータリソースの名前
 			fontName[i] = { "FOT-ニューロダン Pro UB" };	//	フォントの名前
 			break;
@@ -74,8 +78,11 @@ void TextManager::initialize(LPDIRECT3DDEVICE9 _device)
 	{
 		switch (i)
 		{
-		case NEW_RODIN:
-			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+		case NEW_RODIN_GAME_TIME:
+			text[i]->initialize(_device, 48, 27, D3DXCOLOR(255, 255, 255, 255), fontName[i]);
+			break;
+		case NEW_RODIN_CHARACTER_SELECT_TIME:
+			text[i]->initialize(_device, 96, 54, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case FUTURA:
 			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);

@@ -16,7 +16,8 @@ namespace textManagerNS
 {
 	enum TYPE
 	{
-		NEW_RODIN,
+		NEW_RODIN_GAME_TIME,
+		NEW_RODIN_CHARACTER_SELECT_TIME,
 		FUTURA,
 		TYPE_MAX
 	};

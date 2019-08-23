@@ -56,8 +56,17 @@ void Result::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
-	// リザルト2D初期化
-	result2D.initialize(direct3D9->device, 0, _textureLoader);
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		// リザルト2D初期化
+		result2D[i].initialize(direct3D9->device, i, _textureLoader);
+	}
+
+	// 賃金数初期化
+	chinginCnt.initialize(direct3D9->device, 0, _textureLoader, _textManager);
+
+	resultTransition = NULL;				// リザルト画像入れ替え
+	result2Transition = NULL;				// リザルト2画像入れ替え
 }
 //=============================================================================
 // 更新処理
@@ -68,7 +77,7 @@ void Result::update(float frameTime)
 	camera->update();
 
 	//Enterまたは〇ボタンでタイトルへ
-	if (input->anyKeyPressed()||
+	if (input->wasKeyPressed(VK_RETURN) ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
 		)changeScene(nextScene);
@@ -97,8 +106,16 @@ void Result::render3D(Direct3D9* direct3D9)
 //=============================================================================
 void Result::renderUI(LPDIRECT3DDEVICE9 device)
 {
-	// リザルト2D描画
-	result2D.render(device);
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		// リザルト2D描画
+		result2D[i].render(device, resultTransition, result2Transition);
+	}
+
+	static float chinginResult = 99999;
+
+	// 賃金数描画
+	chinginCnt.render(device, chinginResult, chinginResult);
 }
 //=============================================================================
 // コリジョン処理
@@ -117,6 +134,11 @@ void Result::AI()
 //=============================================================================
 void Result::uninitialize()
 {
-	// リザルト2D終了
-	result2D.uninitialize();
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		// リザルト2D終了
+		result2D[i].uninitialize();
+	}
+	// 賃金数終了
+	chinginCnt.uninitialize();
 }
