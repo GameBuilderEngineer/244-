@@ -7,20 +7,6 @@
 #include "WasuremonoManager.h"
 #include "WasuremonoSeries.h"
 
-Wasuremono* unko;
-D3DXVECTOR3 unkoList[] = {
-		D3DXVECTOR3(100,50,50),
-		D3DXVECTOR3(-100,-100,-50),
-		D3DXVECTOR3(100,-50,10),
-		D3DXVECTOR3(100,50,10),
-		D3DXVECTOR3(100,0,100),
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(-100,100,100),
-		D3DXVECTOR3(-100,-100,100),
-		D3DXVECTOR3(-100,100,0),
-		D3DXVECTOR3(-100,100,-100),
-};
-
 
 //=============================================================================
 // コンストラクタ
@@ -62,7 +48,7 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasurem
 	timeCnt = 0.0f;
 	respawnMode = 0;
 
-	unko = create(CHEWING_GUM, &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	//unko = create(CHEWING_GUM, &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 }
 
@@ -391,33 +377,30 @@ void WasuremonoManager::instancingRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX vi
 			break;
 		}
 	}
-	
-	unko->setNumOfRender(device, 10, unkoList);
-	unko->multipleRender(device, view, projection, cameraPositon, effect);
 
-	//// インスタンシング描画に座標リストを渡す
-	//(*wasuremono)[representative[CHEWING_GUM]]->setNumOfRender(device, typeCount[CHEWING_GUM], chewingGumList);
-	//(*wasuremono)[representative[ELECTRIC_FAN]]->setNumOfRender(device, typeCount[ELECTRIC_FAN], electricFanList);
-	//(*wasuremono)[representative[JUMP_ROPE]]->setNumOfRender(device, typeCount[JUMP_ROPE], jumpRopeList);
-	//(*wasuremono)[representative[TELEVISION]]->setNumOfRender(device, typeCount[TELEVISION], televisionList);
-	//(*wasuremono)[representative[KENDAMA]]->setNumOfRender(device, typeCount[KENDAMA], kendamaList);
-	//(*wasuremono)[representative[SOCCER_BALL]]->setNumOfRender(device, typeCount[SOCCER_BALL], soccerBallList);
-	//(*wasuremono)[representative[CHRISTMAS_TREE]]->setNumOfRender(device, typeCount[CHRISTMAS_TREE], christmasTreeList);
-	//(*wasuremono)[representative[BICYCLE]]->setNumOfRender(device, typeCount[BICYCLE], bicycleList);
-	//(*wasuremono)[representative[DIAL_PHONE]]->setNumOfRender(device, typeCount[DIAL_PHONE], dialPhoneList);
-	//(*wasuremono)[representative[STUFFED_BUNNY]]->setNumOfRender(device, typeCount[STUFFED_BUNNY], stuffedBunnyList);
+	// インスタンシング描画に座標リストを渡す
+	(*wasuremono)[representative[CHEWING_GUM]]->setNumOfRender(device, typeCount[CHEWING_GUM], chewingGumList);
+	(*wasuremono)[representative[ELECTRIC_FAN]]->setNumOfRender(device, typeCount[ELECTRIC_FAN], electricFanList);
+	(*wasuremono)[representative[JUMP_ROPE]]->setNumOfRender(device, typeCount[JUMP_ROPE], jumpRopeList);
+	(*wasuremono)[representative[TELEVISION]]->setNumOfRender(device, typeCount[TELEVISION], televisionList);
+	(*wasuremono)[representative[KENDAMA]]->setNumOfRender(device, typeCount[KENDAMA], kendamaList);
+	(*wasuremono)[representative[SOCCER_BALL]]->setNumOfRender(device, typeCount[SOCCER_BALL], soccerBallList);
+	(*wasuremono)[representative[CHRISTMAS_TREE]]->setNumOfRender(device, typeCount[CHRISTMAS_TREE], christmasTreeList);
+	(*wasuremono)[representative[BICYCLE]]->setNumOfRender(device, typeCount[BICYCLE], bicycleList);
+	(*wasuremono)[representative[DIAL_PHONE]]->setNumOfRender(device, typeCount[DIAL_PHONE], dialPhoneList);
+	(*wasuremono)[representative[STUFFED_BUNNY]]->setNumOfRender(device, typeCount[STUFFED_BUNNY], stuffedBunnyList);
 
-	//// インスタンシング描画
-	//(*wasuremono)[representative[CHEWING_GUM]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[ELECTRIC_FAN]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[JUMP_ROPE]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[TELEVISION]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[KENDAMA]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[SOCCER_BALL]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[CHRISTMAS_TREE]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[BICYCLE]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[DIAL_PHONE]]->multipleRender(device, view, projection, cameraPositon, effect);
-	//(*wasuremono)[representative[STUFFED_BUNNY]]->multipleRender(device, view, projection, cameraPositon, effect);
+	// インスタンシング描画
+	(*wasuremono)[representative[CHEWING_GUM]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[ELECTRIC_FAN]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[JUMP_ROPE]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[TELEVISION]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[KENDAMA]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[SOCCER_BALL]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[CHRISTMAS_TREE]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[BICYCLE]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[DIAL_PHONE]]->multipleRender(device, view, projection, cameraPositon, effect);
+	(*wasuremono)[representative[STUFFED_BUNNY]]->multipleRender(device, view, projection, cameraPositon, effect);
 
 	// リスト解放
 	SAFE_DELETE_ARRAY(chewingGumList)

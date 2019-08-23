@@ -4,7 +4,9 @@
 // 作成日：2019/7/27
 //-----------------------------------------------------------------------------
 #include "Map.h"
+#include <cstdio>
 using namespace MapNS;
+
 
 #if 0	// マップノードのコリジョンを表示する場合は1
 #define MAP_COLLISION_VIEW
@@ -12,6 +14,10 @@ using namespace MapNS;
 #if 1	// マップノードのマークを表示する場合は1
 #define MAP_MARK_VIEW
 #endif 
+#if 0	// マップデータをダンプする場合は1
+#define DUMP_MAP_DATA
+#endif 
+
 
 //*****************************************************************************
 // 静的メンバ
@@ -20,12 +26,14 @@ int MapNode::instanceCount = -1;
 std::vector<MapNode*> Map::mapNode;
 Planet* Map::field;
 
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
 void Map::initialize(LPDIRECT3DDEVICE9 device, Planet* _field)
 {
 	field = _field;
+	waitTime = 0.0f;
 
 	// D3DXCreateSphere(デバイス, 球の半径, スライス数, スタック数, メッシュ, 隣接性データ)
 	// ノードのバウンディングスフィア用メッシュ
@@ -122,6 +130,86 @@ void Map::uninitialize(void)
 
 
 //=============================================================================
+// 更新処理
+//=============================================================================
+void Map::update(float frameTime, std::vector<Wasuremono*>& wasuremono)
+{
+	// 更新頻度調整（軽量化のため）
+	waitTime += frameTime;
+	if (waitTime < 1.0f) { return; }
+	waitTime = 0.0f;
+
+	// リセット
+	for (size_t i = 0; i < getMapNode().size(); i++)
+	{
+		getMapNode()[i]->clearWasuremonoCount();
+		getMapNode()[i]->clearAmount();
+	}
+
+	// 高速化のための下ごしらえ
+	bool* alreadyChecked = new bool[wasuremono.size()];					// 既に一度ノードに含めたか
+	ZeroMemory(alreadyChecked, sizeof(bool) * wasuremono.size());
+	int* lastContained = new int[wasuremono.size()];					// 最後に含めたノードの番号
+	ZeroMemory(lastContained, sizeof(int) * wasuremono.size());
+	float radius2 = getField()->getRadius() * getField()->getRadius();	// フィールド半径二乗
+
+#ifdef DUMP_MAP_DATA
+	setDataDirectory();
+	FILE* fp;
+	fp = fopen("dumpMapData.txt", "w");
+	fprintf(fp, "マップデバッグデータ\n出力元：map.cpp\n");
+#endif// DUMP_MAP_DATA
+
+	// ノードがワスレモノの情報を取得する
+	for (size_t i = 0; i < getMapNode().size(); i++)
+	{
+		for (size_t k = 0; k < wasuremono.size(); k++)
+		{
+			// 高速化1
+			if (alreadyChecked[k])
+			{
+				// 既にノードに含めたワスレモノは距離が離れていれば新しくノードが含む可能性がないためパスする
+				// STACKS = 8 のとき 約2000ループくらいカット確認
+				if (i - lastContained[k] >= STACKS * 2) { continue; }
+			}
+
+			// 高速化2
+			if (D3DXVec3LengthSq(&(*getMapNode()[i]->getPosition() - *wasuremono[k]->getPosition())) > radius2)
+			{	// 半径以上離れていればパスする。計算してるけどやらないよりマシ
+				continue;
+			}
+
+			if (getMapNode()[i]->boundingSphere.collide(
+					wasuremono[k]->bodyCollide.getCenter(),
+					wasuremono[k]->bodyCollide.getRadius(),
+					*getMapNode()[i]->getWorldMatrix(),
+					*wasuremono[k]->getMatrixWorld()))
+			{
+				getMapNode()[i]->addWasuremonoCount();
+				getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
+
+				alreadyChecked[k] = true;
+				lastContained[k] = i;
+			}
+		}
+
+#ifdef DUMP_MAP_DATA
+		fprintf(fp, "%d WasuremonoCount : %d\n", i, getMapNode()[i]->wasuremonoCount);
+		fprintf(fp, " totalAmount       : %d\n", getMapNode()[i]->totalAmount);
+#endif// DUMP_MAP_DATA
+	}
+
+	SAFE_DELETE_ARRAY(alreadyChecked)
+	SAFE_DELETE_ARRAY(lastContained)
+
+#ifdef DUMP_MAP_DATA
+	fclose(fp);
+#endif// DUMP_MAP_DATA
+}
+
+
+
+//=============================================================================
 // 描画処理
 //=============================================================================
 void Map::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
@@ -174,7 +262,8 @@ void Map::createNode(LPDIRECT3DDEVICE9 device)
 	D3DXMatrixIdentity(newNode->getWorldMatrix());
 	D3DXMatrixTranslation(newNode->getWorldMatrix(),
 		newNode->getPosition()->x, newNode->getPosition()->y, newNode->getPosition()->z);
-	newNode->setWasuremonoCount(0);
+	newNode->clearWasuremonoCount();
+	newNode->clearAmount();
 	newNode->boundingSphere.initialize(device, newNode->getPosition(), sphere);
 	mapNode.emplace_back(newNode);
 }

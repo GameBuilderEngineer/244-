@@ -244,6 +244,9 @@
     <Filter Include="AI\Map">
       <UniqueIdentifier>{76dff474-7b1b-49bf-93b9-b66f8bd81143}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\RecursionRecognition">
+      <UniqueIdentifier>{07c8ecdc-da00-49b6-a7d6-e13cc966a32a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -380,9 +383,6 @@
     </ClCompile>
     <ClCompile Include="MemoryLine.cpp">
       <Filter>Object\MemoryLine</Filter>
-    </ClCompile>
-    <ClCompile Include="InstancingBillboard.cpp">
-      <Filter>Sound\InstancingBillboard</Filter>
     </ClCompile>
     <ClCompile Include="Recursion.cpp">
       <Filter>Object\Recursion</Filter>
@@ -534,6 +534,10 @@
     <ClCompile Include="Map.cpp">
       <Filter>AI\Map</Filter>
     </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp" />
+    <ClCompile Include="RecursionRecognition.cpp">
+      <Filter>AI\RecursionRecognition</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -677,9 +681,6 @@
     <ClInclude Include="MemoryLine.h">
       <Filter>Object\MemoryLine</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h">
-      <Filter>Sound\InstancingBillboard</Filter>
-    </ClInclude>
     <ClInclude Include="Recursion.h">
       <Filter>Object\Recursion</Filter>
     </ClInclude>
@@ -793,6 +794,10 @@
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>AI\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h" />
+    <ClInclude Include="RecursionRecognition.h">
+      <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

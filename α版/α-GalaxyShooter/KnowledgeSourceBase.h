@@ -22,6 +22,7 @@ protected:
 	// Data
 	Module::TYPE moduleTag;							// モジュールタイプを示す								
 	bool canUpdate;									// 更新可能かを表すフラグ
+	static LPDIRECT3DDEVICE9 device;				// Direct3Dデバイス
 
 public:
 	KnowledgeSourceBase(void);
@@ -36,5 +37,6 @@ public:
 	void setUpdatePermission(bool setting) { canUpdate = setting; }	
 	// 更新許可を取得
 	bool getUpdatePermission(void) { return canUpdate; }
-
+	// デバイスを設定
+	static void setDevice(LPDIRECT3DDEVICE9 _device) { device = _device; }
 };

@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "BlackBoardBase.h"
-#include <unordered_map>
 #include "Map.h"
+#include "Bullet.h"
+#include <unordered_map>
+#include <list>
 
 
 // 前方宣言
@@ -17,20 +19,17 @@ class BehaviorNodeBase;
 //*****************************************************************************
 class MemoryBB : public BlackBoardBase {
 private:
-	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFノードの記録
-	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー
-	// ●アロケータだけにする初期化をねんのためいれておくよてい
-
-	std::vector<MapNode*> memorizedMap;
-
+	std::list<MapNode*> memorizedMap;						// マップ記憶リスト
+	std::list<Bullet*> memorizedBullet;						// バレット記憶リスト
+	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFノードの記録（ビヘイビアツリーで使用）
+	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー（ビヘイビアツリーで使用）
 
 public:
 	// Method
 	MemoryBB(void);
-	void initialize(void) override;				// 初期化処理
-
-	std::unordered_map<BehaviorNodeBase*, int>& getOnOffRecord(void) { return onOffRecord; }
-	std::unordered_map<BehaviorNodeBase*, int>& getTimer(void) { return timer; }
-	std::vector<MapNode*>& getMemorizedMap(void) { return memorizedMap; }
-
+	void initialize(void) override;
+	std::unordered_map<BehaviorNodeBase*, int>& getOnOffRecord(void) { return onOffRecord; }// ONOFFノード記録を取得
+	std::unordered_map<BehaviorNodeBase*, int>& getTimer(void) { return timer; }// タイマー取得
+	std::list<MapNode*>& getMemorizedMap(void) { return memorizedMap; }			// マップ記憶リストを取得
+	std::list<Bullet*>& getMemorizedBullet(void) { return memorizedBullet; }	// バレット記憶リストを取得
 };

@@ -15,7 +15,7 @@ int AgentAI::numAgent = 0;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-AgentAI::AgentAI(Player* opponentPlayer, Camera* camera)
+AgentAI::AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono)
 {
 	aiID = numAgent++;
 
@@ -24,7 +24,7 @@ AgentAI::AgentAI(Player* opponentPlayer, Camera* camera)
 
 	// モジュール
 	sensor = new Sensor(&camera->position, &camera->gazePosition, &camera->fieldOfView);
-	environmentAnalysis = new EnvironmentAnalysis;
+	environmentAnalysis = new EnvironmentAnalysis(wasuremono);
 	pathPlanning = new PathPlanning;
 	decisionMaking = new DecisionMaking;
 	motionGeneration = new MotionGeneration;
@@ -87,6 +87,7 @@ void AgentAI::initialize(
 	arbiter->initialize();
 
 	// モジュール初期化
+	KnowledgeSourceBase::setDevice(device);
 	sensor->initialize();
 	environmentAnalysis->initialize();
 	decisionMaking->initialize();
@@ -133,22 +134,22 @@ void AgentAI::update(float frameTime)
 	{
 		sensor->update(this);
 	}
-	//if (environmentAnalysis->getUpdatePermission())
-	//{
-	//	environmentAnalysis->update(this);
-	//}
-	//if (pathPlanning->getUpdatePermission())
-	//{
-	//	pathPlanning->update(this);
-	//}
-	//if (decisionMaking->getUpdatePermission())
-	//{
-	//	decisionMaking->update(this);
-	//}
-	//if (motionGeneration->getUpdatePermission())
-	//{
-	//	motionGeneration->update(this);
-	//}
+	if (environmentAnalysis->getUpdatePermission())
+	{
+		environmentAnalysis->update(this);
+	}
+	if (pathPlanning->getUpdatePermission())
+	{
+		pathPlanning->update(this);
+	}
+	if (decisionMaking->getUpdatePermission())
+	{
+		decisionMaking->update(this);
+	}
+	if (motionGeneration->getUpdatePermission())
+	{
+		motionGeneration->update(this);
+	}
 
 	// プレイヤー処理の事後更新
 	updatePlayerAfter(frameTime);

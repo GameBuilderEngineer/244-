@@ -37,7 +37,7 @@ Sensor::~Sensor(void)
 //=============================================================================
 void Sensor::initialize(void)
 {
-	*cameraFieldOfView = D3DX_PI / 2.5f;
+	*cameraFieldOfView = D3DX_PI / 2.5f;	// 参照先に数値が入っていないのでここで入れている
 }
 
 
@@ -65,24 +65,11 @@ void Sensor::update(AgentAI* agentAI)
 	mapSensor(agentAI, vecCameraToGaze, radius2);
 	opponentSensor(agentAI, vecCameraToGaze);
 	bulletSensor(agentAI, vecCameraToGaze, radius2);
-
-	// HP
-	opponent->getHp();
-	// 落下中
-	opponent->whetherFall();
-	// ダウン
-	opponent->whetherDown();
-	// 上空モードに入っている
-	opponent->whetherSky();
-	// メモリーパイルの設置数
-
-	// 衝撃波が来る
-
 }
 
 
 //=============================================================================
-// マップセンサー（ワスレモノセンサー）
+// マップセンサー
 //=============================================================================
 void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radius2)
 {
@@ -124,7 +111,19 @@ void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radi
 #ifdef _DEBUG
 		mapNode[i]->isRed = true;
 #endif
-		//recognitionBB->getMemorizedMap().push_back(mapNode[i]);// ここでマップノードを認識！
+
+		// マップノードを認識
+		std::list<MapNode*>::iterator it = std::find(recognitionBB->getMemorizedMap().begin(),
+			recognitionBB->getMemorizedMap().end(), mapNode[i]);
+
+		if (it == recognitionBB->getMemorizedMap().end())
+		{
+		}
+		else
+		{
+			recognitionBB->getMemorizedMap().erase(it);
+		}
+		recognitionBB->getMemorizedMap().push_back(mapNode[i]);
 	}
 }
 
@@ -190,7 +189,17 @@ void Sensor::bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float r
 			}
 		}
 		 
-		//opponent->bullet[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		//recognitionBB->
+		// バレットを認識
+		std::list<Bullet*>::iterator it = std::find(recognitionBB->getMemorizedBullet().begin(),
+			recognitionBB->getMemorizedBullet().end(), &opponent->bullet[i]);
+
+		if (it == recognitionBB->getMemorizedBullet().end())
+		{
+		}
+		else
+		{
+			recognitionBB->getMemorizedBullet().erase(it);
+		}
+		recognitionBB->getMemorizedBullet().push_back(&opponent->bullet[i]);
 	}
 }

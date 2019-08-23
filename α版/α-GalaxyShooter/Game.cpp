@@ -67,7 +67,7 @@ void Game::initialize(
 #if 1
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI(player[0], &camera[1]);
+	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
 #else
 	player[0] = new Player;
 	player[1] = new Player;
@@ -165,9 +165,19 @@ void Game::initialize(
 		D3DXVECTOR3(-100,-100,100),
 		D3DXVECTOR3(-100,100,0),
 		D3DXVECTOR3(-100,100,-100),
+		D3DXVECTOR3(100,50,50),
+		D3DXVECTOR3(-100,-100,-50),
+		D3DXVECTOR3(100,-50,10),
+		D3DXVECTOR3(100,50,10),
+		D3DXVECTOR3(100,0,100),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(-100,100,100),
+		D3DXVECTOR3(-100,-100,100),
+		D3DXVECTOR3(-100,100,0),
+		D3DXVECTOR3(-100,100,-100),
 	};
 	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
-	testObject.setNumOfRender(direct3D9->device, 10, positionList);
+	testObject.setNumOfRender(direct3D9->device, 20, positionList);
 	testObject.activation();
 
 	D3DXVECTOR3 cubeList[NUM_CUBE];
@@ -293,6 +303,9 @@ void Game::update(float _frameTime) {
 	if (input->isKeyDown('M')) {
 		chinginManager.generateChingin(10, temp);
 	};
+
+	// マップの更新
+	map.update(frameTime, wasuremono);
 }
 
 //===================================================================================================================================
@@ -387,6 +400,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 #ifdef _DEBUG
@@ -750,13 +764,45 @@ void Game::collisions() {
 			player[PLAYER1]->changeState(playerNS::SKY);
 		}
 	}
+
+	//// マップノードとワスレモノ
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	map.getMapNode()[i]->clearWasuremonoCount();
+	//	map.getMapNode()[i]->clearAmount();
+	//}
+	//bool* already = new bool[wasuremono.size()];
+	//ZeroMemory(already, sizeof(bool) * wasuremono.size());
+
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	for (size_t k = 0; k < wasuremono.size(); k++)
+	//	{
+	//		if (already[k] == true) { continue; }
+	//		already[k] = true;
+
+	//		if (map.getMapNode()[i]->boundingSphere.collide(
+	//				wasuremono[k]->bodyCollide.getCenter(),
+	//				wasuremono[k]->bodyCollide.getRadius(),
+	//				*map.getMapNode()[i]->getWorldMatrix(),
+	//				*wasuremono[k]->getMatrixWorld()))
+	//		{
+	//			map.getMapNode()[i]->addWasuremonoCount();
+	//			map.getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
+	//		}
+	//	}
+	//}
+
+	//SAFE_DELETE_ARRAY(already)
 }
+
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
 #ifdef USING_AI
-#endif
+
+#endif// USING_AI
 }
 
 //===================================================================================================================================

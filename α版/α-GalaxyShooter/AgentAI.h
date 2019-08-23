@@ -53,7 +53,7 @@ private:
 	void updateAgentSelfData(void);
 
 public:
-	AgentAI(Player* opponentPlayer, Camera* camera);
+	AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono);
 	~AgentAI(void);
 
 	// ‰Šú‰»ˆ—
