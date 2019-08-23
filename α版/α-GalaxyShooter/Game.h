@@ -33,6 +33,7 @@
 #include "Map.h"
 #include "AgentAI.h"
 #include "ChinginManager.h"
+#include "EffectManager.h"
 
 #define JUNK_MAX (100) //ƒKƒ‰ƒNƒ^‚Ì”
 
@@ -105,6 +106,7 @@ private:
 	std::vector<Wasuremono*> wasuremono;
 	WasuremonoManager wasuremonoManager;
 	ChinginManager chinginManager;
+	EffectManager effectManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
 	Pose pose;

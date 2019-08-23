@@ -7,15 +7,15 @@
 // 定数
 //*****************************************************************************
 #ifdef _DEBUG
-const static float		CHINGIN_CNT_POSITION_X = 0.0f;	// 賃金数X座標
-const static float		CHINGIN_CNT_POSITION_Y = 0.0f;		// 賃金数Y座標
-const static float		CHINGIN2_CNT_POSITION_X = 0.0f;	// 賃金数X座標2
+const static float		CHINGIN_CNT_POSITION_X = 150.0f;		// 賃金数X座標
+const static float		CHINGIN_CNT_POSITION_Y = 300.0f;		// 賃金数Y座標
+const static float		CHINGIN2_CNT_POSITION_X = 620.0f;		// 賃金数X座標2
 const static float		CHINGIN2_CNT_POSITION_Y = 300.0f;		// 賃金数Y座標2
 #else
-const static float		CHINGIN_CNT_POSITION_X = 200.0f;	// リリース時賃金数X座標
-const static float		CHINGIN_CNT_POSITION_Y = 0.0f;		// リリース時賃金数Y座標
-const static float		CHINGIN2_CNT_POSITION_X = 600.0f;	// リリース時賃金数X座標2
-const static float		CHINGIN2_CNT_POSITION_Y = 0.0f;		// リリース時賃金数Y座標2
+const static float		CHINGIN_CNT_POSITION_X = 300.0f;	// リリース時賃金数X座標
+const static float		CHINGIN_CNT_POSITION_Y = 600.0f;	// リリース時賃金数Y座標
+const static float		CHINGIN2_CNT_POSITION_X = 1240.0f;	// リリース時賃金数X座標2
+const static float		CHINGIN2_CNT_POSITION_Y = 600.0f;	// リリース時賃金数Y座標2
 #endif 
 //*****************************************************************************
 // グローバル変数

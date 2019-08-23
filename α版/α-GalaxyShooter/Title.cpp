@@ -72,6 +72,12 @@ void Title::initialize(
 	// タイトル指定位置描画処理初期化
 	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
 
+	//// タイトル2D初期化
+	//title2D.initialize(direct3D9->device, 0, _textureLoader);
+
+	//インスタンスプレーン
+	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
+	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::RING));
 
 	titlePlayer[0].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[0].modelType,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
 	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
@@ -145,6 +151,9 @@ void Title::render(Direct3D9* direct3D9)
 //=============================================================================
 void Title::render3D(Direct3D9* direct3D9, Camera currentCamera)
 {
+	//(仮)//プレーンの描画(インスタンシング)
+	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 	// タイトルプレイヤー描画
 	titlePlayer[0].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::TOON),
@@ -156,6 +165,9 @@ void Title::render3D(Direct3D9* direct3D9, Camera currentCamera)
 //=============================================================================
 void Title::renderUI(LPDIRECT3DDEVICE9 device)
 {
+	//// タイトル2D描画
+	//title2D.render(device);
+
 	// タイトル遷移画像描画処理描画
 	titleTransPos.render(device);
 
@@ -190,6 +202,9 @@ void Title::uninitialize()
 
 	// タイトル指定位置描画処理終了
 	titleTransPos.uninitialize();
+
+	//// タイトル2D終了
+	//title2D.uninitialize();
 }
 //=============================================================================
 // 選択UI遷移処理

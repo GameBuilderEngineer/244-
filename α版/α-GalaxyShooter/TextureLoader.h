@@ -59,6 +59,7 @@ namespace textureLoaderNS
 		TITLE_OPERATION_B,
 		TITLE_CREDIT_B,
 		TITLE_GAMEEND_B,
+		TITLE2D,
 		TUTORIAL,
 		RESULT,
 		WIN,
