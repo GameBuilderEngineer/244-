@@ -281,7 +281,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	}
 
 	// メモリーラインの更新
-	memoryLine.update(device, frameTime);
+	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
 }
 
 

@@ -13,7 +13,6 @@ using namespace recursionNS;
 Recursion::Recursion()
 {
 	weightCenter = D3DXVECTOR3(0, 0, 0);
-	existenceTimer = EXISTENCE_TIME;
 }
 
 //===================================================================================================================================
@@ -163,7 +162,6 @@ void Recursion::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 //===================================================================================================================================
 void Recursion::update(float frameTime)
 {
-	existenceTimer -= frameTime;
 }
 
 //===================================================================================================================================

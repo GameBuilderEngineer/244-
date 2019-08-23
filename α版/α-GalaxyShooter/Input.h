@@ -29,12 +29,19 @@ namespace inputNS
 	};
 	const int KEYS_ARRAY_LEN = 256;		// キー配列のサイズ
 
+	enum MOUSE_WHEEL_STATE {
+		NONE,
+		UP,
+		DOWN,
+	};
+
 	// clear()、ビットフラグ
 	const UCHAR KEYS_DOWN = 1;
 	const UCHAR KEYS_PRESSED = 2;
 	const UCHAR MOUSE = 4;
 	const UCHAR TEXT_IN = 8;
 	const UCHAR KEYS_MOUSE_TEXT = KEYS_DOWN + KEYS_PRESSED + MOUSE + TEXT_IN;
+
 
 }
 
@@ -64,6 +71,9 @@ private:
 	bool mouseX2Button;				// X2のマウスボタンが押されている場合はtrue
 	bool mouseBuffer[5] = { false,false,false,false,false };
 	bool mouseButtonTrigger[5] = { false,false,false,false,false };						// マウスのボタンが押された時一度だけtrue,順番は上準拠;
+	int wheelFraction;				//回転量の端数
+	int zDelta;						//回転量
+	int mouseWheelState;			//回転方向の状態変数
 
 	//-----------------------
 	//DInputController
@@ -110,6 +120,8 @@ public:
 	//-----------------------
 	void mouseIn(LPARAM);									// マウスの位置をmouseX、mouseYに読み込みます
 	void mouseRawIn(LPARAM);								// 生のマウスデータをmouseRawX、mouseRawYに読み込みます// このルーチンは高精細マウスと互換性があります
+	void mouseWheelIn(WPARAM wParam);						// マウスの回転量を保存
+	void clearWheelFraction() { wheelFraction = 0; };		// ウィンドウのアクティブ切り替え時に端数をリセット
 	void setMouseLButton(bool b) { mouseLButton = b; }		// 左マウスボタンの状態を保存
 	void setMouseMButton(bool b) { mouseMButton = b; }		// 中央マウスボタンの状態を保存
 	void setMouseRButton(bool b) { mouseRButton = b; }		// 右マウスボタンの状態を保存
@@ -118,6 +130,7 @@ public:
 	int getMouseY()		const { return mouseY; }			// マウスのY位置を戻す
 	int getMouseRawX()	const { return mouseRawX; }			// マウスのX位置の移動のローデータを戻す。左への移動は<0、右への移動は>0//高精細マウスと互換性があります。
 	int getMouseRawY()	const { return mouseRawY; }			// マウスのY位置の移動のローデータを戻す。左への移動は<0、右への移動は>0// 高精細マウスと互換性があります。
+	int getMouseWheelState() { return mouseWheelState; };
 	bool getMouseLButton()	const { return mouseLButton; }	// 左マウスボタンの状態を戻す
 	bool getMouseLButtonTrigger() { return mouseButtonTrigger[0]; }	// 左マウスボタンのトリガー情報を戻す
 	bool getMouseMButton()	const { return mouseMButton; }	// 中央マウスボタンの状態を戻す

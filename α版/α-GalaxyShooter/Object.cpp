@@ -171,6 +171,8 @@ void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
 		device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);		//加算合成を行う
 	}
 	else {
 		//αブレンディングを設定しない
@@ -272,7 +274,7 @@ void Object::setGravity(D3DXVECTOR3 source, float power)
 	//gravity *= min(power, reverseAxisY.distance);
 	gravity *= power;
 	
-	if (onGravity)speed += gravity;
+	if (onGravity)acceleration += gravity;
 }
 
 void Object::activation()

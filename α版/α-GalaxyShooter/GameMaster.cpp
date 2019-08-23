@@ -2,7 +2,7 @@
 //yGameMaster.cppz
 // [ì¬ŽÒ]HAL“Œ‹žGP12A332 11 ›–ì Ž÷
 // [ì¬“ú]2019/07/31
-// [XV“ú]2019/08/04
+// [XV“ú]2019/08/22
 //===================================================================================================================================
 #include "GameMaster.h"
 using namespace gameMasterNS;
@@ -48,6 +48,25 @@ void GameMaster::updateGameTime(float frameTime)
 }
 
 //===================================================================================================================================
+//yƒQ[ƒ€ŠJŽnŽž‚ÌƒJƒEƒ“ƒgƒ_ƒEƒ“‚ÌXVz
+//===================================================================================================================================
+void GameMaster::gameStartCount(float frameTime)
+{
+	gameTimer -= frameTime;
+}
+//===================================================================================================================================
+//yƒQ[ƒ€ŠJŽnŽž‚ÌƒJƒEƒ“ƒgƒ_ƒEƒ“‚ÌXVz
+//===================================================================================================================================
+void GameMaster::gameFinishCount(float frameTime)
+{
+	countDownTimer += frameTime;
+	if (countDownTimer > COUNT_INTERVAL)
+	{
+		
+	}
+}
+
+//===================================================================================================================================
 //yƒQ[ƒ€ŽžŠÔ‚ÌƒŠƒZƒbƒgz
 //===================================================================================================================================
 void GameMaster::resetGameTime()
@@ -59,7 +78,7 @@ void GameMaster::resetGameTime()
 //===================================================================================================================================
 //ysetterz
 //===================================================================================================================================
-void GameMaster::addWage(int playerNo, int wage){ playerInformation[playerNo].wage += wage;}
+void GameMaster::setWage(int playerNo, int wage){ playerInformation[playerNo].wage = wage;}
 void GameMaster::setPlayerCharacter(int playerNo,int playerType, int modelType) {
 	if (playerNo >= playerNS::NUM_PLAYER || playerNo < 0)return;
 	playerInformation[playerNo].playerType= playerType;

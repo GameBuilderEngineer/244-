@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/12
+// [更新日]2019/08/22
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -66,7 +66,7 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 1
+#if 0
 #define USING_AI
 	player[0] = new Player;
 	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
@@ -227,12 +227,16 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.10)return;
+	//if (frameTime > 0.10)return;
 
 	//【ゲームマスターの更新】
 	gameMaster->update(frameTime);
 	if (gameMaster->whetherGameOver())
 	{//シーン切替
+		for (int i = 0; i < playerNS::NUM_PLAYER; i++)
+		{
+			gameMaster->setWage(i, player[i]->getWage());
+		}
 		changeScene(SceneList::RESULT);
 	}
 
@@ -244,8 +248,8 @@ void Game::update(float _frameTime) {
 
 	{
 		// 連打復活が完成するまでの仮
-		static int revivalPoint = 0;
-		if (revivalPoint < 1000) { revivalPoint++; }
+		//static int revivalPoint = 0;
+		//if (revivalPoint < 1000) { revivalPoint++; }
 
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -254,14 +258,13 @@ void Game::update(float _frameTime) {
 
 			uiRecursion[i].update();
 			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
-			uiRevivalGauge[i].update(revivalPoint);
+			uiRevivalGauge[i].update(player[i]->getRevivalPoint());
 		}
 	}
 
 	// コロニーアップデート
 	{
 		colony[0].update();
-
 	}
 
 	// ガラクタアップデート
@@ -314,7 +317,6 @@ void Game::update(float _frameTime) {
 //===================================================================================================================================
 void Game::render(Direct3D9* direct3D9) {
 
-
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER1].projection);
@@ -326,6 +328,7 @@ void Game::render(Direct3D9* direct3D9) {
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER2].projection);
 	direct3D9->changeViewport2PWindow();
 	render3D(direct3D9,camera[PLAYER2]);
+
 	//UI
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
@@ -337,19 +340,6 @@ void Game::render(Direct3D9* direct3D9) {
 //【3D描画】
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
-
-	//ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{//プレイヤーの描画
-		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-			*shaderLoader->getEffect(shaderNS::TOON),
-			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	}
-
-	//target.renderEffectImage(direct3D9->device);
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
@@ -397,6 +387,18 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	//ステンシルマスク
+	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
+
+	//target.renderEffectImage(direct3D9->device);
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -453,20 +455,13 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
-
-	text.print(WINDOW_WIDTH / 2, 170, 
-		"collisionMemoryLine(%d)\n",
-		collitionMemoryLine1P
-	);
-	text.print(WINDOW_WIDTH / 2, 200,
-		"collisionMemoryLine(%.02f)\n",
-		memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
-	);
-	text.print(WINDOW_WIDTH / 2, 230,
-		"recrusion1PAnd2P(%d)\n",
-		recursion1PAnd2P
-	);
 	
+	switch (input->getMouseWheelState())
+	{
+	case inputNS::MOUSE_WHEEL_STATE::NONE:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:NONE");	break;
+	case inputNS::MOUSE_WHEEL_STATE::UP:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:UP");		break;
+	case inputNS::MOUSE_WHEEL_STATE::DOWN:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:DOWN");	break;
+	}
 
 	text2.print(10, 450,
 		"1P:Controller\n\
@@ -581,9 +576,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			hpEffect[i].render(device);
 
-			uiCutMemoryLine[i].render(device);
-			uiRevivalGauge[i].render(device);
-			uiRevival[i].render(device);
+			if (player[i]->whetherCollidedOpponentMemoryLine())
+			{
+				uiCutMemoryLine[i].render(device);
+			}
+
+			if (player[i]->getState() == playerNS::STATE::DOWN)
+			{
+				uiRevivalGauge[i].render(device);
+				uiRevival[i].render(device);
+			}
 		}
 
 		// 優先度：高
@@ -705,7 +707,6 @@ void Game::collisions() {
 			{
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
-
 				wasuremono[i]->inActivation();
 				player[PLAYER2]->bullet[j].inActivation();
 			}

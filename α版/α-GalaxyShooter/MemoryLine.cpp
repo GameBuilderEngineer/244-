@@ -2,7 +2,7 @@
 //【MemoryLine.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/12
+// [更新日]2019/08/20
 //===================================================================================================================================
 #include "MemoryLine.h"
 #include "UtilityFunction.h"
@@ -27,6 +27,8 @@ MemoryLine::MemoryLine()
 	pileNum = 0;
 	pointNum = NULL;
 	renderNum = 0;
+	currentRenderNum = 0;
+	updateTimer = 0;
 }
 
 //===================================================================================================================================
@@ -82,7 +84,7 @@ void MemoryLine::unInitialize()
 //===================================================================================================================================
 //【更新】
 //===================================================================================================================================
-void MemoryLine::update(LPDIRECT3DDEVICE9 device, float frameTime)
+void MemoryLine::update(LPDIRECT3DDEVICE9 device, float frameTime,int type)
 {
 	if (initialized == false)return;			//初期化済みでなければ終了
 
@@ -90,7 +92,11 @@ void MemoryLine::update(LPDIRECT3DDEVICE9 device, float frameTime)
 		lost(frameTime);
 	}
 	else {
-		setLine(device);
+		switch (type)
+		{
+		case PENTAGON:setLine(device); break;
+		case STAR:setStarLine(device,frameTime); break;
+		}
 	}
 }
 
@@ -104,8 +110,87 @@ void MemoryLine::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 }
 
 //===================================================================================================================================
+//【星形のラインの設定】
+//[処理内容]リカージョン完成時に星形のラインを生成する
+//[注意]メモリーパイルのアクティブ状況に関わらず５点の間で生成される
+//===================================================================================================================================
+void MemoryLine::setStarLine(LPDIRECT3DDEVICE9 device,float frameTime)
+{
+	for (int i = 0; i < pileNum; i++)
+	{
+		if (joinTarget[i].getActive() == false)return;//全てがアクティブでない場合は処理を行わない
+	}
+
+	renderNum = 0;//全体で描画する点の数を0とする。
+	//描画ラインの設定
+	for (int i = 0; i < pileNum; i++)
+	{
+		pointNum[i] = 0;//ライン上の点の描画数を0にする
+		{//メモリーラインの始点位置と終点位置を設定する
+				line[i].start = *joinTarget[i].getPosition();//接続元をメモリーラインの始点にする
+				//次のメモリーパイルの要素数
+				int k = UtilityFunction::wrap(i + 2, 0, pileNum);
+				//メモリーラインの終点＝次のメモリーライン
+				line[i].end = *joinTarget[k].getPosition();
+		}
+
+		float length = D3DXVec3Length(&(line[i].end - line[i].start));//ラインの長さを算出
+		pointNum[i] = (int)(length / 1.0f);//ラインの描画点数を確定
+		renderNum += pointNum[i];//全体合計点数へ加算
+		if (pointNum[i] <= 0)continue;//描画する点が0以下ならば次のメモリーラインへ
+		pointList[i] = new D3DXVECTOR3[pointNum[i]];//描画する点の位置情報を新たに生成
+		for (int n = 0; n < pointNum[i]; n++)
+		{
+			//ラインをもとに補間係数を用いて位置情報を作成する。
+			//補間係数=描画番号n/全体描画数
+			D3DXVec3Lerp(&pointList[i][n], &line[i].start, &line[i].end, (float)(n + 1) / (float)pointNum[i]);
+		}
+	}
+	updateTimer += frameTime;
+	while (updateTimer > UPDATE_TIME)
+	{
+		if (currentRenderNum < renderNum)
+			currentRenderNum++;
+		updateTimer -= UPDATE_TIME;
+	}
+
+	if (currentRenderNum >= renderNum)
+	{
+		disconnect();
+	}
+
+	if (currentRenderNum > 0)
+	{
+		renderList = new D3DXVECTOR3[currentRenderNum];
+		{//pointListを用いてrenderListへ値を設定する
+			int j = 0;
+			int k = 0;
+			for (int i = 0; i < currentRenderNum; i++)
+			{
+				if (pointNum[j] > 0)renderList[i] = pointList[j][k];
+				k++;
+				if (k >= pointNum[j]) {
+					k = 0;
+					j++;
+				}
+			}
+		}
+		//インスタンスビルボードの描画数と描画位置情報の設定
+		billboard.setNumOfRender(device, currentRenderNum, renderList);
+		for (int i = 0; i < pileNum; i++)
+		{
+			if (pointNum[i] <= 0)continue;//描画数が0以下であればスキップ
+			delete[]pointList[i];//描画する点のリストの削除
+		}
+	}
+
+	SAFE_DELETE_ARRAY(renderList);//全体のメモリーラインの点の位置情報リストを削除
+
+}
+//===================================================================================================================================
 //【描画ラインの設定】
-//メモリーパイルのアクティブ状況に応じて変動
+//[処理内容]メモリーラインを設定する
+//[注意]メモリーパイルのアクティブ状況に応じて５点の間で生成される
 //===================================================================================================================================
 void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 {
@@ -154,9 +239,9 @@ void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 			int k = 0;
 			for (int i = 0; i < renderNum; i++)
 			{
-				renderList[i] = pointList[j][k];
+				if(pointNum[j] >0)renderList[i] = pointList[j][k];
 				k++;
-				if (k > pointNum[j]) {
+				if (k >= pointNum[j]) {
 					k = 0;
 					j++;
 				}
@@ -195,6 +280,7 @@ void MemoryLine::lost(float frameTime)
 		disconnected = false;
 		lostTime = 0;
 		renderNum = 0;//全体で描画する点の数を0とする。
+		resetCurrentRenderNum();
 		for (int i = 0; i < pileNum; i++)
 		{
 			line[i].start = D3DXVECTOR3(0, 0, 0);
@@ -203,6 +289,7 @@ void MemoryLine::lost(float frameTime)
 			pointNum[i] = 0;//ライン上の点の描画数を0にする
 		}
 		billboard.setNumOfRender(NULL, 0, renderList);
+		billboard.offRender();
 	}
 }
 
@@ -237,4 +324,12 @@ bool MemoryLine::collision(D3DXVECTOR3 measurementPosition,float radius)
 	if (calculationDistance(measurementPosition) > THICKNESS)	return false;
 	//太さ+対象の半径より近い位置にいた場合衝突
 	else return true;
+}
+
+//===================================================================================================================================
+//【setter】
+//===================================================================================================================================
+void MemoryLine::resetCurrentRenderNum()
+{
+	currentRenderNum = 0;
 }

@@ -29,7 +29,6 @@ private:
 	D3DXVECTOR3* vertexArray;					//リカージョンが構成されるメモリーパイル位置
 
 	bool onRender;								//描画フラグ
-	float existenceTimer;						//存在時間
 
 public:
 	Recursion();
@@ -55,6 +54,5 @@ public:
 	//targetMatrix	：対象オブジェクトのワールド行列
 	//================================================================
 	bool collide(D3DXVECTOR3 targetPosition, D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX targetMatrix);
-
 
 };
