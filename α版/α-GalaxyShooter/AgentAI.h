@@ -61,7 +61,7 @@ public:
 	// 終了処理
 	void uninitialize(void);
 	// 更新処理
-	void update(Sound* _sound, float frameTime) override;	// 更新処理 
+	void update(float frameTime) override;	// 更新処理 
 	// バレットの発射
 	void shootBullet(D3DXVECTOR3 targetDirection);
 	// メモリーパイルの設置

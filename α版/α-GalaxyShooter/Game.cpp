@@ -107,6 +107,7 @@ void Game::initialize(
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
+		player[i]->setSound(sound);		//	サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
@@ -199,6 +200,8 @@ void Game::update(float _frameTime) {
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
+
+
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||
@@ -243,7 +246,7 @@ void Game::update(float _frameTime) {
 	//【プレイヤーの更新】
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
-		player[i]->update(sound, frameTime);
+		player[i]->update(frameTime);
 	}
 
 	{

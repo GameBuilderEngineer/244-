@@ -79,7 +79,6 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		break;
 	}
 	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
-	//Object::initialize(device, &staticMeshLoader->staticMesh[modelType], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -112,7 +111,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 //[処理内容5]接地処理
 //[処理内容6]メモリーパイル・メモリーライン・リカージョンの処理
 //===================================================================================================================================
-void Player::update(Sound* _sound, float frameTime)
+void Player::update(float frameTime)
 {
 	// サウンドポインタのセット
 	if (sound == NULL)sound = _sound;
@@ -197,7 +196,7 @@ void Player::update(Sound* _sound, float frameTime)
 	//===========
 	//【弾の更新】
 	//===========
-	updateBullet(_sound, frameTime);
+	updateBullet(frameTime);
 
 	//===========
 	//【カメラの操作】
@@ -207,7 +206,7 @@ void Player::update(Sound* _sound, float frameTime)
 	//===========
 	//【メモリーパイル・メモリーライン・リカージョンの更新】
 	//===========
-	updateMemoryItem(_sound, frameTime);
+	updateMemoryItem(frameTime);
 
 	//===========
 	//【衝撃波の更新】
@@ -548,6 +547,9 @@ void Player::updateSky(float frameTime)
 //===================================================================================================================================
 void Player::changeRevival()
 {
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
+
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
 }
@@ -614,7 +616,7 @@ void Player::configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXM
 //===================================================================================================================================
 //【弾の更新】
 //===================================================================================================================================
-void Player::updateBullet(Sound* _sound, float frameTime)
+void Player::updateBullet(float frameTime)
 {
 	intervalBullet = max(intervalBullet - frameTime, 0);//インターバルの更新
 	//バレットの更新
@@ -629,7 +631,7 @@ void Player::updateBullet(Sound* _sound, float frameTime)
 		&& intervalBullet == 0)
 	{
 		// サウンドの再生
-		_sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
+		sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
 
 		bullet[elementBullet].setPosition(position);
 		//Y軸方向への成分を削除する
@@ -676,7 +678,7 @@ void Player::controlCamera(float frameTime)
 //===================================================================================================================================
 //【メモリーアイテムの操作/更新】
 //===================================================================================================================================
-void Player::updateMemoryItem(Sound* _sound, float frameTime)
+void Player::updateMemoryItem(float frameTime)
 {
 	if (whetherDown())
 	{
@@ -694,7 +696,7 @@ void Player::updateMemoryItem(Sound* _sound, float frameTime)
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
 		// サウンドの再生
-		_sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
 
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
@@ -786,8 +788,10 @@ void Player::disconnectMemoryLine()
 	for (int i = 0; i < NUM_MEMORY_PILE; i++)
 	{
 		memoryPile[i].switchLost();//消失
+		memoryLine.disconnect();//切断
 	}
-	memoryLine.disconnect();//切断
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_CUT_MEMORY_LINE, soundNS::METHOD::PLAY);
 	changeState(playerNS::DOWN);
 }
 
@@ -800,6 +804,8 @@ void Player::triggerShockWave()
 	if (!canShockWave)return;	//使用可能か
 	shockWave = new ShockWave();
 	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
 	onShockWave = true;		//生成中にする
 	canShockWave = false;	//使用不可能にする
 }
@@ -832,6 +838,7 @@ void Player::updateShockWave(float frameTime)
 //===================================================================================================================================
 void Player::setInput(Input* _input) { input = _input; }
 void Player::setCamera(Camera* _camera) { camera = _camera; }
+void Player::setSound(Sound* _sound) { sound = _sound; }
 void Player::damgae(int value) { 
 	hp = max(hp - value, 0);
 	if (whetherDeath())changeState(DOWN);

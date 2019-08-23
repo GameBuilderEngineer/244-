@@ -259,6 +259,9 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{37b89136-d3b7-4a31-94cc-5d3da36148f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{d1caccd4-9775-4a08-a2c5-d6366b204d3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -566,6 +569,12 @@
       <Filter>Sound</Filter>
     </ClCompile>
     <ClCompile Include="InstancingBillboard.cpp" />
+    <ClCompile Include="Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AllocateHierarchy.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -837,6 +846,12 @@
       <Filter>Sound</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h" />
+    <ClInclude Include="Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AllocateHierarchy.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
