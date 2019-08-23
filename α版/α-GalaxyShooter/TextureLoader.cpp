@@ -56,7 +56,7 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_OPERATION_B] = { "Title_Operation_Black.png" };
 	textureName[TITLE_CREDIT_B] = { "Title_Credit_Black.png" };
 	textureName[TITLE_GAMEEND_B] = { "Title_GameExit_Black.png" };
-	textureName[TITLE2D] = { "80193ãTâ™èvâÓ.jpg" };
+	textureName[TITLE2D] = { "tutorial.png" };
 	textureName[TUTORIAL] = { "tutorial.png" };
 	textureName[SELECT] = { "Title_BackGround.png" };
 	textureName[SELECT_PLAYER] = { "Chara1.png" };
@@ -73,7 +73,7 @@ TextureLoader::TextureLoader()
 	textureName[WHITE_TEXTURE] = { "backGround1080p.png" };
 	textureName[LIGHT001] = { "light001.png" };
 	textureName[HP_EFFECT] = { "HP.png" };
-	textureName[TARGET] = { "kurezitto.png" };
+	textureName[TARGET] = { "credit.png" };
 	textureName[POSE] = { "Pause.png" };
 	textureName[CHARA_RESULT_BG] = { "Result_Window.png" };
 }

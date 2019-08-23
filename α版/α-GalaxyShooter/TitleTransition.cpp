@@ -189,32 +189,7 @@ HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,
 //=============================================================================
 void TitleTransition::uninitialize(void)
 {
-	TitleGame.setTexture(NULL);				// ゲーム遷移画像解放
-	TitleTutorial.setTexture(NULL);			// チュートリアル遷移画像解放
-	TitleOperation.setTexture(NULL);		// オペレーション遷移画像解放
-	TitleCredit.setTexture(NULL);			// クレジット遷移画像解放
-	TitleGameend.setTexture(NULL);			// ゲームエンド遷移画像解放
-	TitleGameB.setTexture(NULL);			// ゲーム遷移時画像解放
-	TitleTutorialB.setTexture(NULL);		// チュートリアル遷移時画像解放
-	TitleOperationB.setTexture(NULL);		// オペレーション遷移時画像解放
-	TitleCreditB.setTexture(NULL);			// クレジット遷移時画像解放
-	TitleGameendB.setTexture(NULL);			// ゲームエンド遷移時画像解放
 
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(titleGameTex)
-		SAFE_RELEASE(titleTutorialTex)
-		SAFE_RELEASE(titleOperationTex)
-		SAFE_RELEASE(titleCreditTex)
-		SAFE_RELEASE(titleGameendTex)
-		SAFE_RELEASE(titleGameBTex)
-		SAFE_RELEASE(titleTutorialBTex)
-		SAFE_RELEASE(titleOperationBTex)
-		SAFE_RELEASE(titleCreditBTex)
-		SAFE_RELEASE(titleGameendBTex)
-	}
 }
 //=============================================================================
 // 更新処理

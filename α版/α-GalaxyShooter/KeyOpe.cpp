@@ -59,15 +59,6 @@ HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 //=============================================================================
 void KeyOpe::uninitialize(void)
 {
-	// キーボード説明画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(textureKeyOpe)
-	}
 }
 //=============================================================================
 // 更新処理

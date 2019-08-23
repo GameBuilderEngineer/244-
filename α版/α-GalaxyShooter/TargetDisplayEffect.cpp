@@ -65,15 +65,6 @@ return S_OK;
 //=============================================================================
 void TargetDisplayEffect::uninitialize(void)
 {
-	// ステンシル画像解放
-	image.setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(TargetTexture)
-	}
 
 	// ステンシル終了
 	inactivate();

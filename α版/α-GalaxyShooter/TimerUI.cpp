@@ -77,15 +77,6 @@ HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 //=============================================================================
 void TimerUI::uninitialize(void)
 {
-	// タイマーUI画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(timerTexture)
-	}
 }
 //=============================================================================
 // 更新処理
