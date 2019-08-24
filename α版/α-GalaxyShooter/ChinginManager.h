@@ -11,12 +11,12 @@
 #include "Player.h"
 #include "Sound.h"
 
-static const int NUM_CHINGIN = 100;	// 同時に表示するうえで妥当そうな数
+static const int INITIAL_NUM_CHINGIN = 300;	// ポインタ配列要素数の妥当そうな初期値
 
 //----------
 // チンギン
 //----------
-class Chingin	// 2人分で200個も出るなら重いかと思ってObjectを使っていない
+class Chingin	// 重いと思ってObjectを使っていない
 {
 private:
 	D3DXVECTOR3 position;		// 位置
@@ -28,18 +28,18 @@ private:
 	D3DXVECTOR3 gravity;		// 重力
 	D3DXMATRIX matrixWorld;		// ワールド座標
 	BoundingSphere bodyCollide;	// バウンディングスフィア
-	bool use;					// 使用中か
+	Player* target;				// ターゲットプレイヤー
 
 public:
 	D3DXVECTOR3* getPosition() { return &position; }
 	D3DXVECTOR3* getSpeed() { return &speed; }
 	D3DXMATRIX* getMatrixWorld() { return &matrixWorld; }
 	BoundingSphere* getCollider() { return &bodyCollide; }
-	bool getUse() { return use; }
+	Player* getTarget(void) { return target; }
 
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
-	void setUse(bool _use) { use = _use; }
+	void setTarget(Player* _target) { target = _target; }
 };
 
 
@@ -49,24 +49,26 @@ public:
 class ChinginManager :public Base
 {
 private:
+	Chingin **chingin;						// チンギンポインタ配列
 	InstancingChingin instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
-	Chingin chingin[NUM_CHINGIN];			// チンギン配列
-	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するチンギンの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
-	D3DXVECTOR3 moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition);// 移動速度
+	int chinginMax;							// チンギンポインタ配列の要素数
+	int numOfUse;							// 使用中(配列にポインタがセットされている)数
 
 	// マグネット関係は今は触らない（理解していない）
 	//int type;
 	//float amount;	//磁気量
 	//void reverseAmount();
 
+	// Method
+	D3DXVECTOR3 moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition);// チンギンの移動を設定
+
 public:
 	void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
-	void update(Sound* _sound, float frameTime, Player* player);
+	void uninitialize(void);
+	void update(Sound* _sound, float frameTime);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
-	// チンギンを発生させる
-	void generateChingin(int num, D3DXVECTOR3 positionToGenerate);
+	void generateChingin(int num, D3DXVECTOR3 setPosition, Player* target);	// チンギンを発生させる
 };
 

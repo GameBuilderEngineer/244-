@@ -321,12 +321,15 @@ void Game::update(float _frameTime) {
 	}
 
 	// チンギンの更新
-	chinginManager.update(sound, frameTime, player[1]);
-	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
-
+	chinginManager.update(sound, frameTime);
+	D3DXVECTOR3 chinginTestPos = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
 	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(10, temp);
+		chinginManager.generateChingin(5, chinginTestPos, player[0]);
 	};
+	if (input->isKeyDown('N')) {
+		chinginManager.generateChingin(3, chinginTestPos, player[1]);
+	};
+
 
 	// エフェクトの更新
 	effectManager.update(frameTime, player[0]);
@@ -507,7 +510,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
-	
+
 	switch (input->getMouseWheelState())
 	{
 	case inputNS::MOUSE_WHEEL_STATE::NONE:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:NONE");	break;
@@ -714,7 +717,7 @@ void Game::collisions() {
 				wasuremono[i]->bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld()))
 			{
-				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition(), player[PLAYER1]);
 				wasuremono[i]->inActivation();
 			}
 		}
@@ -730,7 +733,7 @@ void Game::collisions() {
 				wasuremono[i]->bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld()))
 			{
-				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition(), player[PLAYER2]);
 				wasuremono[i]->inActivation();
 			}
 		}
@@ -899,4 +902,5 @@ void Game::uninitialize() {
 	map.uninitialize();
 	SAFE_DELETE(player[0])
 	SAFE_DELETE(player[1])
+	chinginManager.uninitialize();
 }
