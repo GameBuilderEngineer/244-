@@ -23,7 +23,7 @@ AgentAI::AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*
 	arbiter = new Arbiter;
 
 	// ƒ‚ƒWƒ…[ƒ‹
-	sensor = new Sensor(&camera->position, &camera->gazePosition, &camera->fieldOfView);
+	sensor = new Sensor(camera);
 	environmentAnalysis = new EnvironmentAnalysis(wasuremono);
 	pathPlanning = new PathPlanning;
 	decisionMaking = new DecisionMaking;
@@ -138,14 +138,14 @@ void AgentAI::update(float frameTime)
 	{
 		environmentAnalysis->update(this);
 	}
-	if (pathPlanning->getUpdatePermission())
-	{
-		pathPlanning->update(this);
-	}
-	if (decisionMaking->getUpdatePermission())
-	{
-		decisionMaking->update(this);
-	}
+	//if (pathPlanning->getUpdatePermission())
+	//{
+	//	pathPlanning->update(this);
+	//}
+	//if (decisionMaking->getUpdatePermission())
+	//{
+	//	decisionMaking->update(this);
+	//}
 	if (motionGeneration->getUpdatePermission())
 	{
 		motionGeneration->update(this);

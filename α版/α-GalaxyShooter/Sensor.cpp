@@ -11,13 +11,12 @@
 // カメラとノード間のベクトル距離とカメラとフィールド間のベクトル距離の差
 // この範囲内なら球面手前側にノードもフィールドとの交点もあると見なせる
 // フィーリングで決めた大体の数値
-static const float ADUST_RANGE = 5.0f;
+static const float ADJUST_RANGE = 10.0f;
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-Sensor::Sensor(D3DXVECTOR3* _cameraPosition, D3DXVECTOR3* _gazePosition, float* _cameraFieldOfView)
-	: cameraPosition(_cameraPosition), cameraGazePosition(_gazePosition), cameraFieldOfView(_cameraFieldOfView)
+Sensor::Sensor(Camera* _camera): camera(_camera)
 {
 
 }
@@ -37,7 +36,7 @@ Sensor::~Sensor(void)
 //=============================================================================
 void Sensor::initialize(void)
 {
-	*cameraFieldOfView = D3DX_PI / 2.5f;	// 参照先に数値が入っていないのでここで入れている
+	camera->fieldOfView = D3DX_PI / 2.5f;// 参照先に値が入っていないからここで入れている
 }
 
 
@@ -56,7 +55,7 @@ void Sensor::uninitialize(void)
 void Sensor::update(AgentAI* agentAI)
 {
 	// カメラ→注視点のベクトル
-	D3DXVECTOR3 vecCameraToGaze = *cameraGazePosition - *cameraPosition;
+	D3DXVECTOR3 vecCameraToGaze = camera->gazePosition - camera->position;
 	D3DXVec3Normalize(&vecCameraToGaze, &vecCameraToGaze);
 
 	// フィールド半径の二乗
@@ -89,25 +88,36 @@ void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radi
 		// カメラの水平視野角内に無いノードをパス
 		//----------------------------------------
 		// カメラ→マップノードのベクトルを求める
-		D3DXVECTOR3 vecCameraToNode = *mapNode[i]->getPosition() - *getCameraPosition();
+		D3DXVECTOR3 vecCameraToNode = *mapNode[i]->getPosition() - camera->position;
 		float cameraNodeLength = D3DXVec3Length(&vecCameraToNode);// 後で使うサイズ
 		D3DXVec3Normalize(&vecCameraToNode, &vecCameraToNode);
-		agentAI->slip(vecCameraToNode, agentAI->getAxisY()->direction);
+		agentAI->slip(vecCameraToNode, camera->getDirectionY());
 		// 内積から角度を求めて視野角内か判定する
 		float radian = acosf(D3DXVec3Dot(&vecCameraToNode, &vecCameraToGaze));
-		if (radian > *cameraFieldOfView / 2.0f) { continue; }
+		if (radian > camera->fieldOfView / 2.0f) { continue; }
+		// ↑このあたり調整すれば画面の下端ギリギリのノードとかを正確に認識させられるかもしれない
 
 		//----------------------------------
 		// 球面の向こうに隠れたノードをパス
 		//----------------------------------
-		ray.update(*getCameraPosition(), *mapNode[i]->getPosition() - *getCameraPosition());
+		ray.update(camera->position, *mapNode[i]->getPosition() - camera->position);
 		if (ray.rayIntersect(*Map::getField()->getMesh(), *Map::getField()->getMatrixWorld()))
 		{
-			if (false == (ray.distance - ADUST_RANGE < cameraNodeLength
-				&& cameraNodeLength < ray.distance + ADUST_RANGE)) {
+			// フィールドとの距離が一定範囲内に収まっていない
+			if (false == (ray.distance < cameraNodeLength + ADJUST_RANGE
+				&& ray.distance >cameraNodeLength - ADJUST_RANGE))
+
+			{
+				// 場合分けすると
+				// 1-フィールドがノードより手前
+				//(ノードが球面の向こう)のパターン
+				//(成功パターン　配置時の誤差でノード中心座標がフィールド内にめり込んでいる)
+				// フィールドがノードより奥
+				//(成功パターン）ノードが先のあとすぐ設置場所のフィールドに衝突している
 				continue;
 			}
 		}
+
 #ifdef _DEBUG
 		mapNode[i]->isRed = true;
 #endif
@@ -136,10 +146,10 @@ void Sensor::opponentSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze)
 	bool isOpponentInCamera = false;
 	{
 		// カメラ内に（ステンシル描画も含め）相手が写っているかを判定
-		D3DXVECTOR3 vecCameraToOpponent = *opponent->getPosition() - *getCameraPosition();
+		D3DXVECTOR3 vecCameraToOpponent = *opponent->getPosition() - camera->position;
 		D3DXVec3Normalize(&vecCameraToOpponent, &vecCameraToOpponent);
 		float radian = acosf(D3DXVec3Dot(&vecCameraToOpponent, &vecCameraToGaze));
-		if (radian < *cameraFieldOfView / 2.0f) { isOpponentInCamera = true; }
+		if (radian < camera->fieldOfView / 2.0f) { isOpponentInCamera = true; }
 	}
 	if (isOpponentInCamera)
 	{
@@ -168,22 +178,22 @@ void Sensor::bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float r
 		// カメラの水平視野角内に無いバレットをパス
 		//------------------------------------------
 		// カメラ→バレットのベクトルを求める
-		D3DXVECTOR3 vecCameraToBullet = *opponent->bullet[i].getPosition() - *getCameraPosition();
+		D3DXVECTOR3 vecCameraToBullet = *opponent->bullet[i].getPosition() - camera->position;
 		float cameraBulletLength = D3DXVec3Length(&vecCameraToBullet);// 後で使うサイズ
 		D3DXVec3Normalize(&vecCameraToBullet, &vecCameraToBullet);
 		agentAI->slip(vecCameraToBullet, agentAI->getAxisY()->direction);
 		// 内積から角度を求めて視野角内か判定する
 		float radian = acosf(D3DXVec3Dot(&vecCameraToBullet, &vecCameraToGaze));
-		if (radian > *cameraFieldOfView / 2.0f) { continue; }
+		if (radian > camera->fieldOfView / 2.0f) { continue; }
 
 		//------------------------------------
 		// 球面の向こうに隠れたバレットをパス
 		//------------------------------------
-		ray.update(*getCameraPosition(), *opponent->bullet[i].getPosition() - *getCameraPosition());
+		ray.update(camera->position, *opponent->bullet[i].getPosition() - camera->position);
 		if (ray.rayIntersect(*Map::getField()->getMesh(), *Map::getField()->getMatrixWorld()))
 		{
-			if (false == (ray.distance - ADUST_RANGE < cameraBulletLength
-				&& cameraBulletLength < ray.distance + ADUST_RANGE))
+			if (false == (ray.distance - ADJUST_RANGE < cameraBulletLength
+				&& cameraBulletLength < ray.distance + ADJUST_RANGE))
 			{
 				continue;
 			}

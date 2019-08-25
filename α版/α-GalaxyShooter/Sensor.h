@@ -15,9 +15,7 @@ class Sensor:public KnowledgeSourceBase
 {
 private:
 	RecognitionBB* recognitionBB;			// 環境認識ブラックボード
-	D3DXVECTOR3* cameraPosition;			// カメラの位置
-	D3DXVECTOR3* cameraGazePosition;		// カメラ注視点
-	float *cameraFieldOfView;				// カメラの視野角情報
+	Camera* camera;							// カメラ
 	float fieldRadius;						// フィールドの半径
 	Ray ray;								// レイ
 
@@ -28,12 +26,10 @@ private:
 
 public:
 	// Method
-	Sensor(D3DXVECTOR3* _cameraPosition, D3DXVECTOR3* _gazePosition, float* _cameraFieldOfView);
+	Sensor(Camera *camera);
 	~Sensor(void);
 	void initialize(void) override;			// 初期化処理
 	void uninitialize(void) override;		// 終了処理
 	void update(AgentAI* agentAI) override;	// 更新処理
 	void setBlackBoard(RecognitionBB* adr) { recognitionBB = adr; }
-
-	D3DXVECTOR3* getCameraPosition(void) { return cameraPosition; }
 };

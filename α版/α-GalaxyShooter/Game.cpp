@@ -66,7 +66,7 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 0
+#if 1
 #define USING_AI
 	player[0] = new Player;
 	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
