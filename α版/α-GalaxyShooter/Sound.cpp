@@ -22,7 +22,7 @@ Sound::Sound(void)
 	settingVolume.max = DSBVOLUME_MAX;
 	settingVolume.min = DSBVOLUME_MIN;
 
-	for (int i = 0; i < soundNS::TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
 		volume[i] = DSBVOLUME_MAX;
 		flag.play[i] = NULL;
@@ -71,7 +71,7 @@ HRESULT Sound::initialize(HWND _windowHandle)
 	}
 
 	// サウンドの読み込み
-	for (int i = 0; i < soundNS::TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
 		soundBuffer[i] = load(i);
 	}
@@ -86,14 +86,14 @@ HRESULT Sound::initialize(HWND _windowHandle)
 void Sound::update(void)
 {
 	// フェード処理
-	for (int i = 0; i < soundNS::TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
-		if ((fadeType[i] != soundNS::FADE::NONE) && (fadeType[i] == soundNS::FADE::FADE_IN))
+		if ((fadeType[i] != FADE::NONE) && (fadeType[i] == FADE::FADE_IN))
 		{
 			// フェードイン
 			updateFadeIn(i);
 		}
-		else if ((fadeType[i] != soundNS::FADE::NONE) && (fadeType[i] == soundNS::FADE::FADE_OUT))
+		else if ((fadeType[i] != FADE::NONE) && (fadeType[i] == FADE::FADE_OUT))
 		{
 			// フェードアウト
 			updateFadeOut(i);
@@ -121,7 +121,7 @@ void Sound::updateFadeIn(int _soundIndex)
 		return;
 	}
 
-	volume[_soundIndex] += soundNS::CONST_FADE_VALUE;
+	volume[_soundIndex] += CONST_FADE_VALUE;
 
 	if (settingVolume.max > volume[_soundIndex])
 	{
@@ -131,7 +131,7 @@ void Sound::updateFadeIn(int _soundIndex)
 	}
 
 	flag.fade[_soundIndex] = false;
-	fadeType[_soundIndex] = soundNS::FADE::NONE;
+	fadeType[_soundIndex] = FADE::NONE;
 	volume[_soundIndex] = settingVolume.max;
 
 	//Set_Switch(SWITCH_TYPE_SOUND_FADE, false);
@@ -160,7 +160,7 @@ void Sound::updateFadeOut(int _soundIndex)
 		return;
 	}
 
-	volume[_soundIndex] -= soundNS::CONST_FADE_VALUE;
+	volume[_soundIndex] -= CONST_FADE_VALUE;
 
 	if (settingVolume.min < volume[_soundIndex])
 	{
@@ -171,7 +171,7 @@ void Sound::updateFadeOut(int _soundIndex)
 
 	//Set_Switch(SWITCH_TYPE_SOUND_FADE, false);
 	flag.fade[_soundIndex] = false;
-	fadeType[_soundIndex] = soundNS::FADE::NONE;
+	fadeType[_soundIndex] = FADE::NONE;
 	volume[_soundIndex] = settingVolume.min;
 	stop(_soundIndex);
 
@@ -542,7 +542,7 @@ void Sound::checkPlayFlagAll(void)
 	// 変数宣言：初期化
 	DWORD Status = NULL;	//	ステータス
 
-	for (int i = 0; i < soundNS::TYPE::TYPE_MAX; i++)
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
 	{
 		soundBuffer[i]->GetStatus(&Status);	//	GetStatus関数：指定されたCFileオブジェクトインスタンス、または指定されたファイルパスに関連したステータス情報を取得します
 
@@ -617,7 +617,7 @@ void Sound::setRePlay(void)
 //============================================================================================================================================
 void Sound::setFade(int _soundIndex, int _soundFadeType)
 {
-	if (_soundFadeType == soundNS::FADE::NONE)
+	if (_soundFadeType == FADE::NONE)
 	{
 		//Set_Switch(SWITCH_TYPE_SOUND_FADE, false);
 	}
@@ -637,14 +637,14 @@ void Sound::setFade(int _soundIndex, int _soundFadeType)
 //============================================================================================================================================
 void Sound::setVolume(int _soundIndex, int _soundVolumeType)
 {
-	setFade(_soundIndex, soundNS::FADE::NONE);
+	setFade(_soundIndex, FADE::NONE);
 
 	switch (_soundVolumeType)
 	{
-	case soundNS::VOLUME::LOWEST:
+	case VOLUME::LOWEST:
 		volume[_soundIndex] = settingVolume.min;
 		break;
-	case soundNS::VOLUME::HIGHEST:
+	case VOLUME::HIGHEST:
 		volume[_soundIndex] = settingVolume.max;
 		break;
 	default:

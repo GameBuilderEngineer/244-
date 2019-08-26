@@ -6,7 +6,7 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH / 2;						// タイトル遷移画像横サイズ
+const static int		WIDTH = (600);									// タイトル遷移画像横サイズ
 const static float		GAME_POSITION_X = 0.0f;							// ゲーム遷移画像X座標
 const static float		TUTORIAL_POSITION_X = 0.0f;						// チュートリアル遷移画像X座標
 const static float		OPERATION_POSITION_X = 0.0f;					// オペレーション遷移画像X座標
@@ -20,7 +20,7 @@ const static float		OPERATION_POSITION_Y = TITLE_OPERATION_POS;		// オペレーショ
 const static float		CREDIT_POSITION_Y = TITLE_CREDIT_POS;			// クレジット遷移画像Y座標
 const static float		GAMEEND_POSITION_Y = TITLE_GAMEEND_POS;			// ゲームエンド遷移画像Y座標
 #else
-const static int		HEIGHT = WINDOW_HEIGHT / 9;						// リリース時タイトル遷移画像縦サイズ
+const static int		HEIGHT = (75);									// リリース時タイトル遷移画像縦サイズ
 const static float		GAME_POSITION_Y = RELEASE_START_POS;			// リリース時ゲーム遷移画像Y座標
 const static float		TUTORIAL_POSITION_Y = RELEASE_TUTORIAL_POS;		// リリース時チュートリアル遷移画像Y座標
 const static float		OPERATION_POSITION_Y = RELEASE_OPERATION_POS;	// リリース時オペレーション遷移画像Y座標
@@ -65,16 +65,17 @@ HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	titleGameTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAME);					// ゲーム
-	titleTutorialTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TUTORIAL);			// チュートリアル
-	titleOperationTex = *textureLoader->getTexture(textureLoaderNS::TITLE_OPERATION);		// オペレーション
-	titleCreditTex = *textureLoader->getTexture(textureLoaderNS::TITLE_CREDIT);				// クレジット
-	titleGameendTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAMEEND);			// ゲームエンド
-	titleGameBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAME_B);				// ゲーム遷移時
-	titleTutorialBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TUTORIAL_B);		// チュートリアル遷移時
-	titleOperationBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_OPERATION_B);	// オペレーション遷移時
-	titleCreditBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_CREDIT_B);			// クレジット遷移時
-	titleGameendBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAMEEND_B);		// ゲームエンド遷移時
+	titleGameTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAME_WHITE);				// ゲーム
+	titleTutorialTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TUTORIAL_WHITE);		// チュートリアル
+	titleOperationTex = *textureLoader->getTexture(textureLoaderNS::TITLE_OPERATION_WHITE);		// オペレーション
+	titleCreditTex = *textureLoader->getTexture(textureLoaderNS::TITLE_CREDIT_WHITE);			// クレジット
+	titleGameendTex = *textureLoader->getTexture(textureLoaderNS::TITLE_EXIT_WHITE);			// ゲームエンド
+
+	titleGameBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_GAME_BLACK);				// ゲーム遷移時
+	titleTutorialBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_TUTORIAL_BLACK);		// チュートリアル遷移時
+	titleOperationBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_OPERATION_BLACK);	// オペレーション遷移時
+	titleCreditBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_CREDIT_BLACK);			// クレジット遷移時
+	titleGameendBTex = *textureLoader->getTexture(textureLoaderNS::TITLE_EXIT_BLACK);			// ゲームエンド遷移時
 
 	// ゲーム遷移画像初期化
 	TitleGame.initialize(device,

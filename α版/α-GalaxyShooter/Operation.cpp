@@ -111,15 +111,6 @@ void Operation::update(float frameTime)
 	{
 		opeTransition = OPE_MAX;
 	}
-
-	//Enterまたは〇ボタンでリザルトへ
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		)
-	{
-		changeScene(nextScene);
-	}
 }
 //=============================================================================
 // 描画処理

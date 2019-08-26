@@ -79,10 +79,10 @@ void TextManager::initialize(LPDIRECT3DDEVICE9 _device)
 		switch (i)
 		{
 		case NEW_RODIN_GAME_TIME:
-			text[i]->initialize(_device, 48, 27, D3DXCOLOR(255, 255, 255, 255), fontName[i]);
+			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case NEW_RODIN_CHARACTER_SELECT_TIME:
-			text[i]->initialize(_device, 96, 54, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
+			text[i]->initialize(_device, 80, 45, D3DXCOLOR(0, 0, 0, 255), fontName[i]);
 			break;
 		case FUTURA:
 			text[i]->initialize(_device, 48, 27, D3DXCOLOR(0, 0, 0, 255), fontName[i]);

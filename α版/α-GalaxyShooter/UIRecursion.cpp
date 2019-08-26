@@ -6,7 +6,6 @@
 // 2019/07/27
 //============================================================================================================================================
 #include "UIRecursion.h"
-#include "Sprite.h"
 //============================================================================================================================================
 // Using Declaration
 // using宣言
@@ -64,11 +63,11 @@ HRESULT UIRecursion::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 
 	input = _input;
 
-	// テクスチャローダーのリカージョンUIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
-	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_RECURSION_BICYCLE;
-
 	// ディレクトリ設定
 	setVisualDirectory();
+
+	// テクスチャローダーのリカージョンUIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
+	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_RECURSION_BICYCLE;
 
 	// テクスチャ読み込み
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)

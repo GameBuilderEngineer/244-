@@ -15,11 +15,11 @@
 #define CNT_TITLE_OPERATION		(335)										// タイトル選択位置操作方法値
 #define CNT_TITLE_CREDIT		(385)										// タイトル選択位置クレジット値
 #define CNT_TITLE_END			(435)										// タイトル選択位置終了値
-#define CNT_RELEASE_START		(485)										// リリース時タイトル選択位置スタート値
-#define CNT_RELEASE_TUTORIAL	(585)										// リリース時タイトル選択位置チュートリアル値
-#define CNT_RELEASE_OPERATION	(685)										// リリース時タイトル選択位置操作方法値
-#define CNT_RELEASE_CREDIT		(785)										// リリース時タイトル選択位置クレジット値
-#define CNT_RELEASE_END			(885)										// リリース時タイトル選択位置終了値
+#define CNT_RELEASE_START		(475)										// リリース時タイトル選択位置スタート値
+#define CNT_RELEASE_TUTORIAL	(575)										// リリース時タイトル選択位置チュートリアル値
+#define CNT_RELEASE_OPERATION	(675)										// リリース時タイトル選択位置操作方法値
+#define CNT_RELEASE_CREDIT		(775)										// リリース時タイトル選択位置クレジット値
+#define CNT_RELEASE_END			(875)										// リリース時タイトル選択位置終了値
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************

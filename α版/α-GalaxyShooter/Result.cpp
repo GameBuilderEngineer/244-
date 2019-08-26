@@ -59,8 +59,9 @@ void Result::initialize(
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		// リザルト2D初期化
-		result2D[i].initialize(direct3D9->device, i, _textureLoader);
+		//uiResult[i].initialize(direct3D9->device, _textureLoader);
 	}
+	uiResult.initialize(direct3D9->device, _textureLoader);
 
 	// 賃金数初期化
 	chinginCnt.initialize(direct3D9->device, 0, _textureLoader, _textManager);
@@ -109,13 +110,14 @@ void Result::renderUI(LPDIRECT3DDEVICE9 device)
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		// リザルト2D描画
-		result2D[i].render(device, resultTransition, result2Transition);
+		//uiResult[i].render(device);
 	}
+	uiResult.render(device);
 
 	static float chinginResult = 99999;
 
-	// 賃金数描画
-	chinginCnt.render(device, chinginResult, chinginResult);
+	//// 賃金数描画
+	//chinginCnt.render(device, chinginResult, chinginResult);
 }
 //=============================================================================
 // コリジョン処理
@@ -137,8 +139,10 @@ void Result::uninitialize()
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		// リザルト2D終了
-		result2D[i].uninitialize();
+		//uiResult[i].release();
 	}
-	// 賃金数終了
-	chinginCnt.uninitialize();
+	//uiResult.release();
+
+	//// 賃金数終了
+	//chinginCnt.uninitialize();
 }

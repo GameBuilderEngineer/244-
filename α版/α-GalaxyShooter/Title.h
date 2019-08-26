@@ -8,7 +8,7 @@
 #include "TitleTransition.h"
 #include "TitleTransPos.h"
 #include "Player.h"
-#include "Title2D.h"
+#include "UITitleLogo.h"
 #include "InstancingBillboard.h"
 //=============================================================================
 // 名前空間
@@ -51,7 +51,7 @@ private:
 	// プレイヤー
 	Player titlePlayer[titleNS::NUM_PLAYER];
 	// タイトル2D
-	Title2D title2D;
+	UITitleLogo uiTitleLogo;
 
 	InstancingBillboard plane;
 public:

@@ -12,8 +12,8 @@ const static int		HEIGHT = 50;										// タイトル選択位置画像縦サイズ
 const static float		POSITION_X = 0.0f;									// タイトル選択位置画像X座標
 static float			POSITION_Y = CNT_TITLE_START;						// タイトル選択位置画像Y座標
 #else
-const static int		WIDTH = 800;										// リリース時タイトル選択位置画像横サイズ
-const static int		HEIGHT = 80;										// リリース時タイトル選択位置画像縦サイズ
+const static int		WIDTH = 600;										// リリース時タイトル選択位置画像横サイズ
+const static int		HEIGHT = 75;										// リリース時タイトル選択位置画像縦サイズ
 const static float		POSITION_X = 0.0f;									// リリース時タイトル選択位置画像X座標
 static float			POSITION_Y = CNT_RELEASE_START;						// リリース時タイトル選択位置画像Y座標
 #endif 
@@ -46,7 +46,7 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	titleTransPosTex = *textureLoader->getTexture(textureLoaderNS::TITLE_POS);
+	titleTransPosTex = *textureLoader->getTexture(textureLoaderNS::TITLE_BAR);
 
 	// タイトル選択位置描画処理初期化
 	Sprite::initialize(device,

@@ -97,9 +97,6 @@
     <Filter Include="Scene\Splash\Splash2D">
       <UniqueIdentifier>{f8726285-6ecd-414b-b93b-c13b0d2d3dc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Result\Result2D">
-      <UniqueIdentifier>{b467a5f0-a32d-435e-9e98-e7dc67d44d91}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Tutorial">
       <UniqueIdentifier>{e24a5634-eb37-4ee2-86b9-40c2975ddb48}</UniqueIdentifier>
     </Filter>
@@ -181,9 +178,6 @@
     <Filter Include="Object\Wasuremono">
       <UniqueIdentifier>{f76eb046-ecae-44fb-b8f2-bba0f2acdb5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\TimerUI">
-      <UniqueIdentifier>{c6392830-968a-465e-aca0-52cdd4642e89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect">
       <UniqueIdentifier>{bd1f81cf-5758-406b-aa7c-382a09780ae9}</UniqueIdentifier>
     </Filter>
@@ -214,21 +208,6 @@
     <Filter Include="Scene\CharacterSelect">
       <UniqueIdentifier>{28b1a729-53b0-45e5-9d02-0418a8f5c6ee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\CharacterSelect\CharacterSelect2D">
-      <UniqueIdentifier>{84aee29e-7559-47dd-b14b-57b754ae8b5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\CharaSelectBarUI">
-      <UniqueIdentifier>{be828300-170c-4286-87a2-72bb84606672}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Chingin">
-      <UniqueIdentifier>{72a55722-7247-48c1-9b06-1ef552128a77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\PlayTime">
-      <UniqueIdentifier>{f560bf8a-e284-46d8-97e4-b327302ac544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Recursion">
-      <UniqueIdentifier>{28866f52-a732-4465-acc8-8885071dee91}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{d860687a-957b-4aec-b828-5653136e072d}</UniqueIdentifier>
     </Filter>
@@ -241,29 +220,11 @@
     <Filter Include="AI\Map">
       <UniqueIdentifier>{76dff474-7b1b-49bf-93b9-b66f8bd81143}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\CutMemoryLine">
-      <UniqueIdentifier>{2a6cf4dc-9221-492c-8b96-a1ffb073c7f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\ScreenSplitLine">
-      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Revival">
-      <UniqueIdentifier>{2bb7f2c9-9319-484d-87f8-ff29d9f106ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\RevivalGauge">
-      <UniqueIdentifier>{cc9beee4-02db-4d30-beb4-3f774d3f811e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\CountTime">
-      <UniqueIdentifier>{eb97fa15-af69-40de-b36c-b06fd7cf5df6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sound">
       <UniqueIdentifier>{37b89136-d3b7-4a31-94cc-5d3da36148f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Animation">
       <UniqueIdentifier>{d1caccd4-9775-4a08-a2c5-d6366b204d3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\ChinginCnt">
-      <UniqueIdentifier>{ddd4da09-ad1b-440d-bb81-52d0a644eace}</UniqueIdentifier>
     </Filter>
     <Filter Include="Effect\InstancingEffect">
       <UniqueIdentifier>{3ced9445-db18-4deb-a3df-273c95d6de79}</UniqueIdentifier>
@@ -271,11 +232,44 @@
     <Filter Include="Effect\EffectManager">
       <UniqueIdentifier>{2fd1ef0f-9f1f-404b-bb29-a4f9354e9659}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Title\Title2D">
-      <UniqueIdentifier>{2f26ad2b-811f-4d04-aea5-827a11101804}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\RecursionRecognition">
       <UniqueIdentifier>{07c8ecdc-da00-49b6-a7d6-e13cc966a32a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game">
+      <UniqueIdentifier>{008ca107-7c93-44a0-8ab1-c7fbbf42b7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\Chingin">
+      <UniqueIdentifier>{72a55722-7247-48c1-9b06-1ef552128a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\CutMemoryLine">
+      <UniqueIdentifier>{2a6cf4dc-9221-492c-8b96-a1ffb073c7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\PlayTime">
+      <UniqueIdentifier>{f560bf8a-e284-46d8-97e4-b327302ac544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\Recursion">
+      <UniqueIdentifier>{28866f52-a732-4465-acc8-8885071dee91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\RevivalGauge">
+      <UniqueIdentifier>{cc9beee4-02db-4d30-beb4-3f774d3f811e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\Revival">
+      <UniqueIdentifier>{2bb7f2c9-9319-484d-87f8-ff29d9f106ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\ScreenSplitLine">
+      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\CharacterSelect">
+      <UniqueIdentifier>{90a76f1b-ef5e-4888-b487-313b10d4eae2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Result">
+      <UniqueIdentifier>{09a0546f-b056-473f-8778-44806494f09d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Result\ChinginCnt">
+      <UniqueIdentifier>{ddd4da09-ad1b-440d-bb81-52d0a644eace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Title">
+      <UniqueIdentifier>{34bd9ee6-3431-4971-bf0c-15c3d61f5ab0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -354,9 +348,6 @@
     <ClCompile Include="Splash2D.cpp">
       <Filter>Scene\Splash\Splash2D</Filter>
     </ClCompile>
-    <ClCompile Include="Result2D.cpp">
-      <Filter>Scene\Result\Result2D</Filter>
-    </ClCompile>
     <ClCompile Include="Credit.cpp">
       <Filter>Scene\Credit</Filter>
     </ClCompile>
@@ -422,9 +413,6 @@
     </ClCompile>
     <ClCompile Include="UtilityFunction.cpp">
       <Filter>UtilityFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="TimerUI.cpp">
-      <Filter>UI\TimerUI</Filter>
     </ClCompile>
     <ClCompile Include="HpEffect.cpp">
       <Filter>Effect\HpEffect</Filter>
@@ -519,27 +507,17 @@
     <ClCompile Include="InstancingChingin.cpp">
       <Filter>Object\Wage</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp">
-      <Filter>Scene\CharacterSelect</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectCharacter2D.cpp">
-      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
-    </ClCompile>
-    <ClCompile Include="CharaSelectBarUI.cpp">
-      <Filter>UI\CharaSelectBarUI</Filter>
-    </ClCompile>
     <ClCompile Include="Wage.cpp">
       <Filter>Object\Wage</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp" />
     <ClCompile Include="UIChingin.cpp">
-      <Filter>UI\Chingin</Filter>
+      <Filter>UI\Game\Chingin</Filter>
     </ClCompile>
     <ClCompile Include="UIPlayTime.cpp">
-      <Filter>UI\PlayTime</Filter>
+      <Filter>UI\Game\PlayTime</Filter>
     </ClCompile>
     <ClCompile Include="UIRecursion.cpp">
-      <Filter>UI\Recursion</Filter>
+      <Filter>UI\Game\Recursion</Filter>
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>Manager</Filter>
@@ -553,26 +531,20 @@
     <ClCompile Include="SelectCharacter.cpp">
       <Filter>Scene\CharacterSelect</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter2D.cpp">
-      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>AI\Map</Filter>
     </ClCompile>
     <ClCompile Include="UICutMemoryLine.cpp">
-      <Filter>UI\CutMemoryLine</Filter>
+      <Filter>UI\Game\CutMemoryLine</Filter>
     </ClCompile>
     <ClCompile Include="UIScreenSplitLine.cpp">
-      <Filter>UI\ScreenSplitLine</Filter>
+      <Filter>UI\Game\ScreenSplitLine</Filter>
     </ClCompile>
     <ClCompile Include="UIRevival.cpp">
-      <Filter>UI\Revival</Filter>
+      <Filter>UI\Game\Revival</Filter>
     </ClCompile>
     <ClCompile Include="UIRevivalGauge.cpp">
-      <Filter>UI\RevivalGauge</Filter>
-    </ClCompile>
-    <ClCompile Include="UICountTime.cpp">
-      <Filter>UI\CountTime</Filter>
+      <Filter>UI\Game\RevivalGauge</Filter>
     </ClCompile>
     <ClCompile Include="SelectCharacter2D.cpp">
       <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
@@ -591,7 +563,7 @@
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="ChinginCnt.cpp">
-      <Filter>UI\ChinginCnt</Filter>
+      <Filter>UI\Result\ChinginCnt</Filter>
     </ClCompile>
     <ClCompile Include="EffectManager.cpp">
       <Filter>Effect\EffectManager</Filter>
@@ -599,11 +571,20 @@
     <ClCompile Include="InstancingEffect.cpp">
       <Filter>Effect\InstancingEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Title2D.cpp">
-      <Filter>Scene\Title\Title2D</Filter>
-    </ClCompile>
     <ClCompile Include="RecursionRecognition.cpp">
       <Filter>AI\RecursionRecognition</Filter>
+    </ClCompile>
+    <ClCompile Include="UITitleLogo.cpp">
+      <Filter>UI\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="UIResult.cpp">
+      <Filter>UI\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="UICharacterSelect.cpp">
+      <Filter>UI\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterSelect.cpp">
+      <Filter>Scene\CharacterSelect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -769,9 +750,6 @@
     <ClInclude Include="WasuremonoTable.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="TimerUI.h">
-      <Filter>UI\TimerUI</Filter>
-    </ClInclude>
     <ClInclude Include="HpEffect.h">
       <Filter>Effect\HpEffect</Filter>
     </ClInclude>
@@ -817,27 +795,17 @@
     <ClInclude Include="InstancingChingin.h">
       <Filter>Object\Wage</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h">
-      <Filter>Scene\CharacterSelect</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter2D.h">
-      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
-    </ClInclude>
-    <ClInclude Include="CharaSelectBarUI.h">
-      <Filter>UI\CharaSelectBarUI</Filter>
-    </ClInclude>
     <ClInclude Include="Wage.h">
       <Filter>Object\Wage</Filter>
     </ClInclude>
-    <ClInclude Include="SelectCharacter.h" />
     <ClInclude Include="UIChingin.h">
-      <Filter>UI\Chingin</Filter>
+      <Filter>UI\Game\Chingin</Filter>
     </ClInclude>
     <ClInclude Include="UIPlayTime.h">
-      <Filter>UI\PlayTime</Filter>
+      <Filter>UI\Game\PlayTime</Filter>
     </ClInclude>
     <ClInclude Include="UIRecursion.h">
-      <Filter>UI\Recursion</Filter>
+      <Filter>UI\Game\Recursion</Filter>
     </ClInclude>
     <ClInclude Include="TextManager.h">
       <Filter>Manager</Filter>
@@ -852,22 +820,16 @@
       <Filter>AI\Map</Filter>
     </ClInclude>
     <ClInclude Include="UICutMemoryLine.h">
-      <Filter>UI\CutMemoryLine</Filter>
+      <Filter>UI\Game\CutMemoryLine</Filter>
     </ClInclude>
     <ClInclude Include="UIScreenSplitLine.h">
-      <Filter>UI\ScreenSplitLine</Filter>
+      <Filter>UI\Game\ScreenSplitLine</Filter>
     </ClInclude>
     <ClInclude Include="UIRevival.h">
-      <Filter>UI\Revival</Filter>
+      <Filter>UI\Game\Revival</Filter>
     </ClInclude>
     <ClInclude Include="UIRevivalGauge.h">
-      <Filter>UI\RevivalGauge</Filter>
-    </ClInclude>
-    <ClInclude Include="UICountTime.h">
-      <Filter>UI\CountTime</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter2D.h">
-      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
+      <Filter>UI\Game\RevivalGauge</Filter>
     </ClInclude>
     <ClInclude Include="SelectCharacter.h">
       <Filter>Scene\CharacterSelect</Filter>
@@ -884,7 +846,7 @@
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="ChinginCnt.h">
-      <Filter>UI\ChinginCnt</Filter>
+      <Filter>UI\Result\ChinginCnt</Filter>
     </ClInclude>
     <ClInclude Include="EffectManager.h">
       <Filter>Effect\EffectManager</Filter>
@@ -892,12 +854,21 @@
     <ClInclude Include="InstancingEffect.h">
       <Filter>Effect\InstancingEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Title2D.h">
-      <Filter>Scene\Title\Title2D</Filter>
-    </ClInclude>
     <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
+    </ClInclude>
+    <ClInclude Include="UITitleLogo.h">
+      <Filter>UI\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="UIResult.h">
+      <Filter>UI\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="UICharacterSelect.h">
+      <Filter>UI\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterSelect.h">
+      <Filter>Scene\CharacterSelect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -977,9 +948,6 @@
     </Image>
     <ClInclude Include="Splash2D.h">
       <Filter>Scene\Splash\Splash2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Result2D.h">
-      <Filter>Scene\Result\Result2D</Filter>
     </ClInclude>
     <ClInclude Include="Credit.h">
       <Filter>Scene\Credit</Filter>

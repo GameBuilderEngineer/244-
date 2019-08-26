@@ -6,10 +6,10 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// クレジット2D横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// クレジット2D縦サイズ
-const static float		POSITION_X = 0.0f;							// クレジット2DX座標
-const static float		POSITION_Y = 0.0f;							// クレジット2DY座標
+const static int		WIDTH = ((3840 / 2) - 16);					// クレジット2D横サイズ
+const static int		HEIGHT = ((2160 / 2) - 9);					// クレジット2D縦サイズ
+const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// クレジット2DX座標
+const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// クレジット2DY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -44,7 +44,7 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 	// クレジット2D初期化
 	Sprite::initialize(device,
 		textureCredit2D,							// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
+		spriteNS::CENTER,							// 原点
 		WIDTH,										// 横幅
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標

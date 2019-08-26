@@ -95,10 +95,10 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 	//スターラインの初期化
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 
 }
 
@@ -801,7 +801,7 @@ void Player::triggerShockWave()
 	if (onShockWave)return;		//生成されているか
 	if (!canShockWave)return;	//使用可能か
 	shockWave = new ShockWave();
-	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::DEBUG_UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
 	onShockWave = true;		//生成中にする

@@ -57,7 +57,7 @@ HRESULT TimerUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	timerTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARA_SELECT_TIMER);
+	timerTexture = *textureLoader->getTexture(textureLoaderNS::UI_CHARACTER_SELECT_TIME);
 
 	// タイマーUI初期化
 	Sprite::initialize(device,

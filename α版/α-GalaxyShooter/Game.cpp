@@ -148,8 +148,8 @@ void Game::initialize(
 	pointSprite.initilaize(direct3D9->device);
 
 	//インスタンスプレーン
-	plane.createPositionSpherical(direct3D9->device,3000, 250.0f);
-	plane.initialize(direct3D9->device,*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::RING));
+	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
+	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
 	//ポーズの初期化
 	pose.initialize(direct3D9->device, 0, _textureLoader);

@@ -22,7 +22,7 @@ void EffectManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _texture
 	numOfUse = 0;
 	renderList = NULL;
 
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::HP_EFFECT));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::EFFECT_DAMAGE));
 }
 //=============================================================================
 // XVˆ—
