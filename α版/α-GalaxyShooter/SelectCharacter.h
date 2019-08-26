@@ -7,6 +7,7 @@
 #include "SelectCharacter2D.h"
 #include "CharaSelectBarUI.h"
 #include "TimerUI.h"
+#include "UIScreenSplitLine.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -40,6 +41,7 @@ private:
 	CharaSelectBarUI charaSelectBar[selectCharacterNS::NUM_PLAYER];
 	// タイマーUI
 	TimerUI timerUI;
+	UIScreenSplitLine uiScreenSplitLine;
 public:
 	SelectCharacter();
 	~SelectCharacter();

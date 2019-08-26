@@ -20,6 +20,8 @@ Tutorial::Tutorial()
 //=============================================================================
 Tutorial::~Tutorial()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_TUTORIAL);
 }
 //=============================================================================
 // 初期化処理
@@ -44,6 +46,9 @@ void Tutorial::initialize(
 	//shaderLoader
 	shaderLoader = _shaderLoader;
 
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_TUTORIAL, soundNS::METHOD::LOOP);
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
@@ -66,6 +71,18 @@ void Tutorial::update(float frameTime)
 	tutorial2D.update();
 
 	//Enterまたは〇ボタンでリザルトへ
+	// 前の遷移へ戻る
+	if (input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		nextScene = SceneList::TITLE;
+		changeScene(nextScene);
+		return;
+	}
+
 	if (input->wasKeyPressed(VK_RETURN)||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)

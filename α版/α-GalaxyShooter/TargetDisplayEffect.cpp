@@ -65,6 +65,7 @@ return S_OK;
 //=============================================================================
 void TargetDisplayEffect::uninitialize(void)
 {
+
 	// ステンシル終了
 	inactivate();
 }

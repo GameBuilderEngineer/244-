@@ -12,6 +12,9 @@
 namespace STDAI
 {
 #define opponent					(recognitionBB->getOpponentPlayer())
+
+	// 定数
+	static const int NUM_RECURSION_RECOGNITION = 3;	// リカージョン認識の数
 }
 using namespace STDAI;
 

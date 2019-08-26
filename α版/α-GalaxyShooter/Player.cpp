@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/22
 //===================================================================================================================================
 #include "Player.h"
 using namespace playerNS;
@@ -13,10 +13,8 @@ using namespace playerNS;
 Player::Player()
 {
 	ZeroMemory(&keyTable, sizeof(OperationKeyTable));
-	hp = 100;
-	maxHp = 100;
-	sp = 100;
-	maxSp = 100;
+	hp = MAX_HP;
+	revivalPoint = 0;
 	onGravity = true;
 	radius = 5.0f;
 	activation();
@@ -27,7 +25,7 @@ Player::Player()
 	invincibleTimer = 0.0f;					//無敵時間
 	fallTimer = 0.0f;						//落下時間
 	skyTimer = 0.0f;						//上空モード時間
-	downTimer = 0.0f;						//ダウンタイマー[体力が切れるorメモリーラインを切断される]
+	decreaseRevivalTimer = 0.0f;			//ダウンタイマー[体力が切れるorメモリーラインを切断される]
 
 	onGround = false;						//接地判定
 
@@ -35,8 +33,10 @@ Player::Player()
 	modelType = staticMeshNS::ADULT;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
+	onJump = false;							//ジャンプフラグ
 	onRecursion = false;					//リカージョン生成フラグ
 	onShockWave = false;					//衝撃波発動フラグ
+	canShockWave = false;
 	collidedOpponentMemoryLine = false;		//相手のメモリーラインとの衝突フラグ
 	disconnectOpponentMemoryLine = false;	//敵メモリーライン切断メッセージフラグ
 	elementBullet = 0;						//弾アクセス要素数
@@ -44,6 +44,7 @@ Player::Player()
 	intervalBullet = 0;						//発弾間隔
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	recursion = NULL;						//リカージョンNULL
+	recursionTimer = 0.0f;					//リカージョンの生存時間
 }
 
 //===================================================================================================================================
@@ -64,7 +65,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	this->modelType = modelType;
 	this->textureLoader = textureLoader;
 	this->shaderLoader = shaderLoader;
-
+	this->sound = NULL;
 	switch (type)
 	{
 	case PLAYER1:
@@ -78,7 +79,6 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		break;
 	}
 	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
-	//Object::initialize(device, &staticMeshLoader->staticMesh[modelType], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -96,6 +96,9 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+	//スターラインの初期化
+	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
 
 }
 
@@ -110,6 +113,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 //===================================================================================================================================
 void Player::update(float frameTime)
 {
+
 #ifdef _DEBUG
 	//調整用
 	if (input->getController()[type]->wasButton(virtualControllerNS::UP))
@@ -120,7 +124,7 @@ void Player::update(float frameTime)
 
 	//前処理
 	setSpeed(D3DXVECTOR3(0, 0, 0));	//速度（移動量）の初期化
-	bool onJump = false;			//ジャンプフラグ
+	onJump = false;			//ジャンプフラグ
 
 	//===========
 	//【回復】
@@ -153,78 +157,24 @@ void Player::update(float frameTime)
 	}
 
 
-	//===========
-	//【接地処理】
-	//===========
-	//重力線を作成
-	D3DXVECTOR3 gravityDirection;
-	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
-	gravityRay.initialize(position, gravityDirection);								//重力レイの初期化
-	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
-	D3DXVECTOR3 fallPosition;
-	D3DXVECTOR3 groundPosition;
-	D3DXVECTOR3 skyPosition;
-	float rate;
 	switch (state)
 	{
-	case FALL:
-		fallTimer -= frameTime;
-		rate = fallTimer / FALL_TIME;
-		groundPosition = axisY.direction * (radius + attractorRadius);
-		skyPosition = axisY.direction * (radius + attractorRadius + skyHeight);
-		D3DXVec3Lerp(&fallPosition, &groundPosition, &skyPosition, rate);
-		setPosition(fallPosition);
-		if (!whetherFall())changeState(GROUND);
-		break;
-	case SKY:
-		skyTimer -= frameTime;
-		skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
-		if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
-		{
-			//相互半径合計値より引力発生源との距離が短いと接地
-			//相互半径合計値より引力発生源との距離が短いと接地
-			onGround = true;
-			//めり込み補正
-			//現在位置+ 垂直方向*(めり込み距離)
-			setPosition(position + axisY.direction * (radius + attractorRadius + skyHeight - distanceToAttractor));
-			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			setSpeed(reverseAxisY.slip(speed, axisY.direction));
-		}
-		else {
-			//空中
-			onGround = false;
-			setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
-		}
-		if (!whetherSky())changeState(FALL);
-		break;
-	case GROUND:
-		if (radius + attractorRadius >= distanceToAttractor - difference)
-		{
-			//相互半径合計値より引力発生源との距離が短いと接地
-			onGround = true;
-			//めり込み補正
-			//現在位置+ 垂直方向*(めり込み距離)
-			setPosition(position + axisY.direction * (radius + attractorRadius - distanceToAttractor));
-			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-			setSpeed(reverseAxisY.slip(speed, axisY.direction));
-			if (onJump)jump();//ジャンプ
-		}
-		else {
-			//空中
-			onGround = false;
-			setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
-		}
-		break;
+	case FALL:		updateFall(frameTime);			break;
+	case SKY:		updateSky(frameTime);			break;
+	case GROUND:	updateGround(frameTime,onJump);	break;
+	case DOWN:		updateDown(frameTime);			break;
+	case REVIVAL:	updateRevival(frameTime);		break;
 	}
 
 	//===========
 	//【加速度処理】
 	//===========
-	if (D3DXVec3Length(&acceleration) > 0.01f)
+	if (D3DXVec3Length(&acceleration) > 0.05f)
 	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
-	acceleration *= 0.9f;//加速度減衰
+	//acceleration *= 0.9f;//加速度減衰
+
 	
 	//===========
 	//【位置更新】
@@ -299,10 +249,12 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	{
 		memoryPile[i].render(device, view, projection, cameraPosition);
 	}
-	//メモリーラインの描画
-	memoryLine.render(device, view, projection, cameraPosition);
 	//リカージョンの描画
 	if (onRecursion) recursion->render(device, view, projection, cameraPosition);
+	//メモリーラインの描画
+	memoryLine.render(device, view, projection, cameraPosition);
+	//スターラインの描画
+	starLine.render(device, view, projection, cameraPosition);
 	//衝撃波の描画
 	if (onShockWave) shockWave->render(device, view, projection, cameraPosition);
 	//メモリーラインの切断ガイドの表示
@@ -322,11 +274,8 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 //===================================================================================================================================
 void Player::recorvery(float frameTime)
 {
-	if (whetherDown()) {
-		downTimer = max(downTimer - frameTime,0);
-		if (!whetherDown())changeState(REVIVAL);
-		return;
-	}
+	if (whetherDown())return; 
+
 	invincibleTimer = max(invincibleTimer - frameTime, 0);
 	recoveryTimer += frameTime;
 	if (!whetherInvincible() && recoveryTimer < INTERVAL_RECOVERY)return;
@@ -346,7 +295,6 @@ void Player::moveOperation()
 	if (input->isKeyDown(keyTable.front)) {
 		move(D3DXVECTOR2(0, -1), camera->getDirectionX(), camera->getDirectionZ());
 	}
-
 	//後ろへ進む
 	if (input->isKeyDown(keyTable.back)) {
 		move(D3DXVECTOR2(0, 1), camera->getDirectionX(), camera->getDirectionZ());
@@ -386,7 +334,12 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 
 	//操作方向をカメラのXZ方向に準拠した移動ベクトルへ変換する
 	D3DXVECTOR3 moveDirection = operationDirection.x*right + -operationDirection.y*front;
-	addSpeed(moveDirection*SPEED);
+	if (onGround) {
+		addSpeed(moveDirection*SPEED);
+	}
+	else {
+		addSpeed(moveDirection*SPEED/10);
+	}
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
@@ -397,7 +350,10 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 void Player::jump()
 {
 	if (whetherDown())return;
-	acceleration += axisY.direction*JUMP_FORCE;
+	acceleration += axisY.direction * JUMP_FORCE+speed/0.9f;
+	onGround = false;
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_JUMP, soundNS::METHOD::PLAY);
 }
 
 //===================================================================================================================================
@@ -426,54 +382,181 @@ void Player::changeState(int _state)
 	//【切替時初期化処理】
 	switch (state)
 	{
-	case GROUND:	ground();	break;
-	case FALL:		fall();		break;
-	case DOWN:		down();		break;
-	case SKY:		sky();		break;
-	case REVIVAL:	revival();	break;
-	default:					break;
+	case GROUND:	changeGround();		break;
+	case FALL:		changeFall();		break;
+	case DOWN:		changeDown();		break;
+	case SKY:		changeSky();		break;
+	case REVIVAL:	changeRevival();	break;
+	default:							break;
 	}
 }
 
 //===================================================================================================================================
 //【地上モード 切替処理】
 //===================================================================================================================================
-void Player::ground()
+void Player::changeGround()
 {
+	onGround = true;
 	triggerShockWave();//衝撃波を発生させる
+}
+//===================================================================================================================================
+//【地上モード 更新処理】
+//===================================================================================================================================
+void Player::updateGround(float frameTime, bool _onJump)
+{
+	//===========
+	//【接地処理】
+	//===========
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
+	gravityRay.initialize(position, gravityDirection);								//重力レイの初期化
+	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
+	if (radius + attractorRadius >= distanceToAttractor - difference)
+	{
+		//相互半径合計値より引力発生源との距離が短いと接地
+		onGround = true;
+		onGravity = false;
+		//めり込み補正
+		//現在位置+ 垂直方向*(めり込み距離)
+		setPosition(position + axisY.direction * (radius + attractorRadius - distanceToAttractor));
+		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+		setSpeed(reverseAxisY.slip(speed, axisY.direction));
+		acceleration *= 0;
+		if (_onJump)jump();//ジャンプ
+	}
+	else {
+		//空中
+		onGround = false;
+		onGravity = true;
+	}
+	setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
+
 }
 
 //===================================================================================================================================
 //【落下モード 切替処理】
 //===================================================================================================================================
-void Player::fall()
+void Player::changeFall()
 {
 	fallTimer = FALL_TIME;//落下時間のセット
+	onGround = false;
+}
+//===================================================================================================================================
+//【落下モード 更新処理】
+//===================================================================================================================================
+void Player::updateFall(float frameTime)
+{
+	//===========
+	//【接地処理】
+	//===========
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
+	gravityRay.initialize(position, gravityDirection);								//重力レイの初期化
+	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
+	D3DXVECTOR3 fallPosition;
+	D3DXVECTOR3 groundPosition;
+	D3DXVECTOR3 skyPosition;
+	float rate;
+	fallTimer -= frameTime;
+	rate = fallTimer / FALL_TIME;
+	groundPosition = axisY.direction * (radius + attractorRadius);
+	skyPosition = axisY.direction * (radius + attractorRadius + skyHeight);
+	D3DXVec3Lerp(&fallPosition, &groundPosition, &skyPosition, rate);
+	setPosition(fallPosition);
+	//【地上】モードへ切替
+	if (!whetherFall())changeState(REVIVAL);
 }
 
 //===================================================================================================================================
 //【ダウン時 切替処理】
 //===================================================================================================================================
-void Player::down()
+void Player::changeDown()
 {
-	downTimer = DOWN_TIME;//ダウン時間のセット
+	revivalPoint = 0;
+	decreaseRevivalTimer = DECREASE_REVIVAL_TIME;//復活ポイント減少時間のセット
+}
+//===================================================================================================================================
+//【ダウン時 更新処理】
+//===================================================================================================================================
+void Player::updateDown(float frameTime)
+{
+	decreaseRevivalTimer -= frameTime;
+
+	if (revivalPoint > 0 && decreaseRevivalTimer <= 0)
+	{
+		decreaseRevivalTimer = DECREASE_REVIVAL_TIME;
+		revivalPoint -= DECREASE_REVIVAL_POINT;
+		if (revivalPoint < 0)revivalPoint = 0;
+	}
+	if (input->wasKeyPressed(keyTable.revival)|| input->getController()[type]->wasButton(BUTTON_REVIVAL))
+	{
+		revivalPoint += INCREASE_REVIVAL_POINT;
+		if (whetherRevival())changeState(REVIVAL);
+	}
+	updateGround(frameTime, false);
 }
 
 //===================================================================================================================================
 //【上空モード 切替処理】
 //===================================================================================================================================
-void Player::sky()
+void Player::changeSky()
 {
 	skyTimer = SKY_TIME;//上空モード時間のセット
 	skyHeight = 0.0f;
+	hp = MAX_HP;
+	onGround = false;
+	canShockWave = true;
+}
+
+//===================================================================================================================================
+//【上空モード 更新処理】
+//===================================================================================================================================
+void Player::updateSky(float frameTime)
+{
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
+	gravityRay.initialize(position, gravityDirection);								//重力レイの初期化
+	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
+	skyTimer -= frameTime;
+	skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
+	if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
+	{
+		//めり込み補正
+		//現在位置+ 垂直方向*(めり込み距離)
+		setPosition(position + axisY.direction * (radius + attractorRadius + skyHeight - distanceToAttractor));
+		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+		setSpeed(reverseAxisY.slip(speed, axisY.direction));
+	}
+	else {
+		//空中
+		onGround = false;
+		setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
+	}
+
+	//【落下】モードへ切替
+	if (!whetherSky())changeState(FALL);
 }
 
 //===================================================================================================================================
 //【復活時 切替処理】
 //===================================================================================================================================
-void Player::revival()
+void Player::changeRevival()
 {
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
+
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
+	changeState(GROUND);
+}
+//===================================================================================================================================
+//【復活時 更新処理】
+//===================================================================================================================================
+void Player::updateRevival(float frameTime)
+{
+	updateGround(frameTime,false);
 }
 
 //===================================================================================================================================
@@ -545,6 +628,9 @@ void Player::updateBullet(float frameTime)
 	if ((input->getMouseLButton() || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
+
 		bullet[elementBullet].setPosition(position);
 		//Y軸方向への成分を削除する
 		D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
@@ -589,15 +675,28 @@ void Player::controlCamera(float frameTime)
 }
 
 //===================================================================================================================================
-//【カメラの操作/更新】
+//【メモリーアイテムの操作/更新】
 //===================================================================================================================================
 void Player::updateMemoryItem(float frameTime)
 {
+	if (whetherDown())
+	{
+		deleteMemoryItem();//ダウン状態ならば全てのメモリアイテムを削除
+	}
+	if (onRecursion)recursionTimer -= frameTime;
+	if (recursionTimer < 0)
+	{
+		if(onRecursion)SAFE_DELETE(recursion);
+		onRecursion = false;
+	}
 	//1Pのメモリーパイルのセット
 	if (onGround && 
 		memoryPile[elementMemoryPile].ready() &&
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
 		memoryPile[elementMemoryPile].activation();
@@ -606,9 +705,11 @@ void Player::updateMemoryItem(float frameTime)
 		//メモリーパイルを全て設置することに成功
 		if (elementMemoryPile >= NUM_MEMORY_PILE)
 		{
+			memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);//メモリーラインの更新
 			elementMemoryPile = 0;//セットする対象を0番のメモリパイルに切替
 			//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
 			onRecursion = true;
+			recursionTimer = RECURSION_TIME;
 			//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
 			D3DXVECTOR3 vertex[NUM_MEMORY_PILE];
 			for (int i = 0; i < NUM_MEMORY_PILE; i++)
@@ -618,6 +719,8 @@ void Player::updateMemoryItem(float frameTime)
 			//リカージョンの生成
 			recursion = new Recursion;
 			recursion->initialize(device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
+			//スターラインのリセット
+			starLine.resetCurrentRenderNum();
 			//メモリーパイルとメモリーラインの消失
 			for (int i = 0; i < NUM_MEMORY_PILE; i++)
 			{
@@ -627,9 +730,11 @@ void Player::updateMemoryItem(float frameTime)
 		}
 	}
 
-	//敵のメモリーパイルの切断メッセージ
-	if ((input->getController()[type]->wasButton(virtualControllerNS::A) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
-			&& state == GROUND) 
+	//[メッセージ]敵のメモリーパイルを切断する
+	if ((input->getController()[type]->wasButton(BUTTON_CUT) || //コントローラ操作
+		 (input->getMouseWheelState()==inputNS::DOWN)||			//マウスホイール操作
+		 (GetAsyncKeyState(VK_RSHIFT) & 0x8000))				//キーボード操作（仮）
+			&& state == GROUND) 								//地上モード時
 	{disconnectOpponentMemoryLine = true;}
 	else
 	{ disconnectOpponentMemoryLine = false;}
@@ -641,7 +746,34 @@ void Player::updateMemoryItem(float frameTime)
 	}
 	
 	//メモリーラインの更新
-	memoryLine.update(device, frameTime);
+	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
+
+	//スターラインの更新
+	starLine.update(device, frameTime,memoryLineNS::STAR);//スターラインの更新
+	
+	//リカージョンの更新
+	if (onRecursion)
+	{
+		recursion->update(frameTime);
+	}
+}
+//===================================================================================================================================
+//【メモリーアイテムの削除処理】
+//===================================================================================================================================
+void Player::deleteMemoryItem()
+{
+	//スターラインのリセット
+	starLine.resetCurrentRenderNum();
+	//メモリーパイルとメモリーラインの消失
+	for (int i = 0; i < NUM_MEMORY_PILE; i++)
+	{
+		memoryPile[i].switchLost();//消失
+		memoryLine.disconnect();//切断
+	}
+	//リカージョンの削除
+	if (onRecursion)SAFE_DELETE(recursion);
+	onRecursion = false;
+	recursionTimer = 0;
 }
 //===================================================================================================================================
 //【弾ベクトル取得】
@@ -667,6 +799,8 @@ void Player::disconnectMemoryLine()
 		memoryPile[i].switchLost();//消失
 		memoryLine.disconnect();//切断
 	}
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_CUT_MEMORY_LINE, soundNS::METHOD::PLAY);
 	changeState(playerNS::DOWN);
 }
 
@@ -675,10 +809,14 @@ void Player::disconnectMemoryLine()
 //===================================================================================================================================
 void Player::triggerShockWave()
 {
-	if (onShockWave)return;
+	if (onShockWave)return;		//生成されているか
+	if (!canShockWave)return;	//使用可能か
 	shockWave = new ShockWave();
 	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
-	onShockWave = true;
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
+	onShockWave = true;		//生成中にする
+	canShockWave = false;	//使用不可能にする
 }
 
 //===================================================================================================================================
@@ -691,17 +829,17 @@ void Player::deleteShockWave()
 }
 
 //===================================================================================================================================
-//【衝撃波を発動】
+//【衝撃波の更新処理】
 //===================================================================================================================================
 void Player::updateShockWave(float frameTime)
 {
-	if (!onShockWave)return;
-	if (!shockWave->whetherActive())
+	if (!onShockWave)return;//生成されていなければ更新しない
+	if (!shockWave->whetherActive())//衝撃波はアクティブでない
 	{
-		deleteShockWave();
+		deleteShockWave();//削除
 		return;
 	}
-	shockWave->update(frameTime);
+	shockWave->update(frameTime);//更新
 }
 
 //===================================================================================================================================
@@ -709,30 +847,29 @@ void Player::updateShockWave(float frameTime)
 //===================================================================================================================================
 void Player::setInput(Input* _input) { input = _input; }
 void Player::setCamera(Camera* _camera) { camera = _camera; }
+void Player::setSound(Sound* _sound) { sound = _sound; }
 void Player::damgae(int value) { 
 	hp = max(hp - value, 0);
 	if (whetherDeath())changeState(DOWN);
 }
-void Player::recoveryHp(int value) { hp = min(hp + value, maxHp); }
-void Player::lostSp(int value) { sp = max(sp - value, 0); }
-void Player::recoverySp(int value) { sp = min(sp + value, maxSp); }
+void Player::recoveryHp(int value) { hp = min(hp + value, MAX_HP); }
 void Player::setCollidedMemoryLine(bool frag) { collidedOpponentMemoryLine = frag; }
 
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
 int Player::getHp() { return hp; }
-int Player::getMaxHp() { return maxHp; }
-int Player::getSp() { return sp; }
-int Player::getMaxSp() { return maxSp; }
+int Player::getRevivalPoint() { return revivalPoint; }
 int Player::getState() { return state; }
 int Player::getWage() { return wage; }
-bool Player::whetherDown() { return downTimer > 0; }
+bool Player::whetherDown() { return state == DOWN; }
+bool Player::whetherRevival() { return revivalPoint >= MAX_REVIVAL_POINT; }
 bool Player::whetherDeath() {return hp <= 0;}
 bool Player::whetherInvincible() {return invincibleTimer > 0;}
 bool Player::whetherSky() { return skyTimer > 0; }
 bool Player::whetherFall() { return fallTimer > 0; }
 bool Player::whetherGenerationRecursion() { return onRecursion; }
+bool Player::whetherCollidedOpponentMemoryLine() { return collidedOpponentMemoryLine; }
 bool Player::messageDisconnectOpponentMemoryLine() { return disconnectOpponentMemoryLine; }
 Recursion* Player::getRecursion() { return recursion; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }

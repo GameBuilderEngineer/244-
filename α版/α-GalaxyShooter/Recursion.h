@@ -8,6 +8,11 @@
 #include "Base.h"
 #include "BoundingSphere.h"
 
+namespace recursionNS
+{
+	const float EXISTENCE_TIME = 3.0f;
+}
+
 class Recursion:public Base
 {
 private:
@@ -32,7 +37,8 @@ public:
 	//processing
 	HRESULT initialize(LPDIRECT3DDEVICE9 device, D3DXVECTOR3* vertexArray,LPDIRECT3DTEXTURE9 _texture, LPD3DXEFFECT _effect);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
-	
+	void update(float frameTime);
+
 	//================================================================
 	//【重心位置の算出】
 	//vertex	：メモリーパイルの頂点位置配列ポインタ
@@ -48,4 +54,5 @@ public:
 	//targetMatrix	：対象オブジェクトのワールド行列
 	//================================================================
 	bool collide(D3DXVECTOR3 targetPosition, D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX targetMatrix);
+
 };

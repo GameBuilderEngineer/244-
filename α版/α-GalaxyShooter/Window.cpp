@@ -2,7 +2,7 @@
 //【Window.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/07
+// [更新日]2019/08/20
 //===================================================================================================================================
 #include "Window.h"
 
@@ -56,6 +56,7 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	{
 	case WM_ACTIVATE:
 		windowActivate = wParam != WA_INACTIVE;
+		input->clearWheelFraction();
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -107,10 +108,12 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		ReleaseCapture();
 		input->mouseIn(lParam);
 		return 0;
-		// マウスのXボタンが押された/離された
-	case WM_XBUTTONDOWN:case WM_XBUTTONUP:
+	case WM_XBUTTONDOWN:case WM_XBUTTONUP:// マウスのXボタンが押された/離された
 		input->setMouseXButton(wParam);
 		input->mouseIn(lParam);
+		return 0;
+	case WM_MOUSEWHEEL://マウスのホイールが回転した
+		input->mouseWheelIn(wParam);
 		return 0;
 	case WM_DEVICECHANGE:			// コントローラをチェック
 		input->resetController();
@@ -122,7 +125,7 @@ LRESULT Window::msgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 D3DXVECTOR2 Window::getCenter()
 {
 	GetWindowRect(wnd, &rect);//現在のウィンドウの矩形情報を取得
-	D3DXVECTOR2 center((rect.right - rect.left)/2, (rect.bottom - rect.top)/2);//ウィンドウ左上からの中央位置への差を計算
+	D3DXVECTOR2 center((float)(rect.right - rect.left)/2, (float)(rect.bottom - rect.top)/2);//ウィンドウ左上からの中央位置への差を計算
 	center += D3DXVECTOR2(rect.left, rect.top);//0,0位置からウィンドウ左上位置を加算	
 	return center;
 }

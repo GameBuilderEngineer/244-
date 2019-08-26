@@ -2,7 +2,7 @@
 //【MemoryLine.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/11
-// [更新日]2019/08/12
+// [更新日]2019/08/20
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -16,6 +16,13 @@ namespace memoryLineNS
 	const float MAXIMUM_DISTANCE = 10.0f;
 	const float LOST_TIME = 2.0f;
 	const float THICKNESS = 3.0f; // ラインの太さ
+	const float UPDATE_TIME = 0.01f;
+	enum TYPE
+	{
+		PENTAGON,
+		STAR,
+		NUM_TYPE
+	};
 }
 
 
@@ -33,6 +40,8 @@ class MemoryLine : public Base
 	int pileNum;						//メモリーパイルの最大数（非アクティブを含む）
 	int* pointNum;						//各メモリーパイルを始点とするメモリーライン上の点の数のリスト
 	int renderNum;						//メモリーライン全体の描画数
+	int currentRenderNum;				//現在の描画数
+	float updateTimer;					//更新タイマー
 public:
 	MemoryLine();
 	~MemoryLine();
@@ -42,14 +51,16 @@ public:
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 texture);
 	void unInitialize();
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void update(LPDIRECT3DDEVICE9 device, float frameTime);
+	void update(LPDIRECT3DDEVICE9 device, float frameTime, int type);
 
 	//operation
 	bool collision(D3DXVECTOR3 position, float radius);	//衝突検知
 	float calculationDistance(D3DXVECTOR3 point);		//(演算)ある点とラインとの距離を戻す
 	void setLine(LPDIRECT3DDEVICE9 device);				//(更新)メモリーパイルの間のラインを設定する
+	void setStarLine(LPDIRECT3DDEVICE9 device,float frameTime);			//(更新)リカージョンが完成した時の星形のラインを設定する
 	void lost(float frameTime);							//(更新)消失処理
 	void disconnect();									//(切替)切断処理
 	//setter
+	void resetCurrentRenderNum();
 	//getter
 };

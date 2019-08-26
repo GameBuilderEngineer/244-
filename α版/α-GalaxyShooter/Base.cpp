@@ -2,7 +2,7 @@
 //【Base.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/07
+// [更新日]2019/08/20
 //===================================================================================================================================
 #include "Base.h"
 char rootPath[1124]={0};
@@ -102,7 +102,7 @@ D3DXVECTOR3 Base::slip(D3DXVECTOR3 L, D3DXVECTOR3 N)
 	D3DXVECTOR3 S; //滑りベクトル（滑る方向）
 
 	//滑りベクトル S=L-(N * L)/(|N|^2)*N
-	S = L - ((D3DXVec3Dot(&N, &L)) / (pow(D3DXVec3Length(&N), 2)))*N;
+	S = L - ((D3DXVec3Dot(&N, &L)) / (powf(D3DXVec3Length(&N), 2)))*N;
 
 	return S;
 }
@@ -129,12 +129,17 @@ D3DXVECTOR3 Base::nearestPointOnLine(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXVEC
 {
 	//始点から終点への線分ベクトルを求める
 	D3DXVECTOR3 line = end - start;
+	//線分の大きさを求める
+	float length = D3DXVec3Length(&line);
+	//線分の大きさが0であれば最も近い点は始点及び終点とを戻すことで成立する（0除算防止）
+	if (length == 0)return start;
+
 	//始点から点へのベクトルを求める
 	D3DXVECTOR3 toPoint = point - start;
 	//上記二つのベクトルの内積を求める
 	float dot = D3DXVec3Dot(&line, &toPoint);
 	//線分の始点から、点から線分へ垂直に下した交点との距離を求める(内積/線分の大きさ）
-	float distance = dot / D3DXVec3Length(&line);
+	float distance = dot / length;
 	//始点から交点との距離を判断して、最も近い点を戻す
 	if (distance <= 0)
 	{

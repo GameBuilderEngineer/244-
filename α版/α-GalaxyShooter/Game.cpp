@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/12
+// [更新日]2019/08/22
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -13,6 +13,8 @@ using namespace gameNS;
 Game::Game()
 {
 	sceneName = "Scene -Game-";
+	startCountFlag = true;
+	endCountFlag = false;
 
 	nextScene = SceneList::RESULT;
 }
@@ -53,7 +55,7 @@ void Game::initialize(
 	textManager = _textManager;
 
 	// サウンドの停止
-	sound->stop(soundNS::TYPE::BGM_SPLASH_TITLE);
+	sound->stop(soundNS::TYPE::BGM_TITLE);
 	// サウンドの再生
 	sound->play(soundNS::TYPE::BGM_GAME, soundNS::METHOD::LOOP);
 
@@ -64,10 +66,10 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 1
+#if 0
 #define USING_AI
 	player[0] = new Player;
-	player[1] = new AgentAI(player[0], &camera[1].position,  camera[1].fieldOfView);
+	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
 #else
 	player[0] = new Player;
 	player[1] = new Player;
@@ -97,11 +99,15 @@ void Game::initialize(
 	//フィールド
 	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
+	// 画面分割線の初期化
+	uiScreenSplitLine.initialize(direct3D9->device, textureLoader);
+
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
+		player[i]->setSound(sound);		//	サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
@@ -109,7 +115,9 @@ void Game::initialize(
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
-
+		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
+		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
+		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -169,9 +177,19 @@ void Game::initialize(
 		D3DXVECTOR3(-100,-100,100),
 		D3DXVECTOR3(-100,100,0),
 		D3DXVECTOR3(-100,100,-100),
+		D3DXVECTOR3(100,50,50),
+		D3DXVECTOR3(-100,-100,-50),
+		D3DXVECTOR3(100,-50,10),
+		D3DXVECTOR3(100,50,10),
+		D3DXVECTOR3(100,0,100),
+		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(-100,100,100),
+		D3DXVECTOR3(-100,-100,100),
+		D3DXVECTOR3(-100,100,0),
+		D3DXVECTOR3(-100,100,-100),
 	};
 	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
-	testObject.setNumOfRender(direct3D9->device, 10, positionList);
+	testObject.setNumOfRender(direct3D9->device, 20, positionList);
 	testObject.activation();
 
 	D3DXVECTOR3 cubeList[NUM_CUBE];
@@ -194,6 +212,9 @@ void Game::update(float _frameTime) {
 
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
+
+
+
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||
@@ -222,12 +243,16 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	if (frameTime > 0.10)return;
+	//if (frameTime > 0.10)return;
 
 	//【ゲームマスターの更新】
 	gameMaster->update(frameTime);
 	if (gameMaster->whetherGameOver())
 	{//シーン切替
+		for (int i = 0; i < playerNS::NUM_PLAYER; i++)
+		{
+			gameMaster->setWage(i, player[i]->getWage());
+		}
 		changeScene(SceneList::RESULT);
 	}
 
@@ -237,20 +262,24 @@ void Game::update(float _frameTime) {
 		player[i]->update(frameTime);
 	}
 
-	//プレイヤーの更新
 	{
+		// 連打復活が完成するまでの仮
+		//static int revivalPoint = 0;
+		//if (revivalPoint < 1000) { revivalPoint++; }
+
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].update();
 			target.update();
 			uiRecursion[i].update();
+			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
+			uiRevivalGauge[i].update(player[i]->getRevivalPoint());
 		}
 	}
 
 	// コロニーアップデート
 	{
 		colony[0].update();
-
 	}
 
 	// ガラクタアップデート
@@ -290,7 +319,7 @@ void Game::update(float _frameTime) {
 	}
 
 	// チンギンの更新
-	chinginManager.update(frameTime, player[1]);
+	chinginManager.update(sound, frameTime, player[1]);
 	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('M')) {
@@ -306,13 +335,15 @@ void Game::update(float _frameTime) {
 		effectManager.generateEffect(20, temp2, player[PLAYER1]->bulletVec());
 	};
 
+
+	// マップの更新
+	map.update(frameTime, wasuremono);
 }
 
 //===================================================================================================================================
 //【描画】
 //===================================================================================================================================
 void Game::render(Direct3D9* direct3D9) {
-
 
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);
@@ -325,6 +356,7 @@ void Game::render(Direct3D9* direct3D9) {
 	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER2].projection);
 	direct3D9->changeViewport2PWindow();
 	render3D(direct3D9,camera[PLAYER2]);
+
 	//UI
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
@@ -359,21 +391,20 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
-	//(仮)ガラクタの描画
-	for (int i = 0; i < JUNK_MAX; i++)
-	{
-		junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)ガラクタの描画
+	//for (int i = 0; i < JUNK_MAX; i++)
+	//{
+	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-
-	//(仮)マグネットの描画
-	for (int i = 0; i < NUM_MAGNET; i++)
-	{
-		magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
+	////(仮)マグネットの描画
+	//for (int i = 0; i < NUM_MAGNET; i++)
+	//{
+	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device, currentCamera.position);
@@ -386,11 +417,17 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+
 	// ワスレモノの描画
+#if 1
 	for(int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+#else
+	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// インスタンシング描画をやろうしたが上手くいっていない
+#endif
 
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -398,8 +435,21 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// エフェクトの描画
 	effectManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
+	//ステンシルマスク
+	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
+
+	//target.renderEffectImage(direct3D9->device);
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -456,20 +506,13 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
-
-	//text.print(WINDOW_WIDTH / 2, 170, 
-	//	"collisionMemoryLine(%d)\n",
-	//	collitionMemoryLine1P
-	//);
-	//text.print(WINDOW_WIDTH / 2, 200,
-	//	"collisionMemoryLine(%.02f)\n",
-	//	memoryLine1P.calculationDistance(*player[PLAYER2]->getPosition())
-	//);
-	//text.print(WINDOW_WIDTH / 2, 230,
-	//	"recrusion1PAnd2P(%d)\n",
-	//	recursion1PAnd2P
-	//);
 	
+	switch (input->getMouseWheelState())
+	{
+	case inputNS::MOUSE_WHEEL_STATE::NONE:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:NONE");	break;
+	case inputNS::MOUSE_WHEEL_STATE::UP:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:UP");		break;
+	case inputNS::MOUSE_WHEEL_STATE::DOWN:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:DOWN");	break;
+	}
 
 	text2.print(10, 450,
 		"1P:Controller\n\
@@ -559,6 +602,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getController()[inputNS::DINPUT_2P]->getLeftStick().x,input->getController()[inputNS::DINPUT_2P]->getLeftStick().y,
 		input->getController()[inputNS::DINPUT_2P]->getRightStick().x,input->getController()[inputNS::DINPUT_2P]->getRightStick().y
 	);
+
 #endif
 	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
@@ -571,20 +615,41 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
+	// ユーザインタフェース
 	if (onUI) {
 
 		// チンギン完成までの仮
 		static int chingin = 0;
 		if (chingin < 99999) { chingin++; }
 
+		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].render(device);
-			uiRecursion[i].render(device);
+
+			if (player[i]->whetherCollidedOpponentMemoryLine())
+			{
+				uiCutMemoryLine[i].render(device);
+			}
+
+			if (player[i]->getState() == playerNS::STATE::DOWN)
+			{
+				uiRevivalGauge[i].render(device);
+				uiRevival[i].render(device);
+			}
+		}
+
+		// 優先度：高
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
+			uiRecursion[i].render(device);
 		}
 	}
+
+	// 画面分割線
+	uiScreenSplitLine.render(device);
 
 	if (pose.poseon)
 	{
@@ -610,7 +675,8 @@ void Game::collisions() {
 			*player[PLAYER2]->getMatrixWorld(), 
 			*player[PLAYER1]->bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER2]->damgae(5);
 			hpEffect[PLAYER2].activate(20);
 			player[PLAYER1]->bullet[i].inActivation();
@@ -627,7 +693,8 @@ void Game::collisions() {
 			*player[PLAYER1]->getMatrixWorld(), 
 			*player[PLAYER2]->bullet[i].getMatrixWorld()))
 		{
-			sound->play(soundNS::TYPE::SE_DAMAGE_COVERED, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
 			player[PLAYER1]->damgae(5);
 			hpEffect[PLAYER1].activate(20);
 			player[PLAYER2]->bullet[i].inActivation();
@@ -679,7 +746,11 @@ void Game::collisions() {
 				player[PLAYER1]->bullet[j].bodyCollide.getCenter(), player[PLAYER1]->bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER1]->bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
+
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER1]->bullet[j].inActivation();
 			}
 
@@ -688,7 +759,10 @@ void Game::collisions() {
 				player[PLAYER2]->bullet[j].bodyCollide.getCenter(), player[PLAYER2]->bullet[j].bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld(), *player[PLAYER2]->bullet[j].getMatrixWorld()))
 			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 				wasuremono[i]->inActivation();
+				wasuremonoManager.destroy(i);
 				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}
@@ -760,13 +834,45 @@ void Game::collisions() {
 			player[PLAYER1]->changeState(playerNS::SKY);
 		}
 	}
+
+	//// マップノードとワスレモノ
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	map.getMapNode()[i]->clearWasuremonoCount();
+	//	map.getMapNode()[i]->clearAmount();
+	//}
+	//bool* already = new bool[wasuremono.size()];
+	//ZeroMemory(already, sizeof(bool) * wasuremono.size());
+
+	//for (size_t i = 0; i < map.getMapNode().size(); i++)
+	//{
+	//	for (size_t k = 0; k < wasuremono.size(); k++)
+	//	{
+	//		if (already[k] == true) { continue; }
+	//		already[k] = true;
+
+	//		if (map.getMapNode()[i]->boundingSphere.collide(
+	//				wasuremono[k]->bodyCollide.getCenter(),
+	//				wasuremono[k]->bodyCollide.getRadius(),
+	//				*map.getMapNode()[i]->getWorldMatrix(),
+	//				*wasuremono[k]->getMatrixWorld()))
+	//		{
+	//			map.getMapNode()[i]->addWasuremonoCount();
+	//			map.getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
+	//		}
+	//	}
+	//}
+
+	//SAFE_DELETE_ARRAY(already)
 }
+
 //===================================================================================================================================
 //【AI処理】
 //===================================================================================================================================
 void Game::AI() {
 #ifdef USING_AI
-#endif
+
+#endif// USING_AI
 }
 
 //===================================================================================================================================
@@ -783,7 +889,11 @@ void Game::uninitialize() {
 		uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
+		uiCutMemoryLine[i].release();
+		uiRevivalGauge[i].release();
+		uiRevival[i].release();
 	}
+	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
 	SAFE_DELETE(player[0])

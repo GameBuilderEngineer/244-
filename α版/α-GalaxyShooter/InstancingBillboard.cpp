@@ -2,7 +2,7 @@
 //【InstancingBillboard.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/08/07
-// [更新日]2019/08/07
+// [更新日]2019/08/18
 //===================================================================================================================================
 #include "InstancingBillboard.h"
 
@@ -84,8 +84,17 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 
 
 	//αテスト
-	device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
-	device->SetRenderState(D3DRS_ALPHAREF, 0x00);
+	//device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	//device->SetRenderState(D3DRS_ALPHAREF, 0x00);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	// αブレンドを行う
+	//device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	//device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+	//加算合成を行う
+	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -93,8 +102,7 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	//加算合成を行う
-	//device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+
 
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
@@ -127,7 +135,7 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	device->SetStreamSourceFreq(0, 1);
 	device->SetStreamSourceFreq(1, 1);
 	// αブレンドを切る
-	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 }
 

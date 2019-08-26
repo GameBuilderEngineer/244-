@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/22
 //===================================================================================================================================
 #pragma once
 #include "Object.h"
@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "ShockWave.h"
+#include "Sound.h"
 
 
 namespace playerNS{
@@ -36,6 +37,7 @@ namespace playerNS{
 		BYTE cameraX;
 		BYTE cameraY;
 		BYTE provisional;
+		BYTE revival;
 	};
 
 	const OperationKeyTable KEY_TABLE_1P = {
@@ -48,6 +50,7 @@ namespace playerNS{
 		VK_F3,		//CameraAxisX
 		VK_F4,		//CameraAxisY
 		'G',		//Provisional
+		VK_SPACE,	//Revival
 	};
 
 	const OperationKeyTable KEY_TABLE_2P = {
@@ -59,7 +62,8 @@ namespace playerNS{
 		VK_RETURN,		//JUMP
 		VK_F5,			//CameraAxisX
 		VK_F6,			//CameraAxisY
-		'T',		//Provisional
+		'T',			//Provisional
+		VK_SPACE,		//Revival
 	};
 	const OperationKeyTable NON_CONTOROL = {
 		VK_ESCAPE,		//FRONT
@@ -70,10 +74,14 @@ namespace playerNS{
 		VK_ESCAPE,		//JUMP
 		VK_ESCAPE,		//CameraAxisX
 		VK_ESCAPE,		//CameraAxisY
+		VK_ESCAPE,		//Provisional
+		VK_ESCAPE,		//Revival
 	};
 
 	const BYTE BUTTON_JUMP = virtualControllerNS::B;
 	const BYTE BUTTON_BULLET = virtualControllerNS::R1;
+	const BYTE BUTTON_CUT = virtualControllerNS::X;
+	const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
 
 	enum STATE {
 		GROUND,
@@ -84,22 +92,27 @@ namespace playerNS{
 		STATE_NUM
 	};
 
-	const int NUM_BULLET = 30;				//弾の数
-	const int NUM_MEMORY_PILE = 5;			//メモリーパイルの数
-	const int AMOUNT_RECOVERY = 2;			//回復料
-	const float SPEED = 30.0f;				//速度
-	const float JUMP_FORCE = 200.0f;		//ジャンプ力
-	const float GRAVITY_FORCE = 80.0f;		//重力
-	const float DIFFERENCE_FIELD = 1.0f;	//フィールド補正差分
-	const float DOWN_TIME = 5.0f;			//ダウン時間
-	const float FALL_TIME = 0.5f;			//落下時間
-	const float INVINCIBLE_TIME = 3.0f;		//無敵時間
-	const float SKY_TIME = 10.0f;			//上空モード時間
-	const float INTERVAL_RECOVERY = 1.0f;	//自動回復インターバル
-	const float INTERVAL_BULLET = 0.2f;		//弾の発射インターバル
-	const float CAMERA_SPEED = 2.5f;		//弾の発射インターバル
-	const float SKY_HEIGHT = 80.0f;			//上空モードの高さ
-
+	const int NUM_BULLET				= 30;		//弾の数
+	const int NUM_MEMORY_PILE			= 5;		//メモリーパイルの数
+	const int AMOUNT_RECOVERY			= 2;		//回復量
+	const int MAX_HP					= 100;		//ＨＰ最大値
+	const int MAX_REVIVAL_POINT			= 1000;		//復活ポイント最大値
+	const int INCREASE_REVIVAL_POINT	= 50;		//復活ポイント増加値
+	const int DECREASE_REVIVAL_POINT	= 3;		//復活ポイント増加値
+	const float SPEED					= 30.0f;	//速度
+	const float DASH_MAGNIFICATION		= 2.0f;		//ダッシュ倍率
+	const float JUMP_FORCE				= 30.0f;	//ジャンプ力
+	const float GRAVITY_FORCE			= 9.8f*7.0;	//重力
+	const float DIFFERENCE_FIELD		= 0.2f;		//フィールド補正差分
+	const float DECREASE_REVIVAL_TIME	= 0.1f;		//復活ポイント減少時間
+	const float FALL_TIME				= 0.5f;		//落下時間
+	const float INVINCIBLE_TIME			= 3.0f;		//無敵時間
+	const float SKY_TIME				= 10.0f;	//上空モード時間
+	const float INTERVAL_RECOVERY		= 1.0f;		//自動回復インターバル
+	const float INTERVAL_BULLET			= 0.2f;		//弾の発射インターバル
+	const float CAMERA_SPEED			= 2.0f;		//カメラの速さ
+	const float SKY_HEIGHT				= 80.0f;	//上空モードの高さ
+	const float RECURSION_TIME			= 3.0f;		//リカージョンの生存時間
 
 	//プレイヤーのスタートポジション
 	const D3DXVECTOR3 START_POSITION[NUM_PLAYER] =
@@ -117,16 +130,15 @@ protected:
 	LPDIRECT3DDEVICE9 device;
 	TextureLoader* textureLoader;
 	ShaderLoader* shaderLoader;
+	Input* input;										//入力クラス
+	Sound* sound;										//サウンドクラス
 
 	//ステータス
 	int type;											//プレイヤータイプ
 	int modelType;										//キャラクターモデルタイプ
 	int hp;												//体力
-	int maxHp;											//最大体力
-	int sp;												//削除予定
-	int maxSp;											//削除予定
+	int revivalPoint;									//復活ポイント
 	int wage;											//チンギン
-	Input* input;										//入力クラス
 	Camera* camera;										//カメラへのポインタ
 	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
 
@@ -138,19 +150,18 @@ protected:
 	D3DXVECTOR3* attractorPosition;						//重力（引力）発生位置
 	float attractorRadius;								//重力（引力）発生オブジェクト半径
 
-
 	//タイマー
 	float recoveryTimer;								//自動回復時間
 	float invincibleTimer;								//無敵時間
 	float skyTimer;										//上空モード制限時間
-	float downTimer;									//ダウンタイマー[体力が切れるorメモリーラインを切断される]
+	float decreaseRevivalTimer;							//復活ポイント減少タイマー
 	float transitionTimer;								//遷移時間
 	float fallTimer;									//落下時間
 
 	//操作関係
 	float reverseValueXAxis;							//操作X軸
 	float reverseValueYAxis;							//操作Y軸
-
+	bool onJump;										//ジャンプフラグ
 	//弾関係
 	int elementBullet;									//弾アクセス要素数
 	float intervalBullet;								//発弾間隔
@@ -165,14 +176,17 @@ protected:
 	//メモリーアイテム関係
 	MemoryPile memoryPile[playerNS::NUM_MEMORY_PILE];	//メモリーパイル
 	MemoryLine memoryLine;								//メモリーライン
+	MemoryLine starLine;								//星形メモリーライン
 	Recursion* recursion;								//リカージョン
 	LPDIRECT3DTEXTURE9 recrusionTexture;				//リカージョン用テクスチャ
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
+	float recursionTimer;								//リカージョン生存時間
 
 	//衝撃波
 	ShockWave* shockWave;								//衝撃波
 	bool onShockWave;									//衝撃波生成フラグ
+	bool canShockWave;									//衝撃波使用可能フラグ
 
 	//衝突情報
 	bool collidedOpponentMemoryLine;					//相手のメモリーラインとの衝突フラグ
@@ -205,14 +219,20 @@ public:
 	void jump();
 	void reset();
 	void changeState(int _state);
-	void ground();
-	void fall();
-	void down();
-	void sky(); 
-	void revival();
+	void changeGround();
+	void changeFall();
+	void changeDown();
+	void changeSky(); 
+	void changeRevival();
+	void updateGround(float frameTime, bool onJump);
+	void updateFall(float frameTime);
+	void updateDown(float frameTime);
+	void updateSky(float frameTime);
+	void updateRevival(float frameTime);
 	void updateBullet(float frameTime);
 	void controlCamera(float frameTime);
 	void updateMemoryItem(float frameTime);
+	void deleteMemoryItem();
 	void triggerShockWave();
 	void deleteShockWave();
 	void updateShockWave(float frameTime);
@@ -220,25 +240,24 @@ public:
 	//setter
 	void setInput(Input* _input);
 	void setCamera(Camera* _camera);
+	void setSound(Sound* _sound);
 	void damgae(int value);
 	void recoveryHp(int value);
-	void lostSp(int value);
-	void recoverySp(int value);
 	void setCollidedMemoryLine(bool frag);
 
 	//getter
 	int getHp();
-	int getMaxHp();
-	int getSp();
-	int getMaxSp();
+	int getRevivalPoint();
 	int getState();
 	int getWage();
 	bool whetherDown();
+	bool whetherRevival();
 	bool whetherDeath();
 	bool whetherInvincible(); 
 	bool whetherSky();
 	bool whetherFall();
 	bool whetherGenerationRecursion();
+	bool whetherCollidedOpponentMemoryLine();
 	bool messageDisconnectOpponentMemoryLine();
 	Recursion* getRecursion();
 	MemoryLine* getMemoryLine();

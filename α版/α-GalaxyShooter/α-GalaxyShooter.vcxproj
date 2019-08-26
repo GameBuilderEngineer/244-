@@ -128,6 +128,8 @@
     <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="ActionNode.cpp" />
     <ClCompile Include="AgentAI.cpp" />
+    <ClCompile Include="AllocateHierarchy.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Arbiter.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BehaviorNodeBase.cpp" />
@@ -143,9 +145,7 @@
     <ClCompile Include="CharaSelectBarUI.cpp" />
     <ClCompile Include="ChinginCnt.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
-    <ClCompile Include="ChinginUI.cpp" />
     <ClCompile Include="Colony.cpp" />
-    <ClCompile Include="ColonyHitPointUI.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
     <ClCompile Include="DecisionMaking.cpp" />
     <ClCompile Include="Credit.cpp" />
@@ -185,6 +185,7 @@
     <ClCompile Include="Pose.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
+    <ClCompile Include="RecursionRecognition.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="RuleNode.cpp" />
@@ -213,7 +214,12 @@
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UIChingin.cpp" />
+    <ClCompile Include="UICountTime.cpp" />
+    <ClCompile Include="UICutMemoryLine.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
+    <ClCompile Include="UIRevival.cpp" />
+    <ClCompile Include="UIRevivalGauge.cpp" />
+    <ClCompile Include="UIScreenSplitLine.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -229,6 +235,8 @@
     <ClInclude Include="ActionNode.h" />
     <ClInclude Include="AgentAI.h" />
     <ClInclude Include="AICommon.h" />
+    <ClInclude Include="AllocateHierarchy.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Arbiter.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BehaviorNodeBase.h" />
@@ -244,9 +252,7 @@
     <ClInclude Include="CharaSelectBarUI.h" />
     <ClInclude Include="ChinginCnt.h" />
     <ClInclude Include="ChinginManager.h" />
-    <ClInclude Include="ChinginUI.h" />
     <ClInclude Include="Colony.h" />
-    <ClInclude Include="ColonyHitPointUI.h" />
     <ClInclude Include="ConditionalNode.h" />
     <ClInclude Include="Credit.h" />
     <ClInclude Include="Credit2D.h" />
@@ -285,6 +291,7 @@
     <ClInclude Include="Pose.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Recursion.h" />
+    <ClInclude Include="RecursionRecognition.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Result2D.h" />
     <ClInclude Include="RuleNode.h" />
@@ -313,7 +320,12 @@
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UIChingin.h" />
+    <ClInclude Include="UICountTime.h" />
+    <ClInclude Include="UICutMemoryLine.h" />
     <ClInclude Include="UIPlayTime.h" />
+    <ClInclude Include="UIRevival.h" />
+    <ClInclude Include="UIRevivalGauge.h" />
+    <ClInclude Include="UIScreenSplitLine.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />

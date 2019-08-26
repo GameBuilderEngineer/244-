@@ -20,6 +20,8 @@ SelectCharacter::SelectCharacter()
 //=============================================================================
 SelectCharacter::~SelectCharacter()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_CHARACTER_SELECT);
 }
 //=============================================================================
 // 初期化処理
@@ -44,12 +46,18 @@ void SelectCharacter::initialize(
 	//shaderLoader
 	shaderLoader = _shaderLoader;
 
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_CHARACTER_SELECT, soundNS::METHOD::LOOP);
+
 	//camera
 	camera = new Camera;
 	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
 	camera->setGaze(D3DXVECTOR3(0, 0, 0));
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+
+	// 画面分割線の初期化
+	uiScreenSplitLine.initialize(direct3D9->device, textureLoader);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
@@ -78,27 +86,47 @@ void SelectCharacter::update(float frameTime)
 	// カメラ更新
 	camera->update();
 
+	// 前の遷移へ戻る
+	if (input->wasKeyPressed(VK_BACK) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		nextScene = SceneList::TITLE;
+		changeScene(nextScene);
+		return;
+	}
+
 	// キーを押したら選択UI移動
 	if (input->wasKeyPressed('D') ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::RIGHT))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectTransition++;
 	}
 	else if (input->wasKeyPressed('A') ||
 		input->getController()[PLAYER1]->wasButton(virtualControllerNS::LEFT))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectTransition--;
 	}
 
 	// キーを押したら選択UI2移動
-	if (input->wasKeyPressed(VK_RIGHT)||
+	if (input->wasKeyPressed(VK_RIGHT) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::RIGHT))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		select2Transition++;
 	}
-	else if (input->wasKeyPressed(VK_LEFT)||
+	else if (input->wasKeyPressed(VK_LEFT) ||
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::LEFT))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		select2Transition--;
 	}
 
@@ -226,6 +254,10 @@ void SelectCharacter::renderUI(LPDIRECT3DDEVICE9 device)
 		// キャラクターセレクトバー描画
 		charaSelectBar[i].render(device, selectTransition, select2Transition);
 	}
+
+	// 画面分割線
+	uiScreenSplitLine.render(device);
+
 	// タイマーUI描画
 	timerUI.render(device, selectOneTime, selectTenTime);
 }

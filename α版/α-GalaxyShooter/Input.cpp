@@ -2,7 +2,7 @@
 //【Input.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/08/20
 //===================================================================================================================================
 #include "Input.h"
 using namespace inputNS;
@@ -33,6 +33,9 @@ Input::Input()
 	mouseRButton = false;	// 右マウスボタンが押されている場合にtrue
 	mouseX1Button = false;	// X1マウスボタンが押されている場合にtrue
 	mouseX2Button = false;	// X2マウスボタンが押されている場合にtrue
+	wheelFraction = 0;		//回転量の端数
+	zDelta = 0;
+	mouseWheelState = MOUSE_WHEEL_STATE::NONE;
 }
 
 Input::~Input()
@@ -245,6 +248,8 @@ void Input::clear(UCHAR what)
 		mouseY = 0;
 		mouseRawX = 0;
 		mouseRawY = 0;
+		zDelta = 0;
+		mouseWheelState = inputNS::MOUSE_WHEEL_STATE::NONE;
 	}
 
 	if (what & inputNS::TEXT_IN)
@@ -278,6 +283,33 @@ void Input::mouseRawIn(LPARAM lParam)
 	{
 		mouseRawX = raw->data.mouse.lLastX;
 		mouseRawY = raw->data.mouse.lLastY;
+	}
+}
+
+//=============================================================================
+// マウスホイールの回転量を読み取り保存
+//=============================================================================
+void Input::mouseWheelIn(WPARAM wParam)
+{
+	zDelta = GET_WHEEL_DELTA_WPARAM(wParam);//回転量
+	//前回の端数を追加
+	zDelta += wheelFraction;
+
+	//ノッチ数を求める
+	int notch = zDelta / WHEEL_DELTA;
+
+	//端数を保存する
+	wheelFraction = zDelta % WHEEL_DELTA;
+
+	if (notch > 0)
+	{
+		//上に回転（チルト）した
+		mouseWheelState = inputNS::MOUSE_WHEEL_STATE::UP;
+	}
+	else if (notch < 0)
+	{
+		//下に回転（チルト）した
+		mouseWheelState = inputNS::MOUSE_WHEEL_STATE::DOWN;
 	}
 }
 

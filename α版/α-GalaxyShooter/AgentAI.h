@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Base.h"
+#include "Camera.h"
 #include "Player.h"
 #include "arbiter.h"
 #include "Sensor.h"
@@ -17,7 +18,7 @@
 #include "BlackBoardMemory.h"
 #include "StateMachine.h"
 #include "BehaviorTree.h"
-
+#include "Sound.h"
 
 //*****************************************************************************
 // クラス定義
@@ -52,7 +53,7 @@ private:
 	void updateAgentSelfData(void);
 
 public:
-	AgentAI(Player* opponentPlayer, D3DXVECTOR3* cameraPosition, float fieldOfView);
+	AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono);
 	~AgentAI(void);
 
 	// 初期化処理
@@ -61,7 +62,7 @@ public:
 	// 終了処理
 	void uninitialize(void);
 	// 更新処理
-	void update(float frameTime) override;
+	void update(float frameTime) override;	// 更新処理 
 	// バレットの発射
 	void shootBullet(D3DXVECTOR3 targetDirection);
 	// メモリーパイルの設置
