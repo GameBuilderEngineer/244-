@@ -8,6 +8,13 @@
 #include "BoundingSphere.h"
 #include "WasuremonoTable.h"
 
+namespace wasuremonoNS
+{
+	const float GRAVITY_FORCE = 9.8f*7.0;			//重力
+	const float DIFFERENCE_FIELD = 0.2f;		//フィールド補正差分
+
+}
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
@@ -16,6 +23,10 @@ class Wasuremono :public Object
 private:
 	int typeID;
 	static WasuremonoTable* table;
+	D3DXVECTOR3 *attractorPosition;
+	float attractorRadius;
+	float difference;
+	bool onGround;
 
 public:
 	Wasuremono(void);
@@ -33,5 +44,7 @@ public:
 	BoundingSphere bodyCollide;
 	Ray betweenField;
 	
+	void configurationGravity(D3DXVECTOR3* _attractorPosition, float _attractorRadius);
+
 };
 

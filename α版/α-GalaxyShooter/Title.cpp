@@ -65,6 +65,7 @@ void Title::initialize(
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView(D3DX_PI / 2.5);
 	}
 
 	//light
