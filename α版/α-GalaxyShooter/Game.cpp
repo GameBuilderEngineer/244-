@@ -87,6 +87,7 @@ void Game::initialize(
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 10, 0));
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView(D3DX_PI / 2.5);
 	}
 
 	//light
@@ -155,16 +156,18 @@ void Game::initialize(
 	pose.initialize(direct3D9->device, 0, _textureLoader);
 
 
+	// マップ初期化
+	map.initialize(direct3D9->device, &field);
+
 	// ワスレモノの初期化
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
+
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// エフェクト初期化
 	effectManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
-	// マップ初期化
-	map.initialize(direct3D9->device, &field);
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -203,7 +206,7 @@ void Game::initialize(
 	testCube.activation();
 
 	//ゲームマスター
-	gameMaster->resetGameTime();//ゲーム時間のリセット
+	gameMaster->gameStart();//ゲーム開始時処理
 }
 
 //===================================================================================================================================
@@ -214,32 +217,33 @@ void Game::update(float _frameTime) {
 	sceneTimer += _frameTime;
 	frameTime = _frameTime;
 
-
-
-	if (pose.poseon)
+	//ゲームが開始した場合ポーズが有効
+	if (gameMaster->whetherAlreadyStart())
 	{
-		if (input->wasKeyPressed('P') ||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-			)// ポーズ解除
+		if (pose.poseon)
 		{
-			pose.poseon = false;
+			if (input->wasKeyPressed('P') ||
+				input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+				input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+				)// ポーズ解除
+			{
+				pose.poseon = false;
 
+			}
 		}
-	}
-	else if (!pose.poseon)
-	{
-		if (input->wasKeyPressed('P') ||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-			)// ポーズ解除
+		else if (!pose.poseon)
 		{
-			pose.poseon = true;
+			if (input->wasKeyPressed('P') ||
+				input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+				input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
+				)// ポーズ解除
+			{
+				pose.poseon = true;
 
+			}
 		}
+		if (pose.poseon)return;// ポーズしてたら更新しない
 	}
-
-	if (pose.poseon)return;// ポーズしてたら更新しない
 
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
@@ -248,6 +252,7 @@ void Game::update(float _frameTime) {
 
 	//【ゲームマスターの更新】
 	gameMaster->update(frameTime);
+	//ゲームオーバー時処理
 	if (gameMaster->whetherGameOver())
 	{//シーン切替
 		for (int i = 0; i < playerNS::NUM_PLAYER; i++)
@@ -263,16 +268,12 @@ void Game::update(float _frameTime) {
 		player[i]->update(frameTime);
 	}
 
+	//【プレイヤーUIの更新】
 	{
-		// 連打復活が完成するまでの仮
-		//static int revivalPoint = 0;
-		//if (revivalPoint < 1000) { revivalPoint++; }
-
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].update();
 			target.update();
-
 			uiRecursion[i].update();
 			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
 			uiRevivalGauge[i].update(player[i]->getRevivalPoint());
@@ -666,6 +667,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (pose.poseon)
 	{
 		pose.render(device);
+	}
+
+	if (!gameMaster->whetherAlreadyStart())
+	{
+		//カウントダウン３…２…１…
+		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+	}
+	if(gameMaster->displayStart()){
+		//スタート
+		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "START!!");
 	}
 
 	// αテストを無効に

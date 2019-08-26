@@ -29,7 +29,7 @@ WasuremonoManager::~WasuremonoManager(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet*)
+void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet* field)
 {
 	if (table == NULL)
 	{	// インスタンス生成時のみ

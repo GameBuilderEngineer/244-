@@ -9,6 +9,10 @@
 #include "Window.h"
 #include "Direct3D9.h"
 
+namespace cameraNS {
+
+}
+
 class Camera : public Base
 {
 private:
@@ -63,6 +67,7 @@ public:
 
 
 	void setAspect(DWORD _windowWidth, DWORD _windowHeight);
+	void setFieldOfView(float value);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; };
 	void setGaze(D3DXVECTOR3 _gazePosition) { gazePosition = _gazePosition; };
 	void setUpVector(D3DXVECTOR3 _upVector) { upVector = _upVector; };

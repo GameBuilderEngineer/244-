@@ -2,7 +2,7 @@
 //【GameMaster.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/31
-// [更新日]2019/08/22
+// [更新日]2019/08/26
 //===================================================================================================================================
 #include "GameMaster.h"
 using namespace gameMasterNS;
@@ -35,8 +35,16 @@ void GameMaster::initialize()
 //===================================================================================================================================
 void GameMaster::update(float frameTime)
 {
+	//ゲーム開始カウントダウン
+	gameStartCount(frameTime);
+	if (!alreadyStart)return;
+	
 	//ゲームタイムの更新
 	updateGameTime(frameTime);
+	
+	//ゲーム終了カウントダウン
+	gameFinishCount(frameTime);
+
 }
 
 //===================================================================================================================================
@@ -44,6 +52,7 @@ void GameMaster::update(float frameTime)
 //===================================================================================================================================
 void GameMaster::updateGameTime(float frameTime)
 {
+	if (alreadyStart == false)return;
 	gameTimer -= frameTime;
 }
 
@@ -52,28 +61,61 @@ void GameMaster::updateGameTime(float frameTime)
 //===================================================================================================================================
 void GameMaster::gameStartCount(float frameTime)
 {
-	gameTimer -= frameTime;
-}
-//===================================================================================================================================
-//【ゲーム開始時のカウントダウンの更新】
-//===================================================================================================================================
-void GameMaster::gameFinishCount(float frameTime)
-{
+	if (alreadyStart)return;
 	countDownTimer += frameTime;
 	if (countDownTimer > COUNT_INTERVAL)
 	{
-		
+		countDownTimer = 0.0f;
+		count--;
+	}
+
+	if (count == 0)
+	{
+		alreadyStart = true;	//ゲーム開始
+	}
+
+}
+//===================================================================================================================================
+//【ゲーム終了時のカウントダウンの更新】
+//===================================================================================================================================
+void GameMaster::gameFinishCount(float frameTime)
+{
+	if (gameTimer > COUNT_DOWN)return;
+	if (alreadyFinish == false)
+	{
+		alreadyFinish = true;
+		setCountDown();			//ゲーム終了カウントダウンのセット
+	}
+
+	countDownTimer += frameTime;
+	if (countDownTimer > COUNT_INTERVAL)
+	{
+		countDownTimer = 0.0f;
+		count--;
 	}
 }
 
 //===================================================================================================================================
-//【ゲーム時間のリセット】
+//【ゲームカウントダウンのセット】
 //===================================================================================================================================
-void GameMaster::resetGameTime()
+void GameMaster::setCountDown()
 {
-	gameTimer = GAME_TIME;
+	count = COUNT_DOWN;
+	countDownTimer = 0.0f;
 }
 
+//===================================================================================================================================
+//【ゲーム開始処理】
+//===================================================================================================================================
+void GameMaster::gameStart()
+{
+	alreadyStart		= false;
+	alreadyFinish		= false;
+	gameTimer			= GAME_TIME;
+	displayStartTimer	= DISPLAY_START_TIME;
+	displayFinishTimer	= DISPLAY_FINISH_TIME;
+	setCountDown();
+}
 
 //===================================================================================================================================
 //【setter】
@@ -107,3 +149,7 @@ playerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}
 float GameMaster::getGameTime() {return gameTimer;}
 //ゲームが終了したかどうか
 bool GameMaster::whetherGameOver(){	return gameTimer < 0;}
+int GameMaster::getCount() { return count; }
+bool GameMaster::whetherAlreadyStart() { return alreadyStart; }
+bool GameMaster::displayStart() { return displayStartTimer >= 0.0f; }
+bool GameMaster::displayFinish() { return displayFinishTimer >= 0.0f; }

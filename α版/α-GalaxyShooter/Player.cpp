@@ -124,7 +124,7 @@ void Player::update(float frameTime)
 
 	//前処理
 	setSpeed(D3DXVECTOR3(0, 0, 0));	//速度（移動量）の初期化
-	onJump = false;			//ジャンプフラグ
+	onJump = false;					//ジャンプフラグ
 
 	//===========
 	//【回復】

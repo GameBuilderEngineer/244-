@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "Wasuremono.h"
 #include "Map.h"
-
+using namespace wasuremonoNS;
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
@@ -28,6 +28,8 @@ Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *positi
 	radius = bodyCollide.getRadius();
 	onGravity = true;
 	activation();
+	difference = DIFFERENCE_FIELD;
+	configurationGravity(Map::getField()->getPosition(), Map::getField()->getRadius());
 }
 
 
@@ -49,39 +51,9 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 
 	setSpeed(D3DXVECTOR3(0, 0, 0));
 
-	float difference = 1.0f;
-
-	//// 重力方向のベクトル&レイを作成（グラヴィティレイにおきかえできる？）
-	//D3DXVECTOR3 gravityDirection;
-	//D3DXVec3Normalize(&gravityDirection, &(fieldPosition - position));
-	//betweenField.update(position, gravityDirection);
-
-	////フィールド補正
-	//if (betweenField.rayIntersect(fieldMesh, matrix) &&
-	//	radius >= (betweenField.distance - difference))
-	//{
-	//	//めり込み補正
-	//	setPosition(position + betweenField.normal*(radius - betweenField.distance));
-	//	//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-	//	//setSpeed(reverseAxisY.slip(speed, reverseAxisY.normal));
-	//	//Ray moveRay;//移動ベクトルを使ってレイを作成
-	//	//moveRay.initialize(*bullet[i].getPosition(), bullet[i].getSpeed());
-	//	//if(moveRay.rayIntersect(*field.getMesh(),field.getMatrixWorld()) && bullet[i].getRadius() > moveRay.distance)
-	//	//{//二重チェック
-	//	//	bullet[i].setSpeed(moveRay.slip(bullet[i].getSpeed(),moveRay.normal));
-	//	//}
-	//	//bound();
-
-	//}
-	//else {
-	//	setGravity(gravityDirection, 80.0f);
-	//}
-
 	//===========
 	//【接地処理】
 	//===========
-	D3DXVECTOR3 *attractorPosition = Map::getField()->getPosition();
-	float attractorRadius = Map::getField()->getRadius();
 	//重力線を作成
 	D3DXVECTOR3 gravityDirection;
 	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
@@ -90,6 +62,7 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	if (radius + attractorRadius >= distanceToAttractor - difference)
 	{
 		//相互半径合計値より引力発生源との距離が短いと接地
+		onGround = true;
 		onGravity = false;
 		//めり込み補正
 		//現在位置+ 垂直方向*(めり込み距離)
@@ -100,12 +73,13 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	}
 	else {
 		//空中
+		onGround = false;
 		onGravity = true;
 	}
-	setGravity(gravityDirection, 80.0f);//重力処理
+	setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
 
 
-	if (D3DXVec3Length(&acceleration) > 0.01f)
+	if (D3DXVec3Length(&acceleration) > 0.05f)
 	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
@@ -114,7 +88,7 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	position += speed * frameTime;
 
 	//加速度減衰
-	acceleration *= 0.9f;
+	//acceleration *= 0.9f;
 
 	// 姿勢制御……重力方向レイを当てたフィールドの法線と自分Y軸を使用
 	postureControl(axisY.direction, betweenField.normal, 3.0f * frameTime);
@@ -132,4 +106,23 @@ void Wasuremono::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
 #endif
+}
+
+//===================================================================================================================================
+//【重力設定】
+//[内容]重力源の位置情報で重力を設定する
+//[引数]
+//D3DXVECTOR3* attractorPosition：引力発生地点
+//===================================================================================================================================
+void Wasuremono::configurationGravity(D3DXVECTOR3* _attractorPosition, float _attractorRadius)
+{
+	//重力処理を行うために必要な要素をセット
+	attractorPosition = _attractorPosition;
+	attractorRadius = _attractorRadius;
+	//重力線を作成
+	D3DXVECTOR3 gravityDirection;
+	between2VectorDirection(&gravityDirection, position, *attractorPosition);
+	gravityRay.initialize(position, gravityDirection);//重力レイの初期化
+	setGravity(gravityDirection, GRAVITY_FORCE);
+	postureControl(axisY.direction, gravityDirection, 1.0f);
 }
