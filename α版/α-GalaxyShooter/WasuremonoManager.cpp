@@ -47,9 +47,6 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasurem
 
 	timeCnt = 0.0f;
 	respawnMode = 0;
-
-	//unko = create(CHEWING_GUM, &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
 }
 
 

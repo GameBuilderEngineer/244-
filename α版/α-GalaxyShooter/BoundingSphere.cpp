@@ -45,7 +45,6 @@ void BoundingSphere::initialize(LPDIRECT3DDEVICE9 device,float _raidus)
 	radius = _raidus;
 	//ƒƒbƒVƒ…‚ğì¬
 	D3DXCreateSphere(device, radius, 8, 8, &mesh, NULL);
-
 }
 
 void BoundingSphere::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX owner)

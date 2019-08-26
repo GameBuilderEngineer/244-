@@ -453,6 +453,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
 
+
 	//target.renderEffectImage(direct3D9->device);
 #ifdef _DEBUG
 	Ray debugRay;
@@ -460,7 +461,14 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
 	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
+
+#ifdef USING_AI
+	AgentAI* agentAI = (AgentAI*)player[1];
+	agentAI->debugRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+#endif// USING_AI
+
 #endif
+
 
 }
 

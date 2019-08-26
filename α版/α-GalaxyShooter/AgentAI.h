@@ -63,6 +63,8 @@ public:
 	void uninitialize(void);
 	// 更新処理
 	void update(float frameTime) override;	// 更新処理 
+	// 描画処理
+	void debugRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	// バレットの発射
 	void shootBullet(D3DXVECTOR3 targetDirection);
 	// メモリーパイルの設置

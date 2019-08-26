@@ -8,12 +8,14 @@
 #include "BoundingSphere.h"
 #include "WasuremonoTable.h"
 
+const float GRAVITY_FORCE = 9.8f*7.0;	//重力
+
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
 class Wasuremono :public Object
 {
-private:
+protected:
 	int typeID;
 	static WasuremonoTable* table;
 

@@ -1,0 +1,290 @@
+リカージョン認識ファジーデータ
+出力元：EnvironmentAnalysis.cpp/selectRecursionArea()
+0
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.136
+lotAmount = 0.600
+merit = 0.600
+
+1
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.136
+lotAmount = 0.100
+merit = 0.136
+
+2
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.136
+lotAmount = 0.100
+merit = 0.136
+
+3
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.136
+lotAmount = 0.700
+merit = 0.700
+
+4
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.136
+lotAmount = 0.400
+merit = 0.400
+
+5
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+6
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 0.700
+merit = 0.700
+
+7
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 0.400
+merit = 0.591
+
+8
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 1.000
+merit = 1.000
+
+9
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 1.000
+merit = 1.000
+
+10
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 1.000
+merit = 1.000
+
+11
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 0.300
+merit = 0.591
+
+12
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+13
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+14
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+15
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+16
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+17
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 0.300
+merit = 1.000
+
+18
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+19
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+20
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+21
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+22
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+23
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.136
+lotAmount = 0.000
+merit = 0.136
+
+24
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.591
+lotAmount = 0.000
+merit = 0.591
+
+25
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.591
+lotAmount = 0.000
+merit = 0.591
+
+26
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 0.900
+merit = 0.900
+
+27
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 0.591
+lotAmount = 0.700
+merit = 0.700
+
+28
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.591
+lotAmount = 0.000
+merit = 0.591
+
+29
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 0.591
+lotAmount = 0.000
+merit = 0.591
+
+30
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 0.600
+merit = 1.000
+
+31
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 1.000
+lotAmount = 0.000
+merit = 1.000
+
+32
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+33
+radiusSizeSmall = 0.000
+littleAmount = 0.000
+demerit = 0.000
+radiusSizeBig = 1.000
+lotAmount = 1.000
+merit = 1.000
+
+34
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 1.000
+lotAmount = 0.000
+merit = 1.000
+
+35
+radiusSizeSmall = 0.000
+littleAmount = 1.000
+demerit = 1.000
+radiusSizeBig = 1.000
+lotAmount = 0.000
+merit = 1.000
+

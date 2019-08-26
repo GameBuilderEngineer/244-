@@ -53,6 +53,7 @@ public:
 	void clearWasuremonoCount(void) { wasuremonoCount = 0; }
 	void addAmount(int chingin) { totalAmount += chingin; }
 	void clearAmount(void) { totalAmount = 0; }
+	MapNode* getPointer(void) { return this; }
 };
 
 

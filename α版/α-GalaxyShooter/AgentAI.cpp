@@ -384,3 +384,13 @@ void AgentAI::locateMemoryPile(void)
 	//	}
 	//}
 }
+
+
+//=============================================================================
+// デバッグ描画
+//=============================================================================
+void AgentAI::debugRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+{
+	environmentAnalysis->debugRender(this);	// デバッグ描画が有効になっていれば仮想リカージョンを描画
+}
+
