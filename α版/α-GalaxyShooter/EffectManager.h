@@ -8,7 +8,10 @@
 #include "TextureLoader.h"
 #include "BoundingSphere.h"
 #include "Player.h"
+#include "Bullet.h"
+
 static const int NUM_EFFECT = 100;	// 同時に表示するうえで妥当そうな数
+
 //----------
 // エフェクト
 //----------
@@ -25,7 +28,6 @@ private:
 	D3DXMATRIX matrixWorld;		// ワールド座標
 	BoundingSphere bodyCollide;	// バウンディングスフィア
 	bool use;					// 使用中か
-
 public:
 	D3DXVECTOR3* getPosition() { return &position; }
 	D3DXVECTOR3* getSpeed() { return &speed; }
@@ -35,7 +37,10 @@ public:
 
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
+	void addSpeed(D3DXVECTOR3 add) { speed += add; }
 	void setUse(bool _use) { use = _use; }
+	float time;
+
 };
 //--------------------
 // エフェクト管理クラス
@@ -48,7 +53,6 @@ private:
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
-	D3DXVECTOR3 moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition);// 移動速度
 
 	// マグネット関係は今は触らない（理解していない）
 	//int type;
@@ -61,6 +65,6 @@ public:
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
 	// エフェクトを発生させる
-	void generateEffect(int num, D3DXVECTOR3 positionToGenerate);
+	void generateEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec);
 };
 

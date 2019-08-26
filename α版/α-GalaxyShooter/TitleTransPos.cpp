@@ -66,15 +66,6 @@ HRESULT TitleTransPos::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, T
 //=============================================================================
 void TitleTransPos::uninitialize(void)
 {
-	// タイトル選択位置描画処理終了
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(titleTransPosTex)
-	}
 }
 //=============================================================================
 // 更新処理

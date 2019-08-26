@@ -59,15 +59,6 @@ HRESULT Title2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Texture
 //=============================================================================
 void Title2D::uninitialize(void)
 {
-	// タイトル2D画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(textureTitle2D)
-	}
 }
 //=============================================================================
 // 更新処理

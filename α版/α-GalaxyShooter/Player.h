@@ -217,7 +217,6 @@ public:
 	void deleteShockWave();
 	void updateShockWave(float frameTime);
 	void disconnectMemoryLine();
-
 	//setter
 	void setInput(Input* _input);
 	void setCamera(Camera* _camera);
@@ -243,4 +242,5 @@ public:
 	bool messageDisconnectOpponentMemoryLine();
 	Recursion* getRecursion();
 	MemoryLine* getMemoryLine();
+	D3DXVECTOR3 bulletVec();
 };

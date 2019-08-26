@@ -109,6 +109,7 @@ void Game::initialize(
 		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
+
 	}
 
 	//磁石の初期化
@@ -150,7 +151,6 @@ void Game::initialize(
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-
 	// エフェクト初期化
 	effectManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
@@ -243,7 +243,6 @@ void Game::update(float _frameTime) {
 		{
 			hpEffect[i].update();
 			target.update();
-
 			uiRecursion[i].update();
 		}
 	}
@@ -299,11 +298,12 @@ void Game::update(float _frameTime) {
 	};
 
 	// エフェクトの更新
-	effectManager.update(frameTime, player[0]);
-	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+	effectManager.update(frameTime, player[1]);
+	D3DXVECTOR3 temp2 = *player[PLAYER1]->getPosition();
 
-	if (input->isKeyDown('E')) {
-		effectManager.generateEffect(100, temp2);
+	if ((input->getMouseLButton() || input->getController()[0]->isButton(BUTTON_BULLET)))
+	{
+		effectManager.generateEffect(20, temp2, player[PLAYER1]->bulletVec());
 	};
 
 }
@@ -337,8 +337,10 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
-	//ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	////ステンシルマスク
+	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position, 1, D3DCMPFUNC::D3DCMP_GREATEREQUAL);
+
+	//target.renderEffectImage(direct3D9->device, 5, D3DCMPFUNC::D3DCMP_GREATEREQUAL);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
@@ -347,8 +349,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
-
-	//target.renderEffectImage(direct3D9->device);
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
@@ -367,6 +367,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	//(仮)マグネットの描画
 	for (int i = 0; i < NUM_MAGNET; i++)

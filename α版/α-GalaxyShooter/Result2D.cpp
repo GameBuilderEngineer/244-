@@ -202,32 +202,6 @@ HRESULT Result2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 //=============================================================================
 void Result2D::uninitialize(void)
 {
-	setTexture(NULL);						// リザルト2D画像解放
-	resultPlayer.setTexture(NULL);			// リザルトキャラ画像解放
-	resultPlayer2.setTexture(NULL);			// リザルトキャラ2画像解放
-	result2Player.setTexture(NULL);			// リザルト2キャラ画像解放
-	result2Player2.setTexture(NULL);		// リザルト2キャラ2画像解放
-	charaResultBG.setTexture(NULL);			// キャラクターBG画像解放
-	resultPlayerNumber.setTexture(NULL);	// リザルトキャラナンバー画像解放
-	resultPlayer2Number.setTexture(NULL);	// リザルトキャラ2ナンバー画像解放
-	resultJadge.setTexture(NULL);			// リザルトジャッジ画像解放
-	resultJadge2.setTexture(NULL);			// リザルトジャッジ2画像解放
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(result2DTexture)
-		SAFE_RELEASE(resultPlayerTexture)
-		SAFE_RELEASE(resultPlayer2Texture)
-		SAFE_RELEASE(result2PlayerTexture)
-		SAFE_RELEASE(result2Player2Texture)
-		SAFE_RELEASE(resultPlayerBGTexture)
-		SAFE_RELEASE(resultPlayerNumberTexture)
-		SAFE_RELEASE(resultPlayer2NumberTexture)
-		SAFE_RELEASE(resultJadgeTexture)
-		SAFE_RELEASE(resultJadge2Texture)
-	}
 }
 //=============================================================================
 // 更新処理

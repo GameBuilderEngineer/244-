@@ -59,15 +59,6 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 //=============================================================================
 void Tutorial2D::uninitialize(void)
 {
-	// チュートリアル2D画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(textureTutorial2D)
-	}
 }
 //=============================================================================
 // 更新処理

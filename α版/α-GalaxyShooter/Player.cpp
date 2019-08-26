@@ -558,6 +558,7 @@ void Player::updateBullet(float frameTime)
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
+
 	}
 }
 
@@ -642,7 +643,17 @@ void Player::updateMemoryItem(float frameTime)
 	//メモリーラインの更新
 	memoryLine.update(device, frameTime);
 }
+//===================================================================================================================================
+//【弾ベクトル取得】
+//===================================================================================================================================
+D3DXVECTOR3 Player::bulletVec()
+{
+	//Y軸方向への成分を削除する
+	D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
+	D3DXVec3Normalize(&front, &front);//正規化
 
+	return front;
+}
 //===================================================================================================================================
 //【メモリーラインの切断処理】
 // [処理内容]呼び出されるとこのプレイヤーのメモリーラインが切断され、ダウン状態になる。

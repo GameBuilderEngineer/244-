@@ -292,34 +292,6 @@ HRESULT CharaSelectBarUI::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber
 //=============================================================================
 void CharaSelectBarUI::uninitialize(void)
 {
-	charaSelectBar.setTexture(NULL);			// セレクトバーライトテクスチャ解放
-	charaSelectBar2.setTexture(NULL);			// セレクトバーライトテクスチャ2解放
-	charaSelectNo.setTexture(NULL);				// セレクトナンバーテクスチャ解放
-	charaSelectNo2.setTexture(NULL);			// セレクトナンバーテクスチャ2解放
-	charaSelectCursor.setTexture(NULL);			// セレクトカーソルテクスチャ解放
-	charaSelectCursor2.setTexture(NULL);		// セレクトカーソルテクスチャ2解放
-	charaSelectLogo.setTexture(NULL);			// セレクトプレイヤーロゴテクスチャ解放
-	nameEveEng.setTexture(NULL);				// イヴ名前英語テクスチャ解放
-	nameAdamEng.setTexture(NULL);				// アダム名前英語テクスチャ解放
-	nameEveJp.setTexture(NULL);					// イヴ名前日本語テクスチャ解放
-	nameAdamJp.setTexture(NULL);				// アダム名前日本語テクスチャ解放
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(selectBarLightTexture)
-		SAFE_RELEASE(selectBarLightTexture2)
-		SAFE_RELEASE(selectNoTexture)
-		SAFE_RELEASE(selectNoTexture2)
-		SAFE_RELEASE(selectCursorTexture)
-		SAFE_RELEASE(selectCursorTexture2)
-		SAFE_RELEASE(selectPlayerLogoTexture)
-		SAFE_RELEASE(nameEveEngTexture)
-		SAFE_RELEASE(nameAdamEngTexture)
-		SAFE_RELEASE(nameEveJpTexture)
-		SAFE_RELEASE(nameAdamJpTexture)
-	}
 }
 //=============================================================================
 // 更新処理

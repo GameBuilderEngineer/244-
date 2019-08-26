@@ -78,6 +78,7 @@ TextureLoader::TextureLoader()
 	textureName[TARGET] = { "kurezitto.png" };
 	textureName[POSE] = { "Pause.png" };
 	textureName[CHARA_RESULT_BG] = { "Result_Window.png" };
+	textureName[BULLET_EFFECT] = { "bakuha.png" };
 }
 
 

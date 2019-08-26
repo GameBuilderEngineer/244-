@@ -30,6 +30,6 @@ public:
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	void renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);	// ステンシルマスクを描画
-	void renderEffectImage(LPDIRECT3DDEVICE9 device);	// エフェクト画像を描画
+	void renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition, unsigned char ste, D3DCMPFUNC cmp_func);	// ステンシルマスクを描画
+	void renderEffectImage(LPDIRECT3DDEVICE9 device, unsigned char ste, D3DCMPFUNC cmp_func);	// エフェクト画像を描画
 };

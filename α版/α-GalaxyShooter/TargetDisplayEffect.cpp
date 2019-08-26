@@ -65,16 +65,6 @@ return S_OK;
 //=============================================================================
 void TargetDisplayEffect::uninitialize(void)
 {
-	// ステンシル画像解放
-	image.setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(TargetTexture)
-	}
-
 	// ステンシル終了
 	inactivate();
 }
@@ -93,7 +83,7 @@ void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 //=============================================================================
 // ステンシルマスク処理
 //=============================================================================
-void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon, unsigned char ste, D3DCMPFUNC cmp_func)
 {
 	device->SetRenderState(D3DRS_ZENABLE, TRUE);						// Zバッファを使用
 
@@ -102,6 +92,9 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 	device->SetRenderState(D3DRS_ZWRITEENABLE,FALSE);
 
 	device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// ステンシルバッファの値と比較する参照値
+	device->SetRenderState(D3DRS_STENCILREF, ste);
 
 	// ステンシルマスクの設定
 	device->SetRenderState(D3DRS_STENCILMASK, 0xff);
@@ -125,10 +118,10 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 //=============================================================================
 // ステンシル描画処理
 //=============================================================================
-void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
+void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device, unsigned char ste, D3DCMPFUNC cmp_func)
 {
 	// ステンシルバッファの値と比較する参照値
-	device->SetRenderState(D3DRS_STENCILREF, 0x01);
+	device->SetRenderState(D3DRS_STENCILREF, ste);
 
 	// 比較関数条件が真のときステンシルテスト合格
 	device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);

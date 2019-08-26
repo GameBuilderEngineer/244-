@@ -66,7 +66,8 @@ namespace gameNS
 	};
 	
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
-	
+		const BYTE BUTTON_BULLET = virtualControllerNS::R1;
+
 	enum {
 		COLONY1,
 		COLONY2,

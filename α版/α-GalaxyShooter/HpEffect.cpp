@@ -65,15 +65,6 @@ HRESULT HpEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 //=============================================================================
 void HpEffect::uninitialize(void)
 {
-	// 体力エフェクト画像解放
-	hpEffect.setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntEffect--;
-	if (cntEffect < 0)
-	{
-		SAFE_RELEASE(textureHpEffect)
-	}
 }
 //=============================================================================
 // 更新処理

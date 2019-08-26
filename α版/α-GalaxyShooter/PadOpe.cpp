@@ -59,15 +59,6 @@ HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 //=============================================================================
 void PadOpe::uninitialize(void)
 {
-	// パッド説明画像解放
-	setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(texturePadOpe)
-	}
 }
 //=============================================================================
 // 更新処理

@@ -138,24 +138,6 @@ HRESULT SelectCharacter2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumbe
 //=============================================================================
 void SelectCharacter2D::uninitialize(void)
 {
-	selectBG.setTexture(NULL);			// セレクトBG画像解放
-	selectPlayer.setTexture(NULL);		// セレクトキャラ画像解放
-	selectPlayer2.setTexture(NULL);		// セレクトキャラ2画像解放
-	select2Player.setTexture(NULL);		// セレクト2キャラ画像解放
-	select2Player2.setTexture(NULL);	// セレクト2キャラ2画像解放
-	charaSelectBG.setTexture(NULL);		// キャラクターBG画像解放
-
-	// インスタンスが存在しなければテクスチャ解放
-	cntUI--;
-	if (cntUI < 0)
-	{
-		SAFE_RELEASE(selectBgTexture)
-		SAFE_RELEASE(selectPlayerTexture)
-		SAFE_RELEASE(selectPlayer2Texture)
-		SAFE_RELEASE(select2PlayerTexture)
-		SAFE_RELEASE(select2Player2Texture)
-		SAFE_RELEASE(selectPlayerBGTexture)
-	}
 }
 //=============================================================================
 // 更新処理
