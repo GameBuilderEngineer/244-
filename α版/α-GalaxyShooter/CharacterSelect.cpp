@@ -74,6 +74,9 @@ void CharacterSelect::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _s
 	// キャラクターセレクトUIの初期化
 	uiCharacterSelect.initialize(_direct3D9->device, _textureLoader);
 
+	//// 時間のリセット
+	//gameMaster->resetGameTime();
+
 	return;
 }
 //============================================================================================================================================
@@ -92,6 +95,8 @@ void CharacterSelect::uninitialize(void)
 //============================================================================================================================================
 void CharacterSelect::update(float _frameTime)
 {
+	//gameMaster->update(_frameTime);
+
 	// カメラ更新
 	camera->update();
 
@@ -185,7 +190,7 @@ void CharacterSelect::updateTime(float _frameTime)
 	selectTime -= _frameTime;
 
 	// 時間制限
-	if (selectTime <= 0.0f)
+	if (selectTime <= 0.5f)
 	{
 		// 遷移
 		changeScene(nextScene);
@@ -211,7 +216,7 @@ void CharacterSelect::render(Direct3D9* _direct3D9)
 	render2D(_direct3D9->device);
 
 	// Time
-	renderTime(gameMaster->getGameTime());
+	renderTime();
 
 	return;
 }
@@ -244,9 +249,16 @@ void CharacterSelect::render2D(LPDIRECT3DDEVICE9 _device)
 // time
 // 時間
 //============================================================================================================================================
-void CharacterSelect::renderTime(float _time)
+void CharacterSelect::renderTime(void)
 {
-	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(POSITION_TIME_X, POSITION_TIME_Y, "%.0f", _time);
+	if (selectTime <= 9.5f)
+	{
+		textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(POSITION_TIME_X, POSITION_TIME_Y, "0%.0f", selectTime);
+
+		return;
+	}
+
+	textManager->text[textManagerNS::TYPE::NEW_RODIN_CHARACTER_SELECT_TIME]->print(POSITION_TIME_X, POSITION_TIME_Y, "%.0f", selectTime);
 
 	return;
 }

@@ -33,8 +33,8 @@ UICharacterSelect::UICharacterSelect(void)
 	}
 
 	// èâä˙âª
-	selectState[PLAYER_TYPE::PLAYER_1] = TYPE::CHARACTER_PLAYER_1_ADAM;
-	selectState[PLAYER_TYPE::PLAYER_2] = TYPE::CHARACTER_PLAYER_2_EVE;
+	selectState[PLAYER_TYPE::PLAYER_1] = 0;
+	selectState[PLAYER_TYPE::PLAYER_2] = 1;
 	progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::CHARACTER_SELECT;
 	progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::CHARACTER_SELECT;
 

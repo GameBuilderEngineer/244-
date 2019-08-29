@@ -16,8 +16,8 @@
 //============================================================================================================================================
 namespace characterSelectNS
 {
-	const float SELECT_TIME = (60.0f);
-	const float POSITION_TIME_X = ((uiCharacterSelectNS::POSITION_X_TIME) - 20.0f);
+	const float SELECT_TIME = (61.0f);
+	const float POSITION_TIME_X = ((uiCharacterSelectNS::POSITION_X_TIME) - 38.0f);
 	const float POSITION_TIME_Y = ((uiCharacterSelectNS::POSITION_Y_TIME) - 125.0f);
 }
 //============================================================================================================================================
@@ -44,7 +44,7 @@ public:
 	virtual void render(Direct3D9* _direct3D9) override;
 	void render3D(Direct3D9* _direct3D9);
 	void render2D(LPDIRECT3DDEVICE9 _device);
-	void renderTime(float _time);
+	void renderTime(void);
 	// None
 	virtual void collisions(void) override;
 	virtual void AI(void) override;
