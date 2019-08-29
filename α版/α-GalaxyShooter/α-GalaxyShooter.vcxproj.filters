@@ -106,12 +106,6 @@
     <Filter Include="Scene\Tutorial\Tutorial2D">
       <UniqueIdentifier>{d38573a4-d008-4841-8b45-79651d0a485c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Title\TitleTransition">
-      <UniqueIdentifier>{2dd5a8f7-9421-4360-815f-933cb633ba7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Title\TitleTransition\TitleTransPos">
-      <UniqueIdentifier>{f4742acb-56cc-43bb-ab37-9e4b8cd8a7ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Operation\KeyOpe">
       <UniqueIdentifier>{16f93d88-7254-4bca-a3ed-0f4b4e1ffca9}</UniqueIdentifier>
     </Filter>
@@ -357,12 +351,6 @@
     <ClCompile Include="Credit2D.cpp">
       <Filter>Scene\Credit\Credit2D</Filter>
     </ClCompile>
-    <ClCompile Include="TitleTransition.cpp">
-      <Filter>Scene\Title\TitleTransition</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleTransPos.cpp">
-      <Filter>Scene\Title\TitleTransition\TitleTransPos</Filter>
-    </ClCompile>
     <ClCompile Include="KeyOpe.cpp">
       <Filter>Scene\Operation\KeyOpe</Filter>
     </ClCompile>
@@ -562,7 +550,7 @@
     <ClCompile Include="UIPause.cpp">
       <Filter>UI\Game\Pause</Filter>
     </ClCompile>
-    <ClCompile Include="UITitleLogo.cpp">
+    <ClCompile Include="UITitle.cpp">
       <Filter>UI\Title</Filter>
     </ClCompile>
   </ItemGroup>
@@ -837,7 +825,7 @@
     <ClInclude Include="UIPause.h">
       <Filter>UI\Game\Pause</Filter>
     </ClInclude>
-    <ClInclude Include="UITitleLogo.h">
+    <ClInclude Include="UITitle.h">
       <Filter>UI\Title</Filter>
     </ClInclude>
   </ItemGroup>
@@ -933,12 +921,6 @@
     </ClInclude>
     <ClInclude Include="Credit2D.h">
       <Filter>Scene\Credit\Credit2D</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleTransition.h">
-      <Filter>Scene\Title\TitleTransition</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleTransPos.h">
-      <Filter>Scene\Title\TitleTransition\TitleTransPos</Filter>
     </ClInclude>
     <ClInclude Include="KeyOpe.h">
       <Filter>Scene\Operation\KeyOpe</Filter>

@@ -202,8 +202,6 @@
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Title.cpp" />
-    <ClCompile Include="TitleTransition.cpp" />
-    <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UICharacterSelect.cpp" />
@@ -214,7 +212,7 @@
     <ClCompile Include="UIResult.cpp" />
     <ClCompile Include="UIRevival.cpp" />
     <ClCompile Include="UIScreenSplitLine.cpp" />
-    <ClCompile Include="UITitleLogo.cpp" />
+    <ClCompile Include="UITitle.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -303,8 +301,6 @@
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Title.h" />
-    <ClInclude Include="TitleTransition.h" />
-    <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UICharacterSelect.h" />
@@ -315,7 +311,7 @@
     <ClInclude Include="UIResult.h" />
     <ClInclude Include="UIRevival.h" />
     <ClInclude Include="UIScreenSplitLine.h" />
-    <ClInclude Include="UITitleLogo.h" />
+    <ClInclude Include="UITitle.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />

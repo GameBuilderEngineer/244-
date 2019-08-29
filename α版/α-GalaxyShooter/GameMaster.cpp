@@ -106,4 +106,4 @@ playerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}
 //ƒQ[ƒ€§ŒÀŠÔ‚Ìæ“¾
 float GameMaster::getGameTime() {return gameTimer;}
 //ƒQ[ƒ€‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
-bool GameMaster::whetherGameOver(){	return gameTimer < 0;}
+bool GameMaster::whetherGameOver(){	return gameTimer < 0.5f;}

@@ -37,6 +37,8 @@ CharacterSelect::~CharacterSelect(void)
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
 	sound->stop(soundNS::TYPE::BGM_CHARACTER_SELECT);
 
+	uninitialize();
+
 	return;
 }
 //============================================================================================================================================
