@@ -6,7 +6,7 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = (600);									// タイトル遷移画像横サイズ
+const static int		WIDTH = (1200 / 2);								// タイトル遷移画像横サイズ
 const static float		GAME_POSITION_X = 0.0f;							// ゲーム遷移画像X座標
 const static float		TUTORIAL_POSITION_X = 0.0f;						// チュートリアル遷移画像X座標
 const static float		OPERATION_POSITION_X = 0.0f;					// オペレーション遷移画像X座標
@@ -20,7 +20,7 @@ const static float		OPERATION_POSITION_Y = TITLE_OPERATION_POS;		// オペレーショ
 const static float		CREDIT_POSITION_Y = TITLE_CREDIT_POS;			// クレジット遷移画像Y座標
 const static float		GAMEEND_POSITION_Y = TITLE_GAMEEND_POS;			// ゲームエンド遷移画像Y座標
 #else
-const static int		HEIGHT = (75);									// リリース時タイトル遷移画像縦サイズ
+const static int		HEIGHT = (150 / 2);								// リリース時タイトル遷移画像縦サイズ
 const static float		GAME_POSITION_Y = RELEASE_START_POS;			// リリース時ゲーム遷移画像Y座標
 const static float		TUTORIAL_POSITION_Y = RELEASE_TUTORIAL_POS;		// リリース時チュートリアル遷移画像Y座標
 const static float		OPERATION_POSITION_Y = RELEASE_OPERATION_POS;	// リリース時オペレーション遷移画像Y座標

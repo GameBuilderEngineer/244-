@@ -143,7 +143,6 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelect.cpp" />
-    <ClCompile Include="ChinginCnt.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
@@ -182,7 +181,6 @@
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointSprite.cpp" />
-    <ClCompile Include="Pose.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
     <ClCompile Include="RecursionRecognition.cpp" />
@@ -211,10 +209,10 @@
     <ClCompile Include="UICharacterSelect.cpp" />
     <ClCompile Include="UIChingin.cpp" />
     <ClCompile Include="UICutMemoryLine.cpp" />
+    <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
     <ClCompile Include="UIResult.cpp" />
     <ClCompile Include="UIRevival.cpp" />
-    <ClCompile Include="UIRevivalGauge.cpp" />
     <ClCompile Include="UIScreenSplitLine.cpp" />
     <ClCompile Include="UITitleLogo.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
@@ -247,7 +245,6 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterSelect.h" />
-    <ClInclude Include="ChinginCnt.h" />
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ConditionalNode.h" />
@@ -285,7 +282,6 @@
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointSprite.h" />
-    <ClInclude Include="Pose.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Recursion.h" />
     <ClInclude Include="RecursionRecognition.h" />
@@ -314,10 +310,10 @@
     <ClInclude Include="UICharacterSelect.h" />
     <ClInclude Include="UIChingin.h" />
     <ClInclude Include="UICutMemoryLine.h" />
+    <ClInclude Include="UIPause.h" />
     <ClInclude Include="UIPlayTime.h" />
     <ClInclude Include="UIResult.h" />
     <ClInclude Include="UIRevival.h" />
-    <ClInclude Include="UIRevivalGauge.h" />
     <ClInclude Include="UIScreenSplitLine.h" />
     <ClInclude Include="UITitleLogo.h" />
     <ClInclude Include="UtilityFunction.h" />

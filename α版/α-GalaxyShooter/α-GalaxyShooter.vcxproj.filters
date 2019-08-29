@@ -196,9 +196,6 @@
     <Filter Include="Scene\Credit\Credit2D">
       <UniqueIdentifier>{27471d35-a683-420c-a5a0-9f4addc70f52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Game\Pose">
-      <UniqueIdentifier>{5919c7e5-8def-44ca-8e2f-653415ee205b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\BehaviorTree">
       <UniqueIdentifier>{aaf3ace7-37b8-431a-ab3a-d69454688926}</UniqueIdentifier>
     </Filter>
@@ -250,14 +247,8 @@
     <Filter Include="UI\Game\Recursion">
       <UniqueIdentifier>{28866f52-a732-4465-acc8-8885071dee91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Game\RevivalGauge">
-      <UniqueIdentifier>{cc9beee4-02db-4d30-beb4-3f774d3f811e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Game\Revival">
       <UniqueIdentifier>{2bb7f2c9-9319-484d-87f8-ff29d9f106ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Game\ScreenSplitLine">
-      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\CharacterSelect">
       <UniqueIdentifier>{90a76f1b-ef5e-4888-b487-313b10d4eae2}</UniqueIdentifier>
@@ -265,11 +256,14 @@
     <Filter Include="UI\Result">
       <UniqueIdentifier>{09a0546f-b056-473f-8778-44806494f09d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Result\ChinginCnt">
-      <UniqueIdentifier>{ddd4da09-ad1b-440d-bb81-52d0a644eace}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Title">
       <UniqueIdentifier>{34bd9ee6-3431-4971-bf0c-15c3d61f5ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Game\Pause">
+      <UniqueIdentifier>{d0110b46-f168-4c37-876e-66c3b1924bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\ScreenSplitLine">
+      <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -471,9 +465,6 @@
     <ClCompile Include="AbstractScene.cpp">
       <Filter>Scene\AbstractScene</Filter>
     </ClCompile>
-    <ClCompile Include="Pose.cpp">
-      <Filter>Scene\Game\Pose</Filter>
-    </ClCompile>
     <ClCompile Include="AgentAI.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -528,9 +519,6 @@
     <ClCompile Include="ShockWave.cpp">
       <Filter>Object\ShockWave</Filter>
     </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp">
-      <Filter>Scene\CharacterSelect</Filter>
-    </ClCompile>
     <ClCompile Include="Map.cpp">
       <Filter>AI\Map</Filter>
     </ClCompile>
@@ -538,19 +526,10 @@
       <Filter>UI\Game\CutMemoryLine</Filter>
     </ClCompile>
     <ClCompile Include="UIScreenSplitLine.cpp">
-      <Filter>UI\Game\ScreenSplitLine</Filter>
+      <Filter>UI\ScreenSplitLine</Filter>
     </ClCompile>
     <ClCompile Include="UIRevival.cpp">
       <Filter>UI\Game\Revival</Filter>
-    </ClCompile>
-    <ClCompile Include="UIRevivalGauge.cpp">
-      <Filter>UI\Game\RevivalGauge</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectCharacter2D.cpp">
-      <Filter>Scene\CharacterSelect\CharacterSelect2D</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectCharacter.cpp">
-      <Filter>Scene\CharacterSelect</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Sound</Filter>
@@ -562,9 +541,6 @@
     <ClCompile Include="AllocateHierarchy.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="ChinginCnt.cpp">
-      <Filter>UI\Result\ChinginCnt</Filter>
-    </ClCompile>
     <ClCompile Include="EffectManager.cpp">
       <Filter>Effect\EffectManager</Filter>
     </ClCompile>
@@ -574,9 +550,6 @@
     <ClCompile Include="RecursionRecognition.cpp">
       <Filter>AI\RecursionRecognition</Filter>
     </ClCompile>
-    <ClCompile Include="UITitleLogo.cpp">
-      <Filter>UI\Title</Filter>
-    </ClCompile>
     <ClCompile Include="UIResult.cpp">
       <Filter>UI\Result</Filter>
     </ClCompile>
@@ -585,6 +558,12 @@
     </ClCompile>
     <ClCompile Include="CharacterSelect.cpp">
       <Filter>Scene\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPause.cpp">
+      <Filter>UI\Game\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="UITitleLogo.cpp">
+      <Filter>UI\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -762,9 +741,6 @@
     <ClInclude Include="WasuremonoSeries.h">
       <Filter>Object\Wasuremono</Filter>
     </ClInclude>
-    <ClInclude Include="Pose.h">
-      <Filter>Scene\Game\Pose</Filter>
-    </ClInclude>
     <ClInclude Include="BlackBoardMemory.h">
       <Filter>AI\BlackBoard</Filter>
     </ClInclude>
@@ -823,16 +799,10 @@
       <Filter>UI\Game\CutMemoryLine</Filter>
     </ClInclude>
     <ClInclude Include="UIScreenSplitLine.h">
-      <Filter>UI\Game\ScreenSplitLine</Filter>
+      <Filter>UI\ScreenSplitLine</Filter>
     </ClInclude>
     <ClInclude Include="UIRevival.h">
       <Filter>UI\Game\Revival</Filter>
-    </ClInclude>
-    <ClInclude Include="UIRevivalGauge.h">
-      <Filter>UI\Game\RevivalGauge</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectCharacter.h">
-      <Filter>Scene\CharacterSelect</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Sound</Filter>
@@ -845,9 +815,6 @@
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h" />
-    <ClInclude Include="ChinginCnt.h">
-      <Filter>UI\Result\ChinginCnt</Filter>
-    </ClInclude>
     <ClInclude Include="EffectManager.h">
       <Filter>Effect\EffectManager</Filter>
     </ClInclude>
@@ -858,9 +825,6 @@
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
-    <ClInclude Include="UITitleLogo.h">
-      <Filter>UI\Title</Filter>
-    </ClInclude>
     <ClInclude Include="UIResult.h">
       <Filter>UI\Result</Filter>
     </ClInclude>
@@ -869,6 +833,12 @@
     </ClInclude>
     <ClInclude Include="CharacterSelect.h">
       <Filter>Scene\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPause.h">
+      <Filter>UI\Game\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="UITitleLogo.h">
+      <Filter>UI\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

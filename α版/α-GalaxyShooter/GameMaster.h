@@ -54,7 +54,7 @@ private:
 	float countDownTimer;									//カウントダウン時間
 	int count;												//ゲームカウント
 	playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
-
+	int chingin[playerNS::NUM_PLAYER];						//	チンギン
 public:
 	GameMaster();
 	~GameMaster();

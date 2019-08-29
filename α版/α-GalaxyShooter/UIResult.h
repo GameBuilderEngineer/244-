@@ -41,12 +41,15 @@ namespace uiResultNS
 		CHARACTER_PLAYER_1_EVE,
 		CHARACTER_PLAYER_2_ADAM,
 		CHARACTER_PLAYER_2_EVE,
+		WIN_1,
+		WIN_2,
+		LOSE_1,
+		LOSE_2,
+		DRAW_1,
+		DRAW_2,
 		WINDOW,
 		PLAYER_NUMBER_1,
 		PLAYER_NUMBER_2,
-		WIN,
-		LOSE,
-		DRAW,
 		TYPE_MAX
 	};
 }
@@ -60,12 +63,16 @@ private:
 	static int instanceIndex;										//	インスタンスインデックス
 	static LPDIRECT3DTEXTURE9 texture[uiResultNS::TYPE::TYPE_MAX];	//	テクスチャ
 	Sprite sprite[uiResultNS::TYPE::TYPE_MAX];						//	スプライト
+	TextManager* textManager;										//	テキストマネージャ
+	playerTable* playerTable;										//	プレイヤー情報
+	int result;														//	リザルト
 public:
 	UIResult(void);
 	~UIResult(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader);
+	HRESULT initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader, TextManager* _textManager, GameMaster* _gameMaster);
 	void initializeSprite(LPDIRECT3DDEVICE9 _device, int _index);
 	void release(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 _device);
+	void renderChingin(void);
 };

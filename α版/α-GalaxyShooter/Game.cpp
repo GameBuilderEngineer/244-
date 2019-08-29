@@ -112,11 +112,10 @@ void Game::initialize(
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
-		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
+		//uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
-		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
 		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
@@ -152,7 +151,7 @@ void Game::initialize(
 	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
 	//ポーズの初期化
-	pose.initialize(direct3D9->device, 0, _textureLoader);
+	uiPause.initialize(direct3D9->device, _textureLoader);
 
 
 	// ワスレモノの初期化
@@ -216,30 +215,32 @@ void Game::update(float _frameTime) {
 
 
 
-	if (pose.poseon)
+	if (uiPause.getRenderFlag())
 	{
 		if (input->wasKeyPressed('P') ||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-			)// ポーズ解除
+			)
 		{
-			pose.poseon = false;
-
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_PAUSE, soundNS::METHOD::PLAY);
+			uiPause.setRenderFlag(false);
 		}
 	}
-	else if (!pose.poseon)
+	else if (!uiPause.getRenderFlag())
 	{
 		if (input->wasKeyPressed('P') ||
 			input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 			input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
-			)// ポーズ解除
+			)
 		{
-			pose.poseon = true;
-
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_PAUSE, soundNS::METHOD::PLAY);
+			uiPause.setRenderFlag(true);
 		}
 	}
 
-	if (pose.poseon)return;// ポーズしてたら更新しない
+	if (uiPause.getRenderFlag()) { return; };	//	ポーズしてたら更新しない
 
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
@@ -264,18 +265,14 @@ void Game::update(float _frameTime) {
 	}
 
 	{
-		// 連打復活が完成するまでの仮
-		//static int revivalPoint = 0;
-		//if (revivalPoint < 1000) { revivalPoint++; }
-
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			hpEffect[i].update();
 			target.update();
 
-			uiRecursion[i].update();
+			//uiRecursion[i].update();
 			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
-			uiRevivalGauge[i].update(player[i]->getRevivalPoint());
+			uiRevival[i].update(player[i]->getRevivalPoint());
 		}
 	}
 
@@ -635,7 +632,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 			if (player[i]->getState() == playerNS::STATE::DOWN)
 			{
-				uiRevivalGauge[i].render(device);
 				uiRevival[i].render(device);
 			}
 		}
@@ -645,16 +641,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
-			uiRecursion[i].render(device);
+			//uiRecursion[i].render(device);
 		}
 	}
 
 	// 画面分割線
 	uiScreenSplitLine.render(device);
 
-	if (pose.poseon)
+	if (uiPause.getRenderFlag())
 	{
-		pose.render(device);
+		uiPause.render(device);
 	}
 
 	// αテストを無効に
@@ -886,12 +882,11 @@ void Game::uninitialize() {
 	{
 		hpEffect[i].uninitialize();
 		target.uninitialize();
-		pose.uninitialize();
-		uiRecursion[i].release();
+		uiPause.release();
+		//uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
 		uiCutMemoryLine[i].release();
-		uiRevivalGauge[i].release();
 		uiRevival[i].release();
 	}
 	uiScreenSplitLine.release();

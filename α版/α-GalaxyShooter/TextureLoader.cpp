@@ -46,6 +46,10 @@ TextureLoader::TextureLoader()
 	textureName[UI_CHARACTER_SELECT_CURSOR_1] = { "CharacterSelect_Cursor_1.png" };
 	textureName[UI_CHARACTER_SELECT_CURSOR_2] = { "CharacterSelect_Cursor_2.png" };
 	textureName[UI_CHARACTER_SELECT_TIME] = { "CharacterSelect_Time.png" };
+	textureName[UI_CHARACTER_SELECT_READY_BACKGROUND] = { "CharacterSelect_Ready_BackGround.png" };
+	textureName[UI_CHARACTER_SELECT_READY_BAR] = { "CharacterSelect_Ready_Bar.png" };
+	textureName[UI_CHARACTER_SELECT_READY_CANCEL] = { "CharacterSelect_Ready_Cancel.png" };
+	textureName[UI_CHARACTER_SELECT_READY_WAITING] = { "CharacterSelect_Ready_Waiting.png" };
 
 	// Game
 	textureName[UI_RECURSION_BICYCLE] = { "Game_Recursion_Bicycle.png" };
@@ -61,10 +65,15 @@ TextureLoader::TextureLoader()
 	textureName[UI_RECURSION_XMAS_TREE] = { "Game_Recursion_XmasTree.png" };
 	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
-	textureName[UI_REVIVAL] = { "Game_Revival.png" };
+	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };
 	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
-	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
-	textureName[POSE] = { "Pause.png" };
+	textureName[UI_REVIVAL_CONCENTRATION] = { "Game_Revival_Concentration.png" };
+	textureName[UI_REVIVAL_TONE] = { "Game_Revival_Tone.png" };
+	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };
+	textureName[EFFECT_REVIVAL] = { "Game_Revival_Effect.png" };
+	textureName[PAUSE] = { "Pause.png" };
+	textureName[RECURSION] = { "Game_Recursion.png" };
+	textureName[SHOCKWAVE] = { "Game_Shockwave.png" };
 	textureName[BACKGROUND_STAR] = { "Game_BackGround_Star.jpg" };
 	textureName[BACKGROUND_DUST] = { "Game_BackGround_Dust.png" };
 
@@ -82,8 +91,6 @@ TextureLoader::TextureLoader()
 	textureName[TOON_OUT_LINE] = { "Outline.bmp" };
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
-	textureName[RECURSION] = { "StarRecursion.png" };
-	textureName[DEBUG_UV_GRID] = { "Debug_UV_Grid.png" };
 	textureName[LIGHT_001] = { "Light_001.png" };
 	textureName[TARGET] = { "Light_001.png" };
 }

@@ -98,11 +98,8 @@ void CharacterSelect::update(float _frameTime)
 	// 時間更新
 	updateTime(_frameTime);
 
-	// 入力更新
-	if (updateInput() == true)
-	{
-		return;
-	}
+	// 遷移更新
+	updateScene();
 
 	// キャラクターセレクトUI更新
 	uiCharacterSelect.update(input, sound);
@@ -110,14 +107,40 @@ void CharacterSelect::update(float _frameTime)
 	return;
 }
 //============================================================================================================================================
-// updateInput
-// 更新 - 入力
+// updateScene
+// 更新 - シーン
 //============================================================================================================================================
-bool CharacterSelect::updateInput(void)
+void CharacterSelect::updateScene(void)
 {
 	// 前の遷移へ戻る
-	if (input->wasKeyPressed(VK_BACK) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::B) ||
+	updateSceneBack();
+
+	// 次の遷移へ進む
+	updateSceneNext();
+
+	return;
+}
+//============================================================================================================================================
+// updateSceneBack
+// 更新 - シーン( 戻る )
+//============================================================================================================================================
+void CharacterSelect::updateSceneBack(void)
+{
+	if (((uiCharacterSelect.getProgressState(inputNS::DINPUT_1P) == uiCharacterSelectNS::PROGRESS_TYPE::CHARACTER_SELECT) &&
+		input->wasKeyPressed(VK_BACK)) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		// 次の遷移先を設定
+		nextScene = (SceneList::TITLE);
+		// 遷移
+		changeScene(nextScene);
+
+		return;
+	}
+	else if (((uiCharacterSelect.getProgressState(inputNS::DINPUT_2P) == uiCharacterSelectNS::PROGRESS_TYPE::CHARACTER_SELECT) &&
+		input->wasKeyPressed(VK_DELETE)) ||
 		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::B))
 	{
 		// サウンドの再生
@@ -127,24 +150,30 @@ bool CharacterSelect::updateInput(void)
 		// 遷移
 		changeScene(nextScene);
 
-		return true;
+		return;
 	}
 
-	// 次の遷移へ進む
-	if (input->wasKeyPressed(VK_RETURN) ||
-		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
-		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	return;
+}
+//============================================================================================================================================
+// updateSceneNext
+// 更新 - シーン( 進む )
+//============================================================================================================================================
+void CharacterSelect::updateSceneNext(void)
+{
+	if ((uiCharacterSelect.getProgressState(inputNS::DINPUT_1P) == uiCharacterSelectNS::PROGRESS_TYPE::WAITING) &&
+		(uiCharacterSelect.getProgressState(inputNS::DINPUT_2P) == uiCharacterSelectNS::PROGRESS_TYPE::WAITING))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_READY, soundNS::METHOD::PLAY);
 		// キャラクターの設定
 		gameMaster->setPlayerCharacter(playerNS::PLAYER1, gameMasterNS::PLAYER_CHARACTER, uiCharacterSelect.getSelectState(uiCharacterSelectNS::PLAYER_TYPE::PLAYER_1));
 		gameMaster->setPlayerCharacter(playerNS::PLAYER2, gameMasterNS::PLAYER_CHARACTER, uiCharacterSelect.getSelectState(uiCharacterSelectNS::PLAYER_TYPE::PLAYER_2));
 		// 遷移
 		changeScene(nextScene);
-
-		return true;
 	}
 
-	return false;
+	return;
 }
 //============================================================================================================================================
 // updateTime

@@ -5,6 +5,8 @@
 // [更新日]2019/08/22
 //===================================================================================================================================
 #include "Player.h"
+#include "UIRevival.h"
+
 using namespace playerNS;
 
 //===================================================================================================================================
@@ -492,6 +494,8 @@ void Player::updateDown(float frameTime)
 	}
 	if (input->wasKeyPressed(keyTable.revival)|| input->getController()[type]->wasButton(BUTTON_REVIVAL))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_REVIVAL_POINT, soundNS::METHOD::PLAY);
 		revivalPoint += INCREASE_REVIVAL_POINT;
 		if (whetherRevival())changeState(REVIVAL);
 	}
@@ -801,7 +805,7 @@ void Player::triggerShockWave()
 	if (onShockWave)return;		//生成されているか
 	if (!canShockWave)return;	//使用可能か
 	shockWave = new ShockWave();
-	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::DEBUG_UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::SHOCKWAVE), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
 	onShockWave = true;		//生成中にする
@@ -852,7 +856,7 @@ int Player::getRevivalPoint() { return revivalPoint; }
 int Player::getState() { return state; }
 int Player::getWage() { return wage; }
 bool Player::whetherDown() { return state == DOWN; }
-bool Player::whetherRevival() { return revivalPoint >= MAX_REVIVAL_POINT; }
+bool Player::whetherRevival() { return revivalPoint >= (uiRevivalNS::MAX_REVIVAL_POINT); }
 bool Player::whetherDeath() {return hp <= 0;}
 bool Player::whetherInvincible() {return invincibleTimer > 0;}
 bool Player::whetherSky() { return skyTimer > 0; }

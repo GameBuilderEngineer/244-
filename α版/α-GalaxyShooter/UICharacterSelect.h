@@ -18,6 +18,14 @@ namespace uiCharacterSelectNS
 	const int CHARACTER_HEIGHT = ((2160 / 2) - (2160 / 10));													//	高さ
 	const int NAME_WIDTH = (1416 / 2);																			//	幅
 	const int NAME_HEIGHT = (356 / 2);																			//	高さ
+	const int READY_BACKGROUND_WIDTH = (1920 / 2);																//	幅
+	const int READY_BACKGROUND_HEIGHT = (2160 / 2);																//	高さ
+	const int READY_BAR_WIDTH = (1920 / 2);																		//	幅
+	const int READY_BAR_HEIGHT = (400 / 2);																		//	高さ
+	const int READY_CANCEL_WIDTH = (830 / 2);																	//	幅
+	const int READY_CANCEL_HEIGHT = (140 / 2);																	//	高さ
+	const int READY_WAITING_WIDTH = (910 / 2);																	//	幅
+	const int READY_WAITING_HEIGHT = (264 / 2);																	//	高さ
 	const int BACKGROUND_WIDTH = (1920 / 2);																	//	幅
 	const int BACKGROUND_HEIGHT = (2160 / 2);																	//	高さ
 	const int BAR_WIDTH = (1920 / 2);																			//	幅
@@ -26,20 +34,32 @@ namespace uiCharacterSelectNS
 	const int CURSOR_HEIGHT = (180 / 2);																		//	高さ
 	const int TIME_WIDTH = (1180 / 2);																			//	幅
 	const int TIME_HEIGHT = (552 / 2);																			//	高さ
-	const float POSITION_X_CHARACTER_1 = (WINDOW_WIDTH / 8);													//	座標 x
-	const float POSITION_X_CHARACTER_2 = (uiCharacterSelectNS::POSITION_X_CHARACTER_1 + (WINDOW_WIDTH / 2));	//	座標 x
+	const float POSITION_X_CHARACTER_1 = (WINDOW_WIDTH / 8);													//	座標 x ( Player 1 )
+	const float POSITION_X_CHARACTER_2 = (uiCharacterSelectNS::POSITION_X_CHARACTER_1 + (WINDOW_WIDTH / 2));	//	座標 x ( Player 2 )
 	const float POSITION_Y_CHARACTER = (WINDOW_HEIGHT / 2);														//	座標 y
-	const float POSITION_X_NAME_1 = (WINDOW_WIDTH / 3.25f);														//	座標 x
-	const float POSITION_X_NAME_2 = (uiCharacterSelectNS::POSITION_X_NAME_1 + (WINDOW_WIDTH / 2));				//	座標 x
+	const float POSITION_X_NAME_1 = (WINDOW_WIDTH / 3.25f);														//	座標 x ( Player 1 )
+	const float POSITION_X_NAME_2 = (uiCharacterSelectNS::POSITION_X_NAME_1 + (WINDOW_WIDTH / 2));				//	座標 x ( Player 2 )
 	const float POSITION_Y_NAME = (WINDOW_HEIGHT / 1.65f);														//	座標 y
-	const float POSITION_X_BACKGROUND_1 = (WINDOW_WIDTH / 4);													//	座標 x
-	const float POSITION_X_BACKGROUND_2 = (uiCharacterSelectNS::POSITION_X_BACKGROUND_1 + (WINDOW_WIDTH / 2));	//	座標 x
+	const float POSITION_X_READY_BACKGROUND_1 = (WINDOW_WIDTH / 4);												//	座標 x ( Player 1 )
+	const float POSITION_X_READY_BACKGROUND_2 = (POSITION_X_READY_BACKGROUND_1 + (WINDOW_WIDTH / 2));			//	座標 x ( Player 2 )
+	const float POSITION_Y_READY_BACKGROUND = (WINDOW_HEIGHT / 2);												//	座標 y
+	const float POSITION_X_READY_BAR_1 = (WINDOW_WIDTH / 4);													//	座標 x ( Player 1 )
+	const float POSITION_X_READY_BAR_2 = (POSITION_X_READY_BAR_1 + (WINDOW_WIDTH / 2));							//	座標 x ( Player 2 )
+	const float POSITION_Y_READY_BAR = (WINDOW_HEIGHT / 2);														//	座標 y
+	const float POSITION_X_READY_CANCEL_1 = (WINDOW_WIDTH / 4);													//	座標 x ( Player 1 )
+	const float POSITION_X_READY_CANCEL_2 = (POSITION_X_READY_CANCEL_1 + (WINDOW_WIDTH / 2));					//	座標 x ( Player 2 )
+	const float POSITION_Y_READY_CANCEL = ((WINDOW_HEIGHT / 2) + 200.0f);										//	座標 y
+	const float POSITION_X_READY_WAITING_1 = (WINDOW_WIDTH / 4);												//	座標 x ( Player 1 )
+	const float POSITION_X_READY_WAITING_2 = (POSITION_X_READY_WAITING_1 + (WINDOW_WIDTH / 2));					//	座標 x ( Player 2 )
+	const float POSITION_Y_READY_WAITING = (WINDOW_HEIGHT / 2);													//	座標 y
+	const float POSITION_X_BACKGROUND_1 = (WINDOW_WIDTH / 4);													//	座標 x ( Player 1 )
+	const float POSITION_X_BACKGROUND_2 = (uiCharacterSelectNS::POSITION_X_BACKGROUND_1 + (WINDOW_WIDTH / 2));	//	座標 x ( Player 2 )
 	const float POSITION_Y_BACKGROUND = (WINDOW_HEIGHT / 2);													//	座標 y
-	const float POSITION_X_BAR_1 = (WINDOW_WIDTH / 4);															//	座標 x
-	const float POSITION_X_BAR_2 = (uiCharacterSelectNS::POSITION_X_BAR_1 + (WINDOW_WIDTH / 2));				//	座標 x
+	const float POSITION_X_BAR_1 = (WINDOW_WIDTH / 4);															//	座標 x ( Player 1 )
+	const float POSITION_X_BAR_2 = (uiCharacterSelectNS::POSITION_X_BAR_1 + (WINDOW_WIDTH / 2));				//	座標 x ( Player 2 )
 	const float POSITION_Y_BAR = (WINDOW_HEIGHT / 1.75f);														//	座標 y
-	const float POSITION_X_CURSOR_1 = (WINDOW_WIDTH / 4);														//	座標 x
-	const float POSITION_X_CURSOR_2 = (uiCharacterSelectNS::POSITION_X_CURSOR_1 + (WINDOW_WIDTH / 2));			//	座標 x
+	const float POSITION_X_CURSOR_1 = (WINDOW_WIDTH / 4);														//	座標 x ( Player 1 )
+	const float POSITION_X_CURSOR_2 = (uiCharacterSelectNS::POSITION_X_CURSOR_1 + (WINDOW_WIDTH / 2));			//	座標 x ( Player 2 )
 	const float POSITION_Y_CURSOR = (WINDOW_HEIGHT / 2.25f);													//	座標 y
 	const float POSITION_X_TIME = (WINDOW_WIDTH / 2);															//	座標 x
 	const float POSITION_Y_TIME = (uiCharacterSelectNS::TIME_HEIGHT / 2);										//	座標 y
@@ -54,6 +74,14 @@ namespace uiCharacterSelectNS
 		NAME_PLAYER_1_EVE,
 		NAME_PLAYER_2_ADAM,
 		NAME_PLAYER_2_EVE,
+		READY_PLAYER_1_BACKGROUND,
+		READY_PLAYER_2_BACKGROUND,
+		READY_PLAYER_1_BAR,
+		READY_PLAYER_2_BAR,
+		READY_PLAYER_1_CANCEL,
+		READY_PLAYER_2_CANCEL,
+		READY_PLAYER_1_WAITING,
+		READY_PLAYER_2_WAITING,
 		BACKGROUND_1,
 		BACKGROUND_2,
 		BAR_1,
@@ -70,6 +98,14 @@ namespace uiCharacterSelectNS
 		PLAYER_2,
 		PLAYER_TYPE_MAX
 	};
+
+	enum PROGRESS_TYPE
+	{
+		CHARACTER_SELECT,
+		READY,
+		WAITING,
+		PROGRESS_TYPE_MAX
+	};
 }
 //============================================================================================================================================
 // Class
@@ -78,10 +114,11 @@ namespace uiCharacterSelectNS
 class UICharacterSelect
 {
 private:
-	static int instanceIndex;												//	インスタンスインデックス
-	static LPDIRECT3DTEXTURE9 texture[uiCharacterSelectNS::TYPE::TYPE_MAX];	//	テクスチャ
-	Sprite sprite[uiCharacterSelectNS::TYPE::TYPE_MAX];						//	スプライト
-	int selectState[uiCharacterSelectNS::PLAYER_TYPE::PLAYER_TYPE_MAX];		//	選択状態
+	static int instanceIndex;													//	インスタンスインデックス
+	static LPDIRECT3DTEXTURE9 texture[uiCharacterSelectNS::TYPE::TYPE_MAX];		//	テクスチャ
+	Sprite sprite[uiCharacterSelectNS::TYPE::TYPE_MAX];							//	スプライト
+	int selectState[uiCharacterSelectNS::PLAYER_TYPE::PLAYER_TYPE_MAX];			//	選択状態
+	int progressState[uiCharacterSelectNS::PLAYER_TYPE::PLAYER_TYPE_MAX];		//	進行状態
 public:
 	UICharacterSelect(void);
 	~UICharacterSelect(void);
@@ -90,12 +127,21 @@ public:
 	void release(void);
 	void update(Input* _input, Sound *_sound);
 	void updateInput(Input* _input, Sound *_sound);
-	void updateInputPlayer1(Input* _input, Sound *_sound);
-	void updateInputPlayer2(Input* _input, Sound *_sound);
+	void updateInputCharacterSelectPlayer1(Input* _input, Sound *_sound);
+	void updateInputCharacterSelectPlayer2(Input* _input, Sound *_sound);
+	void updateInputReadyPlayer1(Input* _input, Sound *_sound);
+	void updateInputReadyPlayer2(Input* _input, Sound *_sound);
+	void updateInputWaitingPlayer1(Input* _input, Sound *_sound);
+	void updateInputWaitingPlayer2(Input* _input, Sound *_sound);
 	void updateControl(void);
 	void updateControlPlayer1(void);
 	void updateControlPlayer2(void);
 	void render(LPDIRECT3DDEVICE9 _device);
+	void renderCharacterSelect1(LPDIRECT3DDEVICE9 _device);
+	void renderCharacterSelect2(LPDIRECT3DDEVICE9 _device);
+	void renderReadyWaiting1(LPDIRECT3DDEVICE9 _device);
+	void renderReadyWaiting2(LPDIRECT3DDEVICE9 _device);
 	void renderTime(LPDIRECT3DDEVICE9 _device);
-	int getSelectState(int _index);
+	int getSelectState(int _index) { if ((_index < 0) || (_index > 1)) { return NULL; }return selectState[_index]; }
+	int getProgressState(int _index) { if ((_index < uiCharacterSelectNS::PROGRESS_TYPE::CHARACTER_SELECT) || (_index > uiCharacterSelectNS::PROGRESS_TYPE::WAITING)) { return NULL; }return progressState[_index]; }
 };

@@ -20,6 +20,8 @@ Operation::Operation()
 //=============================================================================
 Operation::~Operation()
 {
+	// サウンドの停止
+	sound->stop(soundNS::TYPE::BGM_OPERATION);
 }
 //=============================================================================
 // 初期化処理
@@ -43,6 +45,9 @@ void Operation::initialize(
 	staticMeshLoader = _staticMeshLoader;
 	//shaderLoader
 	shaderLoader = _shaderLoader;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::BGM_OPERATION, soundNS::METHOD::PLAY);
 
 	//camera
 	camera = new Camera;

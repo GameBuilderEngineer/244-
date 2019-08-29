@@ -33,10 +33,10 @@ UICharacterSelect::UICharacterSelect(void)
 	}
 
 	// 初期化
-	for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
-	{
-		selectState[i] = NULL;
-	}
+	selectState[PLAYER_TYPE::PLAYER_1] = TYPE::CHARACTER_PLAYER_1_ADAM;
+	selectState[PLAYER_TYPE::PLAYER_2] = TYPE::CHARACTER_PLAYER_2_EVE;
+	progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::CHARACTER_SELECT;
+	progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::CHARACTER_SELECT;
 
 	return;
 }
@@ -71,6 +71,16 @@ HRESULT UICharacterSelect::initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* 
 	texture[TYPE::NAME_PLAYER_1_EVE] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_NAME_EVE);
 	texture[TYPE::NAME_PLAYER_2_ADAM] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_NAME_ADAM);
 	texture[TYPE::NAME_PLAYER_2_EVE] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_NAME_EVE);
+
+	// テクスチャ読み込み( 準備完了 + 待ち )
+	texture[TYPE::READY_PLAYER_1_BACKGROUND] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_BACKGROUND);
+	texture[TYPE::READY_PLAYER_2_BACKGROUND] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_BACKGROUND);
+	texture[TYPE::READY_PLAYER_1_BAR] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_BAR);
+	texture[TYPE::READY_PLAYER_2_BAR] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_BAR);
+	texture[TYPE::READY_PLAYER_1_CANCEL] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_CANCEL);
+	texture[TYPE::READY_PLAYER_2_CANCEL] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_CANCEL);
+	texture[TYPE::READY_PLAYER_1_WAITING] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_WAITING);
+	texture[TYPE::READY_PLAYER_2_WAITING] = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_READY_WAITING);
 
 	// テクスチャローダーのリザルトUIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
 	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_CHARACTER_SELECT_BACKGROUND_1;
@@ -242,6 +252,150 @@ void UICharacterSelect::initializeSprite(LPDIRECT3DDEVICE9 _device, int _index)
 			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
 		);
 		break;
+	case TYPE::READY_PLAYER_1_BACKGROUND:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_BACKGROUND_WIDTH,				//	横幅
+			READY_BACKGROUND_HEIGHT,			//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_BACKGROUND_1,	//	座標 x
+				POSITION_Y_READY_BACKGROUND,	//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_2_BACKGROUND:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_BACKGROUND_WIDTH,				//	横幅
+			READY_BACKGROUND_HEIGHT,			//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_BACKGROUND_2,	//	座標 x
+				POSITION_Y_READY_BACKGROUND,	//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_1_BAR:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_BAR_WIDTH,					//	横幅
+			READY_BAR_HEIGHT,					//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_BAR_1,			//	座標 x
+				POSITION_Y_READY_BAR,			//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_2_BAR:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_BAR_WIDTH,					//	横幅
+			READY_BAR_HEIGHT,					//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_BAR_2,			//	座標 x
+				POSITION_Y_READY_BAR,			//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_1_CANCEL:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_CANCEL_WIDTH,					//	横幅
+			READY_CANCEL_HEIGHT,				//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_CANCEL_1,		//	座標 x
+				POSITION_Y_READY_CANCEL,		//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_2_CANCEL:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_CANCEL_WIDTH,					//	横幅
+			READY_CANCEL_HEIGHT,				//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_CANCEL_2,		//	座標 x
+				POSITION_Y_READY_CANCEL,		//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_1_WAITING:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_WAITING_WIDTH,				//	横幅
+			READY_WAITING_HEIGHT,				//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_WAITING_1,		//	座標 x
+				POSITION_Y_READY_WAITING,		//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
+	case TYPE::READY_PLAYER_2_WAITING:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],					//	テクスチャ
+			spriteNS::CENTER,					//	原点
+			READY_WAITING_WIDTH,				//	横幅
+			READY_WAITING_HEIGHT,				//	高さ
+			D3DXVECTOR3							//	座標
+			(
+				POSITION_X_READY_WAITING_2,		//	座標 x
+				POSITION_Y_READY_WAITING,		//	座標 y
+				0.0f							//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),		//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)	//	色
+		);
+		break;
 	case TYPE::BACKGROUND_1:
 		sprite[_index].initialize
 		(
@@ -406,57 +560,191 @@ void UICharacterSelect::update(Input* _input, Sound *_sound)
 	return;
 }
 //============================================================================================================================================
-// updateInput
-// 更新 - 入力
+// updateInputCharacterSelect
+// 更新 - 入力( キャラクターセレクト )
 //============================================================================================================================================
 void UICharacterSelect::updateInput(Input* _input, Sound *_sound)
 {
-	// 各プレイヤーの入力更新
-	updateInputPlayer1(_input, _sound);
-	updateInputPlayer2(_input, _sound);
+	// Player 1
+	switch (progressState[PLAYER_TYPE::PLAYER_1])
+	{
+	case PROGRESS_TYPE::CHARACTER_SELECT:
+		updateInputCharacterSelectPlayer1(_input, _sound);
+		break;
+	case PROGRESS_TYPE::READY:
+		updateInputReadyPlayer1(_input, _sound);
+		break;
+	case PROGRESS_TYPE::WAITING:
+		updateInputWaitingPlayer1(_input, _sound);
+		break;
+	default:
+		break;
+	}
+
+	// Player 2
+	switch (progressState[PLAYER_TYPE::PLAYER_2])
+	{
+	case PROGRESS_TYPE::CHARACTER_SELECT:
+		updateInputCharacterSelectPlayer2(_input, _sound);
+		break;
+	case PROGRESS_TYPE::READY:
+		updateInputReadyPlayer2(_input, _sound);
+		break;
+	case PROGRESS_TYPE::WAITING:
+		updateInputWaitingPlayer2(_input, _sound);
+		break;
+	default:
+		break;
+	}
 
 	return;
 }
 //============================================================================================================================================
-// updateInputPlayer1
-// 更新 - 入力( プレイヤー1 )
+// updateInputCharacterSelectPlayer1
+// 更新 - 入力( キャラクターセレクト：プレイヤー1 )
 //============================================================================================================================================
-void UICharacterSelect::updateInputPlayer1(Input* _input, Sound *_sound)
+void UICharacterSelect::updateInputCharacterSelectPlayer1(Input* _input, Sound *_sound)
 {
-	// UI切り替え( Player 1 )
+	if (_input->wasKeyPressed(VK_RETURN) || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_READY, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::READY;
+
+		return;
+	}
+
 	if (_input->wasKeyPressed('D') || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::RIGHT))
 	{
 		// サウンドの再生
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectState[PLAYER_TYPE::PLAYER_1] += 1;
+
+		return;
 	}
 	else if (_input->wasKeyPressed('A') || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::LEFT))
 	{
 		// サウンドの再生
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectState[PLAYER_TYPE::PLAYER_1] -= 1;
+
+		return;
 	}
 
 	return;
 }
 //============================================================================================================================================
-// updateInputPlayer2
-// 更新 - 入力( プレイヤー2 )
+// updateInputCharacterSelectPlayer2
+// 更新 - 入力( キャラクターセレクト：プレイヤー2 )
 //============================================================================================================================================
-void UICharacterSelect::updateInputPlayer2(Input* _input, Sound *_sound)
+void UICharacterSelect::updateInputCharacterSelectPlayer2(Input* _input, Sound *_sound)
 {
-	// UI切り替え( Player 2 )
+	if (_input->wasKeyPressed(VK_SPACE) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_READY, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::READY;
+
+		return;
+	}
+
 	if (_input->wasKeyPressed(VK_RIGHT) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::RIGHT))
 	{
 		// サウンドの再生
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectState[PLAYER_TYPE::PLAYER_2] += 1;
+
+		return;
 	}
 	else if (_input->wasKeyPressed(VK_LEFT) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::LEFT))
 	{
 		// サウンドの再生
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectState[PLAYER_TYPE::PLAYER_2] -= 1;
+
+		return;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateInputReadyPlayer1
+// 更新 - 入力( 準備完了：プレイヤー1 )
+//============================================================================================================================================
+void UICharacterSelect::updateInputReadyPlayer1(Input* _input, Sound *_sound)
+{
+	if (_input->wasKeyPressed(VK_BACK) || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::CHARACTER_SELECT;
+
+		return;
+	}
+
+	if (_input->wasKeyPressed(VK_RETURN) || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_READY, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::WAITING;
+
+		return;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateInputReadyPlayer2
+// 更新 - 入力( 準備完了：プレイヤー2 )
+//============================================================================================================================================
+void UICharacterSelect::updateInputReadyPlayer2(Input* _input, Sound *_sound)
+{
+	if (_input->wasKeyPressed(VK_DELETE) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::CHARACTER_SELECT;
+
+		return;
+	}
+
+	if (_input->wasKeyPressed(VK_SPACE) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_READY, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::WAITING;
+
+		return;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateInputWaitingPlayer1
+// 更新 - 入力( 待ち：プレイヤー1 )
+//============================================================================================================================================
+void UICharacterSelect::updateInputWaitingPlayer1(Input* _input, Sound *_sound)
+{
+	if (_input->wasKeyPressed(VK_BACK) || _input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_1] = PROGRESS_TYPE::CHARACTER_SELECT;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateInputWaitingPlayer2
+// 更新 - 入力( 待ち：プレイヤー2 )
+//============================================================================================================================================
+void UICharacterSelect::updateInputWaitingPlayer2(Input* _input, Sound *_sound)
+{
+	if (_input->wasKeyPressed(VK_DELETE) || _input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::B))
+	{
+		// サウンドの再生
+		_sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		progressState[PLAYER_TYPE::PLAYER_2] = PROGRESS_TYPE::CHARACTER_SELECT;
 	}
 
 	return;
@@ -515,9 +803,24 @@ void UICharacterSelect::updateControlPlayer2(void)
 //============================================================================================================================================
 void UICharacterSelect::render(LPDIRECT3DDEVICE9 _device)
 {
+	// キャラクターセレクト
+	renderCharacterSelect1(_device);
+	renderCharacterSelect2(_device);
+
+	// 準備完了 + 待ち
+	renderReadyWaiting1(_device);
+	renderReadyWaiting2(_device);
+
+	return;
+}
+//============================================================================================================================================
+// renderCharacterSelect1
+// 描画 - キャラクターセレクト：プレイヤー1
+//============================================================================================================================================
+void UICharacterSelect::renderCharacterSelect1(LPDIRECT3DDEVICE9 _device)
+{
 	// BackGround
 	sprite[TYPE::BACKGROUND_1].render(_device);
-	sprite[TYPE::BACKGROUND_2].render(_device);
 
 	// Character
 	if (selectState[PLAYER_TYPE::PLAYER_1] == gameMasterNS::MODEL_ADAM)
@@ -529,18 +832,8 @@ void UICharacterSelect::render(LPDIRECT3DDEVICE9 _device)
 		sprite[TYPE::CHARACTER_PLAYER_1_EVE].render(_device);
 	}
 
-	if (selectState[PLAYER_TYPE::PLAYER_2] == gameMasterNS::MODEL_ADAM)
-	{
-		sprite[TYPE::CHARACTER_PLAYER_2_ADAM].render(_device);
-	}
-	else
-	{
-		sprite[TYPE::CHARACTER_PLAYER_2_EVE].render(_device);
-	}
-
 	// Bar
 	sprite[TYPE::BAR_1].render(_device);
-	sprite[TYPE::BAR_2].render(_device);
 
 	// Name
 	if (selectState[PLAYER_TYPE::PLAYER_1] == gameMasterNS::MODEL_ADAM)
@@ -552,6 +845,34 @@ void UICharacterSelect::render(LPDIRECT3DDEVICE9 _device)
 		sprite[TYPE::NAME_PLAYER_1_EVE].render(_device);
 	}
 
+	// Cursor
+	sprite[TYPE::CURSOR_1].render(_device);
+
+	return;
+}
+//============================================================================================================================================
+// renderCharacterSelect2
+// 描画 - キャラクターセレクト：プレイヤー2
+//============================================================================================================================================
+void UICharacterSelect::renderCharacterSelect2(LPDIRECT3DDEVICE9 _device)
+{
+	// BackGround
+	sprite[TYPE::BACKGROUND_2].render(_device);
+
+	// Character
+	if (selectState[PLAYER_TYPE::PLAYER_2] == gameMasterNS::MODEL_ADAM)
+	{
+		sprite[TYPE::CHARACTER_PLAYER_2_ADAM].render(_device);
+	}
+	else
+	{
+		sprite[TYPE::CHARACTER_PLAYER_2_EVE].render(_device);
+	}
+
+	// Bar
+	sprite[TYPE::BAR_2].render(_device);
+
+	// Name
 	if (selectState[PLAYER_TYPE::PLAYER_2] == gameMasterNS::MODEL_ADAM)
 	{
 		sprite[TYPE::NAME_PLAYER_2_ADAM].render(_device);
@@ -562,8 +883,63 @@ void UICharacterSelect::render(LPDIRECT3DDEVICE9 _device)
 	}
 
 	// Cursor
-	sprite[TYPE::CURSOR_1].render(_device);
 	sprite[TYPE::CURSOR_2].render(_device);
+
+	return;
+}
+//============================================================================================================================================
+// renderReadyWaiting1
+// 描画 - 準備完了 + 待ち：プレイヤー1
+//============================================================================================================================================
+void UICharacterSelect::renderReadyWaiting1(LPDIRECT3DDEVICE9 _device)
+{
+	if (progressState[PLAYER_TYPE::PLAYER_1] == PROGRESS_TYPE::CHARACTER_SELECT) { return; }
+
+	sprite[TYPE::READY_PLAYER_1_BACKGROUND].render(_device);
+
+	if (progressState[PLAYER_TYPE::PLAYER_1] == PROGRESS_TYPE::READY)
+	{
+		sprite[TYPE::READY_PLAYER_1_BAR].render(_device);
+		sprite[TYPE::READY_PLAYER_1_CANCEL].render(_device);
+
+		return;
+	}
+
+	if (progressState[PLAYER_TYPE::PLAYER_1] == PROGRESS_TYPE::WAITING)
+	{
+		sprite[TYPE::READY_PLAYER_1_WAITING].render(_device);
+		sprite[TYPE::READY_PLAYER_1_CANCEL].render(_device);
+
+		return;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// renderReadyWaiting2
+// 描画 - 準備完了 + 待ち：プレイヤー2
+//============================================================================================================================================
+void UICharacterSelect::renderReadyWaiting2(LPDIRECT3DDEVICE9 _device)
+{
+	if (progressState[PLAYER_TYPE::PLAYER_2] == PROGRESS_TYPE::CHARACTER_SELECT) { return; }
+
+	sprite[TYPE::READY_PLAYER_2_BACKGROUND].render(_device);
+
+	if (progressState[PLAYER_TYPE::PLAYER_2] == PROGRESS_TYPE::READY)
+	{
+		sprite[TYPE::READY_PLAYER_2_BAR].render(_device);
+		sprite[TYPE::READY_PLAYER_2_CANCEL].render(_device);
+
+		return;
+	}
+
+	if (progressState[PLAYER_TYPE::PLAYER_2] == PROGRESS_TYPE::WAITING)
+	{
+		sprite[TYPE::READY_PLAYER_2_WAITING].render(_device);
+		sprite[TYPE::READY_PLAYER_2_CANCEL].render(_device);
+
+		return;
+	}
 
 	return;
 }
@@ -577,12 +953,4 @@ void UICharacterSelect::renderTime(LPDIRECT3DDEVICE9 _device)
 	sprite[TYPE::TIME].render(_device);
 
 	return;
-}
-//============================================================================================================================================
-// getSelectState
-// 取得 - 選択状態
-//============================================================================================================================================
-int UICharacterSelect::getSelectState(int _index)
-{ 
-	return selectState[_index];
 }

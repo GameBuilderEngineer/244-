@@ -37,7 +37,9 @@ public:
 	virtual void initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader, ShaderLoader* _shaderLoader, TextManager* _textManager) override;
 	virtual void uninitialize(void) override;
 	virtual void update(float _frameTime) override;
-	bool updateInput(void);
+	void updateScene(void);
+	void updateSceneBack(void);
+	void updateSceneNext(void);
 	void updateTime(float _frameTime);
 	virtual void render(Direct3D9* _direct3D9) override;
 	void render3D(Direct3D9* _direct3D9);

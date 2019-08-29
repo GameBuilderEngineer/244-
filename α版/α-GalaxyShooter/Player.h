@@ -96,9 +96,8 @@ namespace playerNS{
 	const int NUM_MEMORY_PILE			= 5;		//メモリーパイルの数
 	const int AMOUNT_RECOVERY			= 2;		//回復量
 	const int MAX_HP					= 100;		//ＨＰ最大値
-	const int MAX_REVIVAL_POINT			= 1000;		//復活ポイント最大値
 	const int INCREASE_REVIVAL_POINT	= 50;		//復活ポイント増加値
-	const int DECREASE_REVIVAL_POINT	= 3;		//復活ポイント増加値
+	const int DECREASE_REVIVAL_POINT	= 5;		//復活ポイント増加値
 	const float SPEED					= 30.0f;	//速度
 	const float DASH_MAGNIFICATION		= 2.0f;		//ダッシュ倍率
 	const float JUMP_FORCE				= 30.0f;	//ジャンプ力
