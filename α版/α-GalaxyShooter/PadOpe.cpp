@@ -6,10 +6,10 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// パッド操作説明横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// パッド操作説明縦サイズ
-const static float		POSITION_X = 0.0f;							// パッド操作説明X座標
-const static float		POSITION_Y = 0.0f;							// パッド操作説明Y座標
+const static int		WIDTH = ((3840 / 2) - 16);					// パッド操作説明横サイズ
+const static int		HEIGHT = ((2160 / 2) - 9);					// パッド操作説明縦サイズ
+const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// パッド操作説明X座標
+const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// パッド操作説明Y座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -39,12 +39,12 @@ HRESULT PadOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	texturePadOpe = *textureLoader->getTexture(textureLoaderNS::PAD_OPE);
+	texturePadOpe = *textureLoader->getTexture(textureLoaderNS::OPERATION_GAMEPAD);
 
 	// パッド説明画像初期化
 	Sprite::initialize(device,
 		texturePadOpe,								// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
+		spriteNS::CENTER,							// 原点
 		WIDTH,										// 横幅
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標

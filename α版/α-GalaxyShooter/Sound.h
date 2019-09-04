@@ -24,6 +24,7 @@ namespace soundNS
 		BGM_CHARACTER_SELECT,			//	BGM：キャラクターセレクト
 		BGM_CREDIT,						//	BGM：クレジット
 		BGM_GAME,						//	BGM：ゲーム
+		BGM_OPERATION,					//	BGM：操作方法
 		BGM_RESULT,						//	BGM：リザルト
 		BGM_SPLASH,						//	BGM：スプラッシュ
 		BGM_TITLE,						//	BGM：タイトル
@@ -43,8 +44,11 @@ namespace soundNS
 		SE_JUMP,						//	SE：ジャンプ
 		SE_LANDING,						//	SE：着地
 		SE_PAPER,						//	SE：ペーパー
+		SE_PAUSE,						//	SE：ポーズ
+		SE_READY,						//	SE：準備完了
 		SE_RECURSION,					//	SE：再帰回収
 		SE_REVIVAL,						//	SE：復活
+		SE_REVIVAL_POINT,				//	SE：復活ポイント
 		SE_SELECT,						//	SE：セレクト
 		SE_SHOCK_WAVE,					//	SE：衝撃波
 		TYPE_MAX						//	最大値

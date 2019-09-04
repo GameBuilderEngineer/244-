@@ -12,8 +12,7 @@ using namespace staticMeshNS;
 //===================================================================================================================================
 StaticMeshLoader::StaticMeshLoader()
 {
-	fileName[ADULT] = { "adult.x" };
-	fileName[CHILD] = { "child.x" };
+	fileName[CHILD] = { "Character_Eve.x" };
 	fileName[BULLET] = { "bullet.x" };
 	fileName[CUBE] = { "cube.x" };
 	fileName[SAMPLE_HIERARCHY_MESH] = { "HierarchyMesh.x" };

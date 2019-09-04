@@ -113,11 +113,10 @@ void Game::initialize(
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
-		uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
+		//uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
-		uiRevivalGauge[i].initialize(direct3D9->device, i, _textureLoader);
 		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
@@ -149,11 +148,11 @@ void Game::initialize(
 	pointSprite.initilaize(direct3D9->device);
 
 	//インスタンスプレーン
-	plane.createPositionSpherical(direct3D9->device,3000, 250.0f);
-	plane.initialize(direct3D9->device,*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD),*textureLoader->getTexture(textureLoaderNS::RING));
+	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
+	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
 	//ポーズの初期化
-	pose.initialize(direct3D9->device, 0, _textureLoader);
+	uiPause.initialize(direct3D9->device, _textureLoader);
 
 
 	// マップ初期化
@@ -220,29 +219,31 @@ void Game::update(float _frameTime) {
 	//ゲームが開始した場合ポーズが有効
 	if (gameMaster->whetherAlreadyStart())
 	{
-		if (pose.poseon)
+		if (uiPause.getRenderFlag())
 		{
 			if (input->wasKeyPressed('P') ||
 				input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 				input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
 				)// ポーズ解除
 			{
-				pose.poseon = false;
-
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_PAUSE, soundNS::METHOD::PLAY);
+				uiPause.setRenderFlag(false);
 			}
 		}
-		else if (!pose.poseon)
+		else if (!uiPause.getRenderFlag())
 		{
 			if (input->wasKeyPressed('P') ||
 				input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
 				input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN)
 				)// ポーズ解除
 			{
-				pose.poseon = true;
-
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_PAUSE, soundNS::METHOD::PLAY);
+				uiPause.setRenderFlag(true);
 			}
 		}
-		if (pose.poseon)return;// ポーズしてたら更新しない
+		if (uiPause.getRenderFlag())return;// ポーズしてたら更新しない
 	}
 
 	//【処理落ち】
@@ -276,7 +277,7 @@ void Game::update(float _frameTime) {
 			target.update();
 			uiRecursion[i].update();
 			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
-			uiRevivalGauge[i].update(player[i]->getRevivalPoint());
+			uiRevival[i].update(player[i]->getRevivalPoint());
 		}
 	}
 
@@ -659,7 +660,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 			if (player[i]->getState() == playerNS::STATE::DOWN)
 			{
-				uiRevivalGauge[i].render(device);
 				uiRevival[i].render(device);
 			}
 		}
@@ -669,16 +669,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
-			uiRecursion[i].render(device);
+			//uiRecursion[i].render(device);
 		}
 	}
 
 	// 画面分割線
 	uiScreenSplitLine.render(device);
 
-	if (pose.poseon)
+	if (uiPause.getRenderFlag())
 	{
-		pose.render(device);
+		uiPause.render(device);
 	}
 
 	if (!gameMaster->whetherAlreadyStart())
@@ -956,12 +956,11 @@ void Game::uninitialize() {
 	{
 		hpEffect[i].uninitialize();
 		target.uninitialize();
-		pose.uninitialize();
-		uiRecursion[i].release();
+		uiPause.release();
+		//uiRecursion[i].release();
 		uiPlayTime[i].release();
 		uiChingin[i].release();
 		uiCutMemoryLine[i].release();
-		uiRevivalGauge[i].release();
 		uiRevival[i].release();
 	}
 	uiScreenSplitLine.release();

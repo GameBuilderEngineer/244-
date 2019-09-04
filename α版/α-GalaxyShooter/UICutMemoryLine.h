@@ -14,11 +14,11 @@
 //============================================================================================================================================
 namespace uiCutMemoryLineNS
 {
-	const int WIDTH = (960);																	//	幅
-	const int HEIGHT = (100);																	//	高さ
-	const float POSITION_X_PLAYER_1 = ((WINDOW_WIDTH / 2) - (uiCutMemoryLineNS::WIDTH / 2));	//	座標 x ( Player1 )
-	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2));				//	座標 x ( Player2 )
-	const float POSITION_Y = (WINDOW_HEIGHT / 4);												//	座標 y
+	const int WIDTH = (1306 / 2);													//	幅
+	const int HEIGHT = (320 / 2);													//	高さ
+	const float POSITION_X_PLAYER_1 = (WINDOW_WIDTH / 4);							//	座標 x ( Player1 )
+	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2));	//	座標 x ( Player2 )
+	const float POSITION_Y = (WINDOW_HEIGHT / 4);									//	座標 y
 }
 //============================================================================================================================================
 // Class

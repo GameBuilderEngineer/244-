@@ -27,7 +27,7 @@ namespace gameMasterNS {
 		DRAW,
 	};
 
-	const int MODEL_ADAM = staticMeshNS::ADULT;
+	const int MODEL_ADAM = staticMeshNS::CHILD;
 	const int MODEL_EVE = staticMeshNS::CHILD;
 
 	const int COUNT_DOWN = 3;
@@ -59,7 +59,7 @@ private:
 	bool alreadyFinish;										//フィニッシュ済
 	int count;												//ゲームカウント
 	playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
-
+	int chingin[playerNS::NUM_PLAYER];						//	チンギン
 public:
 	GameMaster();
 	~GameMaster();

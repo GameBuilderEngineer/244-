@@ -21,7 +21,7 @@ HRESULT PointSprite::initilaize(LPDIRECT3DDEVICE9 device)
 {
 	setVisualDirectory();
 	//ポイントスプライトに貼るテクスチャオブジェクトを作成
-	if (FAILED(D3DXCreateTextureFromFileEx(device, "Sprite.jpg", (UINT)WIDTH, (UINT)HEIGHT, 0, 0, D3DFMT_UNKNOWN,
+	if (FAILED(D3DXCreateTextureFromFileEx(device, "Game_BackGround_Star.jpg", (UINT)WIDTH, (UINT)HEIGHT, 0, 0, D3DFMT_UNKNOWN,
 		D3DPOOL_DEFAULT, D3DX_FILTER_NONE, D3DX_DEFAULT,
 		0xff000000, NULL, NULL, &pTexture)))
 	{
@@ -30,10 +30,10 @@ HRESULT PointSprite::initilaize(LPDIRECT3DDEVICE9 device)
 	}
 	for (int i = 0; i < POINT_NUM; i++)
 	{
-		vertex[i].coord = D3DXVECTOR3((float)((rand()%1000)-500),(float)((rand()%1000)-500),(float)((rand()%1000)-500));
+		vertex[i].coord = D3DXVECTOR3((float)((rand() % 1000) - 500), (float)((rand() % 1000) - 500), (float)((rand() % 1000) - 500));
 		vertex[i].color = D3DCOLOR_ARGB(255, 255, 255, 255);
 		vertex[i].scale = 0.001f;
-		size[i] = (float)((rand() % 200)/1000);
+		size[i] = (float)((rand() % 200) / 1000);
 	}
 	return S_OK;
 }

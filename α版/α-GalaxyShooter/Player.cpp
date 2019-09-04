@@ -5,6 +5,8 @@
 // [更新日]2019/09/03
 //===================================================================================================================================
 #include "Player.h"
+#include "UIRevival.h"
+
 using namespace playerNS;
 
 //===================================================================================================================================
@@ -30,7 +32,7 @@ Player::Player()
 	onGround = false;						//接地判定
 
 	skyHeight = 0.0f;
-	modelType = staticMeshNS::ADULT;
+	modelType = staticMeshNS::CHILD;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
@@ -81,7 +83,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		keyTable = NON_CONTOROL;
 		break;
 	}
-	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
+	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::CHILD], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -98,11 +100,10 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
-
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 	//スターラインの初期化
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 
 	// 弾エフェクト初期化
 	bulletEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
@@ -116,6 +117,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	// ラインエフェクト初期化
 	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
+	return;
 }
 
 //===================================================================================================================================
@@ -538,6 +540,8 @@ void Player::updateDown(float frameTime)
 	}
 	if (input->wasKeyPressed(keyTable.revival)|| input->getController()[type]->wasButton(BUTTON_REVIVAL))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_REVIVAL_POINT, soundNS::METHOD::PLAY);
 		revivalPoint += INCREASE_REVIVAL_POINT;
 		// アップエフェクト発生
 		upEffect.generateUpEffect(200, position, upVec());
@@ -938,7 +942,7 @@ void Player::triggerShockWave()
 	{
 		if(onShockWave[i])continue;		//生成されているか
 		shockWave[i] = new ShockWave();
-		shockWave[i]->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+		shockWave[i]->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::SHOCKWAVE), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
 		shockWave[i]->update(0.05*(float)i);
 		onShockWave[i] = true;		//生成中にする
 	}
@@ -1003,7 +1007,7 @@ int Player::getRevivalPoint() { return revivalPoint; }
 int Player::getState() { return state; }
 int Player::getWage() { return wage; }
 bool Player::whetherDown() { return state == DOWN; }
-bool Player::whetherRevival() { return revivalPoint >= MAX_REVIVAL_POINT; }
+bool Player::whetherRevival() { return revivalPoint >= (uiRevivalNS::MAX_REVIVAL_POINT); }
 bool Player::whetherDeath() {return hp <= 0;}
 bool Player::whetherInvincible() {return invincibleTimer > 0;}
 bool Player::whetherSky() { return skyTimer > 0; }

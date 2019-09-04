@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E9859007-5E09-4B55-805C-08A6E9BE5A43}</ProjectGuid>
     <RootNamespace>αGalaxyShooter</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -143,8 +143,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletEffect.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CharaSelectBarUI.cpp" />
-    <ClCompile Include="ChinginCnt.cpp" />
+    <ClCompile Include="CharacterSelect.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
@@ -156,6 +155,7 @@
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="DownEffect.cpp" />
+    <ClCompile Include="EffectDew.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
@@ -186,17 +186,14 @@
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="playerK.cpp" />
     <ClCompile Include="PointSprite.cpp" />
-    <ClCompile Include="Pose.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
     <ClCompile Include="RecursionRecognition.cpp" />
     <ClCompile Include="Result.cpp" />
-    <ClCompile Include="Result2D.cpp" />
     <ClCompile Include="RuleNode.cpp" />
     <ClCompile Include="ScreenEffectBase.cpp" />
-    <ClCompile Include="SelectCharacter.cpp" />
-    <ClCompile Include="SelectCharacter2D.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
     <ClCompile Include="ShockWave.cpp" />
@@ -211,21 +208,19 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextManager.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
-    <ClCompile Include="TimerUI.cpp" />
     <ClCompile Include="Title.cpp" />
-    <ClCompile Include="Title2D.cpp" />
-    <ClCompile Include="TitleTransition.cpp" />
-    <ClCompile Include="TitleTransPos.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Tutorial2D.cpp" />
+    <ClCompile Include="UICharacterSelect.cpp" />
     <ClCompile Include="UIChingin.cpp" />
-    <ClCompile Include="UICountTime.cpp" />
     <ClCompile Include="UICutMemoryLine.cpp" />
+    <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
+    <ClCompile Include="UIResult.cpp" />
     <ClCompile Include="UIRevival.cpp" />
-    <ClCompile Include="UIRevivalGauge.cpp" />
     <ClCompile Include="UIScreenSplitLine.cpp" />
     <ClCompile Include="UpEffect.cpp" />
+    <ClCompile Include="UITitle.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -256,8 +251,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletEffect.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CharaSelectBarUI.h" />
-    <ClInclude Include="ChinginCnt.h" />
+    <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ConditionalNode.h" />
@@ -269,6 +263,7 @@
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="DownEffect.h" />
+    <ClInclude Include="EffectDew.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fader.h" />
@@ -298,17 +293,14 @@
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="playerK.h" />
     <ClInclude Include="PointSprite.h" />
-    <ClInclude Include="Pose.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Recursion.h" />
     <ClInclude Include="RecursionRecognition.h" />
     <ClInclude Include="Result.h" />
-    <ClInclude Include="Result2D.h" />
     <ClInclude Include="RuleNode.h" />
     <ClInclude Include="ScreenEffectBase.h" />
-    <ClInclude Include="SelectCharacter.h" />
-    <ClInclude Include="SelectCharacter2D.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="ShockWave.h" />
@@ -323,21 +315,19 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextManager.h" />
     <ClInclude Include="TextureLoader.h" />
-    <ClInclude Include="TimerUI.h" />
     <ClInclude Include="Title.h" />
-    <ClInclude Include="Title2D.h" />
-    <ClInclude Include="TitleTransition.h" />
-    <ClInclude Include="TitleTransPos.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Tutorial2D.h" />
+    <ClInclude Include="UICharacterSelect.h" />
     <ClInclude Include="UIChingin.h" />
-    <ClInclude Include="UICountTime.h" />
     <ClInclude Include="UICutMemoryLine.h" />
+    <ClInclude Include="UIPause.h" />
     <ClInclude Include="UIPlayTime.h" />
+    <ClInclude Include="UIResult.h" />
     <ClInclude Include="UIRevival.h" />
-    <ClInclude Include="UIRevivalGauge.h" />
     <ClInclude Include="UIScreenSplitLine.h" />
     <ClInclude Include="UpEffect.h" />
+    <ClInclude Include="UITitle.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />
