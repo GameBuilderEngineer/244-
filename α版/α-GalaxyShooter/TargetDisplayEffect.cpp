@@ -145,7 +145,7 @@ void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device, unsigned c
 void TargetDisplayEffect::renderSetUp(LPDIRECT3DDEVICE9 device)
 {
 	// ‰Šú‰»
-	device->Clear(0, 0, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL | D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	device->Clear(0, 0, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL , D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
 	device->BeginScene();
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);

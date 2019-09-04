@@ -165,9 +165,6 @@ void Game::initialize(
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
-	// エフェクト初期化
-	effectManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -372,6 +369,81 @@ void Game::render(Direct3D9* direct3D9) {
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 
+	
+	 //フィールドの描画
+	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
+
+
+	for (int i = 0; i < NUM_COLONY; i++)
+	{// コロニーの描画
+		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
+
+	////(仮)ガラクタの描画
+	//for (int i = 0; i < JUNK_MAX; i++)
+	//{
+	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
+
+
+	////(仮)マグネットの描画
+	//for (int i = 0; i < NUM_MAGNET; i++)
+	//{
+	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	//}
+
+	//(仮)//ポイントスプライトの描画
+	pointSprite.render(direct3D9->device, currentCamera.position);
+
+	//(仮)//プレーンの描画(インスタンシング)
+	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//xFileStaticMeshテスト描画
+	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+
+	// ワスレモノの描画
+#if 1
+	for (int i = 0; i < wasuremono.size(); i++)
+	{
+		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+#else
+	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// インスタンシング描画をやろうしたが上手くいっていない
+#endif
+
+
+	// チンギンの描画
+	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	// マップノードの描画
+	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+		//プレイヤーの他のオブジェクトの描画
+		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
+#ifdef _DEBUG
+	Ray debugRay;
+	//法線
+	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
+	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
+	debugRay.render(direct3D9->device, 100.0f);
+#endif
 	//ステンシル準備
 	target.renderSetUp(direct3D9->device);
 
@@ -410,80 +482,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	// ステンシル終了
 	target.renderStencilEnd(direct3D9->device);
-
-	 //フィールドの描画
-	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-
-	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
-
-	for (int i = 0; i < NUM_COLONY; i++)
-	{// コロニーの描画
-		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
-
-	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
-
-	////(仮)ガラクタの描画
-	//for (int i = 0; i < JUNK_MAX; i++)
-	//{
-	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	//}
-
-
-	////(仮)マグネットの描画
-	//for (int i = 0; i < NUM_MAGNET; i++)
-	//{
-	//	magnet[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	//}
-
-	//(仮)//ポイントスプライトの描画
-	pointSprite.render(direct3D9->device, currentCamera.position);
-
-	//(仮)//プレーンの描画(インスタンシング)
-	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//xFileStaticMeshテスト描画
-	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-
-	// ワスレモノの描画
-#if 1
-	for(int i = 0; i < wasuremono.size(); i++)
-	{
-		wasuremono[i]->render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
-#else
-	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// インスタンシング描画をやろうしたが上手くいっていない
-#endif
-
-	// チンギンの描画
-	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	// マップノードの描画
-	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		//プレイヤーの描画
-		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-			*shaderLoader->getEffect(shaderNS::TOON),
-			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-		//プレイヤーの他のオブジェクトの描画
-		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-	}
-
-#ifdef _DEBUG
-	Ray debugRay;
-	//法線
-	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
-	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
-	debugRay.render(direct3D9->device, 100.0f);
-#endif
 
 }
 
