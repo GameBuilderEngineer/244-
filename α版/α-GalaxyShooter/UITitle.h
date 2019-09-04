@@ -84,7 +84,7 @@ private:
 public:
 	UITitle(void);
 	~UITitle(void);
-	HRESULT initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader);
+	HRESULT initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader, int _selectStateMemory);
 	void initializeSprite(LPDIRECT3DDEVICE9 _device, int _index);
 	void release(void);
 	void update(Input* _input, Sound* _sound);

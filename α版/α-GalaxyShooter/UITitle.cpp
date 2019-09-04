@@ -49,7 +49,7 @@ UITitle::~UITitle(void)
 // initialize
 // 初期化
 //============================================================================================================================================
-HRESULT UITitle::initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader)
+HRESULT UITitle::initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader, int _selectStateMemory)
 {
 	// ディレクトリ設定
 	setVisualDirectory();
@@ -69,6 +69,8 @@ HRESULT UITitle::initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLo
 	{
 		initializeSprite(_device, i);
 	}
+
+	selectState = _selectStateMemory;
 
 	return S_OK;
 }

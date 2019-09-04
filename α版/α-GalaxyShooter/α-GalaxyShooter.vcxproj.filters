@@ -259,6 +259,9 @@
     <Filter Include="UI\ScreenSplitLine">
       <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\Dew">
+      <UniqueIdentifier>{12c4f031-ca9f-444b-968c-23863067a784}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -522,7 +525,6 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Sound</Filter>
     </ClCompile>
-    <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Animation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
@@ -553,6 +555,13 @@
     <ClCompile Include="UITitle.cpp">
       <Filter>UI\Title</Filter>
     </ClCompile>
+    <ClCompile Include="InstancingBillboard.cpp">
+      <Filter>Billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectDew.cpp">
+      <Filter>Effect\Dew</Filter>
+    </ClCompile>
+    <ClCompile Include="playerK.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -795,14 +804,12 @@
     <ClInclude Include="Sound.h">
       <Filter>Sound</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="Animation.h">
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="AllocateHierarchy.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="EffectManager.h">
       <Filter>Effect\EffectManager</Filter>
     </ClInclude>
@@ -828,6 +835,16 @@
     <ClInclude Include="UITitle.h">
       <Filter>UI\Title</Filter>
     </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectDew.h">
+      <Filter>Effect\Dew</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="playerK.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

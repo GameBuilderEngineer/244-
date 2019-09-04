@@ -12,6 +12,11 @@
 //============================================================================================================================================
 using namespace titleNS;
 //============================================================================================================================================
+// Global Variable
+// グローバル変数
+//============================================================================================================================================
+int selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;	//	タイトルメニュー選択状態記憶
+//============================================================================================================================================
 // Constructor
 // コンストラクタ
 //============================================================================================================================================
@@ -76,11 +81,14 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	light->initialize(_direct3D9);
 
 	// タイトルUIの初期化
-	uiTitle.initialize(_direct3D9->device, _textureLoader);
+	uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
 
 	// インスタンスプレーンの初期化
 	plane.createPositionSpherical(_direct3D9->device, 3000, 250.0f);
 	plane.initialize(_direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
+
+	// エフェクト初期化
+	effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// プレイヤーの初期化
 	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
@@ -127,6 +135,15 @@ void Title::update(float _frameTime)
 		updateInput();
 	}
 
+	// エフェクトの更新
+	effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
+	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('E'))
+	{
+		effectDewManager.generateEffect(100, temp2);
+	};
+
 	return;
 }
 //============================================================================================================================================
@@ -138,22 +155,27 @@ void Title::updateInput(void)
 	switch (uiTitle.getSelectState())
 	{
 	case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;
 		nextScene = (SceneList::SELECT);
 		changeScene(nextScene);
 		break;
 	case uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL;
 		nextScene = (SceneList::TUTORIAL);
 		changeScene(nextScene);
 		break;
 	case uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION;
 		nextScene = (SceneList::OPERATION);
 		changeScene(nextScene);
 		break;
 	case uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT;
 		nextScene = (SceneList::CREDIT);
 		changeScene(nextScene);
 		break;
 	case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_EXIT:
+		PostQuitMessage(NULL);
 		break;
 	default:
 		break;
@@ -177,6 +199,9 @@ void Title::render(Direct3D9* _direct3D9)
 
 	// 2D
 	render2D(_direct3D9->device);
+
+	// エフェクトの描画
+	effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
 
 	return;
 }

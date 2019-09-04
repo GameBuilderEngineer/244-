@@ -8,6 +8,7 @@
 #pragma once
 #include "AbstractScene.h"
 #include "UITitle.h"
+#include "EffectDew.h"
 //============================================================================================================================================
 // NameSpace
 // 名前空間
@@ -44,6 +45,7 @@ private:
 	Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
 	UITitle uiTitle;										//	タイトルUI
 	InstancingBillboard plane;								//	インスタンシングビルボード
+	EffectDewManager effectDewManager;						//	露エフェクト
 public:
 	Title(void);
 	~Title(void);

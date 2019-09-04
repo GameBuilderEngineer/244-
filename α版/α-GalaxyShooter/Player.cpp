@@ -32,7 +32,7 @@ Player::Player()
 	onGround = false;						//接地判定
 
 	skyHeight = 0.0f;
-	modelType = staticMeshNS::ADULT;
+	modelType = staticMeshNS::CHILD;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
@@ -80,7 +80,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		keyTable = NON_CONTOROL;
 		break;
 	}
-	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
+	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::CHILD], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -102,6 +102,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 
+	return;
 }
 
 //===================================================================================================================================

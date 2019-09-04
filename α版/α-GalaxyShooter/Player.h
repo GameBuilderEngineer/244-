@@ -15,6 +15,7 @@
 #include "Camera.h"
 #include "ShockWave.h"
 #include "Sound.h"
+#include "Animation.h"
 
 
 namespace playerNS{

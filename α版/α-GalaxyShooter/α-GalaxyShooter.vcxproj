@@ -153,6 +153,7 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="EffectDew.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="playerK.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
@@ -253,6 +255,7 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="EffectDew.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fuzzy.h" />
@@ -279,6 +282,7 @@
     <ClInclude Include="PathPlanning.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="playerK.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Recursion.h" />
