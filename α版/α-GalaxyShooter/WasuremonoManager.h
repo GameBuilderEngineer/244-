@@ -21,17 +21,10 @@ using namespace WasuremonoNS;
 //*****************************************************************************
 namespace WasuremonoNS
 {
-	// リスポーンモード
-	enum RESPAWN_MODE
-	{
-		RANDOM		// ランダム
-	};
-
-	const static int WASUREMONO_MAX = 200;
-	const static int INITIAL_PLACEMENT_NUMBER = 100;
-	const static float RESPAWN_SURBEY_INTERVAL = 3.0f;
+	const static int WASUREMONO_MAX = 100;				// ワスレモノ最大数	
+	const static int INITIAL_PLACEMENT_NUMBER = 80;		// ワスレモノ初期配備数
+	const static float RESPAWN_SURBEY_INTERVAL = 1.5f;	// ワスレモノリスポーン間隔(秒)
 }
-
 
 
 //*****************************************************************************
@@ -43,40 +36,31 @@ private:
 	// Data
 	WasuremonoTable* table;					// ワスレモノ表（名称やチンギンを参照可能）
 	std::vector<Wasuremono*>* wasuremono;	// ワスレモノ
-	float timeCnt;							// 時間カウント
-	int respawnMode;						// リスポーンのモード
+	int typeCount[NUM_WASUREMONO];			// ワスレモノごとの数（インスタンシング描画で使う）
+	Planet* field;							// フィールド
 	LPDIRECT3DDEVICE9 device;				// デバイス
-	Planet *field;							// フィールド情報
-	int typeCount[NUM_WASUREMONO];			// ワスレモノごとの数
+	float timeCnt;							// 時間カウント
 
-	// タイプ初期化
-	void setUpInitialType(std::vector<int> &type);
-	// 座標初期化
-	void setUpInitialPosition(std::vector<D3DXVECTOR3> &position);
-	// リスポーン条件を調べる
-	bool surbeyRespawnCondition(void);
+
 	// 自動リスポーン処理
 	void autoRespawn(void);
 	// ランダム配置
-	D3DXVECTOR3 positionRand(D3DXVECTOR3 &out);
-
+	D3DXVECTOR3 positionRand(float radiusRatio);
+	// タイプを決める
+	int decideType(void);
 
 public:
 	WasuremonoManager(void);
 	~WasuremonoManager(void);							
-	void initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet*);
+	void initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *_wasuremono, StaticMeshLoader* staticMeshLoader, Planet* _field);
 	void uninitialize(void);
 	void update(float frameTime);
 
-	// ワスレモノを生成
+	// ワスレモノを１つ生成
 	Wasuremono* create(int typeID, D3DXVECTOR3 *position);
-	// ワスレモノを破棄
-	void destroy(int id);
-	// ワスレモノ初期配備
-	void setUp(void);
-	// ワスレモノ一斉破棄
-	void clear(void);
-
+	// ワスレモノを１つ破棄
+	void destroy(int i);
+	// インスタンシング描画
 	void instancingRender(LPDIRECT3DDEVICE9 device,
 		D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon, LPD3DXEFFECT effect);
 };

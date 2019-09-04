@@ -27,7 +27,7 @@ float Fuzzy::grade(float value, float x0, float x1)
 //=============================================================================
 float Fuzzy::reverseGrade(float value, float x0, float x1)
 {
-	float result = not(grade(value, x0, x1));
+	float result = NOT(grade(value, x0, x1));
 
 	if (result != 2.0f/* 1.0f - (-1.0f) */)
 	{
@@ -128,8 +128,4 @@ float Fuzzy::OR(float a, float b)
 float Fuzzy::NOT(float a)
 {
 	return 1.0f - a;
-}
-
-void a()
-{
 }

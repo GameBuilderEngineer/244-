@@ -74,11 +74,29 @@ void MotionGeneration::update(AgentAI* agentAI)
 		agentAI->locateMemoryPile();
 	}
 
+	// メモリーラインの切断
+	if (bodyBB->getCuttingLine())
+	{
+		agentAI->cutMemoryLine();
+	}
+
+	// ダウン復活
+	if (bodyBB->getRevivalAction())
+	{
+		agentAI->increaseRevivalPoint();
+	}
+
+	// 上空モード移動
+
+	// 落下
+
 	// フラグのリセット
 	bodyBB->setMove(false);
 	bodyBB->setJump(false);				//（これが無くても別フラグで止まる）
 	bodyBB->setShootingBullet(false);
 	bodyBB->setLocatingPile(false);
+	bodyBB->setCuttingLine(false);
+	bodyBB->setRevivalAction(false);
 }
 
 

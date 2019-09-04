@@ -260,6 +260,8 @@ public:
 	bool whetherGenerationRecursion();
 	bool whetherCollidedOpponentMemoryLine();
 	bool messageDisconnectOpponentMemoryLine();
+	int getElementMemoryPile();
 	Recursion* getRecursion();
+	MemoryPile* getMemoryPile();
 	MemoryLine* getMemoryLine();
 };

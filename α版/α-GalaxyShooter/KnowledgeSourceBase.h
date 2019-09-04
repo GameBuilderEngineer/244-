@@ -17,7 +17,8 @@ class AgentAI;
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-class KnowledgeSourceBase {
+class KnowledgeSourceBase: public Base
+{
 protected:
 	// Data
 	Module::TYPE moduleTag;							// モジュールタイプを示す								

@@ -18,6 +18,8 @@ int AgentAI::numAgent = 0;
 AgentAI::AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono)
 {
 	aiID = numAgent++;
+	virticalTime = 0.0f;
+	horizontalTime = 0.0f;
 
 	// アービター
 	arbiter = new Arbiter;
@@ -102,7 +104,8 @@ void AgentAI::initialize(
 	// 初期設定項目を埋める
 	recognitionBB->setMemoryBB(memoryBB);
 	recognitionBB->setMyPosition(&position);
-	bodyBB->configMovingDestination(opponent->getPosition());
+	recognitionBB->setFrameTimePointer(&frameTime);
+	bodyBB->configMovingDestination(opponent->getPosition()); // ●
 }
 
 
@@ -138,18 +141,21 @@ void AgentAI::update(float frameTime)
 	{
 		environmentAnalysis->update(this);
 	}
-	//if (pathPlanning->getUpdatePermission())
-	//{
-	//	pathPlanning->update(this);
-	//}
-	//if (decisionMaking->getUpdatePermission())
-	//{
-	//	decisionMaking->update(this);
-	//}
+	if (pathPlanning->getUpdatePermission())
+	{
+		pathPlanning->update(this);
+	}
+	if (decisionMaking->getUpdatePermission())
+	{
+		decisionMaking->update(this);
+	}
 	if (motionGeneration->getUpdatePermission())
 	{
 		motionGeneration->update(this);
 	}
+
+	// AI用オートカメラ操作
+	autoCamera();
 
 	// プレイヤー処理の事後更新
 	updatePlayerAfter(frameTime);
@@ -157,7 +163,11 @@ void AgentAI::update(float frameTime)
 	// プレイヤー自己情報→AIに送信 
 	updateAgentSelfData();
 
-	Player::update(frameTime);
+	//●
+	if (input->isKeyDown('Q'))
+	{
+		recognitionBB->flag = true;
+	}
 }
 
 
@@ -167,6 +177,8 @@ void AgentAI::update(float frameTime)
 void AgentAI::updatePlayerBefore(float frameTime)
 {
 	setSpeed(D3DXVECTOR3(0, 0, 0));	// 速度（移動量）の初期化
+	onJump = false;
+	disconnectOpponentMemoryLine = false;
 	this->frameTime = frameTime;	// frameTime記録
 }
 
@@ -189,7 +201,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	recorvery(frameTime);
 
-//#ifdef _DEBUG●
+#ifdef _DEBUG
 // デバッグモードのときはコントローラの入力を一部受け付ける
 // 特段理由はない　せっかくだから
 
@@ -201,46 +213,31 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	//【ジャンプ】
 	//===========
-	bool onJump = false;
 	if (input->wasKeyPressed(keyTable.jump) ||
-		input->getController()[type]->wasButton(playerNS::BUTTON_JUMP))
+		input->getController()[type]->wasButton(BUTTON_JUMP))
 	{
 		onJump = true;
 	}
-//#endif
-
-	//===========
-	//【接地処理】
-	//===========
-	//重力線を作成
-	D3DXVECTOR3 gravityDirection;
-	between2VectorDirection(&gravityDirection, position, *attractorPosition);
-	gravityRay.initialize(position, gravityDirection);//重力レイの初期化
-	if (radius + attractorRadius >= (between2VectorLength(position, *attractorPosition) - difference))
-	{
-		onGround = true;
-		//めり込み補正
-		//現在位置+ 垂直方向*(めり込み距離)
-		setPosition(position + axisY.direction * (radius + attractorRadius - between2VectorLength(position, *attractorPosition)));
-		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-		setSpeed(reverseAxisY.slip(speed, axisY.direction));
-#ifdef _DEBUG
-		if (onJump)jump();//ジャンプ
 #endif
-	}
-	else {
-		onGround = false;
-		setGravity(gravityDirection, playerNS::GRAVITY_FORCE);//重力処理
+
+	switch (state)
+	{
+	case FALL:		updateFall(frameTime);			break;
+	case SKY:		updateSky(frameTime);			break;
+	case GROUND:	updateGround(frameTime, onJump);break;
+	case DOWN:		updateDown(frameTime);			break;
+	case REVIVAL:	updateRevival(frameTime);		break;
 	}
 
 	//===========
 	//【加速度処理】
 	//===========
-	if (D3DXVec3Length(&acceleration) > 0.01f)
+	if (D3DXVec3Length(&acceleration) > 0.05f)
 	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
-	acceleration *= 0.9f;//加速度減衰
+	//acceleration *= 0.9f;//加速度減衰
+
 
 	//===========
 	//【位置更新】
@@ -271,12 +268,28 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	//【カメラの操作】
 	//===========
-	controlCamera(frameTime);
+	camera->setUpVector(axisY.direction);				
+	camera->update();
 
 	//==========================
 	//【メモリーアイテムの更新】
 	//==========================
-	// メモリーパイルの更新3
+	if (whetherDown())
+	{
+		deleteMemoryItem();//ダウン状態ならば全てのメモリアイテムを削除
+	}
+	if (onRecursion)recursionTimer -= frameTime;
+	if (recursionTimer < 0)
+	{
+		if (onRecursion)SAFE_DELETE(recursion);
+		onRecursion = false;
+	}
+
+	// メモリーパイルのセットはビヘイビアツリーから
+
+	// メモリーラインの切断もビヘイビアツリーから
+
+	// メモリーパイルの更新
 	for (int i = 0; i < NUM_MEMORY_PILE; i++)
 	{
 		memoryPile[i].update(frameTime);
@@ -284,6 +297,20 @@ void AgentAI::updatePlayerAfter(float frameTime)
 
 	// メモリーラインの更新
 	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
+
+	//スターラインの更新
+	starLine.update(device, frameTime, memoryLineNS::STAR);//スターラインの更新
+
+	//リカージョンの更新
+	if (onRecursion)
+	{
+		recursion->update(frameTime);
+	}
+
+	//===========
+	//【衝撃波の更新】
+	//===========
+	updateShockWave(frameTime);
 }
 
 
@@ -313,6 +340,9 @@ void AgentAI::shootBullet(D3DXVECTOR3 targetDirection)
 	if (whetherDown())return;//ダウン時：発射不可
 	if (intervalBullet == 0)
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
+
 		bullet[elementBullet].setPosition(position);
 		//Y軸方向への成分を削除する
 		D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
@@ -327,7 +357,6 @@ void AgentAI::shootBullet(D3DXVECTOR3 targetDirection)
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
 	}
-
 }
 
 
@@ -340,6 +369,9 @@ void AgentAI::locateMemoryPile(void)
 	// onGround &&
 	// memoryPile[elementMemoryPile].ready()
 
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+
 	memoryPile[elementMemoryPile].setPosition(position);
 	memoryPile[elementMemoryPile].setQuaternion(quaternion);
 	memoryPile[elementMemoryPile].activation();
@@ -349,9 +381,11 @@ void AgentAI::locateMemoryPile(void)
 	//メモリーパイルを全て設置することに成功
 	if (elementMemoryPile >= NUM_MEMORY_PILE)
 	{
+		memoryLine.update(device, frameTime, memoryLineNS::PENTAGON);//メモリーラインの更新
 		elementMemoryPile = 0;//セットする対象を0番のメモリパイルに切替
 		//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
 		onRecursion = true;
+		recursionTimer = RECURSION_TIME;
 		//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
 		D3DXVECTOR3 vertex[NUM_MEMORY_PILE];
 		for (int i = 0; i < NUM_MEMORY_PILE; i++)
@@ -361,6 +395,8 @@ void AgentAI::locateMemoryPile(void)
 		//リカージョンの生成
 		recursion = new Recursion;
 		recursion->initialize(device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
+		//スターラインのリセット
+		starLine.resetCurrentRenderNum();
 		//メモリーパイルとメモリーラインの消失
 		for (int i = 0; i < NUM_MEMORY_PILE; i++)
 		{
@@ -369,19 +405,152 @@ void AgentAI::locateMemoryPile(void)
 		}
 	}
 
-	//メモリーパイルの切断処理
-	//if (input->getController()[type]->wasButton(virtualControllerNS::A)
-	//	|| (GetAsyncKeyState(VK_RSHIFT) & 0x8000))
+}
+
+
+//=============================================================================
+// メモリーライン切断
+//=============================================================================
+void AgentAI::cutMemoryLine(void)
+{
+	disconnectOpponentMemoryLine = true;
+}
+
+
+//=============================================================================
+// 復活ポイント増加
+//=============================================================================
+void AgentAI::increaseRevivalPoint(void)
+{
+	revivalPoint += INCREASE_REVIVAL_POINT;
+}
+
+//=============================================================================
+// オートカメラ操作
+//=============================================================================
+void AgentAI::autoCamera(void)
+{
+
+	if (D3DXVec3Length(&(*opponent->getPosition() - position)) < 90.0f/*こんなもんか？*/)
+	{// 相手に近ければロックオン
+		lockOnHorizontally(*opponent->getPosition(), frameTime);
+	}
+	else
+	{// それ以外は首振り
+
+		// 垂直方向回転
+		static const float ROTATION_VIRTICAL = 0.12;
+		static const float VIRTICAL_UNIT_TIME = 5.0f;
+		virticalTime += frameTime;
+		if (virticalTime < VIRTICAL_UNIT_TIME)
+		{
+			camera->rotation(camera->getHorizontalAxis(), -ROTATION_VIRTICAL);
+		}
+		else if(virticalTime >= VIRTICAL_UNIT_TIME && virticalTime < VIRTICAL_UNIT_TIME * 2)
+		{
+			camera->rotation(camera->getHorizontalAxis(), ROTATION_VIRTICAL);
+		}
+		else
+		{
+			virticalTime = 0.0f;
+		}
+
+		// 水平方向回転
+		static const float ROTATION_HORIZONTAL = 0.15;
+		static const float HORIZONTAL_UNIT_TIME = 3.0f;
+		horizontalTime += frameTime;
+		if (horizontalTime < HORIZONTAL_UNIT_TIME)
+		{
+			camera->rotation(D3DXVECTOR3(0, 1, 0), -ROTATION_HORIZONTAL);
+		}
+		else if (horizontalTime >= HORIZONTAL_UNIT_TIME && horizontalTime < HORIZONTAL_UNIT_TIME * 3)
+		{
+			camera->rotation(D3DXVECTOR3(0, 1, 0), ROTATION_HORIZONTAL);
+		}
+		else if(horizontalTime >= HORIZONTAL_UNIT_TIME * 3 && horizontalTime < HORIZONTAL_UNIT_TIME * 4)
+		{
+			camera->rotation(D3DXVECTOR3(0, 1, 0), -ROTATION_HORIZONTAL);
+		}
+		else
+		{
+			horizontalTime = 0.0f;
+		}
+	}
+}
+
+
+//=============================================================================
+// 水平ロックオン
+//=============================================================================
+void AgentAI::lockOnHorizontally(D3DXVECTOR3 lockOnTarget, float frameTime)
+{
+	float radian;						// 回転角度
+	D3DXVECTOR3 axis(0, 1, 0);			// 回転軸
+	D3DXVECTOR3 lockOnTargetDirection;	// ターゲット方向ベクトル
+
+	// プレイヤー→ターゲットのベクトルにする
+	between2VectorDirection(&lockOnTargetDirection, *camera->target, lockOnTarget);
+
+	// カメラ位置と注視点を含む平面の左右どちらにターゲットがあるか
+	// 平面の方程式にターゲットの座標を代入して調べる
+	bool isRight = false;
+	D3DXVECTOR3 planeN = camera->getDirectionX();
+	float d = -(planeN.x * camera->position.x + planeN.y * camera->position.y + planeN.z * camera->position.z);
+	if (planeN.x * lockOnTarget.x + planeN.y * lockOnTarget.y + planeN.z * lockOnTarget.z + d > 0)
+	{
+		isRight = true;
+	}
+
+	// カメラの注視方向ベクトルとターゲット方向ベクトルをカメラのXZ平面と平行になるようスリップ
+	lockOnTargetDirection = slip(lockOnTargetDirection, camera->getDirectionY());
+	D3DXVec3Normalize(&lockOnTargetDirection, &lockOnTargetDirection);
+	D3DXVECTOR3 front = slip(camera->getDirectionZ(), camera->getDirectionY());
+	D3DXVec3Normalize(&front, &front);
+
+	// 回転させる
+	if (formedRadianAngle(&radian, front, lockOnTargetDirection))
+	{
+		if (isRight)
+		{// 回転向きそのまま
+		}
+		else//(isLeft)
+		{// 回転向き変える
+			radian = -radian;
+		}
+		camera->rotation(axis, D3DXToDegree(radian * frameTime));
+	}
+}
+
+
+//=============================================================================
+// 3次元ロックオン（未完）
+//=============================================================================
+// ターゲットとの位置関係によって（おそらく）ターゲット方向の逆方向を向くよう回転
+// 見下ろしでなく見上げる方向になってしまう
+// よくわからん！
+void AgentAI::lockOn3D(D3DXVECTOR3 lockOnTarget, float frameTime)
+{
+	float radian;						// 回転角度
+	D3DXVECTOR3 axis;					// 回転軸
+	D3DXVECTOR3 lockOnTargetDirection;	// ターゲット方向ベクトル
+
+	// 外積を回転軸に
+	D3DXVec3Cross(&axis, &camera->getDirectionZ(), &(lockOnTarget - camera->position));
+
+	// プレイヤー→ターゲットのベクトルにする
+	between2VectorDirection(&lockOnTargetDirection, *camera->target, lockOnTarget);
+
+	// カメラを回転させる
+	D3DXVECTOR3 front = camera->getDirectionZ();
+	if (formedRadianAngle(&radian, front, lockOnTargetDirection))
+	{
+		camera->rotation(axis, D3DXToDegree(radian* frameTime));
+	}
+
+	//// フィールドの下にカメラが潜り込んだら
+	//if (D3DXVec3Dot(&camera->getDirectionZ(), &getReverseAxisY()->direction) < 0)
 	//{
-	//	if (collitionMemoryLine && !onRecursion1P)
-	//	{//[条件判定]1Pのメモリーラインと2Pが衝突
-	//		for (int i = 0; i < NUM_1P_MEMORY_PILE; i++)
-	//		{//メモリーパイルとメモリーラインの消失
-	//			memoryPile[i].switchLost();//消失
-	//			memoryLine.disconnect();//切断
-	//		}
-	//		player[PLAYER2].changeState(playerNS::DOWN);
-	//	}
+	//	isOpponentLockOn = false;
 	//}
 }
 
@@ -393,4 +562,3 @@ void AgentAI::debugRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX 
 {
 	environmentAnalysis->debugRender(this);	// デバッグ描画が有効になっていれば仮想リカージョンを描画
 }
-

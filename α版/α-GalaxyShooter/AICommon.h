@@ -15,6 +15,12 @@ namespace STDAI
 
 	// 定数
 	static const int NUM_RECURSION_RECOGNITION = 3;	// リカージョン認識の数
+	enum RECURSION_PERSONALITY						// リカージョンの性格
+	{
+		LARGEST_WEIGHT,	// ウェイトの重さ優先
+		MOST_EXPENSIVE,	// チンギン額を優先
+		LEAST_RADIUS	// サイズの小ささを優先
+	};
 }
 using namespace STDAI;
 
@@ -45,6 +51,7 @@ namespace BehaviorTreeNS
 		IF_OPPONENT_NEAR,
 		IF_FIVE_SECONDS_LATER,
 		IF_THREE_SECONDS_LATER,
+		IF_RECURSION_IS_RUNNING,	// リカージョン実行中なら
 
 		//---------------------------------------------------------------------
 		// アクションノード
@@ -54,6 +61,10 @@ namespace BehaviorTreeNS
 		ACTION_JUMP,
 		ACTION_SHOOT,
 		ACTION_PILE,
+		ACTION_CUT,
+		ACTION_REVIVAL,
+		ACTION_SKY_MOVE,
+		ACTION_FALL,
 
 		//---------------------------------------------------------------------
 		// 副処理ノード
@@ -61,6 +72,8 @@ namespace BehaviorTreeNS
 		_SUBPROCEDURE_NODE_,
 		SET_DESTINATION_OPPONENT,
 		SET_DESTINATION_RANDOM,
+		SET_DESTINATION_NEXT_PILE,
+		SET_RECURSION_RECOGNITION,
 		SET_TARGET_OPPONENT,
 
 		// タグの数
@@ -82,6 +95,7 @@ namespace BehaviorTreeNS
 		TREE_INDEX,					//  = 0
 		OFFENSE = 0,				// サンプルツリー1
 		DEFFENSE,					// サンプルツリー2
+		RECURSION,					// リカージョンツリー
 		NUM_TREE					// ビヘイビアツリーの数
 	};
 

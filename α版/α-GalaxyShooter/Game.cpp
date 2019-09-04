@@ -108,7 +108,7 @@ void Game::initialize(
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
-		player[i]->setSound(sound);		//	サウンドのセット
+		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
@@ -313,9 +313,10 @@ void Game::update(float _frameTime) {
 		}
 	}
 
-
-	// ワスレモノの更新
+	// ワスレモノの更新１（リスポーン処理）
 	wasuremonoManager.update(frameTime);
+
+	// ワスレモノの更新２
 	for (int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->update(frameTime, *field.getMesh(), *field.getMatrixWorld(), *field.getPosition());
@@ -324,13 +325,6 @@ void Game::update(float _frameTime) {
 	// チンギンの更新
 	chinginManager.update(sound, frameTime);
 	D3DXVECTOR3 chinginTestPos = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
-	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(5, chinginTestPos, player[0]);
-	};
-	if (input->isKeyDown('N')) {
-		chinginManager.generateChingin(3, chinginTestPos, player[1]);
-	};
-
 
 	// エフェクトの更新
 	effectManager.update(frameTime, player[0]);
@@ -341,7 +335,7 @@ void Game::update(float _frameTime) {
 	};
 
 
-	// マップの更新
+	// マップの更新(ノード担当範囲に含むワスレモノを検知)
 	map.update(frameTime, wasuremono);
 }
 
@@ -366,7 +360,7 @@ void Game::render(Direct3D9* direct3D9) {
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
 	direct3D9->changeViewportFullWindow();
-	renderUI(direct3D9->device);
+	//renderUI(direct3D9->device);
 }
 
 //===================================================================================================================================
@@ -374,7 +368,7 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
-	//ステンシルマスク
+	////ステンシルマスク
 	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -773,7 +767,6 @@ void Game::collisions() {
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 
 				wasuremono[i]->inActivation();
-				wasuremonoManager.destroy(i);
 				player[PLAYER1]->bullet[j].inActivation();
 			}
 
@@ -785,7 +778,6 @@ void Game::collisions() {
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 				wasuremono[i]->inActivation();
-				wasuremonoManager.destroy(i);
 				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}
@@ -857,36 +849,6 @@ void Game::collisions() {
 			player[PLAYER1]->changeState(playerNS::SKY);
 		}
 	}
-
-	//// マップノードとワスレモノ
-	//for (size_t i = 0; i < map.getMapNode().size(); i++)
-	//{
-	//	map.getMapNode()[i]->clearWasuremonoCount();
-	//	map.getMapNode()[i]->clearAmount();
-	//}
-	//bool* already = new bool[wasuremono.size()];
-	//ZeroMemory(already, sizeof(bool) * wasuremono.size());
-
-	//for (size_t i = 0; i < map.getMapNode().size(); i++)
-	//{
-	//	for (size_t k = 0; k < wasuremono.size(); k++)
-	//	{
-	//		if (already[k] == true) { continue; }
-	//		already[k] = true;
-
-	//		if (map.getMapNode()[i]->boundingSphere.collide(
-	//				wasuremono[k]->bodyCollide.getCenter(),
-	//				wasuremono[k]->bodyCollide.getRadius(),
-	//				*map.getMapNode()[i]->getWorldMatrix(),
-	//				*wasuremono[k]->getMatrixWorld()))
-	//		{
-	//			map.getMapNode()[i]->addWasuremonoCount();
-	//			map.getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
-	//		}
-	//	}
-	//}
-
-	//SAFE_DELETE_ARRAY(already)
 }
 
 //===================================================================================================================================

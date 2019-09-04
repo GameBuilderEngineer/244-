@@ -10,12 +10,14 @@
 //=============================================================================
 void BehaviorTree::offense(void)
 {
-	addNode(OFFENSE, PARENT_IS_NOT_EXIST, PARARELL);
-	addNode(OFFENSE, 0, SET_DESTINATION_OPPONENT);
-	addNode(OFFENSE, 0, SEQUENCE);
-	addNode(OFFENSE, 2, IF_THREE_SECONDS_LATER);
-	addNode(OFFENSE, 2, ACTION_PILE);
-	addNode(OFFENSE, 0, ACTION_MOVE);
+	currentTree = OFFENSE;
+
+	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+	//addNode(0, SET_DESTINATION_OPPONENT);
+	//addNode(0, SET_TARGET_OPPONENT);
+	//addNode(0, SEQUENCE);
+	//addNode(3, ACTION_MOVE);
+	//addNode(3, ACTION_SHOOT);
 }
 
 
@@ -24,29 +26,53 @@ void BehaviorTree::offense(void)
 //=============================================================================
 void BehaviorTree::deffense(void)
 {
-	addNode(DEFFENSE, PARENT_IS_NOT_EXIST, PARARELL);
+	currentTree = DEFFENSE;
 
-	addNode(DEFFENSE, 0, SEQUENCE);
-	addNode(DEFFENSE, 1, IF_FIVE_SECONDS_LATER);
-	addNode(DEFFENSE, 1, SET_DESTINATION_RANDOM);
-	addNode(DEFFENSE, 1, SET_TARGET_OPPONENT);
-	addNode(DEFFENSE, 1, ACTION_SHOOT);
 
-	addNode(DEFFENSE, 0, SEQUENCE);
-	addNode(DEFFENSE, 6, IF_THREE_SECONDS_LATER);
-	addNode(DEFFENSE, 6, ACTION_JUMP);
+	addNode(PARENT_IS_NOT_EXIST, PARARELL);
 
-	addNode(DEFFENSE, 0, ACTION_MOVE);
+	//addNode(0, SEQUENCE);
+	//addNode(1, IF_FIVE_SECONDS_LATER);
+	//addNode(1, SET_DESTINATION_RANDOM);
+	//addNode(1, SET_TARGET_OPPONENT);
+	//addNode(1, ACTION_SHOOT);
+
+	//addNode(0, SEQUENCE);
+	//addNode(6, IF_THREE_SECONDS_LATER);
+	//addNode(6, ACTION_JUMP);
+
+	//addNode(0, ACTION_MOVE);
 }
 
+
+//=============================================================================
+// ツリー　リカージョン
+//=============================================================================
+void BehaviorTree::recursion(void)
+{
+	currentTree = RECURSION;
+
+	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+	addNode(0, SEQUENCE);
+	addNode(0, IF_RECURSION_IS_RUNNING);
+	addNode(0, PRIORITY);
+	addNode(1, SET_RECURSION_RECOGNITION);
+	addNode(1, SET_DESTINATION_NEXT_PILE);
+	addNode(3, ACTION_MOVE);
+	addNode(3, SEQUENCE);
+	addNode(7, ACTION_PILE);
+	addNode(7, SET_DESTINATION_NEXT_PILE);
+}
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 BehaviorTree::BehaviorTree(void)
 {
+	currentTree = -1;// 未選択
 	offense();
 	deffense();
+	recursion();
 }
 
 
@@ -72,7 +98,7 @@ BehaviorTree::~BehaviorTree(void)
 //=============================================================================
 // ノードを追加
 //=============================================================================
-void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
+void BehaviorTree::addNode(int parentNumber, NODE_TAG tag)
 {
 	NODE_TYPE nodeType;
 
@@ -98,7 +124,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 	switch (nodeType)
 	{
 	case RULE_NODE:
-		if (new RuleNode(treeType, parentNumber, nodeType, tag) == NULL)
+		if (new RuleNode(currentTree, parentNumber, nodeType, tag) == NULL)
 		{
 			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"), TEXT("SystemError"), MB_OK);
 			PostQuitMessage(0);
@@ -106,7 +132,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 		break;
 
 	case CONDITIONAL_NODE:
-		if (new ConditionalNode(treeType, parentNumber, nodeType, tag) == NULL)
+		if (new ConditionalNode(currentTree, parentNumber, nodeType, tag) == NULL)
 		{
 			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"), TEXT("SystemError"), MB_OK);
 			PostQuitMessage(0);
@@ -114,7 +140,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 		break;
 
 	case ACTION_NODE:
-		if (new ActionNode(treeType, parentNumber, nodeType, tag) == NULL)
+		if (new ActionNode(currentTree, parentNumber, nodeType, tag) == NULL)
 		{
 			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"), TEXT("SystemError"), MB_OK);
 			PostQuitMessage(0);
@@ -122,7 +148,7 @@ void BehaviorTree::addNode(int treeType, int parentNumber, NODE_TAG tag)
 		break;
 
 	case SUBPROCEDURE_NODE:
-		if (new SubProcedureNode(treeType, parentNumber, nodeType, tag) == NULL)
+		if (new SubProcedureNode(currentTree, parentNumber, nodeType, tag) == NULL)
 		{
 			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"), TEXT("SystemError"), MB_OK);
 			PostQuitMessage(0);

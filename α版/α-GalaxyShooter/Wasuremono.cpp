@@ -6,6 +6,7 @@
 #include "Wasuremono.h"
 #include "Map.h"
 using namespace wasuremonoNS;
+
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
@@ -20,12 +21,13 @@ Wasuremono::Wasuremono(void)
 
 }
 
-Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
+Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *_position)
 {
 	this->typeID = typeID;
-	Object::initialize(device, table->getStaticMesh(typeID), position);
-	bodyCollide.initialize(device, position, staticMesh->mesh);
+	Object::initialize(device, table->getStaticMesh(typeID), _position);
+	bodyCollide.initialize(device, _position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
+	onGround = false;
 	onGravity = true;
 	activation();
 	difference = DIFFERENCE_FIELD;
@@ -38,7 +40,7 @@ Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *positi
 //=============================================================================
 void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
 {
-	Wasuremono(device, typeID, position);
+
 }
 
 
@@ -48,8 +50,7 @@ void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *p
 void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix, D3DXVECTOR3 fieldPosition)
 {
 	if (!onActive) { return; }
-
-	setSpeed(D3DXVECTOR3(0, 0, 0));
+	speed *= 0.90f;	// friction	
 
 	//===========
 	//【接地処理】
@@ -61,6 +62,8 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
 	if (radius + attractorRadius >= distanceToAttractor - difference)
 	{
+		setSpeed(D3DXVECTOR3(0, 0, 0));
+
 		//相互半径合計値より引力発生源との距離が短いと接地
 		onGround = true;
 		onGravity = false;
@@ -70,16 +73,17 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 		setSpeed(reverseAxisY.slip(speed, axisY.direction));
 		acceleration *= 0;
+	
 	}
-	else {
+	else
+	{
 		//空中
 		onGround = false;
 		onGravity = true;
 	}
-	setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
+	setGravity(gravityDirection, GRAVITY_FORCE*frameTime);	//重力処理
 
-
-	if (D3DXVec3Length(&acceleration) > 0.05f)
+	if (D3DXVec3Length(&acceleration) > 0.5f)
 	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}
@@ -91,7 +95,7 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	//acceleration *= 0.9f;
 
 	// 姿勢制御……重力方向レイを当てたフィールドの法線と自分Y軸を使用
-	postureControl(axisY.direction, betweenField.normal, 3.0f * frameTime);
+	postureControl(axisY.direction, -gravityRay.direction, 3.0f * frameTime);
 
 	Object::update();
 }

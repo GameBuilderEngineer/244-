@@ -22,9 +22,15 @@
 class BehaviorTree
 {
 private:
-	void offense(void);												// サンプルツリー1
-	void deffense(void);											// サンプルツリー2
-	void addNode(int treeType, int parentNumber, NODE_TAG tag);		// ノードの追加
+	// Data
+	int	currentTree;										// 現在の選択ツリー
+
+	// Method
+	void offense(void);										// サンプルツリー1
+	void deffense(void);									// サンプルツリー2
+	void recursion(void);									// リカージョン
+	//void switchTree(int treeType);						// ツリー切り替え
+	void addNode(int parentNumber, NODE_TAG tag);			// ノードの追加
 
 public:
 	BehaviorTree(void);

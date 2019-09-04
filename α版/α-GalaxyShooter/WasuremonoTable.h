@@ -34,6 +34,9 @@ namespace WasuremonoNS
 
 		NUM_TABLE_ELEMENT	// ワスレモノテーブルの要素数
 	};
+
+	// 出現確率1の百分率での値
+	static const float PROBABILITY_UNIT = 100.0 / (float)33/*仕様書に書いてある出現確率の合計値*/;
 }
 
 
@@ -42,10 +45,11 @@ namespace WasuremonoNS
 //*****************************************************************************
 struct WasuremonoData
 {
-	int typeID;				// ワスレモノの固有番号
-	std::string name;		// ワスレモノの名前
-	int amount;				// ワスレモノのチンギン
-	StaticMesh* staticMesh;	// メッシュ情報
+	int typeID;					// ワスレモノの固有番号
+	std::string name;			// ワスレモノの名前
+	int amount;					// ワスレモノのチンギン
+	StaticMesh* staticMesh;		// メッシュ情報
+	float appearanceProbability;// 出現確率
 };
 
 class WasuremonoTable
@@ -73,6 +77,9 @@ public:
 	// メッシュ情報を取得
 	StaticMesh* getStaticMesh(int typeID);
 	StaticMesh* getStaticMesh(std::string name);
+	// 出現確率を取得
+	float getProbability(int typeID);
+
 	// 金額を加える
 	void addAmount(int &dest, int typeID);
 	void addAmount(int &dest, std::string name);

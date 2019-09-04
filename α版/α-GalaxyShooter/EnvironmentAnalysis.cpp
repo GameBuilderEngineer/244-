@@ -12,24 +12,28 @@ using namespace EnvilonmentAnalysisNs;
 // ビルドスイッチ
 //----------------
 #ifdef _DEBUG
-#if 1
+#if 0
 #define DUMP_RECUASION_AREA		// リカージョンエリアデータをダンプする
 static FILE* fp = NULL;
-static int areaLabel = 0;
 #endif 
 
-#if 1
+#if 0
 #define DUMP_FUZZY_RECOGNITION	// リカージョン認識の数を絞るファジーデータをエリア別にダンプする
 static FILE* fp2 = NULL;
-static int	areaLabel2 = 0;
 #endif
 
-#if 1	// デバッグ描画する場合は1（更新処理を描画処理で実行することになるので注意）					
+#if 0	// デバッグ描画する場合は1（更新処理を描画処理で実行することになるので注意）					
 #define AI_RENDER_MODE
 #endif
 
 // デバッグ描画が有効の場合
 #ifdef AI_RENDER_MODE
+
+#if 1
+#define RENDER_LINE_CUT_POINT	// メモリーライン切断座標を描画する
+static LPD3DXMESH cutPoint = NULL;
+static D3DMATERIAL9 cutPointMat;
+#endif
 
 #if 0
 #define RENDER_RECUASION_AREA	// リカージョンエリア検出スフィアを描画する
@@ -60,7 +64,6 @@ EnvironmentAnalysis::EnvironmentAnalysis(std::vector<Wasuremono*>* _wasuremono):
 //=============================================================================
 EnvironmentAnalysis::~EnvironmentAnalysis(void)
 {
-	SAFE_DELETE(recursionSphere)
 }
 
 
@@ -74,6 +77,8 @@ void EnvironmentAnalysis::initialize(void)
 	bulletTimeCount = 0;
 	forgettingTimeBullet = 0;
 
+	vRecursionFrameCount = 0;
+
 #ifdef RENDER_RECUASION_AREA
 	spherePoint.initialize(device, 1.0f);
 #endif
@@ -84,7 +89,16 @@ void EnvironmentAnalysis::initialize(void)
 	// ライトは切るのでDiffuse, Ambientは不透明だけでよい
 	pointMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
 	pointMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
-	pointMat.Emissive = { 1.0f, 0.0f, 1.0f, 1.0f };
+	pointMat.Emissive = { 1.0f, 0.0f, 1.0f, 1.0f };	// 紫
+#endif
+
+#ifdef RENDER_LINE_CUT_POINT
+	D3DXCreateSphere(device, 1.0f, 5, 5, &cutPoint, NULL);
+	// ノードの表示マーク用メッシュのマテリアル
+	// ライトは切るのでDiffuse, Ambientは不透明だけでよい
+	cutPointMat.Diffuse = { 0.0f, 0.0f, 0.0f, 1.0f };
+	cutPointMat.Ambient = { 0.0f, 0.0f, 0.0f, 1.0f };
+	cutPointMat.Emissive = { 1.0f, 1.0f, 0.0f, 1.0f };// 黄
 #endif
 }
 
@@ -94,9 +108,6 @@ void EnvironmentAnalysis::initialize(void)
 //=============================================================================
 void EnvironmentAnalysis::uninitialize(void)
 {
-#ifdef RENDER_RECUASION_AREA
-	SAFE_DELETE(recursionSphere)
-#endif
 }
 
 
@@ -109,16 +120,241 @@ void EnvironmentAnalysis::update(AgentAI* agentAI)
 	return;
 #endif //AI_RENDER_MODE
 
+	analyzeBattle(agentAI);			// バトル状況を解析
 
-	static int cnt = 0;// ●仮
-	if (++cnt % 10 == 0)
+	//makeCoordForCut(agentAI);		// メモリーライン切断座標を算出
+
+	if (++vRecursionFrameCount % VIRTUAL_RECURSION_FPS == 0)
 	{
-		cnt = 0;
-		virtualRecursion(agentAI);// 仮想リカージョン
+		virtualRecursion(agentAI);	// 仮想リカージョン
 
+		vRecursionFrameCount = 0;
 	}
 
 	forgetMemorizedMatter();		// 記憶事項を忘却
+}
+
+
+//=============================================================================
+// バトル状況を解析
+//=============================================================================
+void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
+{
+	//--------------
+	// 相手との距離
+	//--------------
+	float lengthBetweenPlayers = D3DXVec3Length(&(*opponent->getPosition() - *agentAI->getPosition()));
+	float opponentNearSet = fuzzy.reverseGrade(lengthBetweenPlayers, 0.0f, LENGTH_OPPONENT_IS_NEAR);
+	if (opponentNearSet > 0.5f/*アバウト*/)
+	{
+		isOpponentNear = true; 
+	}
+	else
+	{
+		isOpponentNear = false;
+	}
+
+
+	//----------------
+	// バレットの解析
+	//----------------
+	std::list<Bullet*> bulletList = recognitionBB->getMemorizedBullet();
+	std::list<Bullet*>::iterator itr;
+	int cntHostileBullet = 0;				// 敵性バレットの数
+	int cntCloseDistance = 0;				// 敵性至近距離バレットの数	
+
+	for (itr = bulletList.begin(); itr != bulletList.end(); itr++)
+	{
+		D3DXVECTOR3 vecBulletToAgent;		// バレット⇔自分のベクトル
+		D3DXVECTOR3 slipVecBulletToAgent;	// バレット⇔自分の滑りベクトル
+		D3DXVECTOR3 slipvecBulletSpeed;		// バレットのスピードの滑りベクトル
+		float dintanceToBullet;				// バレットとの距離
+		bool isHostile = false;				// 敵性バレットであるか
+
+		// 自分⇔バレットのベクトルを算出
+		vecBulletToAgent = *agentAI->getPosition() - *(*itr)->getPosition();
+		dintanceToBullet = D3DXVec3Length(&vecBulletToAgent);	// 長さを保管
+
+		// スリップ
+		slipVecBulletToAgent = slip(vecBulletToAgent, (*itr)->getAxisY()->direction);
+		D3DXVec3Normalize(&slipvecBulletSpeed, &vecBulletToAgent);
+
+		// 自分の方向に向かってくるなら敵性バレットである
+		slipvecBulletSpeed = slip((*itr)->getSpeed(), (*itr)->getAxisY()->direction);
+		D3DXVec3Normalize(&slipvecBulletSpeed, &slipvecBulletSpeed);
+		float dot = D3DXVec3Dot(&slipvecBulletSpeed, &slipVecBulletToAgent);
+		float angleDifferenceForHit = acosf(dot);
+		if (angleDifferenceForHit < D3DXToRadian(BULLET_TWO_VECTOR_ANGLE_DEGREE))
+		{
+			isHostile = true;
+			cntHostileBullet++;
+		}
+
+		// 敵性バレットの距離が至近距離か
+		if (isHostile && dintanceToBullet < LENGHT_BULLET_IS_NEAR)
+		{
+			cntCloseDistance++;
+		}
+	}
+
+	if (cntCloseDistance > 0) { isBulletNear = true; }
+	float hostileBulletSet = fuzzy.grade((float)cntHostileBullet, 2.0f, 5.0f);
+
+
+	//----------------
+	// 相手の攻撃意欲
+	//----------------
+	if (fuzzy.OR(opponentNearSet, hostileBulletSet) > 0.8f/*こんなもんか？*/)
+	{
+		isOpponentOffensive = true;
+	}
+
+
+	//----------------
+	// 獲得チンギン数
+	//----------------
+	int wageDifference = agentAI->getWage() - opponent->getWage();
+	if (wageDifference < LOSING_WAGE_DEFFERENSE/*相手との差額*/)
+	{
+		isChinginLow = true;
+	}
+}
+
+
+//=============================================================================
+// メモリーライン切断座標を算出
+//=============================================================================
+void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
+{
+	if (opponent->getElementMemoryPile() < 2) { return; }
+
+	//---------------------------------------------------
+	// 自分に一番近いパイルと2番目に近いパイルを見つける
+	//---------------------------------------------------
+	float nearestLength = 10000.0f;
+	float secondNearestLength = 10000.0f;
+	MemoryPile* nearestPile = NULL;
+	MemoryPile*	secondNearestPile = NULL;
+
+	for (int i = 0; i < opponent->getElementMemoryPile(); i++)
+	{
+		float sqLen = D3DXVec3LengthSq(&(*opponent->getMemoryPile()[i].getPosition() - *agentAI->getPosition()));
+		MemoryPile* p = &opponent->getMemoryPile()[i];
+
+		//if (i < 2)
+		//{
+		//	secondNearestLength = nearestLength;
+		//	nearestLength = sqLen;
+		//	secondNearestPile = nearestPile;
+		//	nearestPile = p;
+		//}
+		//if (i == 2)
+		//{
+		//	if (secondNearestLength < nearestLength)
+		//	{
+		//		float tempLen;
+		//		MemoryPile* temp;
+		//		tempLen = nearestLength;
+		//		nearestLength = secondNearestLength;
+		//		secondNearestLength = tempLen;
+
+		//		temp = nearestPile;
+		//		nearestPile = secondNearestPile;
+		//		secondNearestPile = temp;
+		//	}
+		//}
+
+		if (sqLen < nearestLength * nearestLength)
+		{
+			secondNearestLength = nearestLength;
+			nearestLength = sqLen;
+			secondNearestPile = nearestPile;
+			nearestPile = p;
+		}
+	}
+
+
+	//----------------------
+	// 以下で使用するデータ
+	//----------------------
+	D3DXVECTOR3 vecMemoryLine;		// 最短メモリーラインのベクトル（正規化済）
+	D3DXVECTOR3 orthogonalVector;	// 最短メモリーラインに直交するベクトル（正規化済）
+	bool coordIsCorner;				// メモリーラインを切る座標はパイル付近か？
+
+	// メモリ―ラインのベクトルを求める
+	vecMemoryLine = *secondNearestPile->getPosition() - *nearestPile->getPosition();
+	D3DXVec3Normalize(&vecMemoryLine, &vecMemoryLine);
+	// 外積でメモリーラインに直交するベクトルを求める
+	D3DXVec3Cross(&orthogonalVector, &vecMemoryLine, &nearestPile->getAxisY()->direction);
+	D3DXVec3Normalize(&orthogonalVector, &orthogonalVector);
+
+	//--------------------------------------------------
+	// 求めるべき座標がパイル付近かライン付近か判断する
+	//--------------------------------------------------
+	// エージェントと最短距離パイルのベクトルとメモリーラインのベクトルの内積の結果から
+	// 最寄りの座標がメモリーパイルを設置した角(カド)付近かラインに付近かを判定する
+	D3DXVECTOR3 slipVecAgentToPile = slip(
+		*nearestPile->getPosition() - *agentAI->getPosition(),
+		nearestPile->getReverseAxisY()->direction);
+	if (D3DXVec3Dot(&vecMemoryLine, &slipVecAgentToPile) < 0)
+	{
+		// 2つのベクトルがなす角は鈍角のためエージェントは辺の外側にいる
+		coordIsCorner = true;
+	}
+	else
+	{
+		// 2つのベクトルがなす各は鋭角のためエージェントは辺の垂線
+		coordIsCorner = false;
+	}
+
+	//----------------
+	// 座標を算出する
+	//----------------
+	if (coordIsCorner)
+	{
+		recognitionBB->setLineCutCoord(*nearestPile->getPosition());
+	}
+	else
+	{
+		// メモリーライン平面にエージェントから垂線を下ろして
+		// 当たった座標⇔フィールド間のベクトルを伸長し座標をつくる
+
+		float d = -(orthogonalVector.x * nearestPile->getPosition()->x
+			+ orthogonalVector.y * nearestPile->getPosition()->y
+			+ orthogonalVector.z * nearestPile->getPosition()->z);
+
+		float distance = (orthogonalVector.x * agentAI->getPosition()->x
+			+ orthogonalVector.y * agentAI->getPosition()->y
+			+ orthogonalVector.z * agentAI->getPosition()->z);
+
+		D3DXVECTOR3 intersection = (-orthogonalVector * distance) + *agentAI->getPosition();
+		D3DXVECTOR3 vecFieldToMemoryLine = intersection - *Map::getField()->getPosition();
+		D3DXVec3Normalize(&vecFieldToMemoryLine, &vecFieldToMemoryLine);
+		vecFieldToMemoryLine * Map::getField()->getRadius();
+
+		recognitionBB->setLineCutCoord(vecFieldToMemoryLine);
+	}
+
+#ifdef RENDER_LINE_CUT_POINT
+	D3DXMATRIX pointWorldMatrix;
+	D3DXMatrixIdentity(&pointWorldMatrix);
+	D3DXMatrixTranslation(&pointWorldMatrix,
+		nearestPile->getPosition()->x,
+		nearestPile->getPosition()->y,
+		nearestPile->getPosition()->z);
+	//D3DXMatrixTranslation(&pointWorldMatrix,
+	//	recognitionBB->getLineCutCoord().x,
+	//	recognitionBB->getLineCutCoord().y,
+	//	recognitionBB->getLineCutCoord().z);
+	D3DMATERIAL9 matDef;
+	device->GetMaterial(&matDef);
+	device->LightEnable(0, false);
+	device->SetMaterial(&cutPointMat);
+	device->SetTransform(D3DTS_WORLD, &pointWorldMatrix);
+	cutPoint->DrawSubset(0);
+	device->LightEnable(0, true);
+	device->SetMaterial(&matDef);
+#endif// RENDER_LINE_CUT_POINT
 }
 
 
@@ -133,21 +369,29 @@ void EnvironmentAnalysis::virtualRecursion(AgentAI* agentAI)
 	selectMapNode(nearestNode, &numNearestNode, agentAI);
 	if (numNearestNode == 0) { return; }
 
-	//リカージョンする場所を決めるための衝突判定
+	//リカージョン場所の認識をストックする
 	RecursionRecognition* recursionRecognition = new RecursionRecognition[numNearestNode * NUM_TEST_CASES_PER_NODE];
-	checkRecursionArea(recursionRecognition, nearestNode, numNearestNode, agentAI);
+	recognizeRecursionArea(recursionRecognition, nearestNode, numNearestNode, agentAI);
 
 	// リカージョン認識の数を絞る
-	int selectionRecognition[NUM_RECURSION_RECOGNITION] = { 0 };
+	int selectionRecognition[NUM_RECURSION_RECOGNITION] = { -1, -1, -1 };
 	selectRecursionArea(selectionRecognition, recursionRecognition, nearestNode, numNearestNode, agentAI);
 
 	// メモリーパイルを打ち込む座標を作る
 	makeCoordForPile(selectionRecognition, recursionRecognition, agentAI);
 
-	// 環境認識ブラックボードにフィードバック
+	// 環境認識ブラックボードに保管
 	for (int i = 0; i < NUM_RECURSION_RECOGNITION; i++)
 	{
-		recognitionBB->getRecursionRecognition()[i] = recursionRecognition[selectionRecognition[i]];
+		if (selectionRecognition[i] == -1)
+		{	// リカージョン認識が選択されていない場合は非活性化
+			recognitionBB->setIsActiveRecursionRecognition(i, false);
+		}
+		else
+		{	// リカージョン認識が選択されている場合は活性化してコピーする
+			recognitionBB->setIsActiveRecursionRecognition(i, true);
+			recognitionBB->getRecursionRecognition()[i] = recursionRecognition[selectionRecognition[i]];
+		}
 	}
 
 	SAFE_DELETE_ARRAY(recursionRecognition)
@@ -183,9 +427,9 @@ void EnvironmentAnalysis::selectMapNode(
 
 
 //=============================================================================
-//（仮想リカージョンステップその２）リカージョンする場所を決めるための衝突判定
+//（仮想リカージョンステップその２）リカージョン場所の認識をストックする
 //=============================================================================
-void EnvironmentAnalysis::checkRecursionArea(
+void EnvironmentAnalysis::recognizeRecursionArea(
 	RecursionRecognition recursionRecognition[],	// 認識保管配列
 	MapNode* nearestNode[],							// 最寄りマップノードポインタ配列
 	int numNearestNode,								// ポインタ配列の要素数
@@ -197,7 +441,6 @@ void EnvironmentAnalysis::checkRecursionArea(
 	D3DXMatrixIdentity(&worldMatrix);
 
 #ifdef DUMP_RECUASION_AREA
-	areaLabel = 0;
 	setDataDirectory();
 	fp = fopen("DumpRecuasionArea.txt", "w");
 	fprintf(fp, "リカージョンエリアデータ\n出力元：EnvironmentAnalysis.cpp/recognizeRecursionArea()\n");
@@ -210,28 +453,33 @@ void EnvironmentAnalysis::checkRecursionArea(
 	{
 		for (int cntSize = 0; cntSize < NUM_TEST_SIZE; cntSize++)
 		{
-			// リカージョンチェック用スフィアを生成
-			recursionRadius = 15.0f + cntSize * 10.0f;// ←ここは調整（これがBS自体の半径）
+			// パイルを打つ座標算出に使用（外接円）
+			float circumscribedRadius = TEST_SIZE_RADIUS_BASE + cntSize * TEST_SIZE_RADIUS_ADD;
+			// 衝突判定判定スフィアの半径（内接円）正五角形の内接円の半径の定数で算出
+			float inscribedRadius = circumscribedRadius * 0.25f * (1 + 2.236f);
+			// 衝突判定用スフィアの生成
 			recursionSphere = new BoundingSphere;
-			recursionSphere->initialize(device, recursionRadius);
+			recursionSphere->initialize(device, inscribedRadius);
 
 			// まずノードの位置ぴったりで衝突判定
-			recognizeRecursionArea(agentAI, nearestNode[cntNode]->getPosition(), &recursionRecognition[index++]);
+			hitCheckAndAssign(agentAI, nearestNode[cntNode]->getPosition(), &recursionRecognition[index], index, circumscribedRadius);
+			index++;
 
 			// 次にノードの周囲を回しながら衝突判定を行いたいが
 			// そのために惑星中心⇔ノード間のレイを少し傾ける
 			ray.update(*Map::getField()->getPosition(), *nearestNode[cntNode]->getPosition() - *Map::getField()->getPosition());
 			D3DXVECTOR3 axisToMakeDegree = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+			axisToMakeDegree = slip(axisToMakeDegree, ray.direction);// 回転軸をレイに直交するベクトルにする
 			switch (cntSize)
 			{// 傾く角度をスフィアサイズによって変える
 			case 0:
-				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, 0.22f);
+				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, AXIS_TILT_ANGLE_FOR_SMALL_BS);
 				break;
 			case 1:
-				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, 0.3f);
+				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, AXIS_TILT_ANGLE_FOR_MIDDLE_BS);
 				break;
 			case 2:
-				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, 0.42f);
+				D3DXQuaternionRotationAxis(&quaternion, &axisToMakeDegree, AXIS_TILT_ANGLE_FOR_BIG_BS);
 				break;
 			}
 			D3DXMatrixRotationQuaternion(&worldMatrix, &quaternion);
@@ -246,7 +494,8 @@ void EnvironmentAnalysis::checkRecursionArea(
 				D3DXQuaternionRotationAxis(&quaternion, &rotationAxis, D3DX_PI * 2 / NUM_TEST_ARROUND);
 				D3DXMatrixRotationQuaternion(&worldMatrix, &quaternion);
 				D3DXVec3TransformCoord(&ray.direction, &ray.direction, &worldMatrix);
-				recognizeRecursionArea(agentAI, &ray.direction, &recursionRecognition[index++]);
+				hitCheckAndAssign(agentAI, &ray.direction, &recursionRecognition[index], index, circumscribedRadius);
+				index++;
 			}
 			recursionSphere->getMesh()->Release();
 			SAFE_DELETE(recursionSphere);
@@ -273,44 +522,73 @@ void EnvironmentAnalysis::selectRecursionArea(
 	int selectionIndex = 0;
 
 #ifdef DUMP_FUZZY_RECOGNITION
-	areaLabel2 = 0;
 	setDataDirectory();
 	fp2 = fopen("DumpFuzzyRecognition.txt", "w");
 	fprintf(fp2, "リカージョン認識ファジーデータ\n出力元：EnvironmentAnalysis.cpp/selectRecursionArea()\n");
 #endif// DUMP_FUZZY_RECOGNITION
 
+	//--------------------------------------------
+	// ファジー理論でどの認識を採用するか重みづけ
+	//--------------------------------------------
 	for (int i = 0; i < numNearestNode * NUM_TEST_CASES_PER_NODE; i++)
 	{
-		// ファジー理論でどの認識を採用するか重みづけ
-		float radiusSizeBig = fuzzy.grade(recursionRecognition[i].radius, 15.0f, 35.0f);
-		float littleAmount = fuzzy.reverseGrade(recursionRecognition[i].totalAmount, 5.0f, 70.0f);
-		float demerit = fuzzy.OR(radiusSizeBig, littleAmount);
+		// 距離の近さ⇔遠さをファジー入力化
+		float lenAgentBetweenArea = D3DXVec3Length(&(recursionRecognition[i].center - *agentAI->getPosition()));
+		float distanceNear = fuzzy.reverseGrade(lenAgentBetweenArea, 0.0f, 25.0f);
+		float distanceFar = fuzzy.grade(lenAgentBetweenArea, 22.0f, 36.0f);
+		// リカージョン範囲の小ささ⇔大きさをファジー入力化
+		float radiusSizeSmall = fuzzy.reverseGrade(recursionRecognition[i].radius,
+			TEST_SIZE_RADIUS_BASE - TEST_SIZE_RADIUS_FUZZY_ADJUST, TEST_SIZE_RADIUS_BASE + 2 * TEST_SIZE_RADIUS_ADD);
+		float radiusSizeBig = fuzzy.grade(recursionRecognition[i].radius,
+			TEST_SIZE_RADIUS_BASE, TEST_SIZE_RADIUS_BASE + 2 * TEST_SIZE_RADIUS_ADD + TEST_SIZE_RADIUS_FUZZY_ADJUST);
+		// 範囲内チンギン額の少なさ⇔多さをファジー入力化
+		float littleAmount = fuzzy.reverseGrade(recursionRecognition[i].totalAmount, 5.0f, 150.0f);
+		float lotAmount = fuzzy.grade(recursionRecognition[i].totalAmount, 130.0f, 550.0f);
 
-		float radiusSizeSmall = fuzzy.reverseGrade(recursionRecognition[i].radius, 15.0f, 25.0f);
-		float lotAmount = fuzzy.grade(recursionRecognition[i].totalAmount, 50.0f, 300.0f);
-		float merit = fuzzy.OR(radiusSizeSmall, lotAmount);
+		// ファジー論理演算等でメリットを算出する
+		float leastMerit, largestMerit, finalMerit;
+		leastMerit = fuzzy.AND(distanceNear, radiusSizeSmall);
+		leastMerit = fuzzy.AND(leastMerit, lotAmount);
+		largestMerit = fuzzy.OR(distanceNear, radiusSizeSmall);
+		largestMerit = fuzzy.OR(largestMerit, lotAmount * 1.8f/*チンギン額の評価ウェイトを上げる*/);
+		finalMerit = (largestMerit + leastMerit) / 2;
+		// ファジー論理演算等でデメリットを算出する
+		float leastDemerit, largestDemerit, finalDemerit;
+		leastDemerit = fuzzy.AND(distanceFar, radiusSizeBig);
+		leastDemerit = fuzzy.AND(leastDemerit, littleAmount);
+		largestDemerit = fuzzy.OR(distanceFar * 1.1f/*距離の評価ウェイトを上げる*/, radiusSizeBig);
+		largestDemerit = fuzzy.OR(largestDemerit, littleAmount);
+		finalDemerit = (largestDemerit + leastDemerit) / 2;
 
-		recursionRecognition[i].fuzzySelectionWeight = fuzzy.grade(fuzzy.NOT(demerit) + merit, 0.0f, 2.0f);// 最終的な重み
+		// 最終的な重みをファジー出力として吐き出す
+		recursionRecognition[i].fuzzySelectionWeight = fuzzy.grade(fuzzy.NOT(finalDemerit) + finalMerit, 0.0f, 2.0f);
+
+		//----------------------------------------------------------------------
+		// 以下に該当する認識は選択しない
+		if (recursionRecognition[i].totalAmount == 0.0f) { continue; }
+		if (recursionRecognition[i].fuzzySelectionWeight == 0.0f) { continue; }
+		//----------------------------------------------------------------------
 
 		// 重みの大きい認識から選択していく
-		for (int k = 0; k < NUM_RECURSION_RECOGNITION; k++)
+		if (recursionRecognition[i].fuzzySelectionWeight > largestWeight)
 		{
-			if (recursionRecognition[i].fuzzySelectionWeight > largestWeight)
-			{
-				largestWeight = recursionRecognition[i].fuzzySelectionWeight;
-				selectionRecognition[selectionIndex] = i;
-				if (++selectionIndex >= NUM_RECURSION_RECOGNITION) selectionIndex = 0;
-			}
+			largestWeight = recursionRecognition[i].fuzzySelectionWeight;
+			selectionRecognition[selectionIndex] = i;
+			if (++selectionIndex >= NUM_RECURSION_RECOGNITION) selectionIndex = 0;
 		}
 
 #ifdef DUMP_FUZZY_RECOGNITION
-		fprintf(fp2, "%d\n", areaLabel2++);
-		fprintf(fp2, "radiusSizeSmall = %.3f\n", radiusSizeSmall);
-		fprintf(fp2, "littleAmount = %.3f\n", littleAmount);
-		fprintf(fp2, "demerit = %.3f\n", demerit);
-		fprintf(fp2, "radiusSizeBig = %.3f\n", radiusSizeBig);
-		fprintf(fp2, "lotAmount = %.3f\n", lotAmount);
-		fprintf(fp2, "merit = %.3f\n\n", merit);
+		fprintf(fp2, "%d\n", recursionRecognition[i].uniqueID);
+		fprintf(fp2, "距離lenAgentBetweenArea = %.3f\n", lenAgentBetweenArea);
+		fprintf(fp2, "距離distanceNear = %.3f\n", distanceNear);
+		fprintf(fp2, "距離distanceFar = %.3f\n", distanceFar);
+		fprintf(fp2, "サイズradiusSizeSmall = %.3f\n", radiusSizeSmall);
+		fprintf(fp2, "サイズradiusSizeBig = %.3f\n", radiusSizeBig);
+		fprintf(fp2, "チンギンlotAmount = %.3f\n", lotAmount);
+		fprintf(fp2, "チンギンlittleAmount = %.3f\n", littleAmount);
+		fprintf(fp2, "largestMerit = %.3f leastMerit = %.3f, finalMerit = %.3f\n", largestMerit, leastMerit, finalMerit);
+		fprintf(fp2, "largestDemrit = %.3f leastDemerit = %.3f, finalDemerit = %.3f\n", largestDemerit, leastDemerit, finalDemerit);
+		fprintf(fp2, "fuzzySelectWeight = %.3f\n\n", recursionRecognition[i].fuzzySelectionWeight);
 #endif// DUMP_FUZZY_RECOGNITION
 	}
 
@@ -332,16 +610,22 @@ void EnvironmentAnalysis::makeCoordForPile(int selectionRecognition[], Recursion
 
 	for (int i = 0; i < NUM_RECURSION_RECOGNITION; i++)
 	{
-		// 弧度法では中心角 = 弦長÷半径
+		//-----------------------------------------------
+		// 選択されていない認識はパスする
+		if (selectionRecognition[i] == -1) { continue; }
+		//-----------------------------------------------
+
+		// 弧度法では中心角 = 弦長÷半径（使うのは中心角÷2なので予め2で割っておく）
 		float angle = recursionRecognition[selectionRecognition[i]].radius / Map::getField()->getRadius();
 
 		// 惑星中心⇔リカージョン認識中心座標のレイを求めた中心角分だけ傾ける
 		D3DXQuaternionIdentity(&quaternion);
 		D3DXMatrixIdentity(&worldMatrix);
 		D3DXVECTOR3 axisForTilt = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-		D3DXQuaternionRotationAxis(&quaternion, &axisForTilt, angle);
 		ray.update(*Map::getField()->getPosition(),
 			recursionRecognition[selectionRecognition[i]].center - *Map::getField()->getPosition());
+		axisForTilt = slip(axisForTilt, ray.direction);	// 回転軸をレイに直交するベクトルにする
+		D3DXQuaternionRotationAxis(&quaternion, &axisForTilt, angle);
 		D3DXMatrixRotationQuaternion(&worldMatrix, &quaternion);
 		D3DXVec3TransformCoord(&ray.direction, &ray.direction, &worldMatrix);
 
@@ -375,14 +659,16 @@ void EnvironmentAnalysis::makeCoordForPile(int selectionRecognition[], Recursion
 
 
 //=============================================================================
-// リカージョン認識への代入（スフィアとワスレモノの衝突判定が主）
+// リカージョン認識への代入（スフィアとワスレモノの衝突判定）
 //=============================================================================
-void EnvironmentAnalysis::recognizeRecursionArea(AgentAI* agentAI, D3DXVECTOR3* checkPosition, RecursionRecognition* recursionRecognition)
+void EnvironmentAnalysis::hitCheckAndAssign(AgentAI* agentAI,
+	D3DXVECTOR3* checkPosition, RecursionRecognition* recursionRecognition, int index, float circumscribedRadius)
 {
+	recursionRecognition->uniqueID = index;
 	recursionRecognition->center = *checkPosition;
 	recursionRecognition->totalHit = 0;
 	recursionRecognition->totalAmount = 0;
-	recursionRecognition->radius = recursionSphere->getRadius();
+	recursionRecognition->radius = circumscribedRadius;
 
 	// バウンディングスフィア用ワールドマトリクス作成
 	D3DXMATRIX recursionWorldMatrix;
@@ -391,7 +677,6 @@ void EnvironmentAnalysis::recognizeRecursionArea(AgentAI* agentAI, D3DXVECTOR3* 
 
 	// フィールド半径の二乗
 	float radius2 = Map::getField()->getRadius() * Map::getField()->getRadius();
-
 
 	// バウンディングスフィアとワスレモノの衝突判定
 	for (size_t i = 0; i < wasuremono->size(); i++)
@@ -411,7 +696,7 @@ void EnvironmentAnalysis::recognizeRecursionArea(AgentAI* agentAI, D3DXVECTOR3* 
 	}
 
 #ifdef DUMP_RECUASION_AREA
-	fprintf(fp, "%d\n", areaLabel++);
+	fprintf(fp, "%d\n", recursionRecognition->uniqueID);
 	fprintf(fp, "recursionRecognition->center = (%.2f, %.2f,%.2f) \n",
 		recursionRecognition->center.x, recursionRecognition->center.y, recursionRecognition->center.z);
 	fprintf(fp, "recursionRecognition->totalHit = %d\n", (int)recursionRecognition->totalHit);
@@ -420,14 +705,15 @@ void EnvironmentAnalysis::recognizeRecursionArea(AgentAI* agentAI, D3DXVECTOR3* 
 #endif// DUMP_RECUASION_AREA
 
 #ifdef RENDER_RECUASION_AREA
-	if (recursionRecognition->radius == 35.0f)
+	if (recursionRecognition->uniqueID == 2 /*|| recursionRecognition->uniqueID == 3*/)
 	{
 		spherePoint.render(device, recursionWorldMatrix);	// スフィア座標の描画
+
+		BoundingSphere bs;
+		bs.initialize(device, 15.0f);
+		bs.render(device, recursionWorldMatrix);				// サイズ調整用のスフィア描画
+		bs.getMesh()->Release();
 	}
-	BoundingSphere bs;
-	bs.initialize(device, 35.0f);
-	bs.render(device, recursionWorldMatrix);				// サイズ調整用のスフィア描画
-	bs.getMesh()->Release();
 #endif
 }
 
@@ -468,16 +754,20 @@ void  EnvironmentAnalysis::debugRender(AgentAI* agentAI)
 {
 	// 更新処理が描画時にコールされるようになる
 #ifdef AI_RENDER_MODE
-	//static int cnt = 0;// ●仮
-	//if (++cnt % 5 == 0)
-	//{
-	//	cnt = 0;
+
+	analyzeBattle(agentAI);			// バトル状況を解析
+
+	makeCoordForCut(agentAI);		// メモリーライン切断座標を算出
+
+	static int cnt = 0;// ●仮
+	if (++cnt % 5 == 0)
+	{
+		cnt = 0;
 		virtualRecursion(agentAI);// 仮想リカージョン
 
-	//}
+	}
 
 	forgetMemorizedMatter();		// 記憶事項を忘却
 
 #endif
 }
-

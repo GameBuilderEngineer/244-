@@ -36,7 +36,7 @@ Sensor::~Sensor(void)
 //=============================================================================
 void Sensor::initialize(void)
 {
-	camera->fieldOfView = D3DX_PI / 2.5f;// 参照先に値が入っていないからここで入れている
+
 }
 
 
@@ -55,7 +55,7 @@ void Sensor::uninitialize(void)
 void Sensor::update(AgentAI* agentAI)
 {
 	// カメラ→注視点のベクトル
-	D3DXVECTOR3 vecCameraToGaze = camera->gazePosition - camera->position;
+	D3DXVECTOR3 vecCameraToGaze = camera->getDirectionZ();
 	D3DXVec3Normalize(&vecCameraToGaze, &vecCameraToGaze);
 
 	// フィールド半径の二乗

@@ -40,8 +40,11 @@ bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memo
 	case IF_OPPONENT_NEAR:			return ifOpponentNear(recognitionBB, memoryBB, bodyBB);
 	case IF_FIVE_SECONDS_LATER:		return if5secondsLater(recognitionBB, memoryBB, bodyBB);
 	case IF_THREE_SECONDS_LATER:	return if3secondsLater(recognitionBB, memoryBB, bodyBB);
+	case IF_RECURSION_IS_RUNNING:	return ifRecursionIsRunning(recognitionBB, memoryBB, bodyBB);
 
-	default: return false;
+	default:
+		MessageBox(NULL, TEXT("条件リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
+		return false;
 	}
 }
 
@@ -82,4 +85,13 @@ bool ConditionalNode::if3secondsLater(RecognitionBB* recognitionBB, MemoryBB* me
 	}
 
 	return false;
+}
+
+
+//=============================================================================
+// 条件：リカージョン実行中なら
+//=============================================================================
+bool ConditionalNode::ifRecursionIsRunning(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return recognitionBB->getIsRecursionRunning();
 }
