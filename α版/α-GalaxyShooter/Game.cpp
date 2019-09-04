@@ -159,8 +159,6 @@ void Game::initialize(
 	wasuremonoManager.initialize(direct3D9->device, &wasuremono, staticMeshLoader, &field);
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-	// エフェクト初期化
-	effectManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
@@ -214,7 +212,7 @@ void Game::update(float _frameTime) {
 	frameTime = _frameTime;
 
 
-
+	// ポーズ
 	if (pose.poseon)
 	{
 		if (input->wasKeyPressed('P') ||
@@ -326,16 +324,6 @@ void Game::update(float _frameTime) {
 		chinginManager.generateChingin(10, temp);
 	};
 
-	// エフェクトの更新
-	effectManager.update(frameTime, player[1]);
-	D3DXVECTOR3 temp2 = *player[PLAYER1]->getPosition();
-
-	if ((input->getMouseLButton() || input->getController()[0]->isButton(BUTTON_BULLET)))
-	{
-		effectManager.generateEffect(20, temp2, player[PLAYER1]->bulletVec());
-	};
-
-
 	// マップの更新
 	map.update(frameTime, wasuremono);
 }
@@ -369,10 +357,12 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
-	////ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position, 1, D3DCMPFUNC::D3DCMP_GREATEREQUAL);
 
-	//target.renderEffectImage(direct3D9->device, 5, D3DCMPFUNC::D3DCMP_GREATEREQUAL);
+	//ステンシル準備
+	target.renderSetUp(direct3D9->device);
+
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの描画
@@ -381,6 +371,35 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 	}
+
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+
+	// フィールドの描画
+	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
+	//ステンシルマスク
+	target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
+
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
+
+	// ステンシル画像
+	target.renderEffectImage(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+
+	target.render(direct3D9->device);
+
+	// ステンシル終了
+	target.renderStencilEnd(direct3D9->device);
+
+	 //フィールドの描画
+	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
@@ -397,8 +416,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	//	junk[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	//}
 
-	// フィールドの描画
-	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	////(仮)マグネットの描画
 	//for (int i = 0; i < NUM_MAGNET; i++)
@@ -432,24 +449,20 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// チンギンの描画
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	// エフェクトの描画
-	effectManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
 	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
-	//ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
-
+	
 	for (int i = 0; i < NUM_PLAYER; i++)
-	{//プレイヤーの描画
+	{
+		//プレイヤーの描画
 		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 			*shaderLoader->getEffect(shaderNS::TOON),
 			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+		//プレイヤーの他のオブジェクトの描画
+		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
-	//target.renderEffectImage(direct3D9->device);
 #ifdef _DEBUG
 	Ray debugRay;
 	//法線
@@ -789,8 +802,11 @@ void Game::collisions() {
 	if (player[PLAYER1]->getMemoryLine()->collision(*player[PLAYER2]->getPosition(), player[PLAYER2]->bodyCollide.getRadius()))
 	{
 		player[PLAYER2]->setCollidedMemoryLine(true);
+		//衝突位置を2Pに保存（エフェクト用）
+		player[PLAYER2]->setCollideMemoryLinePosition(player[PLAYER1]->getMemoryLine()->calculationNearPoint(*player[PLAYER2]->getPosition()));
 		if (player[PLAYER2]->messageDisconnectOpponentMemoryLine())
 		{
+
 			//1Pのメモリーラインの切断処理
 			player[PLAYER1]->disconnectMemoryLine();
 		}
@@ -801,8 +817,12 @@ void Game::collisions() {
 	if (player[PLAYER2]->getMemoryLine()->collision(*player[PLAYER1]->getPosition(), player[PLAYER1]->bodyCollide.getRadius()))
 	{
 		player[PLAYER1]->setCollidedMemoryLine(true);
+		//衝突位置を1Pに保存（エフェクト用）
+		player[PLAYER1]->setCollideMemoryLinePosition(
+			player[PLAYER2]->getMemoryLine()->calculationNearPoint(*player[PLAYER1]->getPosition()));
 		if (player[PLAYER1]->messageDisconnectOpponentMemoryLine())
 		{
+
 			//2Pのメモリーラインの切断処理
 			player[PLAYER2]->disconnectMemoryLine();
 		}

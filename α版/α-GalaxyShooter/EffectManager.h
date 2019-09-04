@@ -7,10 +7,7 @@
 #include "InstancingEffect.h"
 #include "TextureLoader.h"
 #include "BoundingSphere.h"
-#include "Player.h"
 #include "Bullet.h"
-
-static const int NUM_EFFECT = 100;	// 同時に表示するうえで妥当そうな数
 
 //----------
 // エフェクト
@@ -30,6 +27,7 @@ private:
 	bool use;					// 使用中か
 public:
 	D3DXVECTOR3* getPosition() { return &position; }
+	D3DXVECTOR3* getScale() { return &scale; }
 	D3DXVECTOR3* getSpeed() { return &speed; }
 	D3DXMATRIX* getMatrixWorld() { return &matrixWorld; }
 	BoundingSphere* getCollider() { return &bodyCollide; }
@@ -37,6 +35,7 @@ public:
 
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
+	void setScale(D3DXVECTOR3 _scale) { speed = _scale; }
 	void addSpeed(D3DXVECTOR3 add) { speed += add; }
 	void setUse(bool _use) { use = _use; }
 	float time;
@@ -49,22 +48,13 @@ class EffectManager :public Base
 {
 private:
 	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
-	EffectIns effectIns[NUM_EFFECT];		// エフェクト配列
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 
-	// マグネット関係は今は触らない（理解していない）
-	//int type;
-	//float amount;	//磁気量
-	//void reverseAmount();
-
 public:
-	void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
-	void update(float frameTime, Player* player);
-	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-
-	// エフェクトを発生させる
-	void generateEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec);
+	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
+	virtual void update(float frameTime);
+	virtual void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 };
 

@@ -56,6 +56,7 @@ public:
 	//operation
 	bool collision(D3DXVECTOR3 position, float radius);	//衝突検知
 	float calculationDistance(D3DXVECTOR3 point);		//(演算)ある点とラインとの距離を戻す
+	D3DXVECTOR3 calculationNearPoint(D3DXVECTOR3 point);//(演算)ある点と最も近い位置を戻す
 	void setLine(LPDIRECT3DDEVICE9 device);				//(更新)メモリーパイルの間のラインを設定する
 	void setStarLine(LPDIRECT3DDEVICE9 device,float frameTime);			//(更新)リカージョンが完成した時の星形のラインを設定する
 	void lost(float frameTime);							//(更新)消失処理

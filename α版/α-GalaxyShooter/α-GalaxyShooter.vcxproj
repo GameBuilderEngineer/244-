@@ -141,6 +141,7 @@
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletEffect.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharaSelectBarUI.cpp" />
     <ClCompile Include="ChinginCnt.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="DownEffect.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="KeyOpe.cpp" />
     <ClCompile Include="Lambert.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LineEffect.cpp" />
     <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MemoryLine.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="UIRevival.cpp" />
     <ClCompile Include="UIRevivalGauge.cpp" />
     <ClCompile Include="UIScreenSplitLine.cpp" />
+    <ClCompile Include="UpEffect.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
     <ClCompile Include="Wage.cpp" />
@@ -248,6 +252,7 @@
     <ClInclude Include="BlackBoardRecognition.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletEffect.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharaSelectBarUI.h" />
     <ClInclude Include="ChinginCnt.h" />
@@ -261,6 +266,7 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="DownEffect.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fuzzy.h" />
@@ -275,6 +281,7 @@
     <ClInclude Include="KeyOpe.h" />
     <ClInclude Include="Lambert.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LineEffect.h" />
     <ClInclude Include="Magnet.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MemoryLine.h" />
@@ -326,6 +333,7 @@
     <ClInclude Include="UIRevival.h" />
     <ClInclude Include="UIRevivalGauge.h" />
     <ClInclude Include="UIScreenSplitLine.h" />
+    <ClInclude Include="UpEffect.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />
     <ClInclude Include="VirtualController.h" />

@@ -15,6 +15,10 @@
 #include "Camera.h"
 #include "ShockWave.h"
 #include "Sound.h"
+#include "BulletEffect.h"
+#include "DownEffect.h"
+#include "UpEffect.h"
+#include "LineEffect.h"
 
 
 namespace playerNS{
@@ -141,6 +145,8 @@ protected:
 	int wage;											//チンギン
 	Camera* camera;										//カメラへのポインタ
 	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
+	DownEffect downEffect;								//ダウンエフェクト
+	UpEffect upEffect;									//アップエフェクト
 
 	int state;											//状態変数
 	
@@ -165,6 +171,7 @@ protected:
 	//弾関係
 	int elementBullet;									//弾アクセス要素数
 	float intervalBullet;								//発弾間隔
+	BulletEffect bulletEffect;							//弾エフェクト
 
 	//接地関係
 	float difference;									//フィールド補正差分
@@ -182,6 +189,7 @@ protected:
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
 	float recursionTimer;								//リカージョン生存時間
+	LineEffect lineEffect;								//ラインエフェクト
 
 	//衝撃波
 	ShockWave* shockWave;								//衝撃波
@@ -190,6 +198,7 @@ protected:
 
 	//衝突情報
 	bool collidedOpponentMemoryLine;					//相手のメモリーラインとの衝突フラグ
+	D3DXVECTOR3 collideMemoryLinePosition;				//相手のメモリーラインとの衝突位置
 
 	//アクションフラグ
 	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
@@ -197,7 +206,6 @@ protected:
 public:
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
-
 
 	Player();
 	~Player();
@@ -227,6 +235,7 @@ public:
 	void updateGround(float frameTime, bool onJump);
 	void updateFall(float frameTime);
 	void updateDown(float frameTime);
+	void updateUpEffect(float frameTime);
 	void updateSky(float frameTime);
 	void updateRevival(float frameTime);
 	void updateBullet(float frameTime);
@@ -244,6 +253,7 @@ public:
 	void damgae(int value);
 	void recoveryHp(int value);
 	void setCollidedMemoryLine(bool frag);
+	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
 
 	//getter
 	int getHp();
@@ -262,4 +272,7 @@ public:
 	Recursion* getRecursion();
 	MemoryLine* getMemoryLine();
 	D3DXVECTOR3 bulletVec();
+	D3DXVECTOR3 downVec();
+	D3DXVECTOR3 upVec();
+
 };
