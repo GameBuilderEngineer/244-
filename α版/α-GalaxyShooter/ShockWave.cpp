@@ -2,10 +2,11 @@
 //【ShockWave.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/08/07
-// [更新日]2019/08/07
+// [更新日]2019/09/02
 //===================================================================================================================================
 #include "ShockWave.h"
 using namespace shockWaveNS;
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -43,7 +44,7 @@ void ShockWave::initialize(LPDIRECT3DDEVICE9 device,D3DXVECTOR3 initialPosition,
 	for (int i = 0; i < VERTEX_NUM; i++)
 	{
 		float rate = (float)i / (float)VERTEX_NUM;
-		height[i] = HEIGHT;
+		height[i] = HEIGHT+HEIGHT/2*sinf((float)i);
 		//動径の設定
 		topPolar[i].radius = radius + height[i];
 		bottomPolar[i].radius = radius;
@@ -234,6 +235,39 @@ void ShockWave::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 	// カリングを有効にする
 	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
+}
+
+//===================================================================================================================================
+//【距離計算】
+//===================================================================================================================================
+float ShockWave::calculationDistance(D3DXVECTOR3 point)
+{
+	float result = WIDTH;
+	for (int i = 0; i < VERTEX_NUM; i++)
+	{
+		int k = UtilityFunction::wrap(i + 1, 0, VERTEX_NUM);
+		Line line;
+		line.start	= topVertex[i];
+		line.end	= topVertex[k];
+		D3DXVECTOR3 nearPoint = nearestPointOnLine(line.start, line.end, point);//ライン上の最も近い点を算出
+		float distance = D3DXVec3Length(&(point - nearPoint));//最も近い点との距離を測定する
+
+		if (i == 0)result = distance;//0番は必ずアクティブであり、初回に代入する必要がある。
+		else result = min(result, distance);//より近い方を代入
+	}
+	return result;
+}
+
+//===================================================================================================================================
+//【衝突判定】
+//（引数１）measurementPosition：測定位置
+//（引数２）radius：半径
+//===================================================================================================================================
+bool ShockWave::collision(D3DXVECTOR3 measurementPosition, float radius)
+{
+	if (calculationDistance(measurementPosition) > shockWaveNS::WIDTH)	return false;
+	//太さ+対象の半径より近い位置にいた場合衝突
+	else return true;
 }
 
 //===================================================================================================================================

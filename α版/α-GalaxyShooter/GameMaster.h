@@ -83,9 +83,11 @@ public:
 	playerTable* getPlayerInfomation();
 	int getResult();
 	float getGameTime();
+	int getCount();
 	bool whetherGameOver();
 	bool whetherAlreadyStart();
-	int getCount();
+	bool whetherAlreadyFinish();
+	bool whetherCountFinish();
 	bool displayStart();		//スタート表記表示時間
 	bool displayFinish();		//フィニッシュ表記表示時間
 };

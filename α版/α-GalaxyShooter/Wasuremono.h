@@ -12,7 +12,7 @@ namespace wasuremonoNS
 {
 	const float GRAVITY_FORCE = 9.8f*7.0;			//重力
 	const float DIFFERENCE_FIELD = 0.2f;		//フィールド補正差分
-
+	const float INHALE_FORCE = 0.2f;
 }
 
 //*****************************************************************************
@@ -28,6 +28,10 @@ private:
 	float difference;
 	bool onGround;
 
+	bool onRecursion;
+	D3DXVECTOR3 recursionCenter;	//リカージョンの中心（重心）位置ベクトル
+	D3DXVECTOR3 recursionVertical;	//リカージョンの鉛直方向
+
 public:
 	Wasuremono(void);
 	Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position);
@@ -40,6 +44,8 @@ public:
 	void addAmount(int &dest) { table->addAmount(dest, typeID); }
 	void subAmount(int &dest) { table->subAmount(dest, typeID); }
 	static void setTable(WasuremonoTable* _table) { table = _table; }
+	void recursionProcessing();
+	void startUpRecursion(D3DXVECTOR3 recursionCenter, D3DXVECTOR3 fieldCenter);
 
 	BoundingSphere bodyCollide;
 	Ray betweenField;

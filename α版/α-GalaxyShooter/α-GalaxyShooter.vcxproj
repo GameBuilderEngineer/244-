@@ -157,6 +157,7 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
+    <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Pose.cpp" />
     <ClCompile Include="Ray.cpp" />
@@ -263,6 +265,7 @@
     <ClInclude Include="Director.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
+    <ClInclude Include="Fader.h" />
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
@@ -287,6 +290,7 @@
     <ClInclude Include="PathPlanning.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Pose.h" />
     <ClInclude Include="Ray.h" />

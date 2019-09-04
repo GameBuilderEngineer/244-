@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/22
+// [更新日]2019/09/03
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -207,6 +207,9 @@ void Game::initialize(
 
 	//ゲームマスター
 	gameMaster->gameStart();//ゲーム開始時処理
+
+	lambert = new Lambert(direct3D9->device);
+	lambert->load(*shaderLoader->getEffect(shaderNS::LAMBERT));
 }
 
 //===================================================================================================================================
@@ -346,6 +349,12 @@ void Game::update(float _frameTime) {
 //【描画】
 //===================================================================================================================================
 void Game::render(Direct3D9* direct3D9) {
+
+	LPDIRECT3DSURFACE9 oldSurface = NULL;
+	direct3D9->device->GetRenderTarget(0, &oldSurface);
+	direct3D9->device->SetRenderTarget(0, colorSurface);
+	direct3D9->device->SetRenderTarget(1, zMapSurface);
+
 
 	//1Pカメラ・ウィンドウ
 	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER1].view);
@@ -663,9 +672,23 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		//カウントダウン３…２…１…
 		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
 	}
-	if(gameMaster->displayStart()){
+	else {
 		//スタート
-		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "START!!");
+		if(gameMaster->displayStart())
+			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "START!!");
+		
+	}
+
+	if(gameMaster->whetherCountFinish())
+	{
+		//カウントダウン３…２…１…
+		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+	}
+	if (gameMaster->whetherAlreadyFinish())
+	{
+		//フィニッシュ
+		if(gameMaster->displayFinish())
+			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "FINISH!!");
 	}
 
 	// αテストを無効に
@@ -714,6 +737,19 @@ void Game::collisions() {
 		}
 	}
 
+	// 1P衝撃波<->プレイヤー2
+	if (player[PLAYER1]->collideShockWave(*player[PLAYER2]->getPosition(), player[PLAYER2]->getRadius()))
+	{
+		player[PLAYER2]->changeState(playerNS::STATE::DOWN);
+	}
+
+	// 2P衝撃波<->プレイヤー1
+	if (player[PLAYER2]->collideShockWave(
+		*player[PLAYER1]->getPosition(), player[PLAYER1]->getRadius()))
+	{
+		player[PLAYER1]->changeState(playerNS::STATE::DOWN);
+	}
+
 	// リカージョン1<->ワスレモノ
 	if (player[PLAYER1]->whetherGenerationRecursion()) {
 		for (int i = 0; i < wasuremono.size(); i++)
@@ -726,7 +762,8 @@ void Game::collisions() {
 				*wasuremono[i]->getMatrixWorld()))
 			{
 				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
-				wasuremono[i]->inActivation();
+				wasuremono[i]->startUpRecursion(player[PLAYER1]->getRecursion()->getWeightCenter(),*field.getPosition());
+				//wasuremono[i]->inActivation();
 			}
 		}
 	}
@@ -742,7 +779,8 @@ void Game::collisions() {
 				*wasuremono[i]->getMatrixWorld()))
 			{
 				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
-				wasuremono[i]->inActivation();
+				wasuremono[i]->startUpRecursion(player[PLAYER2]->getRecursion()->getWeightCenter(), *field.getPosition());
+				//wasuremono[i]->inActivation();
 			}
 		}
 	}

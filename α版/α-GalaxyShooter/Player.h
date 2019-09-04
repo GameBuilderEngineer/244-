@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/22
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include "Object.h"
@@ -94,6 +94,7 @@ namespace playerNS{
 
 	const int NUM_BULLET				= 30;		//弾の数
 	const int NUM_MEMORY_PILE			= 5;		//メモリーパイルの数
+	const int NUM_SHOCK_WAVE			= 3;		//衝撃波の数
 	const int AMOUNT_RECOVERY			= 2;		//回復量
 	const int MAX_HP					= 100;		//ＨＰ最大値
 	const int MAX_REVIVAL_POINT			= 1000;		//復活ポイント最大値
@@ -184,8 +185,8 @@ protected:
 	float recursionTimer;								//リカージョン生存時間
 
 	//衝撃波
-	ShockWave* shockWave;								//衝撃波
-	bool onShockWave;									//衝撃波生成フラグ
+	ShockWave* shockWave[playerNS::NUM_SHOCK_WAVE];		//衝撃波
+	bool onShockWave[playerNS::NUM_SHOCK_WAVE];			//衝撃波生成フラグ
 	bool canShockWave;									//衝撃波使用可能フラグ
 
 	//衝突情報
@@ -234,9 +235,10 @@ public:
 	void updateMemoryItem(float frameTime);
 	void deleteMemoryItem();
 	void triggerShockWave();
-	void deleteShockWave();
-	void updateShockWave(float frameTime);
+	void deleteShockWave(int n);
+	void updateShockWave(float frameTime,int n);
 	void disconnectMemoryLine();
+	bool collideShockWave(D3DXVECTOR3 point, float radius);
 
 	//setter
 	void setInput(Input* _input);

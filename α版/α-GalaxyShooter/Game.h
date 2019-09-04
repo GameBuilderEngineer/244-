@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/03
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include <vector>
@@ -37,6 +37,7 @@
 #include "UIRevivalGauge.h"
 #include "UICutMemoryLine.h"
 #include "EffectManager.h"
+#include "Lambert.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -122,6 +123,18 @@ private:
 	bool endCountFlag;
 	bool onUI = true;
 	float frameTime = 0.0f;//フレームタイム保存変数
+
+
+	//シーンのカラー情報とZ値情報を取得するクラス
+	Lambert* lambert;
+
+	//シーンのカラー情報を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 colorTexture = NULL;
+	LPDIRECT3DSURFACE9 colorSurface = NULL;
+
+	//シーンのZ値を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 zMapTexture = NULL;
+	LPDIRECT3DSURFACE9 zMapSurface = NULL;
 
 public:
 	Game();

@@ -38,10 +38,11 @@ void GameMaster::update(float frameTime)
 	//ゲーム開始カウントダウン
 	gameStartCount(frameTime);
 	if (!alreadyStart)return;
-	
+	if(displayStart())displayStartTimer -= frameTime;
+
 	//ゲームタイムの更新
 	updateGameTime(frameTime);
-	
+
 	//ゲーム終了カウントダウン
 	gameFinishCount(frameTime);
 
@@ -62,6 +63,7 @@ void GameMaster::updateGameTime(float frameTime)
 void GameMaster::gameStartCount(float frameTime)
 {
 	if (alreadyStart)return;
+
 	countDownTimer += frameTime;
 	if (countDownTimer > COUNT_INTERVAL)
 	{
@@ -72,6 +74,8 @@ void GameMaster::gameStartCount(float frameTime)
 	if (count == 0)
 	{
 		alreadyStart = true;	//ゲーム開始
+		displayStartTimer = DISPLAY_START_TIME;
+		setCountDown();			//ゲーム終了カウントダウンのセット
 	}
 
 }
@@ -80,18 +84,19 @@ void GameMaster::gameStartCount(float frameTime)
 //===================================================================================================================================
 void GameMaster::gameFinishCount(float frameTime)
 {
-	if (gameTimer > COUNT_DOWN)return;
-	if (alreadyFinish == false)
-	{
-		alreadyFinish = true;
-		setCountDown();			//ゲーム終了カウントダウンのセット
-	}
+	if (!whetherCountFinish())return;
 
 	countDownTimer += frameTime;
 	if (countDownTimer > COUNT_INTERVAL)
 	{
 		countDownTimer = 0.0f;
 		count--;
+	}
+
+	if (count == 0)
+	{
+		alreadyFinish = true;
+		displayFinishTimer = DISPLAY_FINISH_TIME;
 	}
 }
 
@@ -112,8 +117,8 @@ void GameMaster::gameStart()
 	alreadyStart		= false;
 	alreadyFinish		= false;
 	gameTimer			= GAME_TIME;
-	displayStartTimer	= DISPLAY_START_TIME;
-	displayFinishTimer	= DISPLAY_FINISH_TIME;
+	displayStartTimer	= 0.0f;
+	displayFinishTimer	= 0.0f;
 	setCountDown();
 }
 
@@ -151,5 +156,7 @@ float GameMaster::getGameTime() {return gameTimer;}
 bool GameMaster::whetherGameOver(){	return gameTimer < 0;}
 int GameMaster::getCount() { return count; }
 bool GameMaster::whetherAlreadyStart() { return alreadyStart; }
-bool GameMaster::displayStart() { return displayStartTimer >= 0.0f; }
-bool GameMaster::displayFinish() { return displayFinishTimer >= 0.0f; }
+bool GameMaster::whetherAlreadyFinish() { return alreadyFinish; }
+bool GameMaster::whetherCountFinish() { return gameTimer < (float)COUNT_DOWN; }
+bool GameMaster::displayStart() { return displayStartTimer > 0.0f; }
+bool GameMaster::displayFinish() { return displayFinishTimer > 0.0f; }

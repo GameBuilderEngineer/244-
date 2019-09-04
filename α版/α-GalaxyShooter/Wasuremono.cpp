@@ -17,11 +17,12 @@ WasuremonoTable* Wasuremono::table;		// ワスレモノテーブルを指すポインタ
 //=============================================================================
 Wasuremono::Wasuremono(void)
 {
-
+	onRecursion = false;
 }
 
 Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
 {
+	onRecursion = false;
 	this->typeID = typeID;
 	Object::initialize(device, table->getStaticMesh(typeID), position);
 	bodyCollide.initialize(device, position, staticMesh->mesh);
@@ -59,25 +60,28 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	between2VectorDirection(&gravityDirection, position, *attractorPosition);		//重力方向を算出
 	gravityRay.initialize(position, gravityDirection);								//重力レイの初期化
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
-	if (radius + attractorRadius >= distanceToAttractor - difference)
-	{
-		//相互半径合計値より引力発生源との距離が短いと接地
-		onGround = true;
-		onGravity = false;
-		//めり込み補正
-		//現在位置+ 垂直方向*(めり込み距離)
-		setPosition(position + axisY.direction * (radius + attractorRadius - distanceToAttractor));
-		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
-		setSpeed(reverseAxisY.slip(speed, axisY.direction));
-		acceleration *= 0;
+	if (!onRecursion) {
+		if (radius + attractorRadius >= distanceToAttractor - difference)
+		{
+			//相互半径合計値より引力発生源との距離が短いと接地
+			onGround = true;
+			onGravity = false;
+			//めり込み補正
+			//現在位置+ 垂直方向*(めり込み距離)
+			setPosition(position + axisY.direction * (radius + attractorRadius - distanceToAttractor));
+			//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
+			setSpeed(reverseAxisY.slip(speed, axisY.direction));
+			acceleration *= 0;
+		}
+		else {
+			//空中
+			onGround = false;
+			onGravity = true;
+		}
+		setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
 	}
-	else {
-		//空中
-		onGround = false;
-		onGravity = true;
-	}
-	setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
 
+	recursionProcessing();
 
 	if (D3DXVec3Length(&acceleration) > 0.05f)
 	{//加速度が小さい場合、加算しない
@@ -87,12 +91,9 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 	//位置更新
 	position += speed * frameTime;
 
-	//加速度減衰
-	//acceleration *= 0.9f;
-
 
 	// 姿勢制御……重力方向レイを当てたフィールドの法線と自分Y軸を使用
-	postureControl(axisY.direction, betweenField.normal, 3.0f * frameTime);
+	postureControl(axisY.direction, -gravityRay.direction, 3.0f * frameTime);
 
 
 	Object::update();
@@ -127,4 +128,55 @@ void Wasuremono::configurationGravity(D3DXVECTOR3* _attractorPosition, float _at
 	gravityRay.initialize(position, gravityDirection);//重力レイの初期化
 	setGravity(gravityDirection, GRAVITY_FORCE);
 	postureControl(axisY.direction, gravityDirection, 1.0f);
+}
+
+//===================================================================================================================================
+//【リカージョンへの吸引処理】
+//===================================================================================================================================
+void Wasuremono::recursionProcessing()
+{
+	if (!onRecursion)return;
+	D3DXVECTOR3 centerDirection;	//リカージョンの中心（重心）方向ベクトル
+
+	//リカージョンの中心（重心）位置方向ベクトルの作成
+	Base::between2VectorDirection(&centerDirection, position, recursionCenter);
+
+	//リカージョンの鉛直方向のベクトルを削除する（重心へ向かうことを防ぐ）
+	centerDirection = slip(centerDirection, recursionVertical);
+	acceleration += centerDirection*INHALE_FORCE+recursionVertical;
+}
+
+//===================================================================================================================================
+//【リカージョン処理起動】
+//===================================================================================================================================
+void Wasuremono::startUpRecursion(D3DXVECTOR3 _recursionCenter, D3DXVECTOR3 fieldCenter)
+{
+
+	recursionCenter = _recursionCenter;
+	onRecursion = true;
+
+	//リカージョンの中心（重心）鉛直方向ベクトルの作成
+	Base::between2VectorDirection(&recursionVertical, fieldCenter, recursionCenter);
+
+	//リカージョンの中心（重心）位置方向ベクトルの作成
+	D3DXVECTOR3 centerDirection;
+	Base::between2VectorDirection(&centerDirection, position, recursionCenter);
+	//リカージョンの鉛直方向のベクトルを削除する（重心へ向かうことを防ぐ）
+	centerDirection = slip(centerDirection, recursionVertical);
+	D3DXVec3Normalize(&centerDirection, &centerDirection);
+
+	//初速を作成
+	D3DXVECTOR3 initialSpeed;
+	D3DXVec3Cross(&initialSpeed, &centerDirection,&recursionVertical);
+	D3DXVec3Normalize(&initialSpeed, &initialSpeed);
+	initialSpeed += centerDirection;
+	D3DXVec3Normalize(&initialSpeed, &initialSpeed);
+
+	acceleration += initialSpeed*INHALE_FORCE;
+
+
+	//リカージョンの鉛直方向のベクトルを削除する（重心へ向かうことを防ぐ）
+	centerDirection = slip(centerDirection, recursionVertical);
+
+
 }

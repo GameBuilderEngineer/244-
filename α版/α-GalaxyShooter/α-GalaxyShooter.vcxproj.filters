@@ -277,6 +277,9 @@
     <Filter Include="AI\RecursionRecognition">
       <UniqueIdentifier>{07c8ecdc-da00-49b6-a7d6-e13cc966a32a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fader">
+      <UniqueIdentifier>{8cd57046-37aa-4c3a-baac-7e395309381e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -605,6 +608,10 @@
     <ClCompile Include="RecursionRecognition.cpp">
       <Filter>AI\RecursionRecognition</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Fader.cpp">
+      <Filter>Fader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -898,6 +905,10 @@
     <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Fader.h">
+      <Filter>Fader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

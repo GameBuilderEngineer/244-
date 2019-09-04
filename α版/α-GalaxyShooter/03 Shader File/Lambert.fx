@@ -1,10 +1,16 @@
+//===================================================================================================================================
+//【Lambert.fx】
+// [作成者]HAL東京GP12A332 11 菅野 樹
+// [作成日]2019/08/07
+// [更新日]2019/09/03
+//===================================================================================================================================
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //グローバル
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4x4 matrixProjection;		//プロジェクション（遠近射影）行列
 float4x4 matrixView;			//ビュー行列
 float4x4 matrixWorld;			//ワールド行列
-float4x4 matrixWVP;			//ワールド行列
+float4x4 matrixWVP;				//ワールド行列
 float4 lightDirection;			//平行光源の方向ベクトル
 float4 ambient = 0.0f;			//環境光
 float farZ;						//遠近射影行列の最遠近距離
@@ -16,7 +22,7 @@ sampler textureSmapler : register(s0);	//テクスチャサンプラー
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct VS_OUTPUT
 {
-	float4 position		: POSITIOIN;
+	float4 position		: POSITION;
 	float4 color		: COLOR0;
 	float2 uv			: TEXCOORD0;
 	float4 positionWVP	: TEXCOORD1;
@@ -32,7 +38,7 @@ VS_OUTPUT VS(
 	Out.uv = uv;
 
 	float3 L = -lightDirection.xyz;
-	float3 N = normalize(Normal.xyz);
+	float3 N = normalize(normal.xyz);
 	Out.color = max(ambient, dot(N, L));
 
 	Out.positionWVP = Out.position;
@@ -70,6 +76,6 @@ technique main
 	pass P0
 	{
 		VertexShader = compile vs_2_0 VS();
-		PixelShader = coppile ps_2_0 PS();
+		PixelShader = compile ps_2_0 PS();
 	}
 }
