@@ -39,7 +39,7 @@ HRESULT TargetDisplayEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNum
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	TargetTexture = *textureLoader->getTexture(textureLoaderNS::TARGET);
+	TargetTexture = *textureLoader->getTexture(textureLoaderNS::HP_EFFECT);
 
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
@@ -78,21 +78,23 @@ void TargetDisplayEffect::update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device)
 {
+	image.render(device);
 }
 //=============================================================================
 // ステンシルマスク処理
 //=============================================================================
-void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
+void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, unsigned char ste, D3DCMPFUNC cmp_func)
 {
-	device->SetRenderState(D3DRS_ZENABLE, TRUE);						// Zバッファを使用
+	// Zバッファを使用しない
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-	device->Clear(0, 0, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL | D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-
-	device->SetRenderState(D3DRS_ZWRITEENABLE,FALSE);
-
+	// ステンシルバッファを使用する
 	device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// ステンシルバッファの値と比較する参照値
+	device->SetRenderState(D3DRS_STENCILREF, 2);
 
 	// ステンシルマスクの設定
 	device->SetRenderState(D3DRS_STENCILMASK, 0xff);
@@ -116,13 +118,13 @@ void TargetDisplayEffect::renderStencilMask(LPDIRECT3DDEVICE9 device, D3DXMATRIX
 //=============================================================================
 // ステンシル描画処理
 //=============================================================================
-void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
+void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device, unsigned char ste, D3DCMPFUNC cmp_func)
 {
 	// ステンシルバッファの値と比較する参照値
-	device->SetRenderState(D3DRS_STENCILREF, 0x01);
+	device->SetRenderState(D3DRS_STENCILREF, ste);
 
 	// 比較関数条件が真のときステンシルテスト合格
-	device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_LESSEQUAL);
+	device->SetRenderState(D3DRS_STENCILFUNC, cmp_func);
 
 	// ステンシルテストに合格した場合ステンシル値には何もしない
 	device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
@@ -136,13 +138,61 @@ void TargetDisplayEffect::renderEffectImage(LPDIRECT3DDEVICE9 device)
 
 	// Zバッファへの書き込みを許可する
 	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+}
+//=============================================================================
+// ステンシル開始処理
+//=============================================================================
+void TargetDisplayEffect::renderSetUp(LPDIRECT3DDEVICE9 device)
+{
+	// 初期化
+	device->Clear(0, 0, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL | D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 
-	image.render(device);
+	device->BeginScene();
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
+	device->SetRenderState(D3DRS_ALPHAREF, 0x01);
+}
+//=============================================================================
+// ステンシル終了処理
+//=============================================================================
+void TargetDisplayEffect::renderStencilEnd(LPDIRECT3DDEVICE9 device)
+{
 	// ステンシルテスト禁止
 	device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
 
 	// バックバッファとフロントバッファの入れ替え
 	device->Present(NULL, NULL, NULL, NULL);
+}
+//=============================================================================
+// 一般ステンシル描画処理
+//=============================================================================
+void TargetDisplayEffect::renderGeneral(LPDIRECT3DDEVICE9 device, unsigned char ste, D3DCMPFUNC cmp_func)
+{
+	// Zバッファ設定 => 有効
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
 
+	// ZBUFFER比較設定変更 => (参照値 <= バッファ値)
+	device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+
+	// ステンシルバッファ => 有効
+	device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+
+	// ステンシルバッファと比較する参照値設定 => ref
+	device->SetRenderState(D3DRS_STENCILREF, ste);
+
+	// ステンシルバッファの値に対してのマスク設定 => 0xff(全て真)
+	device->SetRenderState(D3DRS_STENCILMASK, 0xff);
+
+	// ステンシルテストの比較方法設定 => 
+	//		この描画での参照値 >= ステンシルバッファの参照値なら合格
+	device->SetRenderState(D3DRS_STENCILFUNC, cmp_func);
+
+	// ステンシルテストの結果に対しての反映設定
+	device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
+	device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP);
+	device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
 }

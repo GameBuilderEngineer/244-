@@ -133,6 +133,4 @@ void Tutorial::AI()
 //=============================================================================
 void Tutorial::uninitialize()
 {
-	// チュートリアル2D終了
-	tutorial2D.uninitialize();
 }

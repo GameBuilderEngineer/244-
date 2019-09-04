@@ -278,14 +278,4 @@ void SelectCharacter::AI()
 //=============================================================================
 void SelectCharacter::uninitialize()
 {
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		// セレクトキャラクター2D終了
-		selectCharacter2D[i].uninitialize();
-
-		// キャラクターセレクトバー終了
-		charaSelectBar[i].uninitialize();
-	}
-	// タイマーUI修了
-	timerUI.uninitialize();
 }

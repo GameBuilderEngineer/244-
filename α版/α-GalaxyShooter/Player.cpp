@@ -99,9 +99,22 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+
 	//スターラインの初期化
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+
+	// 弾エフェクト初期化
+	bulletEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	// ダウンエフェクト初期化
+	downEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	// アップエフェクト初期化
+	upEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	// ラインエフェクト初期化
+	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 }
 
@@ -216,6 +229,11 @@ void Player::update(float frameTime)
 	{
 		updateShockWave(frameTime,i);
 	}
+
+	//===========
+	//【アップエフェクトの更新】
+	//===========
+	updateUpEffect(frameTime);
 }
 
 //===================================================================================================================================
@@ -229,7 +247,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 {
 	Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
 	//他のオブジェクトの描画
-	otherRender(device,view,projection,cameraPosition);
+	//otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【通常描画】
@@ -245,6 +263,18 @@ void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 //======================
 void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
+	// 弾エフェクトの描画
+	bulletEffect.render(device, view, projection, cameraPosition);
+
+	// ダウンエフェクトの描画
+	downEffect.render(device, view, projection, cameraPosition);
+
+	// アップエフェクトの描画
+	upEffect.render(device, view, projection, cameraPosition);
+
+	// ラインエフェクトの描画
+	lineEffect.render(device, view, projection, cameraPosition);
+
 	//バレットの描画
 	for (int i = 0; i < NUM_BULLET; i++)
 	{
@@ -270,6 +300,7 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	{
 
 	}
+
 	//デバッグ時描画
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
@@ -484,12 +515,19 @@ void Player::changeDown()
 {
 	revivalPoint = 0;
 	decreaseRevivalTimer = DECREASE_REVIVAL_TIME;//復活ポイント減少時間のセット
+
+	// ダウンエフェクト発生
+	downEffect.generateDownEffect(200, position, downVec());
+
 }
 //===================================================================================================================================
 //【ダウン時 更新処理】
 //===================================================================================================================================
 void Player::updateDown(float frameTime)
 {
+	// ダウンエフェクトの更新
+	downEffect.update(frameTime);
+
 	decreaseRevivalTimer -= frameTime;
 
 	if (revivalPoint > 0 && decreaseRevivalTimer <= 0)
@@ -501,11 +539,21 @@ void Player::updateDown(float frameTime)
 	if (input->wasKeyPressed(keyTable.revival)|| input->getController()[type]->wasButton(BUTTON_REVIVAL))
 	{
 		revivalPoint += INCREASE_REVIVAL_POINT;
+		// アップエフェクト発生
+		upEffect.generateUpEffect(200, position, upVec());
 		if (whetherRevival())changeState(REVIVAL);
 	}
+
 	updateGround(frameTime, false);
 }
-
+//===================================================================================================================================
+//【ダウン時 更新処理】
+//===================================================================================================================================
+void Player::updateUpEffect(float frameTime)
+{
+	// アップエフェクトの更新
+	upEffect.update(frameTime);
+}
 //===================================================================================================================================
 //【上空モード 切替処理】
 //===================================================================================================================================
@@ -633,11 +681,17 @@ void Player::updateBullet(float frameTime)
 		bullet[i].update(frameTime);
 	}
 
+	// 弾エフェクトの更新
+	bulletEffect.update(frameTime);
+
 	//バレットの発射
 	if (whetherDown())return;//ダウン時：発射不可
 	if ((input->getMouseLButton() || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
+		// バレットエフェクト
+		bulletEffect.generateBulletEffect(20, position, bulletVec());
+
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
 
@@ -654,6 +708,7 @@ void Player::updateBullet(float frameTime)
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
+
 	}
 }
 
@@ -742,6 +797,7 @@ void Player::updateMemoryItem(float frameTime)
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
 		memoryPile[elementMemoryPile].activation();
 		memoryPile[elementMemoryPile].Object::update();
+
 		elementMemoryPile++;
 		//メモリーパイルを全て設置することに成功
 		if (elementMemoryPile >= NUM_MEMORY_PILE)
@@ -776,7 +832,11 @@ void Player::updateMemoryItem(float frameTime)
 		 (input->getMouseWheelState()==inputNS::DOWN)||			//マウスホイール操作
 		 (GetAsyncKeyState(VK_RSHIFT) & 0x8000))				//キーボード操作（仮）
 			&& state == GROUND) 								//地上モード時
-	{disconnectOpponentMemoryLine = true;}
+	{
+		disconnectOpponentMemoryLine = true;
+		// ラインエフェクト発生
+		lineEffect.generateLineEffect(200, collideMemoryLinePosition, upVec());
+	}
 	else
 	{ disconnectOpponentMemoryLine = false;}
 
@@ -788,6 +848,9 @@ void Player::updateMemoryItem(float frameTime)
 	
 	//メモリーラインの更新
 	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
+
+	// ラインエフェクトの更新
+	lineEffect.update(frameTime);
 
 	//スターラインの更新
 	starLine.update(device, frameTime,memoryLineNS::STAR);//スターラインの更新
@@ -816,7 +879,37 @@ void Player::deleteMemoryItem()
 	onRecursion = false;
 	recursionTimer = 0;
 }
+//===================================================================================================================================
+//【弾ベクトル取得】
+//===================================================================================================================================
+D3DXVECTOR3 Player::bulletVec()
+{
+	//Y軸方向への成分を削除する
+	D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
+	D3DXVec3Normalize(&front, &front);//正規化
 
+	return front;
+}
+//===================================================================================================================================
+//【ダウンベクトル取得】
+//===================================================================================================================================
+D3DXVECTOR3 Player::downVec()
+{
+	D3DXVECTOR3 downVec = reverseAxisY.direction;
+	D3DXVec3Normalize(&downVec, &downVec);//正規化
+
+	return downVec;
+}
+//===================================================================================================================================
+//【アップベクトル取得】
+//===================================================================================================================================
+D3DXVECTOR3 Player::upVec()
+{
+	D3DXVECTOR3 upVec = axisY.direction;
+	D3DXVec3Normalize(&upVec, &upVec);//正規化
+
+	return upVec;
+}
 //===================================================================================================================================
 //【メモリーラインの切断処理】
 // [処理内容]呼び出されるとこのプレイヤーのメモリーラインが切断され、ダウン状態になる。
@@ -899,6 +992,8 @@ void Player::damgae(int value) {
 }
 void Player::recoveryHp(int value) { hp = min(hp + value, MAX_HP); }
 void Player::setCollidedMemoryLine(bool frag) { collidedOpponentMemoryLine = frag; }
+void Player::setCollideMemoryLinePosition(D3DXVECTOR3 value){ 
+	collideMemoryLinePosition = value; }
 
 //===================================================================================================================================
 //【getter】

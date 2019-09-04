@@ -202,15 +202,6 @@ void Title::uninitialize()
 
 	// カメラ解放
 	SAFE_DELETE_ARRAY(camera);
-
-	// タイトル遷移画像描画処理終了
-	titleTrans.uninitialize();
-
-	// タイトル指定位置描画処理終了
-	titleTransPos.uninitialize();
-
-	//// タイトル2D終了
-	//title2D.uninitialize();
 }
 //=============================================================================
 // 選択UI遷移処理

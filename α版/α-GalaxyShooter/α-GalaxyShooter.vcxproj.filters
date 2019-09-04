@@ -277,6 +277,18 @@
     <Filter Include="AI\RecursionRecognition">
       <UniqueIdentifier>{07c8ecdc-da00-49b6-a7d6-e13cc966a32a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\BulletEffect">
+      <UniqueIdentifier>{b2456d65-1ed9-4837-a9d8-43c7048ff7f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\DownEffect">
+      <UniqueIdentifier>{f7bec369-c4d7-49e8-8121-7d7adf0e0a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\UpEffect">
+      <UniqueIdentifier>{0341cb25-6882-4699-99fe-5db1e191c4da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\LineEffect">
+      <UniqueIdentifier>{eebf7c8e-e6c8-41b1-a94d-a850a3e147f9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Fader">
       <UniqueIdentifier>{8cd57046-37aa-4c3a-baac-7e395309381e}</UniqueIdentifier>
     </Filter>
@@ -612,6 +624,18 @@
     <ClCompile Include="Fader.cpp">
       <Filter>Fader</Filter>
     </ClCompile>
+    <ClCompile Include="BulletEffect.cpp">
+      <Filter>Effect\BulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="DownEffect.cpp">
+      <Filter>Effect\DownEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="UpEffect.cpp">
+      <Filter>Effect\UpEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="LineEffect.cpp">
+      <Filter>Effect\LineEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -909,6 +933,18 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Fader.h">
       <Filter>Fader</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletEffect.h">
+      <Filter>Effect\BulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="DownEffect.h">
+      <Filter>Effect\DownEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="UpEffect.h">
+      <Filter>Effect\UpEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="LineEffect.h">
+      <Filter>Effect\LineEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

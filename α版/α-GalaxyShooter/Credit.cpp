@@ -131,6 +131,4 @@ void Credit::AI()
 //=============================================================================
 void Credit::uninitialize()
 {
-	// クレジット2D終了
-	credit2D.uninitialize();
 }

@@ -189,7 +189,6 @@ HRESULT TitleTransition::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber,
 //=============================================================================
 void TitleTransition::uninitialize(void)
 {
-
 }
 //=============================================================================
 // çXêVèàóù

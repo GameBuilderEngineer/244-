@@ -76,6 +76,11 @@ TextureLoader::TextureLoader()
 	textureName[TARGET] = { "credit.png" };
 	textureName[POSE] = { "Pause.png" };
 	textureName[CHARA_RESULT_BG] = { "Result_Window.png" };
+	textureName[BULLET_EFFECT] = { "bakuha.png" };
+	textureName[DOWN_EFFECT] = { "Down.png" };
+	textureName[UP_EFFECT] = { "UP.png" };
+	textureName[BULLET_SMOKE_EFFECT] = { "UP.png" };
+
 }
 
 

@@ -134,11 +134,4 @@ void Result::AI()
 //=============================================================================
 void Result::uninitialize()
 {
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		// リザルト2D終了
-		result2D[i].uninitialize();
-	}
-	// 賃金数終了
-	chinginCnt.uninitialize();
 }
