@@ -1,29 +1,32 @@
 ////============================================================================================================================================
 //// Document
 ////============================================================================================================================================
-//// PlayerK.cpp
+//// PlayerAnimation.cpp
 //// HAL東京 GP-12A-332 09 亀岡竣介
 //// 2019/09/04
 ////============================================================================================================================================
-//#include "PlayerK.h"
+//#include "PlayerAnimation.h"
 ////============================================================================================================================================
 //// Using Declaration
 //// using宣言
 ////============================================================================================================================================
-//using namespace playerKNS;
+//using namespace playerAnimationNS;
 ////============================================================================================================================================
 //// Constructor
 //// コンストラクタ
 ////============================================================================================================================================
-//PlayerK::PlayerK(void)
+//PlayerAnimation::PlayerAnimation(void)
 //{
+//	animation = NULL;				//	アニメーション
+//	animationID = { NULL,NULL };	//	アニメーションID
+//
 //	return;
 //}
 ////============================================================================================================================================
 //// Destructor
 //// デストラクタ
 ////============================================================================================================================================
-//PlayerK::~PlayerK(void)
+//PlayerAnimation::~PlayerAnimation(void)
 //{
 //	// 解放
 //	release();
@@ -34,26 +37,22 @@
 //// initialize
 //// 初期化
 ////============================================================================================================================================
-//HRESULT PlayerK::initialize(LPDIRECT3DDEVICE9 _device)
+//HRESULT PlayerAnimation::initialize(LPDIRECT3DDEVICE9 _device)
 //{
 //	const char* animationSetName[animationNS::TYPE::TYPE_MAX] =	//	アニメーションセット名
 //	{
-//		"Animation_Idle",	//	ANIMATION_3D_TYPE_IDLE
-//		//"Animation_Walk"	//	ANIMATION_3D_TYPE_WALK
+//		"Idle",
+//		"FastRun"
 //	};
 //
-//	position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//	rotation = D3DXVECTOR3(0.0f, D3DXToRadian(180.0f), 0.0f);
-//	scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-//	targetAngle = D3DXToRadian(180.0f);
-//	animationId = animationNS::TYPE::IDLE;
-//	animationIdNext = animationNS::TYPE::IDLE;
-//
 //	// アニメーションを作成
-//	animation = createObjectAnimation();
+//	animation = createObject();
+//
+//	// ディレクトリ設定
+//	setVisualDirectory();
 //
 //	// Xファイルを読み込む
-//	loadXFile(_device, animation, OBJECT_FILE_PLAYER);
+//	loadXFile(_device, animation, ("Character_Adam.x"));
 //
 //	//// アニメーションコールバックの設定
 //	//setCallBackKeyFrame(animation, animationSetName[ANIMATION_3D_TYPE_JUMP]);
@@ -61,16 +60,17 @@
 //	// アニメーションセットの初期化
 //	for (int i = 0; i < animation->animationSetMax; i++)
 //	{
-//		animation->initializeAnimation(animation, animationSetName[i], i);
+//		animation->initialize(animation, animationSetName[i], i);
 //	}
 //
 //	// アニメーションIDの設定
 //	animation->animationIdCurrent = animationNS::TYPE::IDLE;
+//	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
 //	animation->flag.animationPlaying = true;
-//	animation->updateAnimation(animation, TIME_PER_FRAME);
+//	animation->update(animation, TIME_PER_FRAME);
 //
 //	// アニメーションの設定
-//	animation->setShiftTimeAnimation(animation, animation->animationIdCurrent, 1.0f);
+//	animation->setShiftTime(animation, animation->animationIdCurrent, 1.0f);
 //
 //	// アニメーションシフトタイムの初期化
 //	for (int i = 0; i < animation->animationSetMax; i++)
@@ -78,25 +78,11 @@
 //		switch (i)
 //		{
 //		case animationNS::TYPE::IDLE:
-//			animation->setShiftTimeAnimation(animation, i, 0.5f);
+//			animation->setShiftTime(animation, i, 0.5f);
 //			break;
-//		//case animationNS::TYPE::WALK:
-//		//case ANIMATION_3D_TYPE_RUN:
-//		//case ANIMATION_3D_TYPE_JUMP:
-//		//case ANIMATION_3D_TYPE_SUPER_NATURAL:
-//		//case ANIMATION_3D_TYPE_SUPER_NATURAL_POSE:
-//		//case ANIMATION_3D_TYPE_LUMINA:
-//		//case ANIMATION_3D_TYPE_SIT_DOWN:
-//		//case ANIMATION_3D_TYPE_SIT_DOWN_POSE:
-//		//case ANIMATION_3D_TYPE_JUMP_OFF:
-//		//case ANIMATION_3D_TYPE_IN_THE_SEA_POSE:
-//			//Player_State.Animation->Set_Shift_Time_Animation_3D(Player_State.Animation, i, 0.25f);
-//			//break;
-//		//case ANIMATION_3D_TYPE_RUN_JUMP:
-//		//case ANIMATION_3D_TYPE_STAND_UP:
-//		//case ANIMATION_3D_TYPE_STAND_UP_INITIAL:
-//		//	Player_State.Animation->Set_Shift_Time_Animation_3D(Player_State.Animation, i, 0.1f);
-//		//	break;
+//		case animationNS::TYPE::FAST_RUN:
+//			animation->setShiftTime(animation, i, 0.25f);
+//			break;
 //		default:
 //			break;
 //		}
@@ -104,65 +90,56 @@
 //
 //	return S_OK;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーの解放
-//// 関数名：void Release_Player
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void PlayerK::release(void)
+////============================================================================================================================================
+//// release
+//// 解放
+////============================================================================================================================================
+//void PlayerAnimation::release(void)
 //{
 //	// アニメーションの解放
-//	releaseAnimation(animation);
+//	animation->release(animation);
 //
 //	return;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーの更新
-//// 関数名：void Update_Player
-//// 戻り値：void
-//// 引数 1：MANAGEMENT*
-////====================================================================================================================================================================================
-//void PlayerK::update(void)
+////============================================================================================================================================
+//// update
+//// 更新
+////============================================================================================================================================
+//void PlayerAnimation::update(void)
 //{
-//	// １フレーム前の位置を記憶
-//	Player_State.Position_Past = Player_State.Position;
-//
-//	// プレイヤーデータの算出
-//	Update_Player_Calculation();
-//
-//	//// プレイヤーの当たり判定
-//	//Update_Player_Hit_Judgment();
+//	updateAnimationCurrent();
+//	updateAnimationNext();
 //
 //	// アニメーションの更新
-//	Update_Player_Animation();
+//	updateAnimation();
 //
 //	return;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーのアニメーション更新
-//// 関数名：void Update_Player_Animation
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void PlayerK::updateAnimation(void)
+////============================================================================================================================================
+//// updateAnimation
+//// 更新 - アニメーション
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimation(void)
 //{
 //	if (!animation->flag.animationPlaying) { return; }
 //
-//	animation->updateAnimation(animation, TIME_PER_FRAME);
+//	animation->update(animation, TIME_PER_FRAME);
 //
 //	return;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーの更新( アニメーションセット：今 )
-//// 関数名：void Update_Player_Animation_Set_Current
-//// 戻り値：void
-//// 引数 1：MANAGEMENT*
-////====================================================================================================================================================================================
-//void PlayerK::updateAnimationSetCurrent(void)
+////============================================================================================================================================
+//// updateAnimationCurrent
+//// 更新 - アニメーション( 今 )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationCurrent(void)
 //{
-//	switch (animationId)
+//	switch (animationID.current)
 //	{
 //	case animationNS::TYPE::IDLE:
-//		updateAnimationSetCurrentIdol();
+//		updateAnimationCurrentIdle();
+//		break;
+//	case animationNS::TYPE::FAST_RUN:
+//		updateAnimationCurrentFastRun();
 //		break;
 //	default:
 //		break;
@@ -170,47 +147,19 @@
 //
 //	return;
 //}
-//
-////====================================================================================================================================================================================
-//// プレイヤーの更新( アニメーションセット：次 )
-//// 関数名：void Update_Player_Animation_Set_Next
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void PlayerK::updatePlayerAnimationSetNext(void)
+////============================================================================================================================================
+//// updateAnimationNext
+//// 更新 - アニメーション( 次 )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationNext(void)
 //{
-//	switch (Player_State.Animation_Identification_Next)
+//	switch (animationID.next)
 //	{
-//	case ANIMATION_3D_TYPE_IDLE:
-//		Update_Player_Animation_Set_Next_Idol();
-//		return;
+//	case animationNS::TYPE::IDLE:
+//		updateAnimationNextIdle();
 //		break;
-//	case ANIMATION_3D_TYPE_WALK:
-//		Update_Player_Animation_Set_Next_Walk();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_RUN:
-//		Update_Player_Animation_Set_Next_Run();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_JUMP:
-//		Update_Player_Animation_Set_Next_Jump();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_RUN_JUMP:
-//		Update_Player_Animation_Set_Next_Run_Jump();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_SUPER_NATURAL:
-//		Update_Player_Animation_Set_Next_Super_Natural();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_SUPER_NATURAL_POSE:
-//		Update_Player_Animation_Set_Next_Super_Natural_Pose();
-//		return;
-//		break;
-//	case ANIMATION_3D_TYPE_LUMINA:
-//		Update_Player_Animation_Set_Next_Lumina();
-//		return;
+//	case animationNS::TYPE::FAST_RUN:
+//		updateAnimationNextFastRun();
 //		break;
 //	default:
 //		return;
@@ -219,77 +168,36 @@
 //
 //	return;
 //}
-//
-////====================================================================================================================================================================================
-//// プレイヤーの更新( アニメーションセット：今 - アイドル )
-//// 関数名：void Update_Player_Animation_Set_Current_Idol
-//// 戻り値：void
-//// 引数 1：MANAGEMENT*
-////====================================================================================================================================================================================
-//void PlayerK::updateAnimationSetCurrentIdol(MANAGEMENT *Management)
+////============================================================================================================================================
+//// updateAnimationCurrentIdle
+//// 更新 - アニメーション( 今：アイドル )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationCurrentIdle(void)
 //{
-//	// 早期リターン
-//	if (Management->Switch[SWITCH_TYPE_OPERATION_BAN])
+//	if (animation->flag.moveStop)
 //	{
-//		Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_IDLE;
+//		animationID.next = animationNS::TYPE::IDLE;
 //		return;
 //	}
 //
-//	// 歩く
-//	if ((Get_Keyboard_Press(DIK_W) || Get_Keyboard_Press(DIK_A) || Get_Keyboard_Press(DIK_S) || Get_Keyboard_Press(DIK_D) ||
-//		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_UP)) ||
-//		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_LEFT)) ||
-//		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_DOWN)) ||
-//		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_RIGHT))))
+//	if (input->isKeyDown('w') ||
+//		input->isKeyDown('s') ||
+//		input->isKeyDown('a') ||
+//		input->isKeyDown('d'))
 //	{
-//		Update_Player_Animation_Set_Current_Idol_to_Walk();
+//		animationID.next = animationNS::TYPE::FAST_RUN;
 //		return;
 //	}
 //
-//	// ジャンプ
-//	else if ((Get_Keyboard_Trigger(DIK_SPACE)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_CROSS)))
-//	{
-//		Update_Player_Animation_Set_Current_Idol_to_Jump();
-//		return;
-//	}
-//
-//	// スーパーナチュラル
-//	else if ((Get_Keyboard_Trigger(DIK_RSHIFT)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_TRIANGLE)))
-//	{
-//		Update_Player_Animation_Set_Current_Idol_to_Super_Natural(Management);
-//		return;
-//	}
-//
-//	// ルミナ
-//	else if ((Get_Keyboard_Trigger(DIK_LCONTROL)) || (Get_Game_Pad_Triggered_Sometime_Depression(DUALSHOCK_4_BUTTON_L1, DUALSHOCK_4_BUTTON_R1)))
-//	{
-//		Update_Player_Animation_Set_Current_Idol_to_Lumina(Management);
-//		return;
-//	}
+//	//// ジャンプ
+//	//else if ((Get_Keyboard_Trigger(DIK_SPACE)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_CROSS)))
+//	//{
+//	//	Update_Player_Animation_Set_Current_Idol_to_Jump();
+//	//	return;
+//	//}
 //
 //	return;
 //}
-//
-//////====================================================================================================================================================================================
-////// プレイヤーの更新( アニメーションセット：今 - アイドル → 歩く )
-////// 関数名：void Update_Player_Animation_Set_Current_Idol_to_Walk
-////// 戻り値：void
-//////====================================================================================================================================================================================
-////void PlayerK::Update_Player_Animation_Set_Current_Idol_to_Walk(void)
-////{
-////	// 早期リターン
-////	if (Get_Progress_Tutorial() < TUTORIAL_PROGRESS_TYPE_WALK)
-////	{
-////		return;
-////	}
-////
-////	Set_Complete_Switch_Tutorial_Process(TUTORIAL_TYPE_002_WALK);
-////
-////	Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_WALK;
-////
-////	return;
-////}
-//
 //////====================================================================================================================================================================================
 ////// プレイヤーの更新( アニメーションセット：今 - アイドル → ジャンプ )
 ////// 関数名：void Update_Player_Animation_Set_Current_Idol_to_Jump
@@ -318,100 +226,32 @@
 ////
 ////	return;
 ////}
-//////====================================================================================================================================================================================
-////// プレイヤーの更新( アニメーションセット：今 - 歩く )
-////// 関数名：void Update_Player_Animation_Set_Current_Walk
-////// 戻り値：void
-////// 引数 1：MANAGEMENT*
-//////====================================================================================================================================================================================
-////void Update_Player_Animation_Set_Current_Walk(MANAGEMENT *Management)
-////{
-////	// 早期リターン
-////	if (Management->Switch[SWITCH_TYPE_OPERATION_BAN])
-////	{
-////		Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_IDLE;
-////		return;
-////	}
-////
-////	// 歩く
-////	if ((Get_Keyboard_Press(DIK_W) || Get_Keyboard_Press(DIK_A) || Get_Keyboard_Press(DIK_S) || Get_Keyboard_Press(DIK_D) ||
-////		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_UP)) ||
-////		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_LEFT)) ||
-////		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_DOWN)) ||
-////		(Game_Pad_Button_Pressed(0, DUALSHOCK_4_LEFT_STICK_RIGHT))))
-////	{
-////		// 走る
-////		if ((Get_Keyboard_Press(DIK_LSHIFT)) || (Game_Pad_Button_Pressed(0, DUALSHOCK_4_BUTTON_SQUARE)))
-////		{
-////			Update_Player_Animation_Set_Current_Walk_to_Run();
-////			return;
-////		}
-////
-////		// 歩く
-////		else
-////		{
-////			// ジャンプ
-////			if ((Get_Keyboard_Trigger(DIK_SPACE)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_CROSS)))
-////			{
-////				Update_Player_Animation_Set_Current_Walk_to_Jump();
-////				return;
-////			}
-////
-////			// スーパーナチュラル
-////			else if ((Get_Keyboard_Trigger(DIK_RSHIFT)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_TRIANGLE)))
-////			{
-////				Update_Player_Animation_Set_Current_Walk_to_Super_Natural(Management);
-////				return;
-////			}
-////
-////			// ルミナ
-////			else if ((Get_Keyboard_Trigger(DIK_LCONTROL)) || (Get_Game_Pad_Triggered_Sometime_Depression(DUALSHOCK_4_BUTTON_L1, DUALSHOCK_4_BUTTON_R1)))
-////			{
-////				Update_Player_Animation_Set_Current_Walk_to_Lumina(Management);
-////				return;
-////			}
-////
-////			// 歩く
-////			else
-////			{
-////				Update_Player_Animation_Set_Current_Walk_to_Walk(Management);
-////				return;
-////			}
-////
-////			return;
-////		}
-////
-////		return;
-////	}
-////
-////	// アイドル
-////	Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_IDLE;
-////
-////	return;
-////}
+////============================================================================================================================================
+//// updateAnimationCurrentFastRun
+//// 更新 - アニメーション( 今：走る )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationCurrentFastRun(void)
+//{
+//	if (animation->flag.moveStop)
+//	{
+//		animationID.next = animationNS::TYPE::IDLE;
+//		return;
+//	}
 //
-//////====================================================================================================================================================================================
-////// プレイヤーの更新( アニメーションセット：今 - 歩く → 歩く )
-////// 関数名：void Update_Player_Animation_Set_Current_Walk_to_Walk
-////// 戻り値：void
-////// 引数 1：MANAGEMENT*
-//////====================================================================================================================================================================================
-////void Update_Player_Animation_Set_Current_Walk_to_Walk(MANAGEMENT *Management)
-////{
-////	Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_WALK;
-////	Update_Player_Control(PLAYER_CONTROL_TYPE_WALK, Management);
-////
-////	// 早期リターン
-////	if (Check_Play_Flag_Sound(SOUND_TYPE_SOUND_EFFECT_001_GAME_WALK))
-////	{
-////		return;
-////	}
-////
-////	Stop_Sound(SOUND_TYPE_SOUND_EFFECT_002_GAME_RUN);
-////	Play_Sound(SOUND_TYPE_SOUND_EFFECT_001_GAME_WALK, SOUND_PLAY_TYPE_PLAY);
-////
-////	return;
-////}
+//	if (input->isKeyDown(keyTable.front) ||
+//		input->isKeyDown(keyTable.back) ||
+//		input->isKeyDown(keyTable.left) ||
+//		input->isKeyDown(keyTable.right))
+//	{
+//		animationID.next = animationNS::TYPE::FAST_RUN;
+//		return;
+//	}
+//
+//	// アイドル
+//	animationID.next = animationNS::TYPE::IDLE;
+//
+//	return;
+//}
 //
 //////====================================================================================================================================================================================
 ////// プレイヤーの更新( アニメーションセット：今 - 歩く → 走る )
@@ -624,51 +464,38 @@
 ////
 ////	return;
 ////}
-////====================================================================================================================================================================================
-//// プレイヤーの更新( アニメーションセット：次 - アイドル )
-//// 関数名：void Update_Player_Animation_Set_Next_Idol
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void playerK::updateAnimationSetNextIdol(void)
+////============================================================================================================================================
+//// updateAnimationNextIdle
+//// 更新 - アニメーション( 次：アイドル )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationNextIdle(void)
 //{
-//	if ((Player_State.Animation_Identification == ANIMATION_3D_TYPE_IDLE) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_WALK) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_RUN) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_RUN_JUMP) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_SUPER_NATURAL) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_SUPER_NATURAL_POSE) ||
-//		(Player_State.Animation_Identification == ANIMATION_3D_TYPE_SIT_DOWN_POSE))
+//	if (animationID.current == animationNS::TYPE::IDLE)
 //	{
-//		Player_State.Animation_Identification = ANIMATION_3D_TYPE_IDLE;
-//		Player_State.Animation->Switching_Animation_3D(Player_State.Animation, ANIMATION_3D_TYPE_IDLE, 1.0f);
+//		animationID.current = animationNS::TYPE::IDLE;
+//		animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
 //
 //		return;
 //	}
 //
-//	// 早期リターン
-//	if (!Player_State.Animation->Animation_End_Flag)
-//	{
-//		return;
-//	}
+//	if (!animation->flag.animationEnd) { return; }
 //
-//	Player_State.Animation_Identification = ANIMATION_3D_TYPE_IDLE;
-//	Player_State.Animation->Switching_Animation_3D(Player_State.Animation, ANIMATION_3D_TYPE_IDLE, 1.0f);
+//	animationID.current = animationNS::TYPE::IDLE;
+//	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
 //
 //	return;
 //}
+////============================================================================================================================================
+//// updateAnimationNextFastRun
+//// 更新 - アニメーション( 次：走る )
+////============================================================================================================================================
+//void PlayerAnimation::updateAnimationNextFastRun(void)
+//{
+//	animationID.current = animationNS::TYPE::FAST_RUN;
+//	animation->switching(animation, animationNS::TYPE::FAST_RUN, 1.0f);
 //
-//////====================================================================================================================================================================================
-////// プレイヤーの更新( アニメーションセット：次 - 歩く )
-////// 関数名：void Update_Player_Animation_Set_Next_Walk
-////// 戻り値：void
-//////====================================================================================================================================================================================
-////void Update_Player_Animation_Set_Next_Walk(void)
-////{
-////	Player_State.Animation_Identification = ANIMATION_3D_TYPE_WALK;
-////	Player_State.Animation->Switching_Animation_3D(Player_State.Animation, ANIMATION_3D_TYPE_WALK, 1.0f);
-////
-////	return;
-////}
+//	return;
+//}
 ////
 //////====================================================================================================================================================================================
 ////// プレイヤーの更新( アニメーションセット：次 - 走る )
@@ -1142,173 +969,95 @@
 ////	return;
 ////}
 ////
-////====================================================================================================================================================================================
-//// プレイヤーの更新( 算出 )
-//// 関数名：void Update_Player_Calculation
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void updatePlayerCalculation(void)
-//{
-//	static float playerRotateDifferenceY = NULL;	//	プレイヤーの回転差分
-//
-//	// 移動量の慣性を計算
-//	Player_State.Move.x -= Player_State.Move.x * PLAYER_INERTIA_MOVE;
-//	Player_State.Move.y -= Player_State.Move.y * PLAYER_INERTIA_MOVE;
-//	Player_State.Move.z -= Player_State.Move.z * PLAYER_INERTIA_MOVE;
-//
-//	// プレイヤーの移動更新
-//	Player_State.Position.x += Player_State.Move.x;
-//	Player_State.Position.y += Player_State.Move.y;
-//
-//	if (Player_State.Position.y < 0.0f)
-//	{
-//		Player_State.Position.y = 0.0f;
-//	}
-//	if (Player_State.Position.y > 75.0f)
-//	{
-//		Player_State.Position.y = 75.0f;
-//	}
-//	Player_State.Position.z += Player_State.Move.z;
-//
-//	// 目的角度までの差分を計算
-//	Player_Rotate_Difference_Y = Player_State.Target_Angle - Player_State.Rotation.y;
-//
-//	if (Player_Rotate_Difference_Y > D3DX_PI)
-//	{
-//		Player_Rotate_Difference_Y -= D3DX_PI_DOUBLE;
-//	}
-//	if (Player_Rotate_Difference_Y < -D3DX_PI)
-//	{
-//		Player_Rotate_Difference_Y += D3DX_PI_DOUBLE;
-//	}
-//
-//	// 目的角度までの慣性を計算
-//	Player_State.Rotation.y += Player_Rotate_Difference_Y * PLAYER_INERTIA_ROTATION;
-//
-//	if (Player_State.Rotation.y > D3DX_PI)
-//	{
-//		Player_State.Rotation.y -= D3DX_PI_DOUBLE;
-//	}
-//	if (Player_State.Rotation.y < -D3DX_PI)
-//	{
-//		Player_State.Rotation.y += D3DX_PI_DOUBLE;
-//	}
-//
-//	return;
-//}
-////====================================================================================================================================================================================
-//// プレイヤーの描画
-//// 関数名：void Draw_Player
-//// 戻り値：void
-//// 引数 1：ORIGIN_DEVICE*
-//// 引数 2：ORIGIN_MATRIX*
-////====================================================================================================================================================================================
-//void playerK::render(LPDIRECT3DDEVICE9* _device, D3DXMATRIX* _matrix)
+//////====================================================================================================================================================================================
+////// プレイヤーの更新( 算出 )
+////// 関数名：void Update_Player_Calculation
+////// 戻り値：void
+//////====================================================================================================================================================================================
+////void PlayerK::updateCalculation(void)
+////{
+////	static float playerRotateDifferenceY = NULL;	//	プレイヤーの回転差分
+////
+////	// 移動量の慣性を計算
+////	move.x -= (move.x * PLAYER_INERTIA_MOVE);
+////	move.y -= (move.y * PLAYER_INERTIA_MOVE);
+////	move.z -= (move.z * PLAYER_INERTIA_MOVE);
+////
+////	// プレイヤーの移動更新
+////	position.x += (move.x);
+////	position.y += (move.y);
+////
+////	if (Player_State.Position.y < 0.0f)
+////	{
+////		Player_State.Position.y = 0.0f;
+////	}
+////	if (Player_State.Position.y > 75.0f)
+////	{
+////		Player_State.Position.y = 75.0f;
+////	}
+////	Player_State.Position.z += Player_State.Move.z;
+////
+////	// 目的角度までの差分を計算
+////	Player_Rotate_Difference_Y = Player_State.Target_Angle - Player_State.Rotation.y;
+////
+////	if (Player_Rotate_Difference_Y > D3DX_PI)
+////	{
+////		Player_Rotate_Difference_Y -= D3DX_PI_DOUBLE;
+////	}
+////	if (Player_Rotate_Difference_Y < -D3DX_PI)
+////	{
+////		Player_Rotate_Difference_Y += D3DX_PI_DOUBLE;
+////	}
+////
+////	// 目的角度までの慣性を計算
+////	Player_State.Rotation.y += Player_Rotate_Difference_Y * PLAYER_INERTIA_ROTATION;
+////
+////	if (Player_State.Rotation.y > D3DX_PI)
+////	{
+////		Player_State.Rotation.y -= D3DX_PI_DOUBLE;
+////	}
+////	if (Player_State.Rotation.y < -D3DX_PI)
+////	{
+////		Player_State.Rotation.y += D3DX_PI_DOUBLE;
+////	}
+////
+////	return;
+////}
+////============================================================================================================================================
+//// render
+//// 描画
+////============================================================================================================================================
+//void PlayerAnimation::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX* _matrixWorld)
 //{
 //	D3DMATERIAL9 materialDefault;	//	マテリアル
 //
-//	// マトリクスの設定
-//	setMatrixPlayer();
+//	// ワールドマトリクスの設定
+//	_device->SetTransform(D3DTS_WORLD, _matrixWorld);
 //
 //	// 現在のマテリアルを取得
-//	getMaterial(&materialDefault);
+//	_device->GetMaterial(&materialDefault);
 //
 //	// アニメーションの描画
-//	animation->render(_device, animation, _matrix);
+//	animation->render(_device, animation, _matrixWorld);
 //
 //	// マテリアルを戻す
-//	setMaterial(&materialDefault);
+//	_device->SetMaterial(&materialDefault);
 //
 //	return;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーの設置
-//// 関数名：void Installation_Player
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void playerK::installation(void)
+////============================================================================================================================================
+//// installation
+//// 設置
+////============================================================================================================================================
+//void PlayerAnimation::installation(void)
 //{
-//	switch (Get_Progress_Ending())
-//	{
-//	case ENDING_PROGRESS_TYPE_SET_UP:
-//		Player_State.Position = D3DXVECTOR3(-400.0f, 0.0f, 0.0f);
-//		Player_State.Rotation = D3DXVECTOR3(0.0f, D3DXToRadian(270.0f), 0.0f);
-//		Player_State.Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-//		Player_State.Target_Angle = D3DXToRadian(270.0f);
-//		Player_State.Animation_Identification = ANIMATION_3D_TYPE_IDLE;
-//		Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_IDLE;
-//		Player_State.Animation->Playing_Animation_Identification_Current = ANIMATION_3D_TYPE_IDLE;
-//		Player_State.Animation->Switching_Animation_3D(Player_State.Animation, ANIMATION_3D_TYPE_IDLE, 1.0f);
-//		return;
-//		break;
-//	case ENDING_PROGRESS_TYPE_CUT_SCENE_001_JUMP_OFF:
-//		Player_State.Position = D3DXVECTOR3(-450.0f, 200.0f, 25.0f);
-//		Player_State.Rotation = D3DXVECTOR3(D3DXToRadian(70.0f), D3DXToRadian(-30.0f), D3DXToRadian(180.0f));
-//		Player_State.Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-//		Player_State.Target_Angle = 0.0f;
-//		Player_State.Animation_Identification = ANIMATION_3D_TYPE_FALL;
-//		Player_State.Animation_Identification_Next = ANIMATION_3D_TYPE_FALL;
-//		Player_State.Animation->Playing_Animation_Identification_Current = ANIMATION_3D_TYPE_FALL;
-//		Player_State.Animation->Switching_Animation_3D(Player_State.Animation, ANIMATION_3D_TYPE_FALL, 1.0f);
-//		return;
-//		break;
-//	default:
-//		return;
-//		break;
-//	}
+//	animationID.current = animationNS::TYPE::IDLE;
+//	animationID.next = animationNS::TYPE::IDLE;
+//	animation->animationIdCurrent = animationNS::TYPE::IDLE;
+//	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
 //
 //	return;
 //}
-////====================================================================================================================================================================================
-//// プレイヤーのマトリクス設定
-//// 関数名：void Set_Matrix_Player
-//// 戻り値：void
-////====================================================================================================================================================================================
-//void playerK::setMatrix(void)
-//{
-//	D3DXMATRIX matrixScale;			//	スケールマトリクス
-//	D3DXMATRIX matrixRotation;		//	ローテーションマトリクス
-//	D3DXMATRIX matrixTranslation;	//	トランスレーションマトリクス
-//
-//	// ワールドマトリクスの初期化：ワールドマトリクスを単位行列に初期化( 変換 )
-//	initializeMatrixWorld();
-//
-//	// Scale
-//	D3DXMatrixScaling
-//	(
-//		&Matrix_Scale,
-//		Player_State.Scale.x,
-//		Player_State.Scale.y,
-//		Player_State.Scale.z
-//	);
-//	multiplyMatrixWorld(&Matrix_Scale);
-//
-//	// Rotation
-//	D3DXMatrixRotationYawPitchRoll
-//	(
-//		&Matrix_Rotation,
-//		Player_State.Rotation.y,
-//		Player_State.Rotation.x,
-//		Player_State.Rotation.z
-//	);
-//	multiplyMatrixWorld(&Matrix_Rotation);
-//
-//	// Translation
-//	D3DXMatrixTranslation
-//	(
-//		&Matrix_Translation,
-//		Player_State.Position.x,
-//		Player_State.Position.y,
-//		Player_State.Position.z
-//	);
-//	multiplyMatrixWorld(&Matrix_Translation);
-//
-//	// ワールドマトリクスの設定
-//	setTransformWorld();
-//
-//	return;
-//}
-//
 //////====================================================================================================================================================================================
 ////// プレイヤーの位置を設定
 ////// 関数名：void Set_Position_Player
@@ -1482,3 +1231,4 @@
 ////{
 ////	return Player_State.Target_Angle;
 ////}
+//

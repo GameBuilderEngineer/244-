@@ -47,6 +47,10 @@ Player::Player()
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	recursion = NULL;						//リカージョンNULL
 	recursionTimer = 0.0f;					//リカージョンの生存時間
+
+	animation = NULL;				//	アニメーション
+	animationID = { NULL,NULL };	//	アニメーションID
+
 }
 
 //===================================================================================================================================
@@ -101,6 +105,9 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	//スターラインの初期化
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
+
+	// アニメーション
+	initializeAnimation(_device);
 
 	return;
 }
@@ -194,6 +201,8 @@ void Player::update(float frameTime)
 	//===========
 	Object::update();
 
+	updateAnimation();
+
 	//===========
 	//【弾の更新】
 	//===========
@@ -234,6 +243,9 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	Object::render(device,view,projection, cameraPosition);
+
+	renderAnimation(device, &matrixWorld);
+
 	//他のオブジェクトの描画
 	otherRender(device,view,projection,cameraPosition);
 }
@@ -867,3 +879,252 @@ bool Player::whetherCollidedOpponentMemoryLine() { return collidedOpponentMemory
 bool Player::messageDisconnectOpponentMemoryLine() { return disconnectOpponentMemoryLine; }
 Recursion* Player::getRecursion() { return recursion; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }
+
+//============================================================================================================================================
+// initialize
+// 初期化
+//============================================================================================================================================
+HRESULT Player::initializeAnimation(LPDIRECT3DDEVICE9 _device)
+{
+	const char* animationSetName[animationNS::TYPE::TYPE_MAX] =	//	アニメーションセット名
+	{
+		"Idle",
+		"FastRun"
+	};
+
+	// アニメーションを作成
+	animation = createObject();
+
+	// ディレクトリ設定
+	setVisualDirectory();
+
+	// Xファイルを読み込む
+	loadXFile(_device, animation, ("Character_Adam.x"));
+
+	//// アニメーションコールバックの設定
+	//setCallBackKeyFrame(animation, animationSetName[ANIMATION_3D_TYPE_JUMP]);
+
+	// アニメーションセットの初期化
+	for (int i = 0; i < animation->animationSetMax; i++)
+	{
+		animation->initialize(animation, animationSetName[i], i);
+	}
+
+	// アニメーションIDの設定
+	animation->animationIdCurrent = animationNS::TYPE::IDLE;
+	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
+	animation->flag.animationPlaying = true;
+	animation->update(animation, TIME_PER_FRAME);
+
+	// アニメーションの設定
+	animation->setShiftTime(animation, animation->animationIdCurrent, 1.0f);
+
+	// アニメーションシフトタイムの初期化
+	for (int i = 0; i < animation->animationSetMax; i++)
+	{
+		switch (i)
+		{
+		case animationNS::TYPE::IDLE:
+			animation->setShiftTime(animation, i, 0.5f);
+			break;
+		case animationNS::TYPE::FAST_RUN:
+			animation->setShiftTime(animation, i, 0.25f);
+			break;
+		default:
+			break;
+		}
+	}
+
+	return S_OK;
+}
+//============================================================================================================================================
+// release
+// 解放
+//============================================================================================================================================
+void Player::releaseAnimation(void)
+{
+	// アニメーションの解放
+	animation->release(animation);
+
+	return;
+}
+//============================================================================================================================================
+// update
+// 更新
+//============================================================================================================================================
+void Player::updateAnimation(void)
+{
+	updateAnimationCurrent();
+	updateAnimationNext();
+
+	// アニメーションの更新
+	if (!animation->flag.animationPlaying) { return; }
+
+	animation->update(animation, TIME_PER_FRAME);
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationCurrent
+// 更新 - アニメーション( 今 )
+//============================================================================================================================================
+void Player::updateAnimationCurrent(void)
+{
+	switch (animationID.current)
+	{
+	case animationNS::TYPE::IDLE:
+		updateAnimationCurrentIdle();
+		break;
+	case animationNS::TYPE::FAST_RUN:
+		updateAnimationCurrentFastRun();
+		break;
+	default:
+		break;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationNext
+// 更新 - アニメーション( 次 )
+//============================================================================================================================================
+void Player::updateAnimationNext(void)
+{
+	switch (animationID.next)
+	{
+	case animationNS::TYPE::IDLE:
+		updateAnimationNextIdle();
+		break;
+	case animationNS::TYPE::FAST_RUN:
+		updateAnimationNextFastRun();
+		break;
+	default:
+		return;
+		break;
+	}
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationCurrentIdle
+// 更新 - アニメーション( 今：アイドル )
+//============================================================================================================================================
+void Player::updateAnimationCurrentIdle(void)
+{
+	if (animation->flag.moveStop)
+	{
+		animationID.next = animationNS::TYPE::IDLE;
+		return;
+	}
+
+	if (input->isKeyDown('w') ||
+		input->isKeyDown('s') ||
+		input->isKeyDown('a') ||
+		input->isKeyDown('d'))
+	{
+		animationID.next = animationNS::TYPE::FAST_RUN;
+		return;
+	}
+
+	//// ジャンプ
+	//else if ((Get_Keyboard_Trigger(DIK_SPACE)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_CROSS)))
+	//{
+	//	Update_Player_Animation_Set_Current_Idol_to_Jump();
+	//	return;
+	//}
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationCurrentFastRun
+// 更新 - アニメーション( 今：走る )
+//============================================================================================================================================
+void Player::updateAnimationCurrentFastRun(void)
+{
+	if (animation->flag.moveStop)
+	{
+		animationID.next = animationNS::TYPE::IDLE;
+		return;
+	}
+
+	if (input->isKeyDown(keyTable.front) ||
+		input->isKeyDown(keyTable.back) ||
+		input->isKeyDown(keyTable.left) ||
+		input->isKeyDown(keyTable.right))
+	{
+		animationID.next = animationNS::TYPE::FAST_RUN;
+		return;
+	}
+
+	// アイドル
+	animationID.next = animationNS::TYPE::IDLE;
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationNextIdle
+// 更新 - アニメーション( 次：アイドル )
+//============================================================================================================================================
+void Player::updateAnimationNextIdle(void)
+{
+	if (animationID.current == animationNS::TYPE::IDLE)
+	{
+		animationID.current = animationNS::TYPE::IDLE;
+		animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
+
+		return;
+	}
+
+	if (!animation->flag.animationEnd) { return; }
+
+	animationID.current = animationNS::TYPE::IDLE;
+	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
+
+	return;
+}
+//============================================================================================================================================
+// updateAnimationNextFastRun
+// 更新 - アニメーション( 次：走る )
+//============================================================================================================================================
+void Player::updateAnimationNextFastRun(void)
+{
+	animationID.current = animationNS::TYPE::FAST_RUN;
+	animation->switching(animation, animationNS::TYPE::FAST_RUN, 1.0f);
+
+	return;
+}
+//============================================================================================================================================
+// render
+// 描画
+//============================================================================================================================================
+void Player::renderAnimation(LPDIRECT3DDEVICE9 _device, D3DXMATRIX* _matrixWorld)
+{
+	D3DMATERIAL9 materialDefault;	//	マテリアル
+
+	// ワールドマトリクスの設定
+	_device->SetTransform(D3DTS_WORLD, _matrixWorld);
+
+	// 現在のマテリアルを取得
+	_device->GetMaterial(&materialDefault);
+
+	// アニメーションの描画
+	animation->render(_device, animation, _matrixWorld);
+
+	// マテリアルを戻す
+	_device->SetMaterial(&materialDefault);
+
+	return;
+}
+//============================================================================================================================================
+// installation
+// 設置
+//============================================================================================================================================
+void Player::installationAnimation(void)
+{
+	animationID.current = animationNS::TYPE::IDLE;
+	animationID.next = animationNS::TYPE::IDLE;
+	animation->animationIdCurrent = animationNS::TYPE::IDLE;
+	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
+
+	return;
+}

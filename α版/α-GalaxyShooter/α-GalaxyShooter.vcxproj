@@ -181,7 +181,7 @@
     <ClCompile Include="InstancingBillboard.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="playerK.cpp" />
+    <ClCompile Include="PlayerAnimation.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
@@ -282,7 +282,7 @@
     <ClInclude Include="PathPlanning.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="playerK.h" />
+    <ClInclude Include="PlayerAnimation.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Recursion.h" />

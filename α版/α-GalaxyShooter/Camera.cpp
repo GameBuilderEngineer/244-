@@ -115,7 +115,9 @@ HRESULT Camera::setViewProjection()
 {
 	D3DXMatrixLookAtLH(&view, &position, &gazePosition, &upVector);
 	// プロジェクション
-	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 2.5, aspect, 0.1f, 1000.0f);
+	//D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 2.5, aspect, 0.1f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 2.5, aspect, 0.1f, 10000.0f);
+
 	return S_OK;
 }
 

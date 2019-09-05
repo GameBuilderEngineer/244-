@@ -12,6 +12,7 @@
 #include "StaticMeshLoader.h"
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
+#include "Animation.h"
 
 namespace objectNS {
 
@@ -24,6 +25,8 @@ protected:
 	//Data
 	//スタティックメッシュ
 	StaticMesh* staticMesh;
+	Animation* animation;		//	アニメーション
+	AnimationID animationID;	//	アニメーションID
 
 	//ステータス変数
 	D3DXVECTOR3 position;		//位置

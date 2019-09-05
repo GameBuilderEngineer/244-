@@ -360,6 +360,8 @@ void Game::render(Direct3D9* direct3D9) {
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
 	direct3D9->changeViewportFullWindow();
 	renderUI(direct3D9->device);
+
+
 }
 
 //===================================================================================================================================
@@ -370,13 +372,13 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	//ステンシルマスク
 	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{//プレイヤーの描画
-		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-			*shaderLoader->getEffect(shaderNS::TOON),
-			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	}
+	//for (int i = 0; i < NUM_PLAYER; i++)
+	//{//プレイヤーの描画
+	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//		*shaderLoader->getEffect(shaderNS::TOON),
+	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	//}
 
 	//target.renderEffectImage(direct3D9->device);
 
@@ -439,13 +441,13 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	//ステンシルマスク
 	//target.renderStencilMask(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{//プレイヤーの描画
-		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-			*shaderLoader->getEffect(shaderNS::TOON),
-			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	}
+	//for (int i = 0; i < NUM_PLAYER; i++)
+	//{//プレイヤーの描画
+	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//		*shaderLoader->getEffect(shaderNS::TOON),
+	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	//}
 
 	//target.renderEffectImage(direct3D9->device);
 #ifdef _DEBUG
@@ -602,6 +604,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	);
 
 #endif
+
 	// このへんは全体のinitializeのほうがいいかもしれない＠なかごみ
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);				// αブレンドを行う
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);			// αソースカラーの指定
@@ -892,6 +895,6 @@ void Game::uninitialize() {
 	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();
 	map.uninitialize();
-	SAFE_DELETE(player[0])
-	SAFE_DELETE(player[1])
+	SAFE_DELETE(player[0]);
+	SAFE_DELETE(player[1]);
 }

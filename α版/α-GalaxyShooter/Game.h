@@ -37,6 +37,8 @@
 #include "UICutMemoryLine.h"
 #include "EffectManager.h"
 
+#include "PlayerAnimation.h"
+
 #define JUNK_MAX (100) //ƒKƒ‰ƒNƒ^‚Ì”
 
 namespace gameNS

@@ -561,7 +561,9 @@
     <ClCompile Include="EffectDew.cpp">
       <Filter>Effect\Dew</Filter>
     </ClCompile>
-    <ClCompile Include="playerK.cpp" />
+    <ClCompile Include="PlayerAnimation.cpp">
+      <Filter>Object\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -844,7 +846,9 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="playerK.h" />
+    <ClInclude Include="PlayerAnimation.h">
+      <Filter>Object\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

@@ -83,6 +83,7 @@ namespace playerNS{
 	const BYTE BUTTON_BULLET = virtualControllerNS::R1;
 	const BYTE BUTTON_CUT = virtualControllerNS::X;
 	const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
+	const float TIME_PER_FRAME = (0.0167f);
 
 	enum STATE {
 		GROUND,
@@ -194,6 +195,10 @@ protected:
 	//アクションフラグ
 	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
 
+	// アニメーション
+	Animation* animation;		//	アニメーション
+	AnimationID animationID;	//	アニメーションID
+
 public:
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
@@ -262,4 +267,16 @@ public:
 	bool messageDisconnectOpponentMemoryLine();
 	Recursion* getRecursion();
 	MemoryLine* getMemoryLine();
+
+	HRESULT initializeAnimation(LPDIRECT3DDEVICE9 _device);
+	void releaseAnimation(void);
+	void updateAnimation(void);
+	void updateAnimationCurrent(void);
+	void updateAnimationCurrentIdle(void);
+	void updateAnimationCurrentFastRun(void);
+	void updateAnimationNext(void);
+	void updateAnimationNextIdle(void);
+	void updateAnimationNextFastRun(void);
+	void renderAnimation(LPDIRECT3DDEVICE9 _device, D3DXMATRIX* _matrixWorld);
+	void installationAnimation(void);
 };
