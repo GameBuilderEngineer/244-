@@ -122,7 +122,7 @@ void EnvironmentAnalysis::update(AgentAI* agentAI)
 
 	analyzeBattle(agentAI);			// バトル状況を解析
 
-	//makeCoordForCut(agentAI);		// メモリーライン切断座標を算出
+	makeCoordForCut(agentAI);		// メモリーライン切断座標を算出
 
 	if (++vRecursionFrameCount % VIRTUAL_RECURSION_FPS == 0)
 	{
@@ -226,126 +226,156 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 //=============================================================================
 void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 {
+	// メモリーラインが引かれていなければ終了
 	if (opponent->getElementMemoryPile() < 2) { return; }
+	
+	int numPile = opponent->getElementMemoryPile() + 1; // パイルの数（次に打ち込むパイルを加える）
+	float length[5 + 1] = { 0.0f };						// パイルとの距離を昇順にソートして格納
+	MemoryPile* pile[5 + 1] = { NULL };					// パイルとの距離で昇順にソートしたメモリーパイル
+	MemoryPile pileBeforeHitting;						// 次に打ち込むパイル（対戦相手座標を格納）
 
-	//---------------------------------------------------
-	// 自分に一番近いパイルと2番目に近いパイルを見つける
-	//---------------------------------------------------
-	float nearestLength = 10000.0f;
-	float secondNearestLength = 10000.0f;
-	MemoryPile* nearestPile = NULL;
-	MemoryPile*	secondNearestPile = NULL;
-
-	for (int i = 0; i < opponent->getElementMemoryPile(); i++)
+	//--------------------------------------------
+	// 近距離のパイルを取得して近さ順にソートする
+	//--------------------------------------------
+	for (int i = 0; i < numPile; i++)
 	{
-		float sqLen = D3DXVec3LengthSq(&(*opponent->getMemoryPile()[i].getPosition() - *agentAI->getPosition()));
-		MemoryPile* p = &opponent->getMemoryPile()[i];
-
-		//if (i < 2)
-		//{
-		//	secondNearestLength = nearestLength;
-		//	nearestLength = sqLen;
-		//	secondNearestPile = nearestPile;
-		//	nearestPile = p;
-		//}
-		//if (i == 2)
-		//{
-		//	if (secondNearestLength < nearestLength)
-		//	{
-		//		float tempLen;
-		//		MemoryPile* temp;
-		//		tempLen = nearestLength;
-		//		nearestLength = secondNearestLength;
-		//		secondNearestLength = tempLen;
-
-		//		temp = nearestPile;
-		//		nearestPile = secondNearestPile;
-		//		secondNearestPile = temp;
-		//	}
-		//}
-
-		if (sqLen < nearestLength * nearestLength)
+		// ５つ打ち切る前は次に打ち込むパイルも加える
+		if (i == opponent->getElementMemoryPile() && i != 5/*5本目の次のパイルは無いので*/)
 		{
-			secondNearestLength = nearestLength;
-			nearestLength = sqLen;
-			secondNearestPile = nearestPile;
-			nearestPile = p;
+			length[i] = D3DXVec3Length(&(*opponent->getPosition() - *agentAI->getPosition()));
+			pileBeforeHitting.setPosition(*opponent->getPosition());
+			pileBeforeHitting.getAxisY()->initialize(
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), opponent->getAxisY()->direction);
+			pile[i] = &pileBeforeHitting;
+		}
+
+		// 次に打ち込むパイル以降はパス
+		if (i >= opponent->getElementMemoryPile()) { continue; }
+
+		length[i] = D3DXVec3Length(&(*opponent->getMemoryPile()[i].getPosition() - *agentAI->getPosition()));
+		pile[i] = &opponent->getMemoryPile()[i];
+	}
+
+	// バブルソート
+	for (int i = 0; i < numPile - 1; i++)
+	{
+		for (int k = numPile - 1; k > i; k--)
+		{
+			if (length[i] > length[k])
+			{
+				if (pile[i] == NULL || pile[k] == NULL) { continue; }
+
+				float tempLen = length[k];
+				MemoryPile* tempPile = pile[k];
+				length[k] = length[i];
+				pile[k] = pile[i];
+				length[i] = tempLen;
+				pile[i] = tempPile;
+			}
 		}
 	}
 
 
-	//----------------------
-	// 以下で使用するデータ
-	//----------------------
-	D3DXVECTOR3 vecMemoryLine;		// 最短メモリーラインのベクトル（正規化済）
-	D3DXVECTOR3 orthogonalVector;	// 最短メモリーラインに直交するベクトル（正規化済）
-	bool coordIsCorner;				// メモリーラインを切る座標はパイル付近か？
+	//------------------------
+	// 以下で使用するデータ２
+	//------------------------
+	D3DXVECTOR3 vecLine0to1;		// 最短パイル⇔第2最短パイルのベクトル（正規化済）
+	D3DXVECTOR3 orthogonal0to1;		// 最短メモリーラインに直交するベクトル（正規化済）
+	vecLine0to1 = *pile[1]->getPosition() - *pile[0]->getPosition();
+	D3DXVec3Normalize(&vecLine0to1, &vecLine0to1);
+	D3DXVec3Cross(&orthogonal0to1, &vecLine0to1, &pile[0]->getAxisY()->direction);
+	D3DXVec3Normalize(&orthogonal0to1, &orthogonal0to1);
 
-	// メモリ―ラインのベクトルを求める
-	vecMemoryLine = *secondNearestPile->getPosition() - *nearestPile->getPosition();
-	D3DXVec3Normalize(&vecMemoryLine, &vecMemoryLine);
-	// 外積でメモリーラインに直交するベクトルを求める
-	D3DXVec3Cross(&orthogonalVector, &vecMemoryLine, &nearestPile->getAxisY()->direction);
-	D3DXVec3Normalize(&orthogonalVector, &orthogonalVector);
+	D3DXVECTOR3 vecLine0to2;		// 最短パイル⇔第3最短パイルのベクトル（正規化済）
+	D3DXVECTOR3 orthogonal0to2;		// 最短メモリーラインに直交するベクトル（正規化済）
+	vecLine0to2 = *pile[2]->getPosition() - *pile[0]->getPosition();
+	D3DXVec3Normalize(&vecLine0to2, &vecLine0to2);
+	D3DXVec3Cross(&orthogonal0to2, &vecLine0to2, &pile[0]->getAxisY()->direction);
+	D3DXVec3Normalize(&orthogonal0to2, &orthogonal0to2);
 
-	//--------------------------------------------------
-	// 求めるべき座標がパイル付近かライン付近か判断する
-	//--------------------------------------------------
-	// エージェントと最短距離パイルのベクトルとメモリーラインのベクトルの内積の結果から
-	// 最寄りの座標がメモリーパイルを設置した角(カド)付近かラインに付近かを判定する
-	D3DXVECTOR3 slipVecAgentToPile = slip(
-		*nearestPile->getPosition() - *agentAI->getPosition(),
-		nearestPile->getReverseAxisY()->direction);
-	if (D3DXVec3Dot(&vecMemoryLine, &slipVecAgentToPile) < 0)
-	{
-		// 2つのベクトルがなす角は鈍角のためエージェントは辺の外側にいる
-		coordIsCorner = true;
-	}
-	else
-	{
-		// 2つのベクトルがなす各は鋭角のためエージェントは辺の垂線
-		coordIsCorner = false;
-	}
+	D3DXVECTOR3 posLine0to1;		// 最短パイル⇔第2最短パイルのラインを切断する座標
+	D3DXVECTOR3 posLine0to2;		// 最短パイル⇔第3最短パイルのラインを切断する座標
+
 
 	//----------------
 	// 座標を算出する
 	//----------------
-	if (coordIsCorner)
-	{
-		recognitionBB->setLineCutCoord(*nearestPile->getPosition());
-	}
-	else
-	{
-		// メモリーライン平面にエージェントから垂線を下ろして
-		// 当たった座標⇔フィールド間のベクトルを伸長し座標をつくる
+	// ここでやっていること
+	// (1)平面の方程式を求めてエージェントの座標との距離を求める
+	// (2)距離を利用して平面との交点を求める
+	// (3)フィールド座標から交点までのベクトルをフィールド半径まで伸長し座標とする
 
-		float d = -(orthogonalVector.x * nearestPile->getPosition()->x
-			+ orthogonalVector.y * nearestPile->getPosition()->y
-			+ orthogonalVector.z * nearestPile->getPosition()->z);
+	{// 最短パイル⇔第2最短パイルのラインを切断する座標を求める
+		float d = -(orthogonal0to1.x * pile[0]->getPosition()->x
+			+ orthogonal0to1.y * pile[0]->getPosition()->y
+			+ orthogonal0to1.z * pile[0]->getPosition()->z);
 
-		float distance = (orthogonalVector.x * agentAI->getPosition()->x
-			+ orthogonalVector.y * agentAI->getPosition()->y
-			+ orthogonalVector.z * agentAI->getPosition()->z);
+		float distance = (orthogonal0to1.x * agentAI->getPosition()->x
+			+ orthogonal0to1.y * agentAI->getPosition()->y
+			+ orthogonal0to1.z * agentAI->getPosition()->z + d);
 
-		D3DXVECTOR3 intersection = (-orthogonalVector * distance) + *agentAI->getPosition();
+		D3DXVECTOR3 intersection = (-orthogonal0to1 * distance) + *agentAI->getPosition();
 		D3DXVECTOR3 vecFieldToMemoryLine = intersection - *Map::getField()->getPosition();
 		D3DXVec3Normalize(&vecFieldToMemoryLine, &vecFieldToMemoryLine);
-		vecFieldToMemoryLine * Map::getField()->getRadius();
-
-		recognitionBB->setLineCutCoord(vecFieldToMemoryLine);
+		posLine0to1 = vecFieldToMemoryLine * Map::getField()->getRadius();
 	}
+
+	//if(opponent->getElementMemoryPile() > 2)
+	{// 最短パイル⇔第3最短パイルのラインを切断する座標を求める
+		float d = -(orthogonal0to2.x * pile[0]->getPosition()->x
+			+ orthogonal0to2.y * pile[0]->getPosition()->y
+			+ orthogonal0to2.z * pile[0]->getPosition()->z);
+
+		float distance = (orthogonal0to2.x * agentAI->getPosition()->x
+			+ orthogonal0to2.y * agentAI->getPosition()->y
+			+ orthogonal0to2.z * agentAI->getPosition()->z + d);
+
+		D3DXVECTOR3 intersection = (-orthogonal0to2 * distance) + *agentAI->getPosition();
+		D3DXVECTOR3 vecFieldToMemoryLine = intersection - *Map::getField()->getPosition();
+		D3DXVec3Normalize(&vecFieldToMemoryLine, &vecFieldToMemoryLine);
+		posLine0to2 = vecFieldToMemoryLine * Map::getField()->getRadius();
+	}
+
+
+	//----------------
+	// 座標を決定する
+	//----------------
+#define DIFFERENSE_BETWEEN_GROUND	(2.5f)
+	D3DXVECTOR3 slipVecAgentToPile0 = slip(
+		*agentAI->getPosition() - *pile[0]->getPosition(),
+		pile[0]->getReverseAxisY()->direction);
+
+		float dot0to1 = D3DXVec3Dot(&vecLine0to1, &slipVecAgentToPile0);
+		float dot0to2 = D3DXVec3Dot(&vecLine0to2, &slipVecAgentToPile0);
+
+		// エージェント⇔最短パイルのベクトルがパイル同士のベクトル２つに対して
+		// どの程度角度が開いているかにより座標を３つから選択する
+		if (dot0to1 < 0.0f && dot0to2 < 0.0f)
+		{// 両方のベクトルに対し鈍角
+			recognitionBB->setLineCutCoord(
+				*pile[0]->getPosition() + pile[0]->getReverseAxisY()->direction * DIFFERENSE_BETWEEN_GROUND);
+		}
+		else if (/*dot0to1 < 0.0f &&*/ dot0to2 > 0.0f)
+		{
+			recognitionBB->setLineCutCoord(posLine0to2);
+		}
+		else if (dot0to1 > 0.0f /*&& dot0to2 < 0.0f*/)
+		{
+			recognitionBB->setLineCutCoord(posLine0to1);
+		}
+
 
 #ifdef RENDER_LINE_CUT_POINT
 	D3DXMATRIX pointWorldMatrix;
 	D3DXMatrixIdentity(&pointWorldMatrix);
-	D3DXMatrixTranslation(&pointWorldMatrix,
-		nearestPile->getPosition()->x,
-		nearestPile->getPosition()->y,
-		nearestPile->getPosition()->z);
 	//D3DXMatrixTranslation(&pointWorldMatrix,
-	//	recognitionBB->getLineCutCoord().x,
-	//	recognitionBB->getLineCutCoord().y,
-	//	recognitionBB->getLineCutCoord().z);
+	//	pile[0]->getPosition()->x,
+	//	pile[0]->getPosition()->y,
+	//	pile[0]->getPosition()->z);
+	D3DXMatrixTranslation(&pointWorldMatrix,
+		recognitionBB->getLineCutCoord().x,
+		recognitionBB->getLineCutCoord().y,
+		recognitionBB->getLineCutCoord().z);
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);
 	device->LightEnable(0, false);
