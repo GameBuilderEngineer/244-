@@ -327,15 +327,6 @@ void Game::update(float _frameTime) {
 	chinginManager.update(sound, frameTime);
 	D3DXVECTOR3 chinginTestPos = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
 
-	// エフェクトの更新
-	effectManager.update(frameTime, player[0]);
-	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
-
-	if (input->isKeyDown('E')) {
-		effectManager.generateEffect(100, temp2);
-	};
-
-
 	// マップの更新(ノード担当範囲に含むワスレモノを検知)
 	map.update(frameTime, wasuremono);
 }

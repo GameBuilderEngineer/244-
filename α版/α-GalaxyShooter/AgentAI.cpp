@@ -202,12 +202,12 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	recorvery(frameTime);
 
 #ifdef _DEBUG
-// デバッグモードのときはコントローラの入力を一部受け付ける
-// 特段理由はない　せっかくだから
+	// デバッグモードのときはコントローラの入力を一部受け付ける
+	// 特段理由はない　せっかくだから
 
-	//===========
-	//【移動処理】
-	//===========
+		//===========
+		//【移動処理】
+		//===========
 	moveOperation();
 
 	//===========
@@ -224,7 +224,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	{
 	case FALL:		updateFall(frameTime);			break;
 	case SKY:		updateSky(frameTime);			break;
-	case GROUND:	updateGround(frameTime, onJump);break;
+	case GROUND:	updateGround(frameTime, onJump); break;
 	case DOWN:		updateDown(frameTime);			break;
 	case REVIVAL:	updateRevival(frameTime);		break;
 	}
@@ -268,7 +268,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	//【カメラの操作】
 	//===========
-	camera->setUpVector(axisY.direction);				
+	camera->setUpVector(axisY.direction);
 	camera->update();
 
 	//==========================
@@ -296,7 +296,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	}
 
 	// メモリーラインの更新
-	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
+	memoryLine.update(device, frameTime, memoryLineNS::PENTAGON);
 
 	//スターラインの更新
 	starLine.update(device, frameTime, memoryLineNS::STAR);//スターラインの更新
@@ -310,7 +310,10 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	//【衝撃波の更新】
 	//===========
-	updateShockWave(frameTime);
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		updateShockWave(frameTime, i);
+	}
 }
 
 
