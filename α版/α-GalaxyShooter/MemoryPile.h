@@ -2,10 +2,11 @@
 //【MemoryLine.h】
 // 作成者：HAL東京GP12A332 11 菅野 樹
 // 作成日：2019/07/04
-// 更新日：2019/08/04
+// 更新日：2019/09/03
 //===================================================================================================================================
 #pragma once
 #include "Object.h"
+#include "Lambert.h"
 
 namespace memoryPileNS
 {
@@ -17,6 +18,7 @@ class MemoryPile :public Object
 private:
 	float lostTime;
 	bool onLost;
+
 public:
 	//Method
 	MemoryPile();

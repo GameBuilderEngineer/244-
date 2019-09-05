@@ -265,5 +265,8 @@ void Map::createNode(LPDIRECT3DDEVICE9 device)
 	newNode->clearWasuremonoCount();
 	newNode->clearAmount();
 	newNode->boundingSphere.initialize(device, newNode->getPosition(), sphere);
+#ifdef _DEBUG
+	newNode->isRed = false;
+#endif
 	mapNode.emplace_back(newNode);
 }

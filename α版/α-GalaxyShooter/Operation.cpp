@@ -176,9 +176,4 @@ void Operation::AI()
 //=============================================================================
 void Operation::uninitialize()
 {
-	// キーボード説明終了
-	keyOpe.uninitialize();
-
-	// パッド説明終了
-	padOpe.uninitialize();
 }

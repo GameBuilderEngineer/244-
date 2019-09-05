@@ -59,15 +59,6 @@ HRESULT Credit2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 //=============================================================================
 void Credit2D::uninitialize(void)
 {
-	// クレジット2D画像解放
-	//setTexture(NULL);
-
-	// インスタンスが存在しなければテクスチャ解放
-	//cntUI--;
-	//if (cntUI < 0)
-	//{
-	//	SAFE_RELEASE(textureCredit2D)
-	//}
 }
 //=============================================================================
 // 更新処理

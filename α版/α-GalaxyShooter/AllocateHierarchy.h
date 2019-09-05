@@ -16,7 +16,9 @@ class D3DXFrameDerived : public D3DXFRAME	// "D3DXFRAME"から派生した構造
 {
 public:
 	D3DXMATRIXA16 combinedTransformationMatrix;
+#ifdef _RELEASE
 	void *operator new(size_t index) { return _aligned_malloc(index, 16); }
+#endif
 };
 // D3DXMeshContainerDerived
 class D3DXMeshContainerDerived : public D3DXMESHCONTAINER	// "D3DXMESHCONTAINER"から派生した構造体：各メッシュと共に、保存されるアプリ固有の情報を追加できる

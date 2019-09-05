@@ -2,7 +2,7 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/05
+// [更新日]2019/08/26
 //===================================================================================================================================
 #include "Camera.h"
 
@@ -61,7 +61,6 @@ void Camera::update()
 		relativeGaze.y*D3DXVECTOR3(world._21,world._22,world._23)+
 		relativeGaze.z*D3DXVECTOR3(world._31,world._32,world._33);
 
-	
 	setViewProjection();
 }
 
@@ -109,15 +108,16 @@ void Camera::setAspect(DWORD _windowWidth, DWORD _windowHeight)
 	windowHeight = _windowHeight;
 	aspect = (FLOAT)windowWidth / (FLOAT)windowHeight;
 }
-
+void Camera::setFieldOfView(float value)
+{
+	fieldOfView = value;
+}
 //プロジェクション行列とビュー行列の設定
 HRESULT Camera::setViewProjection()
 {
 	D3DXMatrixLookAtLH(&view, &position, &gazePosition, &upVector);
 	// プロジェクション
-	//D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 2.5, aspect, 0.1f, 1000.0f);
-	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 2.5, aspect, 0.1f, 10000.0f);
-
+	D3DXMatrixPerspectiveFovLH(&projection, fieldOfView, aspect, 0.1f, 1000.0f);
 	return S_OK;
 }
 

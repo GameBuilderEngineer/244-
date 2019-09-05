@@ -2,7 +2,7 @@
 //【GameMaster.h】
 // [作成者] HAL東京GP12A332 11 菅野 樹
 // [作成日] 2019/07/31
-// [更新日] 2019/08/22
+// [更新日] 2019/08/26
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -32,7 +32,8 @@ namespace gameMasterNS {
 
 	const int COUNT_DOWN = 3;
 	const float COUNT_INTERVAL = 1.0f;
-
+	const float DISPLAY_START_TIME = 1.0f;
+	const float DISPLAY_FINISH_TIME = 1.0f;
 }
 
 struct playerTable
@@ -52,6 +53,10 @@ class GameMaster :public Base
 private:
 	float gameTimer;										//ゲーム時間
 	float countDownTimer;									//カウントダウン時間
+	float displayStartTimer;								//スタートアナウンス表示時間
+	float displayFinishTimer;								//フィニッシュアナウンス表示時間
+	bool alreadyStart;										//スタート済
+	bool alreadyFinish;										//フィニッシュ済
 	int count;												//ゲームカウント
 	playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
 	int chingin[playerNS::NUM_PLAYER];						//	チンギン
@@ -68,7 +73,7 @@ public:
 	void gameStartCount(float frameTime);					//ゲーム開始時のカウントダウン
 	void gameFinishCount(float frameTime);					//ゲーム終了時のカウントダウン
 	void setCountDown();									//カウントダウンのセット
-	void resetGameTime();									//ゲーム時間のリセット
+	void gameStart();										//ゲーム開始処理
 
 	//setter
 	void setPlayerCharacter(int playerNo, int playerType, int modelType);	//キャラクター情報をセット
@@ -78,7 +83,12 @@ public:
 	playerTable* getPlayerInfomation();
 	int getResult();
 	float getGameTime();
-	bool whetherGameOver();
 	int getCount();
+	bool whetherGameOver();
+	bool whetherAlreadyStart();
+	bool whetherAlreadyFinish();
+	bool whetherCountFinish();
+	bool displayStart();		//スタート表記表示時間
+	bool displayFinish();		//フィニッシュ表記表示時間
 };
 

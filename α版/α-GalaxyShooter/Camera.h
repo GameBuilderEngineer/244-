@@ -2,12 +2,16 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/05
+// [更新日]2019/08/26
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
 #include "Window.h"
 #include "Direct3D9.h"
+
+namespace cameraNS {
+
+}
 
 class Camera : public Base
 {
@@ -63,6 +67,7 @@ public:
 
 
 	void setAspect(DWORD _windowWidth, DWORD _windowHeight);
+	void setFieldOfView(float value);
 	void setPosition(D3DXVECTOR3 _position) { position = _position; };
 	void setGaze(D3DXVECTOR3 _gazePosition) { gazePosition = _gazePosition; };
 	void setUpVector(D3DXVECTOR3 _upVector) { upVector = _upVector; };

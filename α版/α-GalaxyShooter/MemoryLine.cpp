@@ -309,11 +309,41 @@ float MemoryLine::calculationDistance(D3DXVECTOR3 point)
 		if (i == 0)result = distance;//0番は必ずアクティブであり、初回に代入する必要がある。
 		else result = min(result, distance);//より近い方を代入
 	}
+
 	return result;
 }
 
 //===================================================================================================================================
-//【距離計算】
+//【ある点と最も近い位置】
+//===================================================================================================================================
+D3DXVECTOR3 MemoryLine::calculationNearPoint(D3DXVECTOR3 point)
+{
+	D3DXVECTOR3 result;
+	float minDistance = THICKNESS;
+	for (int i = 0; i < pileNum; i++)
+	{
+		if (!joinTarget[i].getActive())continue;//接続元がアクティブでない場合スキップ
+
+		D3DXVECTOR3 nearPoint = nearestPointOnLine(line[i].start, line[i].end, point);//ライン上の最も近い点を算出
+		float distance = D3DXVec3Length(&(point - nearPoint));//最も近い点との距離を測定する
+
+		//0番は必ずアクティブであり、初回に代入する必要がある。
+		if (i == 0)
+		{
+			minDistance = distance;
+			result = nearPoint;
+		}
+		else if (distance < minDistance) {
+			minDistance = distance;//より近い方を代入
+			result = nearPoint;
+		}
+	}
+
+	return result;
+}
+
+//===================================================================================================================================
+//【衝突判定】
 //（引数１）measurementPosition：測定位置
 //（引数２）radius：半径
 //===================================================================================================================================
@@ -332,4 +362,12 @@ bool MemoryLine::collision(D3DXVECTOR3 measurementPosition,float radius)
 void MemoryLine::resetCurrentRenderNum()
 {
 	currentRenderNum = 0;
+}
+
+//===================================================================================================================================
+//【getter】
+//===================================================================================================================================
+bool MemoryLine::getDisconnected()
+{
+	return disconnected;
 }

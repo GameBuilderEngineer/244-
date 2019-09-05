@@ -24,4 +24,12 @@ void RecognitionBB::initialize(void)
 	myPosition = NULL;
 	inAir = false;
 	isDown = false;
+
+	distanceBetweenPlayers = 0.0f;
+
+	ZeroMemory(recursionRecognition, sizeof(RecursionRecognition) * NUM_RECURSION_RECOGNITION);
+	recursionPolicy = RECURSION_PERSONALITY::LARGEST_WEIGHT;// œƒŠƒJ[ƒWƒ‡ƒ“‚Ì•ûj‚ğİ’è
+	ZeroMemory(&runningRecursion, sizeof(RecursionRecognition));
+	isRecursionRunnning = false;
+	pileCount = 0;
 }

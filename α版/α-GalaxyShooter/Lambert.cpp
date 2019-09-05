@@ -2,7 +2,7 @@
 //yLambert.cppz
 // [ì¬ŽÒ]HAL“Œ‹žGP12A332 11 ›–ì Ž÷
 // [ì¬“ú]2019/08/07
-// [XV“ú]2019/08/07
+// [XV“ú]2019/09/03
 //===================================================================================================================================
 #include "Lambert.h"
 
@@ -33,12 +33,9 @@ void Lambert::restore()
 	}
 }
 
-HRESULT Lambert::load()
+HRESULT Lambert::load(LPD3DXEFFECT _effect)
 {
-	D3DCAPS9 caps;
-	device->GetDeviceCaps(&caps);
-	LPD3DXBUFFER err = NULL;
-	HRESULT hr = D3DXCreateEffectFromFile(device, "Lambert.fx", NULL, NULL, 0, NULL, &effect, &err);
+	this->effect = _effect;
 
 	technique		= effect->GetTechniqueByName("main");
 	WVP				= effect->GetParameterByName(NULL, "matrixWVP");

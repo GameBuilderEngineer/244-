@@ -2,7 +2,7 @@
 //【ShaderLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/16
-// [更新日]2019/08/07
+// [更新日]2019/09/03
 //===================================================================================================================================
 #include "ShaderLoader.h"
 using namespace shaderNS;
@@ -15,6 +15,7 @@ ShaderLoader::ShaderLoader()
 	shaderName[INSTANCE_STATIC_MESH] = { "InstancingStaticMesh.fx" };
 	shaderName[RECURSION] = { "Recursion.fx" };
 	shaderName[SHOCK_WAVE] = { "ShockWave.fx" };
+	shaderName[LAMBERT] = { "Lambert.fx" };
 }
 
 ShaderLoader::~ShaderLoader()

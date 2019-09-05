@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/03
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include <vector>
@@ -36,6 +36,7 @@
 #include "UIRevival.h"
 #include "UICutMemoryLine.h"
 #include "EffectManager.h"
+#include "Lambert.h"
 
 #include "PlayerAnimation.h"
 
@@ -52,6 +53,8 @@ namespace gameNS
 	const int NUM_BULLET = 30;
 	const int NUM_MAGNET = 30;
 	const int NUM_CUBE = 1000;
+	const int NUM_MEMORY_PILE = 5;
+
 	const D3DXVECTOR3 PLANET_POSITION(0.0f,0.0f,0.0f);
 
 	const D3DXVECTOR3 PLAYER_POSITION[NUM_PLAYER] =
@@ -70,7 +73,9 @@ namespace gameNS
 	};
 	
 	const D3DXVECTOR3 CAMERA_RELATIVE_GAZE = D3DXVECTOR3(0,10,0);
-	
+		const BYTE BUTTON_BULLET = virtualControllerNS::R1;
+		const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
+
 	enum {
 		COLONY1,
 		COLONY2,
@@ -105,7 +110,6 @@ private:
 	Object testObject;//仮
 	Object testCube;//仮
 	//プレイヤー
-	//Player player[gameNS::NUM_PLAYER];
 	Player *player[gameNS::NUM_PLAYER];
 	//プレイヤークラスへ統合
 	Map map;// 仮
@@ -113,7 +117,6 @@ private:
 	std::vector<Wasuremono*> wasuremono;
 	WasuremonoManager wasuremonoManager;
 	ChinginManager chinginManager;
-	EffectManager effectManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
 	UIPause uiPause;
@@ -122,6 +125,18 @@ private:
 	bool endCountFlag;
 	bool onUI = true;
 	float frameTime = 0.0f;//フレームタイム保存変数
+
+
+	//シーンのカラー情報とZ値情報を取得するクラス
+	Lambert* lambert;
+
+	//シーンのカラー情報を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 colorTexture = NULL;
+	LPDIRECT3DSURFACE9 colorSurface = NULL;
+
+	//シーンのZ値を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 zMapTexture = NULL;
+	LPDIRECT3DSURFACE9 zMapSurface = NULL;
 
 public:
 	Game();

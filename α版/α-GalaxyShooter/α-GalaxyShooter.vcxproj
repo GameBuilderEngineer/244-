@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E9859007-5E09-4B55-805C-08A6E9BE5A43}</ProjectGuid>
     <RootNamespace>αGalaxyShooter</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,6 +141,7 @@
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletEffect.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelect.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
@@ -153,10 +154,12 @@
     <ClCompile Include="Direct3D9.cpp" />
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="DownEffect.cpp" />
     <ClCompile Include="EffectDew.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
+    <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
@@ -169,6 +172,7 @@
     <ClCompile Include="KeyOpe.cpp" />
     <ClCompile Include="Lambert.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LineEffect.cpp" />
     <ClCompile Include="Magnet.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MemoryLine.cpp" />
@@ -182,6 +186,7 @@
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAnimation.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointSprite.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Recursion.cpp" />
@@ -214,6 +219,7 @@
     <ClCompile Include="UIResult.cpp" />
     <ClCompile Include="UIRevival.cpp" />
     <ClCompile Include="UIScreenSplitLine.cpp" />
+    <ClCompile Include="UpEffect.cpp" />
     <ClCompile Include="UITitle.cpp" />
     <ClCompile Include="UtilityFunction.cpp" />
     <ClCompile Include="VolumeLight.cpp" />
@@ -243,6 +249,7 @@
     <ClInclude Include="BlackBoardRecognition.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletEffect.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="ChinginManager.h" />
@@ -255,9 +262,11 @@
     <ClInclude Include="Direct3D9.h" />
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="DownEffect.h" />
     <ClInclude Include="EffectDew.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
+    <ClInclude Include="Fader.h" />
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
@@ -270,6 +279,7 @@
     <ClInclude Include="KeyOpe.h" />
     <ClInclude Include="Lambert.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LineEffect.h" />
     <ClInclude Include="Magnet.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MemoryLine.h" />
@@ -282,6 +292,7 @@
     <ClInclude Include="PathPlanning.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PlayerAnimation.h" />
     <ClInclude Include="PointSprite.h" />
     <ClInclude Include="Ray.h" />
@@ -315,6 +326,7 @@
     <ClInclude Include="UIResult.h" />
     <ClInclude Include="UIRevival.h" />
     <ClInclude Include="UIScreenSplitLine.h" />
+    <ClInclude Include="UpEffect.h" />
     <ClInclude Include="UITitle.h" />
     <ClInclude Include="UtilityFunction.h" />
     <ClInclude Include="UIRecursion.h" />

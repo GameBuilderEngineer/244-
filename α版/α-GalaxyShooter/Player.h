@@ -2,7 +2,7 @@
 //【Player.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/22
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include "Object.h"
@@ -15,6 +15,10 @@
 #include "Camera.h"
 #include "ShockWave.h"
 #include "Sound.h"
+#include "BulletEffect.h"
+#include "DownEffect.h"
+#include "UpEffect.h"
+#include "LineEffect.h"
 #include "Animation.h"
 
 
@@ -96,6 +100,7 @@ namespace playerNS{
 
 	const int NUM_BULLET				= 30;		//弾の数
 	const int NUM_MEMORY_PILE			= 5;		//メモリーパイルの数
+	const int NUM_SHOCK_WAVE			= 3;		//衝撃波の数
 	const int AMOUNT_RECOVERY			= 2;		//回復量
 	const int MAX_HP					= 100;		//ＨＰ最大値
 	const int INCREASE_REVIVAL_POINT	= 50;		//復活ポイント増加値
@@ -142,6 +147,8 @@ protected:
 	int wage;											//チンギン
 	Camera* camera;										//カメラへのポインタ
 	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
+	DownEffect downEffect;								//ダウンエフェクト
+	UpEffect upEffect;									//アップエフェクト
 
 	int state;											//状態変数
 	
@@ -166,6 +173,7 @@ protected:
 	//弾関係
 	int elementBullet;									//弾アクセス要素数
 	float intervalBullet;								//発弾間隔
+	BulletEffect bulletEffect;							//弾エフェクト
 
 	//接地関係
 	float difference;									//フィールド補正差分
@@ -183,14 +191,16 @@ protected:
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
 	float recursionTimer;								//リカージョン生存時間
+	LineEffect lineEffect;								//ラインエフェクト
 
 	//衝撃波
-	ShockWave* shockWave;								//衝撃波
-	bool onShockWave;									//衝撃波生成フラグ
+	ShockWave* shockWave[playerNS::NUM_SHOCK_WAVE];		//衝撃波
+	bool onShockWave[playerNS::NUM_SHOCK_WAVE];			//衝撃波生成フラグ
 	bool canShockWave;									//衝撃波使用可能フラグ
 
 	//衝突情報
 	bool collidedOpponentMemoryLine;					//相手のメモリーラインとの衝突フラグ
+	D3DXVECTOR3 collideMemoryLinePosition;				//相手のメモリーラインとの衝突位置
 
 	//アクションフラグ
 	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
@@ -202,7 +212,6 @@ protected:
 public:
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
-
 
 	Player();
 	~Player();
@@ -232,6 +241,7 @@ public:
 	void updateGround(float frameTime, bool onJump);
 	void updateFall(float frameTime);
 	void updateDown(float frameTime);
+	void updateUpEffect(float frameTime);
 	void updateSky(float frameTime);
 	void updateRevival(float frameTime);
 	void updateBullet(float frameTime);
@@ -239,9 +249,10 @@ public:
 	void updateMemoryItem(float frameTime);
 	void deleteMemoryItem();
 	void triggerShockWave();
-	void deleteShockWave();
-	void updateShockWave(float frameTime);
+	void deleteShockWave(int n);
+	void updateShockWave(float frameTime,int n);
 	void disconnectMemoryLine();
+	bool collideShockWave(D3DXVECTOR3 point, float radius);
 
 	//setter
 	void setInput(Input* _input);
@@ -250,6 +261,7 @@ public:
 	void damgae(int value);
 	void recoveryHp(int value);
 	void setCollidedMemoryLine(bool frag);
+	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
 
 	//getter
 	int getHp();
@@ -265,7 +277,9 @@ public:
 	bool whetherGenerationRecursion();
 	bool whetherCollidedOpponentMemoryLine();
 	bool messageDisconnectOpponentMemoryLine();
+	int getElementMemoryPile();
 	Recursion* getRecursion();
+	MemoryPile* getMemoryPile();
 	MemoryLine* getMemoryLine();
 
 	HRESULT initializeAnimation(LPDIRECT3DDEVICE9 _device);
@@ -279,4 +293,8 @@ public:
 	void updateAnimationNextFastRun(void);
 	void renderAnimation(LPDIRECT3DDEVICE9 _device, D3DXMATRIX* _matrixWorld);
 	void installationAnimation(void);
+	D3DXVECTOR3 bulletVec();
+	D3DXVECTOR3 downVec();
+	D3DXVECTOR3 upVec();
+
 };

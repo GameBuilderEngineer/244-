@@ -139,6 +139,4 @@ void Splash::AI()
 //=============================================================================
 void Splash::uninitialize()
 {
-	// スプラッシュ2D終了
-	splash2D.uninitialize();
 }

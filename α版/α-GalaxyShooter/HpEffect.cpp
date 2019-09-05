@@ -80,7 +80,7 @@ void HpEffect::update(void)
 		// 処理をつくる
 		effectFade();
 	}
-
+	// 時間になったら終了
 	if (cntFrame == settingFrame)
 	{
 		isActive = false;
@@ -93,6 +93,7 @@ void HpEffect::update(void)
 //=============================================================================
 void HpEffect::render(LPDIRECT3DDEVICE9 device)
 {
+	// 使用していなかったら戻る
 	if (!isActive) return;
 
 	// 体力エフェクト描画
@@ -106,10 +107,12 @@ void HpEffect::effectFade(void)
 	// アルファ減算
 	alphaColor -= HP_EFFECT_SUB_TIME;
 
+	// アルファが0になったら元に戻す
 	if (alphaColor <= 0)
 	{
 		alphaColor = HP_EFFECT_ALPHA_MAX;
 	}
 
+	// エフェクト位置設定
 	hpEffect.setAlpha(alphaColor);
 }

@@ -2,7 +2,7 @@
 //【TextureLoader.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/07
+// [更新日]2019/09/05
 //===================================================================================================================================
 #include "TextureLoader.h"
 using namespace textureLoaderNS;
@@ -67,6 +67,14 @@ TextureLoader::TextureLoader()
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
 	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };
 	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
+	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
+
+	textureName[POSE] = { "Pause.png" };
+	textureName[BULLET_EFFECT] = { "bakuha.png" };
+	textureName[DOWN_EFFECT] = { "Down.png" };
+	textureName[UP_EFFECT] = { "UP.png" };
+	textureName[BULLET_SMOKE_EFFECT] = { "UP.png" };
+
 	textureName[UI_REVIVAL_CONCENTRATION] = { "Game_Revival_Concentration.png" };
 	textureName[UI_REVIVAL_TONE] = { "Game_Revival_Tone.png" };
 	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };

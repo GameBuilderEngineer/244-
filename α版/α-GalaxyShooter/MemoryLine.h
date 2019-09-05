@@ -2,7 +2,7 @@
 //【MemoryLine.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/11
-// [更新日]2019/08/20
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -56,6 +56,7 @@ public:
 	//operation
 	bool collision(D3DXVECTOR3 position, float radius);	//衝突検知
 	float calculationDistance(D3DXVECTOR3 point);		//(演算)ある点とラインとの距離を戻す
+	D3DXVECTOR3 calculationNearPoint(D3DXVECTOR3 point);//(演算)ある点と最も近い位置を戻す
 	void setLine(LPDIRECT3DDEVICE9 device);				//(更新)メモリーパイルの間のラインを設定する
 	void setStarLine(LPDIRECT3DDEVICE9 device,float frameTime);			//(更新)リカージョンが完成した時の星形のラインを設定する
 	void lost(float frameTime);							//(更新)消失処理
@@ -63,4 +64,5 @@ public:
 	//setter
 	void resetCurrentRenderNum();
 	//getter
+	bool getDisconnected();
 };

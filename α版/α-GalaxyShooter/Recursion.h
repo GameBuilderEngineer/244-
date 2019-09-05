@@ -55,4 +55,7 @@ public:
 	//================================================================
 	bool collide(D3DXVECTOR3 targetPosition, D3DXVECTOR3 targetCenter, float targetRadius, D3DXMATRIX targetMatrix);
 
+
+	//getter
+	D3DXVECTOR3 getWeightCenter();
 };

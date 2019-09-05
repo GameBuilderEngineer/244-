@@ -74,6 +74,7 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView(D3DX_PI / 2.5);
 	}
 
 	// Light
@@ -223,11 +224,9 @@ void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 		_currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::TOON),
 		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE)
-	);
-
-	return;
+		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 }
+
 //============================================================================================================================================
 // render2D
 // •`‰æ - 2D

@@ -279,3 +279,11 @@ bool Recursion::collide(D3DXVECTOR3 targetPosition,D3DXVECTOR3 targetCenter, flo
 	return collide;
 
 }
+
+//===================================================================================================================================
+//ÅygetterÅz
+//===================================================================================================================================
+D3DXVECTOR3 Recursion::getWeightCenter()
+{
+	return weightCenter;
+}

@@ -23,7 +23,7 @@ void InstancingEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMAT
 	D3DXMATRIX cancelRotation = view;
 	cancelRotation._41 = cancelRotation._42 = cancelRotation._43 = 0;
 	D3DXMatrixInverse(&cancelRotation, NULL, &cancelRotation);
-
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	//αテスト
 	device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	device->SetRenderState(D3DRS_ALPHAREF, 0x00);
@@ -79,4 +79,5 @@ void InstancingEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMAT
 
 	// ラインティングを有効にする
 	device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
