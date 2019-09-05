@@ -7,7 +7,6 @@
 #include "WasuremonoManager.h"
 #include "WasuremonoSeries.h"
 
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -22,34 +21,48 @@ WasuremonoManager::WasuremonoManager(void)
 //=============================================================================
 WasuremonoManager::~WasuremonoManager(void)
 {
-	SAFE_DELETE(table);
 }
 
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasuremono*> *wasuremono, StaticMeshLoader* staticMeshLoader, Planet* field)
+void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device,
+	std::vector<Wasuremono*> *_wasuremono,
+	StaticMeshLoader* staticMeshLoader,
+	Planet* _field)
 {
-	if (table == NULL)
-	{	// インスタンス生成時のみ
-		table = new WasuremonoTable(staticMeshLoader);	// テーブル生成
-		Wasuremono::setTable(table);					// テーブル→ワスレモノに設定
-		this->device = device;
+	table = new WasuremonoTable(staticMeshLoader);	// テーブル生成
+	Wasuremono::setTable(table);					// テーブル→ワスレモノ静的メンバに設定
+	wasuremono = _wasuremono;
+	wasuremono->reserve(WASUREMONO_MAX);			// ワスレモノポインタvectorのメモリのみ先に増やしておく（再確保防止）
+	ZeroMemory(typeCount, sizeof(int) * NUM_WASUREMONO);
+	field = _field;
+	this->device = device;
+	timeCnt = 0.0f;
+
+	//--------------------
+	// ワスレモノ一斉配備
+	//--------------------
+	// ワスレモノタイプの決定
+	std::vector<int> type(INITIAL_PLACEMENT_NUMBER);
+	for (size_t i = 0; i < type.size(); i++)
+	{
+		type[i] = decideType();
 	}
 
-	this->wasuremono = wasuremono;
-	wasuremono->reserve(WASUREMONO_MAX);				// vectorのメモリのみ先に確保
-	ZeroMemory(typeCount, sizeof(int) * NUM_WASUREMONO);// ワスレモノタイプのカウントを初期化
+	// ワスレモノ初期座標の決定
+	std::vector<D3DXVECTOR3> position(INITIAL_PLACEMENT_NUMBER);
+	for (size_t i = 0; i < position.size(); i++)
+	{
+		position[i] = positionRand(1.05f/*半径比1.0だとめり込みの関係か著しく位置が偏る*/);
+	}
 
-	// ワスレモノ初期配備
-	setUp();
-
-	timeCnt = 0.0f;
-	respawnMode = 0;
-
-	//unko = create(CHEWING_GUM, &D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-
+	// ワスレモノを一斉生成
+	for (int i = 0; i < INITIAL_PLACEMENT_NUMBER; i++)
+	{
+		(*wasuremono)[i] = create(type[i], &position[i]);
+	}
 }
 
 
@@ -58,7 +71,17 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device, std::vector<Wasurem
 //=============================================================================
 void WasuremonoManager::uninitialize(void)
 {
-	clear();// ワスレモノ一斉破棄
+	SAFE_DELETE(table);	// テーブル破棄
+
+	//----------------------
+	// ワスレモノを一斉破棄
+	//----------------------
+	for (size_t i = 0; i < wasuremono->size(); i++)
+	{
+		delete (*wasuremono)[i];
+	}
+	std::vector<Wasuremono*> temp;	// 一時オブジェクトとスワップして
+	(*wasuremono).swap(temp);		// メモリアロケータに戻す
 }
 
 
@@ -67,42 +90,22 @@ void WasuremonoManager::uninitialize(void)
 //=============================================================================
 void WasuremonoManager::update(float frameTime)
 {
-	// 更新間隔を調整
+	// アクティブでないワスレモノを破棄
+	for (size_t i = 0; i < wasuremono->size(); i++)
+	{
+		if ((*wasuremono)[i]->getActive() == false)
+		{
+			destroy(i);
+		}
+	}
+
+	// 以下の更新間隔を調整
 	timeCnt += frameTime;
 	if (timeCnt < RESPAWN_SURBEY_INTERVAL) { return; }
 	timeCnt = 0.0f;
 
-	// GameSceneで解放するように一旦変更
-	//// 非表示のワスレモノを解放
-	//for (int i = 0; i < wasuremono->size(); i++)
-	//{
-	//	if ((*wasuremono)[i]->getActive() == false)
-	//	{
-	//		SAFE_DELETE((*wasuremono)[i])
-	//		wasuremono->erase(wasuremono->begin() + i);
-	//	}
-	//}
-
-	// 条件に当てはまればリスポーン
-	if (surbeyRespawnCondition() == true)
-	{
-		autoRespawn();
-	}
-}
-
-
-//=============================================================================
-// リスポーン条件を調べる
-//=============================================================================
-bool WasuremonoManager::surbeyRespawnCondition(void)
-{
-	// 仮
-	if (wasuremono->size() < size_t(INITIAL_PLACEMENT_NUMBER * 0.8f))
-	{
-		respawnMode = RANDOM;
-		return true;
-	}
-	return false;
+	// 自動リスポーン
+	autoRespawn();
 }
 
 
@@ -113,21 +116,16 @@ void WasuremonoManager::autoRespawn(void)
 {
 	D3DXVECTOR3 newPosition;
 
-	switch (respawnMode)
+	if (wasuremono->size() < (size_t)WASUREMONO_MAX)
 	{
-	case RANDOM:
-		positionRand(newPosition);
-		create(rand() % NUM_WASUREMONO, &newPosition);
-		break;
-
-	default:
-		break;
+		newPosition = positionRand(1.5f);
+		create(decideType(), &newPosition);
 	}
 }
 
 
 //=============================================================================
-// ワスレモノを生成
+// ワスレモノを１つ生成
 //=============================================================================
 Wasuremono* WasuremonoManager::create(int typeID, D3DXVECTOR3 *position)
 {
@@ -183,90 +181,59 @@ Wasuremono* WasuremonoManager::create(int typeID, D3DXVECTOR3 *position)
 
 
 //=============================================================================
-// ワスレモノを破棄
+// ワスレモノを１つ破棄
 //=============================================================================
-void WasuremonoManager::destroy(int id)
+void WasuremonoManager::destroy(int i)
 {
-	typeCount[(*wasuremono)[id]->getType()]--;	// タイプごとのカウント減らす
-	delete (*wasuremono)[id];
-	wasuremono->erase(wasuremono->begin() + id);
+	typeCount[(*wasuremono)[i]->getType()]--;	// タイプごとのカウント減らす
+	delete (*wasuremono)[i];
+	wasuremono->erase(wasuremono->begin() + i);
 }
 
 
 //=============================================================================
-// ワスレモノ初期配備
+// タイプを決める
 //=============================================================================
-void WasuremonoManager::setUp(void)
+int WasuremonoManager::decideType()
 {
-	std::vector<int> type(INITIAL_PLACEMENT_NUMBER);
-	setUpInitialType(type);
+	int temp = rand() % 10000;
+	float keyValue = temp / 100.0f;	// キー値
+	int ans = -1;					// 返却値
 
-	std::vector<D3DXVECTOR3> position(INITIAL_PLACEMENT_NUMBER);
-	setUpInitialPosition(position);
-
-	for (int i = 0; i < INITIAL_PLACEMENT_NUMBER; i++)
+	// ワスレモノ出現確率をキー値と比較する範囲として扱う
+	// キー値が範囲内に入ったときのワスレモノに決定する
+	float sum = 0.0f;
+	for (int i = 0; i < NUM_WASUREMONO; i++)
 	{
-		(*wasuremono)[i] = create(type[i], &position[i]);
+		sum += table->getProbability(i);
+		if (keyValue < sum)
+		{
+			ans = i;
+		}
 	}
+	return ans;
 }
 
-
-//=============================================================================
-// ワスレモノ一斉破棄
-//=============================================================================
-void WasuremonoManager::clear(void)
-{
-	for (size_t i = 0; i < wasuremono->size(); i++)
-	{
-		delete (*wasuremono)[i];
-	}
-	std::vector<Wasuremono*> temp;
-	(*wasuremono).swap(temp);	// メモリアロケータに戻す
-}
-
-
-//=============================================================================
-// ゲームスタート時にワスレモノのタイプを決めるアルゴリズム
-//=============================================================================
-void WasuremonoManager::setUpInitialType(std::vector<int> &type)
-{
-	for (int i = 0; i < type.size(); i++)
-	{
-		type[i] = rand() % NUM_WASUREMONO;	// 仮
-	}
-}
-
-
-//=============================================================================
-// ゲームスタート時にワスレモノを配置するアルゴリズム
-//=============================================================================
-void WasuremonoManager::setUpInitialPosition(std::vector<D3DXVECTOR3> &position)
-{
-	for (int i = 0; i < position.size(); i++)
-	{
-		positionRand(position[i]);	// 仮
-	}
-}
 
 //=============================================================================
 // ランダム配置
 //=============================================================================
-D3DXVECTOR3 WasuremonoManager::positionRand(D3DXVECTOR3 &out)
+D3DXVECTOR3 WasuremonoManager::positionRand(float radiusRatio)
 {
-	// 仮
-	float x = (float)(rand() % 100);
-	if (rand() % 2) x = -x;
-	float y = (float)(rand() % 100);
-	if (rand() % 2) y = -y;
-	float z = (float)(rand() % 100);
-	if (rand() % 2) z = -z;
+	// ランダムに極角と方位角を決める
+	float latitude = D3DXToRadian(rand() % 181);	// 極角（緯度）
+	float longitude = D3DXToRadian(rand() % 360);	// 方位角（経度）
+
+	// 極座標を直交座標に変換する公式
+	float x = sinf(latitude) * cosf(longitude);
+	float y = sinf(latitude) * sinf(longitude);
+	float z = cosf(latitude);
+
+	// 惑星との距離を調節
 	D3DXVECTOR3 setPos = D3DXVECTOR3(x, y, z);
-	D3DXVec3Normalize(&setPos, &setPos);
-	setPos.x *= 200.0f;
-	setPos.y *= 200.0f;
-	setPos.z *= 200.0f;
-	
-	out = setPos;
+	D3DXVec3Scale(&setPos, &setPos, field->getRadius() * radiusRatio);
+	setPos += *field->getPosition();
+
 	return setPos;
 }
 

@@ -5,10 +5,6 @@
 //-----------------------------------------------------------------------------
 #include "ActionNode.h"
 
-static const float STOP_MOVE_LENGTH = 5.0f;
-static const float STOP_MOVE_LENGTH_STRICT = 3.5f;
-
-
 //=============================================================================
 // コンストラクタ
 //=============================================================================
@@ -34,11 +30,18 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 {
 	switch (tag)
 	{
-	case ACTION_MOVE:	return actionMove(recognitionBB, memoryBB, bodyBB);
-	case ACTION_JUMP:	return actionJump(recognitionBB, memoryBB, bodyBB);
-	case ACTION_SHOOT:	return actionShoot(recognitionBB, memoryBB, bodyBB);
-	case ACTION_PILE:	return actionPile(recognitionBB, memoryBB, bodyBB);
-	default:			return NODE_STATUS::_NOT_FOUND;
+	case ACTION_MOVE:		return actionMove(recognitionBB, memoryBB, bodyBB);
+	case ACTION_JUMP:		return actionJump(recognitionBB, memoryBB, bodyBB);
+	case ACTION_SHOOT:		return actionShoot(recognitionBB, memoryBB, bodyBB);
+	case ACTION_PILE:		return actionPile(recognitionBB, memoryBB, bodyBB);
+	case ACTION_CUT:		return actionCut(recognitionBB, memoryBB, bodyBB);
+	case ACTION_REVIVAL:	return actionRevival(recognitionBB, memoryBB, bodyBB);
+	case ACTION_SKY_MOVE:	return actionSkyMove(recognitionBB, memoryBB, bodyBB);
+	case ACTION_FALL:		return actionFall(recognitionBB, memoryBB, bodyBB);
+
+	default:
+		MessageBox(NULL, TEXT("アクションリストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
+		return NODE_STATUS::_NOT_FOUND;
 	}
 }
 
@@ -48,11 +51,14 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 //=============================================================================
 NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	// 到着していたら停止して成功
+	static const float STOP_MOVE_LENGTH = 5.0f;
+	static const float STOP_MOVE_LENGTH_STRICT = 3.5f;
+
+	// 到着していたら停止で失敗
 	if (bodyBB->getIsArrived())
 	{
 		bodyBB->setMove(false);
-		return NODE_STATUS::SUCCESS;
+		return NODE_STATUS::FAILED;
 	}
 
 	// 到着していない場合実行中
@@ -152,6 +158,85 @@ NODE_STATUS ActionNode::actionPile(RecognitionBB* recognitionBB, MemoryBB* memor
 	else
 	{
 		bodyBB->setLocatingPile(true);
+
+		// パイルの5つめを打ち込みしたらリカージョン実行中フラグをオフにする
+		if (*recognitionBB->getPileCount() == 5)
+		{
+			recognitionBB->setIsRecursionRunning(false);
+			recognitionBB->flag = false;// ●
+			*recognitionBB->getPileCount() = 0;
+		}
+
 		return NODE_STATUS::SUCCESS;
 	}
+}
+
+
+//=============================================================================
+// アクション：メモリーライン切断
+//=============================================================================
+NODE_STATUS ActionNode::actionCut(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	//----------------------------------------------------------------
+	// 切断を実行後切れたかどうか取得できるのが1フレーム後になるので
+	// 初回は必ずFAILEDが返る
+	// 切れていればSUCCESSではなく「切断」の実行があればSUCCESSとする
+	//----------------------------------------------------------------
+	if (opponent->getMemoryLine()->getDisconnected())
+	{// メモリーラインが切れている
+		if (bodyBB->getOnceTriedCut())
+		{// 切断アクションを実行済み
+			return NODE_STATUS::SUCCESS;// 切断に成功
+		}
+		else
+		{
+			return NODE_STATUS::FAILED;	// 切断に失敗（切れていても自分で切断していない）
+		}
+		bodyBB->setOnceTriedCut(false);
+	}
+	else
+	{// メモリーラインは切れていない
+		bodyBB->setCuttingLine(true);
+		bodyBB->setOnceTriedCut(true);
+		return NODE_STATUS::FAILED;		// 切断に失敗
+	}
+}
+
+
+//=============================================================================
+// アクション：ダウン復活
+//=============================================================================
+NODE_STATUS ActionNode::actionRevival(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	static const float INCREASE_INTERVAL = 0.3f;	//（秒）ボタン連打の間隔を表現
+
+	if (bodyBB->getRevivalPointInterval() < INCREASE_INTERVAL)
+	{
+		bodyBB->setRevivalPointInterval(bodyBB->getRevivalPointInterval() + recognitionBB->getFrameTime());
+		return NODE_STATUS::FAILED;		// ダウン復活アクション失敗
+	}
+	else
+	{
+		bodyBB->setRevivalAction(true);
+		bodyBB->setRevivalPointInterval(0.0f);
+		return NODE_STATUS::SUCCESS;	// ダウン復活アクション成功
+	}
+}
+
+
+//=============================================================================
+// アクション：上空モード移動
+//=============================================================================
+NODE_STATUS ActionNode::actionSkyMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// アクション：落下
+//=============================================================================
+NODE_STATUS ActionNode::actionFall(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return NODE_STATUS::SUCCESS;
 }

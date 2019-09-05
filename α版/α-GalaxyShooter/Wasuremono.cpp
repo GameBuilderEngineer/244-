@@ -6,6 +6,7 @@
 #include "Wasuremono.h"
 #include "Map.h"
 using namespace wasuremonoNS;
+
 //*****************************************************************************
 // 静的メンバ変数
 //*****************************************************************************
@@ -20,13 +21,14 @@ Wasuremono::Wasuremono(void)
 	onRecursion = false;
 }
 
-Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
+Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *_position)
 {
 	onRecursion = false;
 	this->typeID = typeID;
-	Object::initialize(device, table->getStaticMesh(typeID), position);
-	bodyCollide.initialize(device, position, staticMesh->mesh);
+	Object::initialize(device, table->getStaticMesh(typeID), _position);
+	bodyCollide.initialize(device, _position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
+	onGround = false;
 	onGravity = true;
 	activation();
 	difference = DIFFERENCE_FIELD;
@@ -39,7 +41,7 @@ Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *positi
 //=============================================================================
 void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position)
 {
-	Wasuremono(device, typeID, position);
+
 }
 
 
@@ -49,8 +51,7 @@ void Wasuremono::initialize(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *p
 void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix, D3DXVECTOR3 fieldPosition)
 {
 	if (!onActive) { return; }
-
-	setSpeed(D3DXVECTOR3(0, 0, 0));
+	speed *= 0.90f;	// friction	
 
 	//===========
 	//【接地処理】
@@ -83,7 +84,7 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 
 	recursionProcessing();
 
-	if (D3DXVec3Length(&acceleration) > 0.05f)
+	if (D3DXVec3Length(&acceleration) > 0.5f)
 	{//加速度が小さい場合、加算しない
 		speed += acceleration;
 	}

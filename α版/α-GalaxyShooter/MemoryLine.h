@@ -64,4 +64,5 @@ public:
 	//setter
 	void resetCurrentRenderNum();
 	//getter
+	bool getDisconnected();
 };

@@ -10,7 +10,7 @@
 
 namespace wasuremonoNS
 {
-	const float GRAVITY_FORCE = 9.8f*7.0;			//重力
+	const float GRAVITY_FORCE = 9.8f*0.1666f;			//重力
 	const float DIFFERENCE_FIELD = 0.2f;		//フィールド補正差分
 	const float INHALE_FORCE = 0.2f;
 }
@@ -20,7 +20,7 @@ namespace wasuremonoNS
 //*****************************************************************************
 class Wasuremono :public Object
 {
-private:
+protected:
 	int typeID;
 	static WasuremonoTable* table;
 	D3DXVECTOR3 *attractorPosition;
@@ -34,8 +34,8 @@ private:
 
 public:
 	Wasuremono(void);
-	Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *position);
-	void initialize(LPDIRECT3DDEVICE9 device, int id, D3DXVECTOR3 *position);
+	Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *_position);
+	void initialize(LPDIRECT3DDEVICE9 device, int id, D3DXVECTOR3 *_position);
 	virtual void update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix, D3DXVECTOR3 fieldPosition);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	

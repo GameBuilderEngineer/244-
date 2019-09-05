@@ -11,16 +11,16 @@
 //=============================================================================
 void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect)
 {
-	D3DXCreateSphere(device, 3.0f, 9, 9, &sphere, NULL);	// 当たり判定用にスフィアを作る
-
-	for (int i = 0; i < NUM_CHINGIN; i++)
+	D3DXCreateSphere(device, 3.0f, 9, 9, &sphere, NULL);		// 当たり判定用にスフィアを作る
+	chinginMax = INITIAL_NUM_CHINGIN;							// 初期チンギン数を設定
+	chingin = (Chingin**)malloc(sizeof(Chingin*) * chinginMax);	// ポインタ配列確保
+	if (chingin == NULL)
 	{
-		chingin[i].setPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		chingin[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		D3DXMatrixIdentity(chingin[i].getMatrixWorld());
-		chingin[i].getCollider()->initialize(device, chingin[i].getPosition(), sphere);
-		chingin[i].setUse(false);
+		MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"),
+			TEXT("SystemError"), MB_OK);
+		PostQuitMessage(0);
 	}
+	ZeroMemory(chingin, sizeof(Chingin*) * INITIAL_NUM_CHINGIN);// 配列にnullをセットする
 	
 	numOfUse = 0;
 	renderList = NULL;
@@ -28,36 +28,63 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_REVIVAL_GAUGE));
 }
 
+//=============================================================================
+// 終了処理
+//=============================================================================
+void ChinginManager::uninitialize(void)
+{
+	for (int i = 0; i < chinginMax; i++)
+	{
+		if (chingin[i] != NULL) { SAFE_DELETE(chingin[i]) }
+	}
+	free(chingin);
+}
+
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void ChinginManager::update(Sound* _sound, float frameTime, Player* player)
+void ChinginManager::update(Sound* _sound, float frameTime)
 {
 	// 使用中のチンギンの挙動を更新する
-	for (int i = 0; i < NUM_CHINGIN; i++)
+	for (int i = 0; i < chinginMax; i++)
 	{
-		if (chingin[i].getUse() == false) { continue; }
+		if (chingin[i] == NULL) { continue; }
 
-		chingin[i].setSpeed(moveSpeed(*chingin[i].getPosition(), *player->getPosition()));
-		chingin[i].setPosition(*chingin[i].getPosition() + *chingin[i].getSpeed());
+		chingin[i]->setSpeed(moveSpeed(*chingin[i]->getPosition(), *chingin[i]->getTarget()->getPosition()));
+		chingin[i]->setPosition(*chingin[i]->getPosition() + *chingin[i]->getSpeed());
 
-		D3DXMatrixIdentity(chingin[i].getMatrixWorld());
-		D3DXMatrixTranslation(chingin[i].getMatrixWorld(),
-			chingin[i].getPosition()->x, chingin[i].getPosition()->y, chingin[i].getPosition()->z);
+		D3DXMatrixIdentity(chingin[i]->getMatrixWorld());
+		D3DXMatrixTranslation(chingin[i]->getMatrixWorld(),
+			chingin[i]->getPosition()->x, chingin[i]->getPosition()->y, chingin[i]->getPosition()->z);
 
-		// プレイヤーに当たったら終了
-		if (chingin[i].getCollider()->collide(
-			player->bodyCollide.getCenter(), player->bodyCollide.getRadius(),
-			*chingin[i].getMatrixWorld(), *player->getMatrixWorld()))
+		// プレイヤーに当たったらメモリ解放
+		if (chingin[i]->getCollider()->collide(
+			chingin[i]->getTarget()->bodyCollide.getCenter(), chingin[i]->getTarget()->bodyCollide.getRadius(),
+			*chingin[i]->getMatrixWorld(), *chingin[i]->getTarget()->getMatrixWorld()))
 		{
 			// サウンドの再生
 			_sound->play(soundNS::TYPE::SE_CHINGIN, soundNS::METHOD::PLAY);
 
-			chingin[i].setUse(false);
+			SAFE_DELETE(chingin[i])
 			numOfUse--;
 		}
 	}
+
+#if 1	// チンギンが一つも使われていないタイミング(=ポインタ配列が全てnull)で配列もリサイズする
+	if (numOfUse == 0 && chinginMax > INITIAL_NUM_CHINGIN)
+	{
+		chinginMax = INITIAL_NUM_CHINGIN;
+		Chingin** temp = (Chingin**)realloc(chingin, sizeof(Chingin*) * INITIAL_NUM_CHINGIN);
+		if (temp == NULL)
+		{
+			MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"),
+				TEXT("SystemError"), MB_OK);
+			PostQuitMessage(0);
+		}
+		chingin = temp;
+	}
+#endif
 }
 
 
@@ -68,11 +95,12 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 {
 	// 使用中のチンギンをインスタンシング描画に流す
 	renderList = new D3DXVECTOR3[numOfUse];
-	for (int i = 0; i < numOfUse; i++)
+	int renderIndex = 0;
+	for (int i = 0; i < chinginMax; i++)
 	{
-		if (chingin[i].getUse() == false) { continue; }
+		if (chingin[i] == NULL) { continue; }
 
-		renderList[i] = *chingin[i].getPosition();
+		renderList[renderIndex++] = *chingin[i]->getPosition();
 	}
 	instancingProcedure.setNumOfRender(device, numOfUse, renderList);
 	SAFE_DELETE_ARRAY(renderList)
@@ -82,7 +110,7 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 
 
 //=============================================================================
-// チンギンの速度を設定
+// チンギンの移動を設定
 //=============================================================================
 D3DXVECTOR3 ChinginManager::moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition)
 {
@@ -100,28 +128,44 @@ D3DXVECTOR3 ChinginManager::moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPo
 //=============================================================================
 // チンギンを発生させる
 //=============================================================================
-void ChinginManager::generateChingin(int num, D3DXVECTOR3 positionToGenerate)
+void ChinginManager::generateChingin(int num, D3DXVECTOR3 setPosition, Player* target)
 {
-	int cnt = 0;
-	D3DXVECTOR3 newPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	int newIndex = 0;	// 新規生成チンギンインスタンスの数
 
-	for (int i = 0; i < NUM_CHINGIN; i++)
+	for (int i = 0; i < chinginMax; i++)
 	{
-		if (chingin[i].getUse()) { continue; }
-		
-		if (cnt < num)
-		{
-			newPosition.x = positionToGenerate.x + rand() % 20;
-			newPosition.y = positionToGenerate.y + rand() % 20;
-			newPosition.z = positionToGenerate.z + rand() % 20;
-			chingin[i].setPosition(newPosition);
+		if (newIndex == num) { break; }
+		if (chingin[i] != NULL) { continue; }
 
-			chingin[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-			D3DXMatrixIdentity(chingin[i].getMatrixWorld());
-			chingin[i].setUse(true);
-			numOfUse++;
+		chingin[i] = new Chingin;
+		newIndex++;
+
+		// パラメータ設定
+		chingin[i]->setPosition(setPosition);
+		chingin[i]->setTarget(target);
+		chingin[i]->setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		D3DXMatrixIdentity(chingin[i]->getMatrixWorld());
+		numOfUse++;
+
+		//----------------------------------------------------------------------------
+		// ポインタ配列の要素数を超えてチンギンが確保された場合に配列自体を確保し直す
+		//----------------------------------------------------------------------------
+		static const int ADDITIONAL_NUM_CHINGIN = 200;	// 追加要素数
+		if (i == chinginMax - 1 && newIndex == num)
+		{
+			chinginMax += ADDITIONAL_NUM_CHINGIN;
+			Chingin** temp = (Chingin**)realloc(chingin, sizeof(Chingin*) * chinginMax);
+			if (temp == NULL)
+			{
+				MessageBox(NULL, TEXT("メモリの確保に失敗しました。\nアプリケーションを終了します。"),
+					TEXT("SystemError"), MB_OK);
+				PostQuitMessage(0);
+			}
+			chingin = temp;
+
+			// 新規確保分のメモリにnullをセットする
+			ZeroMemory(&chingin[i + 1], sizeof(Chingin*) * ADDITIONAL_NUM_CHINGIN);
 		}
-		cnt++;
 	}
 }
 

@@ -152,7 +152,7 @@ void RuleNode::priorityWork(NODE_STATUS& result, bool& isRepetition, int& execut
 		break;
 
 	case NODE_STATUS::_NOT_FOUND:
-		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		MessageBox(NULL, TEXT("(PRIORITY)子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
 
@@ -190,7 +190,7 @@ void RuleNode::onOffWork(NODE_STATUS& result, bool& isRepetition, int& executedC
 		break;
 
 	case NODE_STATUS::_NOT_FOUND:
-		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		MessageBox(NULL, TEXT("(ON_OFF)子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
 }
@@ -218,7 +218,7 @@ void RuleNode::randomWork(NODE_STATUS& result, bool& isRepetition, int& executed
 		break;
 
 	case NODE_STATUS::_NOT_FOUND:
-		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		MessageBox(NULL, TEXT("(RANDOM)子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
 }
@@ -247,7 +247,7 @@ void RuleNode::sequenceWork(NODE_STATUS& result, bool& isRepetition, int& execut
 		break;
 
 	case NODE_STATUS::_NOT_FOUND:
-		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		MessageBox(NULL, TEXT("(SEQUENCE)子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
 
@@ -280,7 +280,7 @@ void RuleNode::pararellWork(NODE_STATUS& result, bool& isRepetition, int& execut
 		break;
 
 	case NODE_STATUS::_NOT_FOUND:
-		MessageBox(NULL, TEXT("子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
+		MessageBox(NULL, TEXT("(PARARELL)子ノードが_NOT_FOUNDを返しました"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
 

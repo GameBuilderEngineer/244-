@@ -15,6 +15,7 @@
 struct RecursionRecognition
 {
 	// Data
+	int uniqueID;								// ID
 	float totalHit;								// 認識範囲内のワスレモノ数
 	float totalAmount;							// 認識範囲の総チンギン額
 	D3DXVECTOR3 center;							// 認識範囲の中心座標

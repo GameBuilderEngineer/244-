@@ -1015,5 +1015,7 @@ bool Player::whetherFall() { return fallTimer > 0; }
 bool Player::whetherGenerationRecursion() { return onRecursion; }
 bool Player::whetherCollidedOpponentMemoryLine() { return collidedOpponentMemoryLine; }
 bool Player::messageDisconnectOpponentMemoryLine() { return disconnectOpponentMemoryLine; }
+int Player::getElementMemoryPile() { return elementMemoryPile; }
 Recursion* Player::getRecursion() { return recursion; }
+MemoryPile* Player::getMemoryPile() { return memoryPile; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }

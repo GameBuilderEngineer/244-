@@ -10,7 +10,6 @@
 //=============================================================================
 SubProcedureNode::SubProcedureNode(int treeType, int parentNumber, NODE_TYPE type, NODE_TAG tag) : BehaviorNodeBase(treeType, parentNumber, type, tag)
 {
-
 }
 
 
@@ -32,8 +31,12 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 	{
 	case SET_DESTINATION_OPPONENT:	return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
 	case SET_DESTINATION_RANDOM:	return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_NEXT_PILE: return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
 	case SET_TARGET_OPPONENT:		return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
-	default:						return NODE_STATUS::_NOT_FOUND;
+	case SET_RECURSION_RECOGNITION: return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
+	default:
+		MessageBox(NULL, TEXT("副処理リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
+		return NODE_STATUS::_NOT_FOUND;
 	}
 }
 
@@ -57,6 +60,86 @@ NODE_STATUS SubProcedureNode::setMovingDestinationRandom(RecognitionBB* recognit
 	D3DXVECTOR3* newDestination = Map::getMapNode()[number]->getPosition();
 	bodyBB->configMovingDestination(Map::getMapNode()[number]->getPosition());
 	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// 副処理：次のパイル設置座標を目的地に設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setMovingDestinationNextPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	// リカージョン実行中でないならreturn
+	if (recognitionBB->getIsRecursionRunning() == false) { return NODE_STATUS::FAILED; }
+
+	bodyBB->configMovingDestination(
+		&recognitionBB->getRunningRecursion()->pilePosition[(*recognitionBB->getPileCount())++]);
+
+	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// 副処理：実行するリカージョン認識を設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setRecursionRecognition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	// リカージョンが実行中なら失敗
+	if (recognitionBB->getIsRecursionRunning()) { return NODE_STATUS::FAILED; }
+
+	float largestWeight = 0.0f;				// 重み最大値
+	float mostExpensiveAmout = 0.0f;		// 最大チンギン額 
+	float leastRadius = 1000.0f;			// 最小半径
+	int cntActiveRecursionRecognition = 0;	// 環境認識ブラックボードのリカージョン認識のうち有効なデータが入っている数
+	int largestWeightRecognition = -1;		// 認識している中で最も採用ウェイトの思いリカージョン認識を示す
+	int mostExpensiveRecognition = -1;		// 認識している中で最もチンギン額の多いリカージョン認識を示す
+	int	leastRadiusRecognition = -1;		// 認識している中で最も半径の小さいリカージョン認識を示す
+
+	// リカージョン方針ごとに認識をさがす
+	for (int i = 0; i < NUM_RECURSION_RECOGNITION; i++)
+	{
+		// 非活性はパス
+		if (recognitionBB->getIsActiveRecursionRecognition(i) == false) { continue; }
+
+		cntActiveRecursionRecognition++;
+		if (largestWeight < recognitionBB->getRecursionRecognition()[i].fuzzySelectionWeight)
+		{
+			largestWeight = recognitionBB->getRecursionRecognition()[i].fuzzySelectionWeight;
+			largestWeightRecognition = i;
+		}
+		if (mostExpensiveAmout < recognitionBB->getRecursionRecognition()[i].totalAmount)
+		{
+			mostExpensiveAmout = recognitionBB->getRecursionRecognition()[i].totalAmount;
+			mostExpensiveRecognition = i;
+		}
+		if (leastRadius > recognitionBB->getRecursionRecognition()[i].radius)
+		{
+			leastRadius = recognitionBB->getRecursionRecognition()[i].radius;
+			leastRadiusRecognition = i;
+		}
+	}
+
+	// 有効なリカージョン認識がない場合は失敗
+	if (cntActiveRecursionRecognition == 0)
+	{
+		return NODE_STATUS::FAILED;
+	}
+
+	// 実行リカージョン認識として選ぶ
+	switch (recognitionBB->getRecursionPolicy())
+	{
+	case LARGEST_WEIGHT:
+		*recognitionBB->getRunningRecursion() = recognitionBB->getRecursionRecognition()[largestWeightRecognition];
+		break;
+	case MOST_EXPENSIVE:
+		*recognitionBB->getRunningRecursion() = recognitionBB->getRecursionRecognition()[mostExpensiveRecognition];
+		break;
+	case LEAST_RADIUS:
+		*recognitionBB->getRunningRecursion() = recognitionBB->getRecursionRecognition()[leastRadiusRecognition];
+		break;
+	}
+
+	recognitionBB->setIsRecursionRunning(true);	// リカージョン実行中にセット
+	return NODE_STATUS::SUCCESS;				// 成功
 }
 
 

@@ -10,6 +10,7 @@
 //=============================================================================
 RecursionRecognition::RecursionRecognition(void)
 {
+	uniqueID = -1;
 	totalHit = 0;
 	totalAmount = 0;
 	center = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -66,7 +66,7 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 0
+#if 1
 #define USING_AI
 	player[0] = new Player;
 	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
@@ -108,7 +108,7 @@ void Game::initialize(
 		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader,textureLoader,shaderLoader);
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
-		player[i]->setSound(sound);		//	サウンドのセット
+		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
@@ -314,23 +314,29 @@ void Game::update(float _frameTime) {
 		}
 	}
 
-
-	// ワスレモノの更新
+	// ワスレモノの更新１（リスポーン処理）
 	wasuremonoManager.update(frameTime);
+
+	// ワスレモノの更新２
 	for (int i = 0; i < wasuremono.size(); i++)
 	{
 		wasuremono[i]->update(frameTime, *field.getMesh(), *field.getMatrixWorld(), *field.getPosition());
 	}
 
 	// チンギンの更新
-	chinginManager.update(sound, frameTime, player[1]);
-	D3DXVECTOR3 temp = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+	chinginManager.update(sound, frameTime);
+	D3DXVECTOR3 chinginTestPos = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
 
-	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(10, temp);
+	// エフェクトの更新
+	effectManager.update(frameTime, player[0]);
+	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('E')) {
+		effectManager.generateEffect(100, temp2);
 	};
 
-	// マップの更新
+
+	// マップの更新(ノード担当範囲に含むワスレモノを検知)
 	map.update(frameTime, wasuremono);
 }
 
@@ -361,7 +367,7 @@ void Game::render(Direct3D9* direct3D9) {
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
 	direct3D9->changeViewportFullWindow();
-	renderUI(direct3D9->device);
+	//renderUI(direct3D9->device);
 }
 
 //===================================================================================================================================
@@ -444,6 +450,12 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	debugRay.color = D3DXCOLOR(128, 0, 128, 255);
 	debugRay.update(*player[PLAYER1]->getPosition(), player[PLAYER1]->getReverseAxisY()->normal);
 	debugRay.render(direct3D9->device, 100.0f);
+
+#ifdef USING_AI
+	AgentAI* agentAI = (AgentAI*)player[1];
+	agentAI->debugRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+#endif// USING_AI
+
 #endif
 	//ステンシル準備
 	target.renderSetUp(direct3D9->device);
@@ -532,7 +544,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		magnet[0].getPosition()->x,magnet[0].getPosition()->y,magnet[0].getPosition()->z,
 		magnet[0].getSpeed().x,magnet[0].getSpeed().y,magnet[0].getSpeed().z
 	);
-	
+
 	switch (input->getMouseWheelState())
 	{
 	case inputNS::MOUSE_WHEEL_STATE::NONE:	text.print(WINDOW_WIDTH / 2, 40, "mouseWheel:NONE");	break;
@@ -775,7 +787,7 @@ void Game::collisions() {
 				wasuremono[i]->bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld()))
 			{
-				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition(), player[PLAYER1]);
 				wasuremono[i]->startUpRecursion(player[PLAYER1]->getRecursion()->getWeightCenter(),*field.getPosition());
 				//wasuremono[i]->inActivation();
 			}
@@ -792,7 +804,7 @@ void Game::collisions() {
 				wasuremono[i]->bodyCollide.getRadius(),
 				*wasuremono[i]->getMatrixWorld()))
 			{
-				chinginManager.generateChingin(1, *wasuremono[i]->getPosition());
+				chinginManager.generateChingin(1, *wasuremono[i]->getPosition(), player[PLAYER2]);
 				wasuremono[i]->startUpRecursion(player[PLAYER2]->getRecursion()->getWeightCenter(), *field.getPosition());
 				//wasuremono[i]->inActivation();
 			}
@@ -814,7 +826,6 @@ void Game::collisions() {
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 
 				wasuremono[i]->inActivation();
-				wasuremonoManager.destroy(i);
 				player[PLAYER1]->bullet[j].inActivation();
 			}
 
@@ -826,7 +837,6 @@ void Game::collisions() {
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_DESTRUCTION_WASUREMONO, soundNS::METHOD::PLAY);
 				wasuremono[i]->inActivation();
-				wasuremonoManager.destroy(i);
 				player[PLAYER2]->bullet[j].inActivation();
 			}
 		}
@@ -905,36 +915,6 @@ void Game::collisions() {
 			player[PLAYER1]->changeState(playerNS::SKY);
 		}
 	}
-
-	//// マップノードとワスレモノ
-	//for (size_t i = 0; i < map.getMapNode().size(); i++)
-	//{
-	//	map.getMapNode()[i]->clearWasuremonoCount();
-	//	map.getMapNode()[i]->clearAmount();
-	//}
-	//bool* already = new bool[wasuremono.size()];
-	//ZeroMemory(already, sizeof(bool) * wasuremono.size());
-
-	//for (size_t i = 0; i < map.getMapNode().size(); i++)
-	//{
-	//	for (size_t k = 0; k < wasuremono.size(); k++)
-	//	{
-	//		if (already[k] == true) { continue; }
-	//		already[k] = true;
-
-	//		if (map.getMapNode()[i]->boundingSphere.collide(
-	//				wasuremono[k]->bodyCollide.getCenter(),
-	//				wasuremono[k]->bodyCollide.getRadius(),
-	//				*map.getMapNode()[i]->getWorldMatrix(),
-	//				*wasuremono[k]->getMatrixWorld()))
-	//		{
-	//			map.getMapNode()[i]->addWasuremonoCount();
-	//			map.getMapNode()[i]->addAmount(wasuremono[k]->getAmount());
-	//		}
-	//	}
-	//}
-
-	//SAFE_DELETE_ARRAY(already)
 }
 
 //===================================================================================================================================
@@ -968,4 +948,5 @@ void Game::uninitialize() {
 	map.uninitialize();
 	SAFE_DELETE(player[0])
 	SAFE_DELETE(player[1])
+	chinginManager.uninitialize();
 }

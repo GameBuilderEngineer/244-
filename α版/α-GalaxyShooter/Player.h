@@ -272,7 +272,9 @@ public:
 	bool whetherGenerationRecursion();
 	bool whetherCollidedOpponentMemoryLine();
 	bool messageDisconnectOpponentMemoryLine();
+	int getElementMemoryPile();
 	Recursion* getRecursion();
+	MemoryPile* getMemoryPile();
 	MemoryLine* getMemoryLine();
 	D3DXVECTOR3 bulletVec();
 	D3DXVECTOR3 downVec();
