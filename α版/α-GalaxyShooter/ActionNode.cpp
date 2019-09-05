@@ -51,8 +51,10 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 //=============================================================================
 NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	static const float STOP_MOVE_LENGTH = 5.0f;
-	static const float STOP_MOVE_LENGTH_STRICT = 3.5f;
+	//static const float STOP_MOVE_LENGTH = 5.0f;
+	//static const float STOP_MOVE_LENGTH_STRICT = 3.5f;
+	static const float STOP_MOVE_LENGTH = 8.0f;
+	static const float STOP_MOVE_LENGTH_STRICT = 5.0f;
 
 	// “ž’…‚µ‚Ä‚¢‚½‚ç’âŽ~‚ÅŽ¸”s
 	if (bodyBB->getIsArrived())
@@ -113,7 +115,6 @@ NODE_STATUS ActionNode::actionJump(RecognitionBB* recognitionBB, MemoryBB* memor
 		if (recognitionBB->getWhetherInAir())
 		{
 			return NODE_STATUS::FAILED;	// ‹ó’†‚Å‚ÍƒWƒƒƒ“ƒvŽ¸”s
-
 		}
 		else
 		{
