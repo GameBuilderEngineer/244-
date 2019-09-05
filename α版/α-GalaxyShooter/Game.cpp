@@ -160,6 +160,9 @@ void Game::initialize(
 	// チンギン初期化
 	chinginManager.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
+	// ラインエフェクト初期化
+	lineEffect.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
 	//xFile読込meshのインスタンシング描画のテスト
@@ -324,6 +327,9 @@ void Game::update(float _frameTime) {
 		chinginManager.generateChingin(10, temp);
 	};
 
+	// ラインエフェクトの更新
+	lineEffect.update(frameTime);
+
 	// マップの更新
 	map.update(frameTime, wasuremono);
 }
@@ -377,6 +383,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	// フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	//ステンシルマスク
 	target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
@@ -462,6 +469,10 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		//プレイヤーの他のオブジェクトの描画
 		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+
+	// ラインエフェクトの描画
+	lineEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -806,9 +817,12 @@ void Game::collisions() {
 		player[PLAYER2]->setCollideMemoryLinePosition(player[PLAYER1]->getMemoryLine()->calculationNearPoint(*player[PLAYER2]->getPosition()));
 		if (player[PLAYER2]->messageDisconnectOpponentMemoryLine())
 		{
+			// ラインエフェクト発生
+			lineEffect.generateLineEffect(200, player[PLAYER2]->collideMemoryLinePosition, player[PLAYER2]->upVec());
 
 			//1Pのメモリーラインの切断処理
 			player[PLAYER1]->disconnectMemoryLine();
+
 		}
 	}else{
 		player[PLAYER2]->setCollidedMemoryLine(false);
@@ -822,6 +836,8 @@ void Game::collisions() {
 			player[PLAYER2]->getMemoryLine()->calculationNearPoint(*player[PLAYER1]->getPosition()));
 		if (player[PLAYER1]->messageDisconnectOpponentMemoryLine())
 		{
+			// ラインエフェクト発生
+			lineEffect.generateLineEffect(200, player[PLAYER1]->collideMemoryLinePosition, player[PLAYER1]->upVec());
 
 			//2Pのメモリーラインの切断処理
 			player[PLAYER2]->disconnectMemoryLine();

@@ -23,9 +23,8 @@ void LineEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoa
 
 	numOfUse = 0;
 	renderList = NULL;
-
 	// インスタンシング初期化
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UP_EFFECT));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::LINE_EFFECT));
 }
 //=============================================================================
 // 更新処理
@@ -40,9 +39,6 @@ void LineEffect::update(float frameTime)
 
 		// 時間をフレームに合わせる
 		lineEffect[i].time += frameTime;
-
-		// エフェクト位置更新
-		lineEffect[i].setPosition(*lineEffect[i].getPosition() + *lineEffect[i].getSpeed());
 
 		// 時間になったら終了
 		if (lineEffect[i].time >= 0.2)
@@ -101,9 +97,9 @@ void LineEffect::generateLineEffect(int num, D3DXVECTOR3 positionToGenerate, D3D
 			// 生存時間初期化
 			lineEffect[i].time = 0.0;
 			// エフェクト位置設定
-			lineEffect[i].setPosition(positionToGenerate - (effectVec * 8));
+			lineEffect[i].setPosition(positionToGenerate);
 			// エフェクトスピード設定
-			lineEffect[i].setSpeed(resultVec*((float)(rand() % 20) / 10.0f));
+			lineEffect[i].setSpeed(resultVec*((float)(rand() % 10) / 10.0f));
 			D3DXMatrixIdentity(lineEffect[i].getMatrixWorld());
 			// 使用へ
 			lineEffect[i].setUse(true);

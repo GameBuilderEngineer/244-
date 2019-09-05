@@ -198,7 +198,6 @@ protected:
 
 	//衝突情報
 	bool collidedOpponentMemoryLine;					//相手のメモリーラインとの衝突フラグ
-	D3DXVECTOR3 collideMemoryLinePosition;				//相手のメモリーラインとの衝突位置
 
 	//アクションフラグ
 	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
@@ -217,6 +216,7 @@ public:
 		LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
 	void otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	D3DXVECTOR3 collideMemoryLinePosition;				//相手のメモリーラインとの衝突位置
 
 	//operation
 	void configurationGravityWithRay(D3DXVECTOR3* attractorPosition, LPD3DXMESH attractorMesh, D3DXMATRIX* attractorMatrix);

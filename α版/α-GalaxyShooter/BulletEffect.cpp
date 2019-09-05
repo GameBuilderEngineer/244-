@@ -21,25 +21,11 @@ void BulletEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureL
 		bulletEffect[i].time = 0;
 	}
 
-	// 弾煙エフェクト初期化
-	for (int i = 0; i < BULLET_EFFECT; i++)
-	{
-		bulletSmokeEffect[i].setPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		bulletSmokeEffect[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		D3DXMatrixIdentity(bulletSmokeEffect[i].getMatrixWorld());
-		bulletSmokeEffect[i].getCollider()->initialize(device, bulletSmokeEffect[i].getPosition(), sphere);
-		bulletSmokeEffect[i].setUse(false);
-		bulletSmokeEffect[i].time = 0;
-	}
-
 	numOfUse = 0;
 	renderList = NULL;
 
 	// インスタンシング初期化
 	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::BULLET_EFFECT));
-
-	// インスタンシング初期化
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::BULLET_SMOKE_EFFECT));
 
 }
 //=============================================================================

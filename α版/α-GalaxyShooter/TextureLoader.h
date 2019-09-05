@@ -80,7 +80,7 @@ namespace textureLoaderNS
 		BULLET_EFFECT,
 		DOWN_EFFECT,
 		UP_EFFECT,
-		BULLET_SMOKE_EFFECT,
+		LINE_EFFECT,
 		MAX_TEXTURE,
 	};
 }

@@ -79,7 +79,7 @@ TextureLoader::TextureLoader()
 	textureName[BULLET_EFFECT] = { "bakuha.png" };
 	textureName[DOWN_EFFECT] = { "Down.png" };
 	textureName[UP_EFFECT] = { "UP.png" };
-	textureName[BULLET_SMOKE_EFFECT] = { "UP.png" };
+	textureName[LINE_EFFECT] = { "LineEffect.png" };
 
 }
 

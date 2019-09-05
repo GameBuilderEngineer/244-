@@ -21,7 +21,6 @@ class BulletEffect :public EffectManager
 private:
 	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
 	EffectIns bulletEffect[BULLET_EFFECT];	// エフェクト配列
-	EffectIns bulletSmokeEffect[BULLET_EFFECT];	// エフェクト配列
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ

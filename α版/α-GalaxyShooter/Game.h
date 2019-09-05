@@ -36,6 +36,7 @@
 #include "UIRevival.h"
 #include "UIRevivalGauge.h"
 #include "UICutMemoryLine.h"
+#include "LineEffect.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -100,6 +101,7 @@ private:
 	UIRevival uiRevival[gameNS::NUM_PLAYER];
 	UIRevivalGauge uiRevivalGauge[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
+	LineEffect lineEffect;								//ラインエフェクト
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];
