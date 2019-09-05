@@ -6,12 +6,12 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// スプラッシュ2D横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// スプラッシュ2D縦サイズ
+const static int		WIDTH = ((1600 / 2) - 16);					// スプラッシュ2D横サイズ
+const static int		HEIGHT = ((1136 / 2) - 9);					// スプラッシュ2D縦サイズ
 static int				alphaColor = 0;								// アルファ値
 static int				time = 0;									// スプラッシュ2D消滅時間
-const static float		POSITION_X = 0.0f;							// スプラッシュ2DX座標
-const static float		POSITION_Y = 0.0f;							// スプラッシュ2DY座標
+const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// スプラッシュ2DX座標
+const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// スプラッシュ2DY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -46,7 +46,7 @@ HRESULT Splash2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 	// スプラッシュ2D初期化
 	Sprite::initialize(device,
 		textureSplash2D,							// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
+		spriteNS::CENTER,							// 原点
 		WIDTH,										// 横幅
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標

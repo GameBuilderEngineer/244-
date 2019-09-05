@@ -6,10 +6,10 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// チュートリアル2D横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// チュートリアル2D縦サイズ
-const static float		POSITION_X = 0.0f;							// チュートリアル2DX座標
-const static float		POSITION_Y = 0.0f;							// チュートリアル2DY座標
+const static int		WIDTH = ((3840 / 2) - 16);					// チュートリアル2D横サイズ
+const static int		HEIGHT = ((2160 / 2) - 9);					// チュートリアル2D縦サイズ
+const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// チュートリアル2DX座標
+const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// チュートリアル2DY座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -44,7 +44,7 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 	// チュートリアル2D初期化
 	Sprite::initialize(device,
 		textureTutorial2D,							// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
+		spriteNS::CENTER,							// 原点
 		WIDTH,										// 横幅
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標

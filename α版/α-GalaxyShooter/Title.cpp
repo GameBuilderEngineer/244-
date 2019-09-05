@@ -1,277 +1,251 @@
-//=============================================================================
-// タイトル処理 [title.cpp]
-// 制作者 飯塚春輝
-////===========================================================================
+//============================================================================================================================================
+// Document
+//============================================================================================================================================
+// Title.cpp
+// HAL東京 GP-12A-332 09 亀岡竣介
+// 2019/08/29
+//============================================================================================================================================
 #include "Title.h"
-// タイトル名前空間有効
+//============================================================================================================================================
+// Using Declaration
+// using宣言
+//============================================================================================================================================
 using namespace titleNS;
-//*****************************************************************************
-// 定数
-//*****************************************************************************
-static int titletransition = NULL;	//選択位置記憶変数
-//=============================================================================
+//============================================================================================================================================
+// Global Variable
+// グローバル変数
+//============================================================================================================================================
+int selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;	//	タイトルメニュー選択状態記憶
+//============================================================================================================================================
+// Constructor
 // コンストラクタ
-//=============================================================================
-Title::Title()
+//============================================================================================================================================
+Title::Title(void)
 {
-	// 現在のシーン(タイトル)
-	sceneName = "Scene -Title-";
+	// 今のシーン( タイトル )
+	sceneName = ("Scene -Title-");
+	
+	return;
 }
-//=============================================================================
+//============================================================================================================================================
+// Destructor
 // デストラクタ
-//=============================================================================
-Title::~Title()
+//============================================================================================================================================
+Title::~Title(void)
 {
 	// サウンドの停止
 	sound->stop(soundNS::TYPE::BGM_TITLE);
+
+	uninitialize();
+
+	return;
 }
-//=============================================================================
-// 初期化処理
-//=============================================================================
-void Title::initialize(
-	Direct3D9* direct3D9,
-	Input* _input,
-	Sound* _sound,
-	TextureLoader* _textureLoader,
-	StaticMeshLoader* _staticMeshLoader,
-	ShaderLoader* _shaderLoader,
-	TextManager* _textManager)
+//============================================================================================================================================
+// initialize
+// 初期化
+//============================================================================================================================================
+void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, TextureLoader* _textureLoader, StaticMeshLoader* _staticMeshLoader, ShaderLoader* _shaderLoader, TextManager* _textManager)
 {
-	//Input
+	// Input
 	input = _input;
-	//sound
+	// Sound
 	sound = _sound;
-	//textureLoader
+	// TextureLoader
 	textureLoader = _textureLoader;
-	//staticMeshLoader
+	// StaticMeshLoader
 	staticMeshLoader = _staticMeshLoader;
-	//shaderLoader
+	// ShaderLoader
 	shaderLoader = _shaderLoader;
 
 	// サウンドの再生
 	sound->play(soundNS::TYPE::BGM_TITLE, soundNS::METHOD::LOOP);
 
-	//camera
-	camera = new Camera[NUM_PLAYER];
+	// Camera
+	camera = new Camera[PLAYER_TYPE::PLAYER_TYPE_MAX];
 
-	for (int i = 0; i < NUM_PLAYER; i++)
+	for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		camera[i].setTarget(titlePlayer[i].getPosition());
-		camera[i].setTargetX(&titlePlayer[i].getAxisX()->direction);
-		camera[i].setTargetY(&titlePlayer[i].getAxisY()->direction);
-		camera[i].setTargetZ(&titlePlayer[i].getAxisZ()->direction);
+		camera[i].setTarget(player[i].getPosition());
+		camera[i].setTargetX(&player[i].getAxisX()->direction);
+		camera[i].setTargetY(&player[i].getAxisY()->direction);
+		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
 		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView(D3DX_PI / 2.5);
 	}
 
-	//light
+	// Light
 	light = new Light;
-	light->initialize(direct3D9);
+	light->initialize(_direct3D9);
 
-	// タイトル遷移画像描画処理初期化
-	titleTrans.initialize(direct3D9->device, 0, _textureLoader);
+	// タイトルUIの初期化
+	uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
 
-	// タイトル指定位置描画処理初期化
-	titleTransPos.initialize(direct3D9->device, 0, _textureLoader);
+	// インスタンスプレーンの初期化
+	plane.createPositionSpherical(_direct3D9->device, 3000, 250.0f);
+	plane.initialize(_direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
-	//// タイトル2D初期化
-	//title2D.initialize(direct3D9->device, 0, _textureLoader);
+	// エフェクト初期化
+	effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
-	//インスタンスプレーン
-	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
-	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::RING));
+	// プレイヤーの初期化
+	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+	player[PLAYER_TYPE::PLAYER_1].setPosition(D3DXVECTOR3(-20.0f, 100.0f, 25.0f));
 
-	titlePlayer[0].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[0].modelType,direct3D9->device,staticMeshLoader,textureLoader,shaderLoader);
-	titlePlayer[0].setPosition(D3DXVECTOR3(-20, 100, 25));
+	return;
 }
-//=============================================================================
-// 更新処理
-//=============================================================================
-void Title::update(float frameTime)
+//============================================================================================================================================
+// uninitialize
+// 解放
+//============================================================================================================================================
+void Title::uninitialize(void)
 {
-	// キーを押したら選択UI移動
-	if (input->wasKeyPressed(VK_DOWN)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::DOWN) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::DOWN)
-		)
-	{
-		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
-		titletransition++;
-	}
-	else if (input->wasKeyPressed(VK_UP)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::UP) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::UP)
-		)
-	{
-		sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
-		titletransition--;
-	}
+	// ライト
+	SAFE_DELETE(light);
 
-	// 選択UI下限
-	if (titletransition > CNT_TITLE_MAX)
-	{
-		titletransition = 0;
-	}
-	// 選択UI上限
-	else if (titletransition < 0)
-	{
-		titletransition = CNT_TITLE_MAX;
-	}
+	// カメラ
+	SAFE_DELETE_ARRAY(camera);
 
-	// 位置記憶
-	titleTrans.cntTitle = titletransition;
-	titleTransPos.cntTitle = titletransition;
+	// タイトルUI
+	uiTitle.release();
 
-	// 選択UI遷移処理
-	titleTransitionPos();
-
-	// タイトル遷移画像描画処理更新
-	titleTrans.update();
-
-	// タイトル指定位置描画処理更新
-	titleTransPos.update();
-
-	// カメラアップデート
-	camera[0].setUpVector(titlePlayer[0].getAxisY()->direction);
+	return;
+}
+//============================================================================================================================================
+// update
+// 更新
+//============================================================================================================================================
+void Title::update(float _frameTime)
+{
+	// カメラ
+	camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
 	camera[0].update();
+
+	// タイトルUI
+	uiTitle.update(input, sound);
+
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::A) ||
+		input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::A))
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
+		updateInput();
+	}
+
+	// エフェクトの更新
+	effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
+	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+
+	if (input->isKeyDown('E'))
+	{
+		effectDewManager.generateEffect(100, temp2);
+	};
+
+	return;
 }
-//=============================================================================
-// 描画処理
-//=============================================================================
-void Title::render(Direct3D9* direct3D9)
+//============================================================================================================================================
+// updateInput
+// 更新 - 入力
+//============================================================================================================================================
+void Title::updateInput(void)
 {
-	//1Pカメラ・ウィンドウ
-	direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
-	direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
-	direct3D9->changeViewportFullWindow();
-	render3D(direct3D9, camera[0]);
-	//UI
-	renderUI(direct3D9->device);
+	switch (uiTitle.getSelectState())
+	{
+	case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_START;
+		nextScene = (SceneList::SELECT);
+		changeScene(nextScene);
+		break;
+	case uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_TUTORIAL;
+		nextScene = (SceneList::TUTORIAL);
+		changeScene(nextScene);
+		break;
+	case uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_OPERATION;
+		nextScene = (SceneList::OPERATION);
+		changeScene(nextScene);
+		break;
+	case uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT:
+		selectStateMemory = uiTitleNS::TITLE_MENU_TYPE::MENU_CREDIT;
+		nextScene = (SceneList::CREDIT);
+		changeScene(nextScene);
+		break;
+	case uiTitleNS::TITLE_MENU_TYPE::MENU_GAME_EXIT:
+		PostQuitMessage(NULL);
+		break;
+	default:
+		break;
+	}
+
+	return;
 }
-//=============================================================================
-// 3D描画処理
-//=============================================================================
-void Title::render3D(Direct3D9* direct3D9, Camera currentCamera)
+//============================================================================================================================================
+// render
+// 描画
+//============================================================================================================================================
+void Title::render(Direct3D9* _direct3D9)
 {
-	//(仮)//プレーンの描画(インスタンシング)
-	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	// カメラ・ウィンドウ
+	_direct3D9->device->SetTransform(D3DTS_VIEW, &camera[0].view);
+	_direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[0].projection);
+	_direct3D9->changeViewportFullWindow();
+
+	// 3D
+	render3D(_direct3D9, camera[0]);
+
+	// 2D
+	render2D(_direct3D9->device);
+
+	// エフェクトの描画
+	effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
+
+	return;
+}
+//============================================================================================================================================
+// render3D
+// 描画 - 3D
+//============================================================================================================================================
+void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
+{
+	// プレーン( インスタンシング )
+	plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
-	titlePlayer[0].toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	player[0].toonRender
+	(
+		_direct3D9->device,
+		_currentCamera.view,
+		_currentCamera.projection,
+		_currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::TOON),
 		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 }
-//=============================================================================
-// 2D描画処理
-//=============================================================================
-void Title::renderUI(LPDIRECT3DDEVICE9 device)
+
+//============================================================================================================================================
+// render2D
+// 描画 - 2D
+//============================================================================================================================================
+void Title::render2D(LPDIRECT3DDEVICE9 _device)
 {
-	//// タイトル2D描画
-	//title2D.render(device);
+	// タイトルUI
+	uiTitle.render(_device);
 
-	// タイトル遷移画像描画処理描画
-	titleTransPos.render(device);
-
-	// タイトル指定位置描画処理描画
-	titleTrans.render(device);
+	return;
 }
-//=============================================================================
-// コリジョン処理
-//=============================================================================
-void Title::collisions()
+//============================================================================================================================================
+// None
+//============================================================================================================================================
+void Title::collisions(void)
 {
+	// None
 }
-//=============================================================================
-// AI処理
-//=============================================================================
-void Title::AI()
+void Title::AI(void)
 {
-}
-//=============================================================================
-// 終了処理
-//=============================================================================
-void Title::uninitialize()
-{
-	// ライト解放
-	SAFE_DELETE(light);
-
-	// カメラ解放
-	SAFE_DELETE_ARRAY(camera);
-}
-//=============================================================================
-// 選択UI遷移処理
-//=============================================================================
-void Title::titleTransitionPos(void)
-{
-	switch (titletransition)
-	{
-		// セレクト
-	case 0:
-		//Enterまたは〇ボタンでセレクトへ
-		nextScene = SceneList::SELECT;
-		if (input->wasKeyPressed(VK_RETURN) ||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			)
-		{
-			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-			changeScene(nextScene);
-		}
-		break;
-
-		// チュートリアル
-	case 1:
-		//Enterまたは〇ボタンでチュートリアルへ
-		nextScene = SceneList::TUTORIAL;
-		if (input->wasKeyPressed(VK_RETURN)||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			)
-		{
-			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-			changeScene(nextScene);
-		}
-		break;
-
-		// 操作方法
-	case 2:
-		//Enterまたは〇ボタンでオペレーションへ
-		nextScene = SceneList::OPERATION;
-		if (input->wasKeyPressed(VK_RETURN)||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			)
-		{
-			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-			changeScene(nextScene);
-		}
-		break;
-
-		// クレジット
-	case 3:
-		//Enterまたは〇ボタンでクレジットへ
-		nextScene = SceneList::CREDIT;
-		if (input->wasKeyPressed(VK_RETURN)||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			) 
-		{
-			sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
-			changeScene(nextScene);
-		}
-		break;
-
-		// ゲーム終了
-	case 4:
-		//Enterまたは〇ボタンでゲーム終了
-		if (input->wasKeyPressed(VK_RETURN)||
-			input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-			input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-			)PostQuitMessage(0);
-		break;
-	}
+	// None
 }

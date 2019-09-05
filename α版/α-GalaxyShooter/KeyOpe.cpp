@@ -6,10 +6,10 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = WINDOW_WIDTH;						// キーボード操作説明横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;						// キーボード操作説明縦サイズ
-const static float		POSITION_X = 0.0f;							// キーボード操作説明X座標
-const static float		POSITION_Y = 0.0f;							// キーボード操作説明Y座標
+const static int		WIDTH = ((3840 / 2) - 16);					// キーボード操作説明横サイズ
+const static int		HEIGHT = ((2160 / 2) - 9);					// キーボード操作説明縦サイズ
+const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// キーボード操作説明X座標
+const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// キーボード操作説明Y座標
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -39,12 +39,12 @@ HRESULT KeyOpe::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureL
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	textureKeyOpe = *textureLoader->getTexture(textureLoaderNS::KEY_OPE);
+	textureKeyOpe = *textureLoader->getTexture(textureLoaderNS::OPERATION_KEYBOARD);
 
 	// キーボード説明画像初期化
 	Sprite::initialize(device,
 		textureKeyOpe,								// テクスチャ
-		spriteNS::TOP_LEFT,							// 原点
+		spriteNS::CENTER,							// 原点
 		WIDTH,										// 横幅
 		HEIGHT,										// 高さ
 		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// 座標

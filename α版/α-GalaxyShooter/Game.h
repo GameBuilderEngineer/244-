@@ -2,7 +2,7 @@
 //【Game.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/03
+// [更新日]2019/09/03
 //===================================================================================================================================
 #pragma once
 #include <vector>
@@ -25,7 +25,7 @@
 #include "WasuremonoManager.h"
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
-#include "Pose.h"
+#include "UIPause.h"
 #include "UIRecursion.h"
 #include "UIPlayTime.h"
 #include "UIChingin.h"
@@ -34,9 +34,10 @@
 #include "ChinginManager.h"
 #include "UIScreenSplitLine.h"
 #include "UIRevival.h"
-#include "UIRevivalGauge.h"
 #include "UICutMemoryLine.h"
 #include "LineEffect.h"
+#include "EffectManager.h"
+#include "Lambert.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -94,12 +95,11 @@ private:
 	Text text;
 	Text text2;
 
-	UIRecursion uiRecursion[gameNS::NUM_PLAYER];
+	//UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
 	UIChingin uiChingin[gameNS::NUM_PLAYER];
 	UICutMemoryLine uiCutMemoryLine[gameNS::NUM_PLAYER];
 	UIRevival uiRevival[gameNS::NUM_PLAYER];
-	UIRevivalGauge uiRevivalGauge[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
 	LineEffect lineEffect;								//ラインエフェクト
 
@@ -119,12 +119,24 @@ private:
 	ChinginManager chinginManager;
 	HpEffect hpEffect[gameNS::NUM_PLAYER];
 	TargetDisplayEffect target;
-	Pose pose;
+	UIPause uiPause;
 
 	bool startCountFlag;
 	bool endCountFlag;
 	bool onUI = true;
 	float frameTime = 0.0f;//フレームタイム保存変数
+
+
+	//シーンのカラー情報とZ値情報を取得するクラス
+	Lambert* lambert;
+
+	//シーンのカラー情報を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 colorTexture = NULL;
+	LPDIRECT3DSURFACE9 colorSurface = NULL;
+
+	//シーンのZ値を格納するサーフェイス
+	LPDIRECT3DTEXTURE9 zMapTexture = NULL;
+	LPDIRECT3DSURFACE9 zMapSurface = NULL;
 
 public:
 	Game();

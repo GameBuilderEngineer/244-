@@ -15,8 +15,8 @@ using namespace uiRevivalNS;
 // Global Variable
 // グローバル変数
 //============================================================================================================================================
-int UIRevival::instanceIndex = 0;		//	インスタンスインデックス
-LPDIRECT3DTEXTURE9 UIRevival::texture;	//	テクスチャ
+int UIRevival::instanceIndex = 0;						//	インスタンスインデックス
+LPDIRECT3DTEXTURE9 UIRevival::texture[TYPE::TYPE_MAX];	//	テクスチャ
 //============================================================================================================================================
 // Constructor
 // コンストラクタ
@@ -27,7 +27,10 @@ UIRevival::UIRevival(void)
 	instanceIndex++;
 
 	// テクスチャのクリア
-	texture = NULL;
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		texture[i] = NULL;
+	}
 
 	return;
 }
@@ -51,28 +54,115 @@ HRESULT UIRevival::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 	// ディレクトリ設定
 	setVisualDirectory();
 
+	// テクスチャローダーの復活UIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
+	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_REVIVAL_BAR;
+
 	// テクスチャ読み込み
-	texture = *_textureLoader->getTexture(textureLoaderNS::TEXTURE_NUMBER::UI_REVIVAL);
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		texture[i] = *_textureLoader->getTexture(textureLoaderIndex);
+		textureLoaderIndex++;
+	}
 
 	// スプライト初期化
-	sprite.initialize
-	(
-		_device,
-		texture,														//	テクスチャ
-		spriteNS::CENTER,												//	原点
-		WIDTH,															//	横幅
-		HEIGHT,															//	高さ
-		D3DXVECTOR3														//	座標
-		(
-			_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
-			POSITION_Y,													//	座標 y
-			0.0f														//	座標 z
-		),
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
-		D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
-	);
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		initializeSprite(_device, _playerIndex, i);
+	}
+
+	// スプライト初期化
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		initializeSprite(_device, _playerIndex, i);
+	}
 
 	return S_OK;
+}
+//============================================================================================================================================
+// initializeSprite
+// 初期化 - スプライト
+//============================================================================================================================================
+void UIRevival::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, int _index)
+{
+	switch (_index)
+	{
+	case TYPE::BAR:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH_BAR,														//	横幅
+			HEIGHT_BAR,														//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y_BAR,												//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	case TYPE::GAUGE:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH_GAUGE,													//	横幅
+			HEIGHT_GAUGE,													//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y,													//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	case TYPE::CONCENTRATION:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH_CONCENTRATION,											//	横幅
+			HEIGHT_CONCENTRATION,											//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y,													//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	case TYPE::TONE:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			WIDTH_TONE,														//	横幅
+			HEIGHT_TONE,													//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y,													//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
+	default:
+		break;
+	}
+
+	return;
 }
 //============================================================================================================================================
 // release
@@ -81,10 +171,26 @@ HRESULT UIRevival::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 void UIRevival::release(void)
 {
 	// スプライトのクリア
-	sprite.setTexture(NULL);
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		sprite[i].setTexture(NULL);
+	}
 
 	// インスタンスインデックスを減算
 	instanceIndex--;
+
+	return;
+}
+//============================================================================================================================================
+// update
+// 更新
+//============================================================================================================================================
+void UIRevival::update(int _revivalPoint)
+{
+	float percentage = ((float)_revivalPoint / (float)MAX_REVIVAL_POINT);
+
+	sprite[GAUGE].setSize((int)(percentage * WIDTH_GAUGE), HEIGHT_GAUGE);
+	sprite[GAUGE].setVertex();
 
 	return;
 }
@@ -94,7 +200,10 @@ void UIRevival::release(void)
 //============================================================================================================================================
 void UIRevival::render(LPDIRECT3DDEVICE9 _device)
 {
-	sprite.render(_device);
+	for (int i = 0; i < TYPE::TYPE_MAX; i++)
+	{
+		sprite[i].render(_device);
+	}
 
 	return;
 }

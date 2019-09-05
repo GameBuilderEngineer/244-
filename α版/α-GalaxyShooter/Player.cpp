@@ -2,9 +2,11 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/22
+// [更新日]2019/09/03
 //===================================================================================================================================
 #include "Player.h"
+#include "UIRevival.h"
+
 using namespace playerNS;
 
 //===================================================================================================================================
@@ -30,12 +32,15 @@ Player::Player()
 	onGround = false;						//接地判定
 
 	skyHeight = 0.0f;
-	modelType = staticMeshNS::ADULT;
+	modelType = staticMeshNS::CHILD;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
 	onRecursion = false;					//リカージョン生成フラグ
-	onShockWave = false;					//衝撃波発動フラグ
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		onShockWave[i] = false;
+	}//衝撃波発動フラグ
 	canShockWave = false;
 	collidedOpponentMemoryLine = false;		//相手のメモリーラインとの衝突フラグ
 	disconnectOpponentMemoryLine = false;	//敵メモリーライン切断メッセージフラグ
@@ -78,7 +83,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		keyTable = NON_CONTOROL;
 		break;
 	}
-	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
+	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::CHILD], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -95,11 +100,10 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
-
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 	//スターラインの初期化
 	starLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT001));
+		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
 
 	// 弾エフェクト初期化
 	bulletEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
@@ -110,6 +114,10 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	// アップエフェクト初期化
 	upEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
+	// ラインエフェクト初期化
+	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	return;
 }
 
 //===================================================================================================================================
@@ -134,7 +142,7 @@ void Player::update(float frameTime)
 
 	//前処理
 	setSpeed(D3DXVECTOR3(0, 0, 0));	//速度（移動量）の初期化
-	onJump = false;			//ジャンプフラグ
+	onJump = false;					//ジャンプフラグ
 
 	//===========
 	//【回復】
@@ -219,13 +227,15 @@ void Player::update(float frameTime)
 	//===========
 	//【衝撃波の更新】
 	//===========
-	updateShockWave(frameTime);
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		updateShockWave(frameTime,i);
+	}
 
 	//===========
 	//【アップエフェクトの更新】
 	//===========
 	updateUpEffect(frameTime);
-
 }
 
 //===================================================================================================================================
@@ -281,7 +291,9 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	//スターラインの描画
 	starLine.render(device, view, projection, cameraPosition);
 	//衝撃波の描画
-	if (onShockWave) shockWave->render(device, view, projection, cameraPosition);
+	for(int i = 0;i<NUM_SHOCK_WAVE;i++)
+		if (onShockWave[i])
+			shockWave[i]->render(device, view, projection, cameraPosition);
 	//メモリーラインの切断ガイドの表示
 	if (collidedOpponentMemoryLine)
 	{
@@ -525,6 +537,8 @@ void Player::updateDown(float frameTime)
 	}
 	if (input->wasKeyPressed(keyTable.revival)|| input->getController()[type]->wasButton(BUTTON_REVIVAL))
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_REVIVAL_POINT, soundNS::METHOD::PLAY);
 		revivalPoint += INCREASE_REVIVAL_POINT;
 		// アップエフェクト発生
 		upEffect.generateUpEffect(200, position, upVec());
@@ -549,8 +563,9 @@ void Player::changeSky()
 	skyTimer = SKY_TIME;//上空モード時間のセット
 	skyHeight = 0.0f;
 	hp = MAX_HP;
-	onGround = false;
+	onGround = true;
 	canShockWave = true;
+	deleteMemoryItem();
 }
 
 //===================================================================================================================================
@@ -575,7 +590,7 @@ void Player::updateSky(float frameTime)
 	}
 	else {
 		//空中
-		onGround = false;
+		//onGround = false;
 		setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
 	}
 
@@ -593,6 +608,7 @@ void Player::changeRevival()
 
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
+	triggerShockWave();//衝撃波を発生させる
 }
 //===================================================================================================================================
 //【復活時 更新処理】
@@ -728,18 +744,50 @@ void Player::controlCamera(float frameTime)
 //===================================================================================================================================
 void Player::updateMemoryItem(float frameTime)
 {
+	//ダウン状態ならば全てのメモリアイテムを削除
 	if (whetherDown())
 	{
-		deleteMemoryItem();//ダウン状態ならば全てのメモリアイテムを削除
+		deleteMemoryItem();
 	}
+
 	if (onRecursion)recursionTimer -= frameTime;
+
+	//リカージョン時間がなくなった場合リカージョンを削除する
 	if (recursionTimer < 0)
 	{
 		if(onRecursion)SAFE_DELETE(recursion);
 		onRecursion = false;
 	}
+
+	//接地有効距離かどうか
+	bool whetherInstallationEffectiveDistance = false;
+	int k = UtilityFunction::wrap(elementMemoryPile - 1, 0, NUM_MEMORY_PILE);
+	if(k == 0)
+	{
+		whetherInstallationEffectiveDistance = true;
+	}
+	else if(D3DXVec3Length(&(position-*memoryPile[k].getPosition()))
+		<= memoryLineNS::MAXIMUM_DISTANCE)//最大距離以下
+	{
+		whetherInstallationEffectiveDistance = true;
+	}
+	else if (D3DXVec3Length(&(position - *memoryPile[k].getPosition())) 
+		>= memoryLineNS::MINIMUM_DISTANCE)//最小距離以上
+	{
+		whetherInstallationEffectiveDistance = true;
+	}
+
+	if ( k != 0 &&//２本目以降の設置を行う状態
+		D3DXVec3Length(&(position - *memoryPile[k].getPosition())) 
+		> memoryLineNS::MAXIMUM_DISTANCE//最大距離以下
+		)
+	{
+		//メモリーパイル・メモリーラインが消失し、プレイヤーはダウン状態になる。
+	}
+
 	//1Pのメモリーパイルのセット
-	if (onGround && 
+	if (whetherInstallationEffectiveDistance &&
+		onGround && 
 		memoryPile[elementMemoryPile].ready() &&
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
@@ -879,37 +927,51 @@ void Player::disconnectMemoryLine()
 //===================================================================================================================================
 void Player::triggerShockWave()
 {
-	if (onShockWave)return;		//生成されているか
 	if (!canShockWave)return;	//使用可能か
-	shockWave = new ShockWave();
-	shockWave->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::UV_GRID), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+	for (int i = 0;i < NUM_SHOCK_WAVE; i++)
+	{
+		if(onShockWave[i])continue;		//生成されているか
+		shockWave[i] = new ShockWave();
+		shockWave[i]->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::SHOCKWAVE), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+		shockWave[i]->update(0.05*(float)i);
+		onShockWave[i] = true;		//生成中にする
+	}
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
-	onShockWave = true;		//生成中にする
 	canShockWave = false;	//使用不可能にする
 }
 
 //===================================================================================================================================
 //【衝撃波を削除】
 //===================================================================================================================================
-void Player::deleteShockWave()
+void Player::deleteShockWave(int n)
 {
-	SAFE_DELETE(shockWave);
-	onShockWave = false;
+	delete shockWave[n];
+	onShockWave[n] = false;
 }
 
 //===================================================================================================================================
 //【衝撃波の更新処理】
 //===================================================================================================================================
-void Player::updateShockWave(float frameTime)
+void Player::updateShockWave(float frameTime,int n)
 {
-	if (!onShockWave)return;//生成されていなければ更新しない
-	if (!shockWave->whetherActive())//衝撃波はアクティブでない
+	if (!onShockWave[n])return;//生成されていなければ更新しない
+	if (!shockWave[n]->whetherActive())//衝撃波はアクティブでない
 	{
-		deleteShockWave();//削除
+		deleteShockWave(n);//削除
 		return;
 	}
-	shockWave->update(frameTime);//更新
+	shockWave[n]->update(frameTime);//更新
+}
+
+//===================================================================================================================================
+//【衝撃波の更新処理】
+//===================================================================================================================================
+bool Player::collideShockWave(D3DXVECTOR3 point,float radius)
+{
+	if (!onShockWave[1])return false;
+	if(shockWave[1]->collision(point,radius))return false;
+	return true;
 }
 
 //===================================================================================================================================
@@ -935,7 +997,7 @@ int Player::getRevivalPoint() { return revivalPoint; }
 int Player::getState() { return state; }
 int Player::getWage() { return wage; }
 bool Player::whetherDown() { return state == DOWN; }
-bool Player::whetherRevival() { return revivalPoint >= MAX_REVIVAL_POINT; }
+bool Player::whetherRevival() { return revivalPoint >= (uiRevivalNS::MAX_REVIVAL_POINT); }
 bool Player::whetherDeath() {return hp <= 0;}
 bool Player::whetherInvincible() {return invincibleTimer > 0;}
 bool Player::whetherSky() { return skyTimer > 0; }
@@ -943,5 +1005,7 @@ bool Player::whetherFall() { return fallTimer > 0; }
 bool Player::whetherGenerationRecursion() { return onRecursion; }
 bool Player::whetherCollidedOpponentMemoryLine() { return collidedOpponentMemoryLine; }
 bool Player::messageDisconnectOpponentMemoryLine() { return disconnectOpponentMemoryLine; }
+int Player::getElementMemoryPile() { return elementMemoryPile; }
 Recursion* Player::getRecursion() { return recursion; }
+MemoryPile* Player::getMemoryPile() { return memoryPile; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }

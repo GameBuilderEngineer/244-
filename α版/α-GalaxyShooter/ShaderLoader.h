@@ -15,6 +15,7 @@ namespace shaderNS
 		INSTANCE_STATIC_MESH,
 		RECURSION,
 		SHOCK_WAVE,
+		LAMBERT,
 		MAX_SHADER,
 	};
 }

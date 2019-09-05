@@ -34,6 +34,13 @@ void BodyBB::initialize(void)
 
 	aiLocatePile = false;
 	isPileReady = false;
+
+	aiCutLine = false;
+	onceTriedCut = false;
+
+	aiRevivalAction = false;
+	revivalPointInterval = 0.0f;
+	
 }
 
 //=============================================================================

@@ -9,7 +9,6 @@
 
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		ADULT,
 		CHILD,
 		BULLET,
 		CUBE,

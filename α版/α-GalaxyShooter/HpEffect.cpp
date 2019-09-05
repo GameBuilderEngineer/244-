@@ -45,7 +45,7 @@ HRESULT HpEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Textur
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	textureHpEffect = *textureLoader->getTexture(textureLoaderNS::HP_EFFECT);
+	textureHpEffect = *textureLoader->getTexture(textureLoaderNS::EFFECT_DAMAGE);
 
 	// 体力エフェクト初期化
 	hpEffect.initialize(device,

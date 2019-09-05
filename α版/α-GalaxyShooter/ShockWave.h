@@ -2,7 +2,7 @@
 //【ShockWave.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/04
+// [更新日]2019/09/02
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -13,7 +13,8 @@ namespace shockWaveNS
 	const int VERTEX_NUM = 24;
 	const int POLYGON_NUM = VERTEX_NUM*2;
 	const float EXISTENCE_TIME = 2.0f;
-	const float HEIGHT = 7.0f;
+	const float HEIGHT = 3.0f;
+	const float WIDTH = 1.0f;
 }
 
 class ShockWave :public Base
@@ -55,6 +56,8 @@ public:
 	void updateVertexCoord();
 	void update(float frameTime);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon);
+	float calculationDistance(D3DXVECTOR3 point);		//(演算)ある点とラインとの距離を戻す
+	bool collision(D3DXVECTOR3 position, float radius);	//衝突検知
 
 	//getter
 	bool whetherActive();
