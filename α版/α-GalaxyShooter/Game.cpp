@@ -358,7 +358,7 @@ void Game::render(Direct3D9* direct3D9) {
 	//direct3D9->device->SetTransform(D3DTS_VIEW, &camera[2].view);
 	//direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[2].projection);
 	direct3D9->changeViewportFullWindow();
-	//renderUI(direct3D9->device);
+	renderUI(direct3D9->device);
 }
 
 //===================================================================================================================================
