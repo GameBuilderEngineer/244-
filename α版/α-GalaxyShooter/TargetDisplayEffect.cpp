@@ -39,7 +39,7 @@ HRESULT TargetDisplayEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNum
 	// テクスチャを読み込む
 	setVisualDirectory();
 
-	TargetTexture = *textureLoader->getTexture(textureLoaderNS::HP_EFFECT);
+	TargetTexture = *textureLoader->getTexture(textureLoaderNS::TARGET);
 
 	//staticMeshLoader
 	staticMeshLoader = _staticMeshLoader;

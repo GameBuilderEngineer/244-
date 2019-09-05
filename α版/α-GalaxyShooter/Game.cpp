@@ -275,7 +275,7 @@ void Game::update(float _frameTime) {
 		{
 			hpEffect[i].update();
 			target.update();
-			uiRecursion[i].update();
+			//uiRecursion[i].update();
 			uiCutMemoryLine[i].update(*player[0]->getPosition(), *player[1]->getPosition());
 			uiRevival[i].update(player[i]->getRevivalPoint());
 		}

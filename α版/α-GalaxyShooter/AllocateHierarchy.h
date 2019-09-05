@@ -73,10 +73,10 @@ struct D3DXFRAMEDerived : public D3DXFRAME
 {
 	D3DXMATRIXA16 combinedTransformationMatrix;
 
-	void *operator new(size_t _index)
-	{
-		return _aligned_malloc(_index, 16);
-	}
+	//void *operator new(size_t _index)
+	//{
+	//	return _aligned_malloc(_index, 16);
+	//}
 };
 // "D3DXMESHCONTAINER"から派生した構造体：各メッシュと共に、保存されるアプリ固有の情報を追加できる
 struct D3DXMESHCONTAINERDerived : public D3DXMESHCONTAINER
