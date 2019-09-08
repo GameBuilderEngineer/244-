@@ -20,6 +20,7 @@ Credit::Credit()
 //=============================================================================
 Credit::~Credit()
 {
+	SAFE_DELETE(camera);
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
 	sound->stop(soundNS::TYPE::BGM_CREDIT);
 }

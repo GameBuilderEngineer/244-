@@ -2,7 +2,7 @@
 //【ShockWave.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/08/07
-// [更新日]2019/09/02
+// [更新日]2019/09/08
 //===================================================================================================================================
 #include "ShockWave.h"
 using namespace shockWaveNS;
@@ -242,13 +242,13 @@ void ShockWave::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 //===================================================================================================================================
 float ShockWave::calculationDistance(D3DXVECTOR3 point)
 {
-	float result = WIDTH;
+	float result = WIDTH*2;
 	for (int i = 0; i < VERTEX_NUM; i++)
 	{
 		int k = UtilityFunction::wrap(i + 1, 0, VERTEX_NUM);
 		Line line;
-		line.start	= topVertex[i];
-		line.end	= topVertex[k];
+		line.start	= bottomVertex[i];
+		line.end	= bottomVertex[k];
 		D3DXVECTOR3 nearPoint = nearestPointOnLine(line.start, line.end, point);//ライン上の最も近い点を算出
 		float distance = D3DXVec3Length(&(point - nearPoint));//最も近い点との距離を測定する
 
@@ -265,9 +265,10 @@ float ShockWave::calculationDistance(D3DXVECTOR3 point)
 //===================================================================================================================================
 bool ShockWave::collision(D3DXVECTOR3 measurementPosition, float radius)
 {
-	if (calculationDistance(measurementPosition) > shockWaveNS::WIDTH)	return false;
-	//太さ+対象の半径より近い位置にいた場合衝突
-	else return true;
+	if (calculationDistance(measurementPosition) > shockWaveNS::WIDTH)
+		return false;
+	else
+		return true;	//太さ+対象の半径より近い位置にいた場合衝突
 }
 
 //===================================================================================================================================

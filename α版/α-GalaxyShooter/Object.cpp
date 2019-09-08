@@ -303,3 +303,8 @@ void Object::switchOperationAlpha(bool flag)
 {
 	operationAlpha = flag;
 }
+
+void Object::setRenderFlag(bool flag)
+{
+	onRender = flag;
+}

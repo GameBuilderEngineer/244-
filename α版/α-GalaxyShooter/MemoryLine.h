@@ -2,7 +2,7 @@
 //【MemoryLine.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/11
-// [更新日]2019/09/03
+// [更新日]2019/09/05
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -12,9 +12,9 @@
 
 namespace memoryLineNS
 {
-	const float MINIMUM_DISTANCE = 2.0f;
-	const float MAXIMUM_DISTANCE = 10.0f;
-	const float LOST_TIME = 2.0f;
+	const float MINIMUM_DISTANCE = 10.0f;
+	const float MAXIMUM_DISTANCE = 30.0f;
+	const float LOST_TIME = 3.0f;
 	const float THICKNESS = 3.0f; // ラインの太さ
 	const float UPDATE_TIME = 0.01f;
 	enum TYPE
@@ -42,6 +42,7 @@ class MemoryLine : public Base
 	int renderNum;						//メモリーライン全体の描画数
 	int currentRenderNum;				//現在の描画数
 	float updateTimer;					//更新タイマー
+	float colorTimer;					//カラータイマー
 public:
 	MemoryLine();
 	~MemoryLine();
@@ -61,6 +62,8 @@ public:
 	void setStarLine(LPDIRECT3DDEVICE9 device,float frameTime);			//(更新)リカージョンが完成した時の星形のラインを設定する
 	void lost(float frameTime);							//(更新)消失処理
 	void disconnect();									//(切替)切断処理
+	void changeColor(LPDIRECT3DDEVICE9 device,D3DXCOLOR color);					//(切替)色の切替
+														
 	//setter
 	void resetCurrentRenderNum();
 	//getter

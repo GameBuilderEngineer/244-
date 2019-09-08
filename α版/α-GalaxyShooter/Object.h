@@ -2,7 +2,7 @@
 //【Object.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/06/05
-// [更新日]2019/08/03
+// [更新日]2019/09/08
 //===================================================================================================================================
 #pragma once
 #include <stdio.h>
@@ -109,10 +109,11 @@ public:
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setQuaternion(D3DXQUATERNION _quaternion) { quaternion = _quaternion; }
 	void setAlpha(float value);
-	void activation();								//活性化
-	void inActivation();							//不活化
+	void activation();								//アクティブ化
+	void inActivation();							//非アクティブ化
 	void switchTransparent(bool flag);				//透過の切り替え
 	void switchOperationAlpha(bool flag);			//透過値操作フラグの切り替え
+	void setRenderFlag(bool frag);					//描画フラグのセット
 
 	//描画数をセット
 	//num:描画する数を指定
