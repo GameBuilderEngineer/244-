@@ -32,6 +32,8 @@ private:
 	static int				numAgent;				// AIの数  
 	int						aiID;					// AIの固有識別番号
 	float					frameTime;				// 1フレームあたりの時間
+	bool					canChangeCameraSkyMode;	// true 上空モード用カメラに変更可能　false 可能でない
+	D3DXQUATERNION			cameraRotPreservation;	// カメラの回転を保管するクオータニオン
 	float					virticalTime;			// オートカメラの縦首振り時間
 	float					horizontalTime;			// オートカメラの横首振り時間
 
@@ -79,6 +81,8 @@ public:
 	void update(float frameTime) override;
 	// 描画処理
 	void debugRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+	// ジャンプ
+	void activateJump(void) { onJump = true; }
 	// バレットの発射
 	void shootBullet(D3DXVECTOR3 targetDirection);
 	// メモリーパイルの設置

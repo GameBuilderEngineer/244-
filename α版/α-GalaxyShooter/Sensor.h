@@ -21,6 +21,7 @@ private:
 
 	// ÉZÉìÉTÅ[
 	void mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radius2);
+	void mapSensorSky(void);
 	void opponentSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze);
 	void bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radius2);
 

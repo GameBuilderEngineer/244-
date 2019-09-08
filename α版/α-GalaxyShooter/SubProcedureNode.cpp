@@ -32,6 +32,7 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 	case SET_DESTINATION_OPPONENT:	return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
 	case SET_DESTINATION_RANDOM:	return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
 	case SET_DESTINATION_NEXT_PILE: return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_TO_FALL:	return setMovingDestinationToFall(recognitionBB, memoryBB, bodyBB);
 	case SET_TARGET_OPPONENT:		return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
 	case SET_RECURSION_RECOGNITION: return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
 	default:
@@ -75,6 +76,40 @@ NODE_STATUS SubProcedureNode::setMovingDestinationNextPile(RecognitionBB* recogn
 		&recognitionBB->getRunningRecursion()->pilePosition[(*recognitionBB->getPileCount())++]);
 
 	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// 副処理：上空から落下するための目的を設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setMovingDestinationToFall(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	std::list<MapNode*> memorizedMap = recognitionBB->getMemorizedMap();
+	std::list<MapNode*>::iterator itr;
+	std::list<MapNode*>::iterator dest;
+	int numMaxWasuremono = 0;
+
+	for (itr = memorizedMap.begin(); itr != memorizedMap.end(); itr++)
+	{
+		if ((*itr)->getWasuremonoCount() > numMaxWasuremono)
+		{
+			numMaxWasuremono = (*itr)->getWasuremonoCount();
+			dest = itr;
+		}
+	}
+
+	if (numMaxWasuremono != 0)
+	{
+		bodyBB->configMovingDestination((*dest)->getPosition());	// ワスレモノの多いノード
+		recognitionBB->setWhetherFallingDestinationDecided(true);	// 落下時にステートマシンでfalseになる
+		return NODE_STATUS::SUCCESS;
+	}
+	else
+	{
+		bodyBB->configMovingDestination(opponent->getPosition());	// 相手
+		recognitionBB->setWhetherFallingDestinationDecided(true);	// 落下時にステートマシンでfalseになる
+		return NODE_STATUS::FAILED;
+	}
 }
 
 
@@ -151,5 +186,3 @@ NODE_STATUS SubProcedureNode::setShootingTargetOpponent(RecognitionBB* recogniti
 	bodyBB->setTargetCoordValue(*opponent->getPosition());
 	return NODE_STATUS::SUCCESS;
 }
-
-

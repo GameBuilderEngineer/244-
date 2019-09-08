@@ -23,6 +23,7 @@ private:
 	std::list<Bullet*> memorizedBullet;						// バレット記憶リスト
 	std::unordered_map<BehaviorNodeBase*, int> onOffRecord;	// ONOFFノードの記録（ビヘイビアツリーで使用）
 	std::unordered_map<BehaviorNodeBase*, int> timer;		// タイマー（ビヘイビアツリーで使用）
+	std::unordered_map<BehaviorNodeBase*, bool> flag;		// フラグ（ビヘイビアツリーで使用）
 
 public:
 	// Method

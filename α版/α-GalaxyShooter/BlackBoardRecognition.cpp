@@ -23,12 +23,18 @@ void RecognitionBB::initialize(void)
 	// opponentPlayer = コンストラクタで設定済
 	myPosition = NULL;
 	inAir = false;
-	isDown = false;
-
 	distanceBetweenPlayers = 0.0f;
+	D3DXVECTOR3 lineCutCoord = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	isFallingDestinationDecided = false;
+
+	isOpponentNear = false;
+	isOpponentOffensive = false;
+	isBulletNear = false;
+	isChinginLow = false;
 
 	ZeroMemory(recursionRecognition, sizeof(RecursionRecognition) * NUM_RECURSION_RECOGNITION);
 	recursionPolicy = RECURSION_PERSONALITY::LARGEST_WEIGHT;// ●リカージョンの方針を設定
+	isStartRecursion = false;
 	ZeroMemory(&runningRecursion, sizeof(RecursionRecognition));
 	isRecursionRunnning = false;
 	pileCount = 0;

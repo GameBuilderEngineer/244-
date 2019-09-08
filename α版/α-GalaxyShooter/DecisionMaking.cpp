@@ -21,9 +21,6 @@ DecisionMaking::DecisionMaking(void)
 	// ステートマシンとビヘイビアツリーを静的メンバに生成（AgentAI共用のため）
 	if (!stateMachine) { stateMachine = new StateMachine; }
 	if (!behaviorTree) { behaviorTree = new BehaviorTree; }
-
-	// 初期ステートを設定
-	currentState = stateMachine->getInitialState();
 }
 
 
@@ -61,6 +58,6 @@ void DecisionMaking::uninitialize(void)
 //=============================================================================
 void DecisionMaking::update(AgentAI* agentAI)
 {
-	int treeNumber = stateMachine->run(currentState, recognitionBB, memoryBB, bodyBB);
+	int treeNumber = stateMachine->run(recognitionBB, memoryBB, bodyBB);
 	behaviorTree->run(treeNumber, recognitionBB, memoryBB, bodyBB);
 }

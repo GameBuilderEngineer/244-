@@ -366,8 +366,6 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
-
-	
 	 //フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 

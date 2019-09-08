@@ -59,7 +59,7 @@ void MotionGeneration::update(AgentAI* agentAI)
 	// ジャンプ
 	if (bodyBB->getJump())
 	{
-		agentAI->jump();
+		agentAI->activateJump();
 	}
 
 	// バレットを打つ

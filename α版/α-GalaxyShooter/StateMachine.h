@@ -42,7 +42,7 @@ private:
 	static OffenseState* instance;
 
 	// Method
-	OffenseState() { setNumber(BehaviorTreeNS::TREE::OFFENSE); }	
+	OffenseState() { setNumber(BehaviorTreeNS::TREE::OFFENSE_TREE); }	
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }
 	static State* getInstance(void) { return instance; }
@@ -59,7 +59,7 @@ class DeffenseState: public State
 private:
 	static DeffenseState* instance;
 
-	DeffenseState() { setNumber(BehaviorTreeNS::TREE::DEFFENSE); }
+	DeffenseState() { setNumber(BehaviorTreeNS::TREE::DEFFENSE_TREE); }
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }	
 	static State* getInstance(void) { return instance; }
@@ -77,7 +77,7 @@ class RecursionState : public State
 private:
 	static RecursionState* instance;
 
-	RecursionState() { setNumber(BehaviorTreeNS::TREE::RECURSION); }
+	RecursionState() { setNumber(BehaviorTreeNS::TREE::RECURSION_TREE); }
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }
 	static State* getInstance(void) { return instance; }
@@ -95,7 +95,7 @@ class DownState : public State
 private:
 	static DownState* instance;
 
-	DownState() { setNumber(BehaviorTreeNS::TREE::RECURSION); }
+	DownState() { setNumber(BehaviorTreeNS::TREE::DOWN_TREE); }
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }
 	static State* getInstance(void) { return instance; }
@@ -113,7 +113,7 @@ class SkyState : public State
 private:
 	static SkyState* instance;
 
-	SkyState() { setNumber(BehaviorTreeNS::TREE::RECURSION); }
+	SkyState() { setNumber(BehaviorTreeNS::TREE::SKY_TREE); }
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }
 	static State* getInstance(void) { return instance; }
@@ -132,7 +132,7 @@ class FallState : public State
 private:
 	static FallState* instance;
 
-	FallState() { setNumber(BehaviorTreeNS::TREE::RECURSION); }
+	FallState() { setNumber(BehaviorTreeNS::TREE::FALL_TREE); }
 public:
 	static void destroy(void) { SAFE_DELETE(instance) }
 	static State* getInstance(void) { return instance; }
@@ -148,11 +148,10 @@ public:
 class StateMachine
 {
 private:
-	State* initialState;		// 開始時初期ステート
+	State* current;		// 現在のステート
 
 public:
 	StateMachine();
 	~StateMachine();
-	State* getInitialState(void) { return initialState; }
-	static int run(State* current, RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	int run(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };

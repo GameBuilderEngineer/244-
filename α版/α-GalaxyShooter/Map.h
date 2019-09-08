@@ -29,24 +29,24 @@ private:
 	static int instanceCount;		// ノード数カウンタ
 	D3DXVECTOR3	position;			// ワールド座標
 	D3DXMATRIX worldMatrix;			// ワールドマトリクス
-
-
-public:
-	BoundingSphere boundingSphere;	// バウンディングスフィア
-#ifdef _DEBUG
-	bool isRed;						// ノードのデバッグ表示が赤色
-#endif
-
-	// 
 	int wasuremonoCount;			// バウンディングスフィア内のワスレモノの数
 	int totalAmount;				// バウンディングスフィア内の総賃金数
 
+public:
+#ifdef _DEBUG
+	bool isRed;						// ノードのデバッグ表示が赤色
+#endif
+	BoundingSphere boundingSphere;	// バウンディングスフィア
+
 	// Method
 	MapNode(void) { instanceCount++; }
-	int getNumber(void) { return number; }
-	int getInstanceCount(void) { return instanceCount; }	// Getter
+	int getNumber(void) { return number; }					// Getter
+	int getInstanceCount(void) { return instanceCount; }
 	D3DXVECTOR3* getPosition(void) { return &position; }
 	D3DXMATRIX* getWorldMatrix(void) { return &worldMatrix; }
+	int getWasuremonoCount(void) { return wasuremonoCount; }
+	int getTotalAmount(void) { return totalAmount; }
+
 	void setNumber(int _number) { number = _number; }		// Setter
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void addWasuremonoCount(void) { wasuremonoCount++; }

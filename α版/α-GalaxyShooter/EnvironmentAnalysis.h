@@ -16,9 +16,9 @@
 namespace EnvilonmentAnalysisNs
 {
 	// バトル状況解析
-	const float	LENGTH_OPPONENT_IS_NEAR = 30.0f;		// 相手が近い判断するベクトルの長さ
-	const int	BULLET_TWO_VECTOR_ANGLE_DEGREE = 4;		// バレット⇔自分ベクトルとバレットスピードベクトルの角度差
-	const float LENGHT_BULLET_IS_NEAR = 8.0f;			// バレットが近いと判断するベクトルの長さ
+	const float	LENGTH_OPPONENT_IS_NEAR = 70.0f;		// 相手が近い判断するベクトルの長さ
+	const int	BULLET_TWO_VECTOR_ANGLE_DEGREE = 10;	// バレット⇔自分ベクトルとバレットスピードベクトルの角度差
+	const float LENGHT_BULLET_IS_NEAR = 50.0f;			// バレットが近いと判断するベクトルの長さ
 	const float LOSING_WAGE_DEFFERENSE = -600;			// チンギン額で差をつけられていると見なすチンギンの相手との差額
 
 	const int	VIRTUAL_RECURSION_FPS = 20;				// 仮想リカージョン更新FPS
@@ -54,12 +54,6 @@ private:
 	std::vector<Wasuremono*>* wasuremono;	// ワスレモノ
 	Fuzzy fuzzy;							// ファジー理論処理
 	Ray ray;								// 汎用レイ
-
-	// バトル状況関係
-	bool isOpponentNear;					// 敵が違い
-	bool isOpponentOffensive;				// 敵が攻撃的である
-	bool isBulletNear;						// バレットが近い
-	bool isChinginLow;						// チンギンが低い
 
 	// 仮想リカージョン関係
 	int vRecursionFrameCount;				// 更新カウント

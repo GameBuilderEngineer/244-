@@ -22,25 +22,25 @@ static FILE* fp = NULL;
 static FILE* fp2 = NULL;
 #endif
 
-#if 0	// デバッグ描画する場合は1（更新処理を描画処理で実行することになるので注意）					
+#if 1	// デバッグ描画する場合は1（更新処理を描画処理で実行することになるので注意）					
 #define AI_RENDER_MODE
 #endif
 
 // デバッグ描画が有効の場合
 #ifdef AI_RENDER_MODE
 
-#if 1
+#if 0
 #define RENDER_LINE_CUT_POINT	// メモリーライン切断座標を描画する
 static LPD3DXMESH cutPoint = NULL;
 static D3DMATERIAL9 cutPointMat;
 #endif
 
-#if 0
+#if 1
 #define RENDER_RECUASION_AREA	// リカージョンエリア検出スフィアを描画する
 static BoundingSphere spherePoint;
 #endif
 
-#if 0
+#if 1
 #define RENDER_PILE_POINT		// パイル設置座標を描画する
 static LPD3DXMESH pilePoint = NULL;
 static D3DMATERIAL9 pointMat;
@@ -143,15 +143,16 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 	//--------------
 	// 相手との距離
 	//--------------
-	float lengthBetweenPlayers = D3DXVec3Length(&(*opponent->getPosition() - *agentAI->getPosition()));
-	float opponentNearSet = fuzzy.reverseGrade(lengthBetweenPlayers, 0.0f, LENGTH_OPPONENT_IS_NEAR);
-	if (opponentNearSet > 0.5f/*アバウト*/)
+	// センサーで視界に入ったときの距離で判定
+	float opponentNearSet = 
+		fuzzy.reverseGrade(recognitionBB->getDistanceBetweenPlayers(), 0.0f, LENGTH_OPPONENT_IS_NEAR);
+	if (opponentNearSet > 0.5f/*調整*/)
 	{
-		isOpponentNear = true; 
+		recognitionBB->setIsOpponentNear(true);
 	}
 	else
 	{
-		isOpponentNear = false;
+		recognitionBB->setIsOpponentNear(false);
 	}
 
 
@@ -163,26 +164,32 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 	int cntHostileBullet = 0;				// 敵性バレットの数
 	int cntCloseDistance = 0;				// 敵性至近距離バレットの数	
 
+	if (bulletList.size() >= 5 )
+	{
+		int x;
+		x = 5;
+	}
+
 	for (itr = bulletList.begin(); itr != bulletList.end(); itr++)
 	{
 		D3DXVECTOR3 vecBulletToAgent;		// バレット⇔自分のベクトル
 		D3DXVECTOR3 slipVecBulletToAgent;	// バレット⇔自分の滑りベクトル
-		D3DXVECTOR3 slipvecBulletSpeed;		// バレットのスピードの滑りベクトル
+		D3DXVECTOR3 slipVecBulletSpeed;		// バレットのスピードの滑りベクトル
 		float dintanceToBullet;				// バレットとの距離
 		bool isHostile = false;				// 敵性バレットであるか
 
-		// 自分⇔バレットのベクトルを算出
+		// 自分⇔バレットのベクトルを算出し滑りベクトルにして正規化
 		vecBulletToAgent = *agentAI->getPosition() - *(*itr)->getPosition();
 		dintanceToBullet = D3DXVec3Length(&vecBulletToAgent);	// 長さを保管
-
-		// スリップ
 		slipVecBulletToAgent = slip(vecBulletToAgent, (*itr)->getAxisY()->direction);
-		D3DXVec3Normalize(&slipvecBulletSpeed, &vecBulletToAgent);
+		D3DXVec3Normalize(&slipVecBulletToAgent, &slipVecBulletToAgent);
+
+		// バレットのスピードも滑りベクトルにしてを正規化
+		slipVecBulletSpeed = slip((*itr)->getSpeed(), (*itr)->getAxisY()->direction);
+		D3DXVec3Normalize(&slipVecBulletSpeed, &slipVecBulletSpeed);
 
 		// 自分の方向に向かってくるなら敵性バレットである
-		slipvecBulletSpeed = slip((*itr)->getSpeed(), (*itr)->getAxisY()->direction);
-		D3DXVec3Normalize(&slipvecBulletSpeed, &slipvecBulletSpeed);
-		float dot = D3DXVec3Dot(&slipvecBulletSpeed, &slipVecBulletToAgent);
+		float dot = D3DXVec3Dot(&slipVecBulletSpeed, &slipVecBulletToAgent);
 		float angleDifferenceForHit = acosf(dot);
 		if (angleDifferenceForHit < D3DXToRadian(BULLET_TWO_VECTOR_ANGLE_DEGREE))
 		{
@@ -190,23 +197,35 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 			cntHostileBullet++;
 		}
 
-		// 敵性バレットの距離が至近距離か
 		if (isHostile && dintanceToBullet < LENGHT_BULLET_IS_NEAR)
 		{
 			cntCloseDistance++;
 		}
 	}
 
-	if (cntCloseDistance > 0) { isBulletNear = true; }
-	float hostileBulletSet = fuzzy.grade((float)cntHostileBullet, 2.0f, 5.0f);
+	// 至近距離の敵性バレットがあるか設定する
+	if (cntCloseDistance > 0)
+	{ 
+		recognitionBB->setIsBuletNear(true);
+	}
+	else
+	{
+		recognitionBB->setIsBuletNear(false);
+	}
+
+	float hostileBulletSet = fuzzy.grade((float)cntHostileBullet, 0.0f, 3.0f);
 
 
 	//----------------
 	// 相手の攻撃意欲
 	//----------------
-	if (fuzzy.OR(opponentNearSet, hostileBulletSet) > 0.8f/*こんなもんか？*/)
+	if (fuzzy.OR(opponentNearSet, hostileBulletSet) > 0.65f/*こんなもんか？*/)
 	{
-		isOpponentOffensive = true;
+		recognitionBB->setIsOpponentOffensive(true);
+	}
+	else
+	{
+		recognitionBB->setIsOpponentOffensive(false);
 	}
 
 
@@ -216,7 +235,11 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 	int wageDifference = agentAI->getWage() - opponent->getWage();
 	if (wageDifference < LOSING_WAGE_DEFFERENSE/*相手との差額*/)
 	{
-		isChinginLow = true;
+		recognitionBB->setIsChinginLow(true);
+	}
+	else
+	{
+		recognitionBB->setIsChinginLow(false);
 	}
 }
 
@@ -230,6 +253,7 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 	if (opponent->getElementMemoryPile() < 2) { return; }
 	
 	int numPile = opponent->getElementMemoryPile() + 1; // パイルの数（次に打ち込むパイルを加える）
+	int number[5];
 	float length[5 + 1] = { 0.0f };						// パイルとの距離を昇順にソートして格納
 	MemoryPile* pile[5 + 1] = { NULL };					// パイルとの距離で昇順にソートしたメモリーパイル
 	MemoryPile pileBeforeHitting;						// 次に打ち込むパイル（対戦相手座標を格納）
@@ -265,10 +289,13 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 			{
 				if (pile[i] == NULL || pile[k] == NULL) { continue; }
 
+				int tempNumber = number[k];
 				float tempLen = length[k];
 				MemoryPile* tempPile = pile[k];
+				number[k] = number[i];
 				length[k] = length[i];
 				pile[k] = pile[i];
+				number[i] = tempNumber;
 				length[i] = tempLen;
 				pile[i] = tempPile;
 			}
@@ -280,18 +307,25 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 	// 以下で使用するデータ２
 	//------------------------
 	D3DXVECTOR3 vecLine0to1;		// 最短パイル⇔第2最短パイルのベクトル（正規化済）
-	D3DXVECTOR3 orthogonal0to1;		// 最短メモリーラインに直交するベクトル（正規化済）
+	D3DXVECTOR3 orthogonal0to1;		// このメモリーラインに直交するベクトル（正規化済）
 	vecLine0to1 = *pile[1]->getPosition() - *pile[0]->getPosition();
 	D3DXVec3Normalize(&vecLine0to1, &vecLine0to1);
 	D3DXVec3Cross(&orthogonal0to1, &vecLine0to1, &pile[0]->getAxisY()->direction);
 	D3DXVec3Normalize(&orthogonal0to1, &orthogonal0to1);
 
 	D3DXVECTOR3 vecLine0to2;		// 最短パイル⇔第3最短パイルのベクトル（正規化済）
-	D3DXVECTOR3 orthogonal0to2;		// 最短メモリーラインに直交するベクトル（正規化済）
+	D3DXVECTOR3 orthogonal0to2;		// このメモリーラインに直交するベクトル（正規化済）
 	vecLine0to2 = *pile[2]->getPosition() - *pile[0]->getPosition();
 	D3DXVec3Normalize(&vecLine0to2, &vecLine0to2);
 	D3DXVec3Cross(&orthogonal0to2, &vecLine0to2, &pile[0]->getAxisY()->direction);
 	D3DXVec3Normalize(&orthogonal0to2, &orthogonal0to2);
+
+	D3DXVECTOR3 vecLine1to2;		// 第2最短パイル⇔第3最短パイルのベクトル（正規化済）
+	D3DXVECTOR3 orthogonal1to2;		// このメモリーラインに直交するベクトル（正規化済）
+	vecLine1to2 = *pile[2]->getPosition() - *pile[1]->getPosition();
+	D3DXVec3Normalize(&vecLine1to2, &vecLine1to2);
+	D3DXVec3Cross(&orthogonal1to2, &vecLine1to2, &pile[1]->getAxisY()->direction);
+	D3DXVec3Normalize(&orthogonal1to2, &orthogonal1to2);
 
 	D3DXVECTOR3 posLine0to1;		// 最短パイル⇔第2最短パイルのラインを切断する座標
 	D3DXVECTOR3 posLine0to2;		// 最短パイル⇔第3最短パイルのラインを切断する座標
@@ -355,13 +389,13 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 			recognitionBB->setLineCutCoord(
 				*pile[0]->getPosition() + pile[0]->getReverseAxisY()->direction * DIFFERENSE_BETWEEN_GROUND);
 		}
-		else if (/*dot0to1 < 0.0f &&*/ dot0to2 > 0.0f)
-		{
-			recognitionBB->setLineCutCoord(posLine0to2);
-		}
-		else if (dot0to1 > 0.0f /*&& dot0to2 < 0.0f*/)
+		else if (dot0to1 > 0.0f)
 		{
 			recognitionBB->setLineCutCoord(posLine0to1);
+		}
+		else if (dot0to2 > 0.0f)
+		{
+			recognitionBB->setLineCutCoord(posLine0to2);
 		}
 
 
@@ -756,7 +790,7 @@ void EnvironmentAnalysis::forgetMemorizedMatter(void)
 	if (recognitionBB->getMemorizedMap().size() != 0)
 	{
 		mapTimeCount++;
-		forgettingTimeMap = 60/*FPS*/ * 15/*秒*/ / recognitionBB->getMemorizedMap().size();
+		forgettingTimeMap = 60/*FPS*/ * 8/*秒*/ / recognitionBB->getMemorizedMap().size();
 		if (mapTimeCount > forgettingTimeMap)
 		{
 			recognitionBB->getMemorizedMap().pop_front();
@@ -767,7 +801,7 @@ void EnvironmentAnalysis::forgetMemorizedMatter(void)
 	if (recognitionBB->getMemorizedBullet().size() != 0)
 	{
 		bulletTimeCount++;
-		forgettingTimeBullet = 60/*FPS*/ * 4/*秒*/ / recognitionBB->getMemorizedBullet().size();
+		forgettingTimeBullet = 60/*FPS*/ * 3/*秒*/ / recognitionBB->getMemorizedBullet().size();
 		if (bulletTimeCount > forgettingTimeBullet)
 		{
 			recognitionBB->getMemorizedBullet().pop_front();

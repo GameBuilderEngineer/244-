@@ -18,6 +18,8 @@ int AgentAI::numAgent = 0;
 AgentAI::AgentAI(Player* opponentPlayer, Camera* camera, std::vector<Wasuremono*>* wasuremono)
 {
 	aiID = numAgent++;
+	canChangeCameraSkyMode = true;
+	D3DXQuaternionIdentity(&cameraRotPreservation);
 	virticalTime = 0.0f;
 	horizontalTime = 0.0f;
 
@@ -105,6 +107,7 @@ void AgentAI::initialize(
 	recognitionBB->setMemoryBB(memoryBB);
 	recognitionBB->setMyPosition(&position);
 	recognitionBB->setFrameTimePointer(&frameTime);
+	recognitionBB->setSkyHeightPointer(&skyHeight);
 	bodyBB->configMovingDestination(opponent->getPosition()); // ●
 }
 
@@ -166,7 +169,7 @@ void AgentAI::update(float frameTime)
 	//●
 	if (input->isKeyDown('Q'))
 	{
-		recognitionBB->flag = true;
+		recognitionBB->setIsStartRecursion(true);
 	}
 }
 
@@ -218,6 +221,10 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	{
 		onJump = true;
 	}
+
+	// バレット
+	if (input->isKeyDown('M')) {shootBullet(*opponent->getPosition() - position);}
+
 #endif
 
 	switch (state)
@@ -323,9 +330,9 @@ void AgentAI::updatePlayerAfter(float frameTime)
 void AgentAI::updateAgentSelfData(void)
 {
 	recognitionBB->setWhetherInAir(!onGround);							// 空中にいるか
-	recognitionBB->setIsDown(whetherDown());							// ダウン中か
 	bodyBB->setShootingInterval(intervalBullet);						// バレット発射インターバル
 	bodyBB->setIsReadyForPile(memoryPile[elementMemoryPile].ready());	// パイル設置可能か
+	recognitionBB->setPlayerState(state);								// ステートを設定
 }
 
 
@@ -426,13 +433,38 @@ void AgentAI::cutMemoryLine(void)
 void AgentAI::increaseRevivalPoint(void)
 {
 	revivalPoint += INCREASE_REVIVAL_POINT;
+
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_REVIVAL_POINT, soundNS::METHOD::PLAY);
+	revivalPoint += INCREASE_REVIVAL_POINT;
+	// アップエフェクト発生
+	upEffect.generateUpEffect(200, position, upVec());
+	if (whetherRevival())changeState(REVIVAL);
 }
 
 //=============================================================================
 // オートカメラ操作
 //=============================================================================
 void AgentAI::autoCamera(void)
-{
+{	
+	// 上空＆落下
+	if (state == SKY || state == FALL)
+	{
+		if (canChangeCameraSkyMode)
+		{
+			cameraRotPreservation = camera->relativeQuaternion;
+			camera->setRelative(SKY_RELATIVE_QUATERNION);
+			canChangeCameraSkyMode = false;
+		}
+		return;
+	}
+
+	// 地上
+	if (canChangeCameraSkyMode == false)
+	{
+		camera->setRelative(cameraRotPreservation);
+		canChangeCameraSkyMode = true;
+	}
 
 	if (D3DXVec3Length(&(*opponent->getPosition() - position)) < 90.0f/*こんなもんか？*/)
 	{// 相手に近ければロックオン

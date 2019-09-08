@@ -174,7 +174,6 @@ void Player::update(float frameTime)
 		triggerShockWave();
 	}
 
-
 	switch (state)
 	{
 	case FALL:		updateFall(frameTime);			break;
@@ -712,7 +711,6 @@ void Player::updateBullet(float frameTime)
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
-
 	}
 }
 
