@@ -2,10 +2,10 @@
 //【Camera.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/26
+// [更新日]2019/09/05
 //===================================================================================================================================
 #include "Camera.h"
-
+using namespace cameraNS;
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -50,12 +50,14 @@ void Camera::update()
 	D3DXVECTOR3 axisY(world._21, world._22, world._23);
 	if(targetY != NULL)Base::postureControl(&posture,axisY,*targetY ,0.1f);
 
+	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)relativeQuaternion;
+
 	//姿勢クォータニオンから姿勢行列を作成する
 	D3DXMatrixRotationQuaternion(&world, &posture);
 	position +=
-		relativeQuaternion.x*D3DXVECTOR3(world._11,world._12,world._13)+
-		relativeQuaternion.y*D3DXVECTOR3(world._21,world._22,world._23)+
-		relativeQuaternion.z*D3DXVECTOR3(world._31,world._32,world._33);
+		relativePosition.x*D3DXVECTOR3(world._11,world._12,world._13)+
+		relativePosition.y*D3DXVECTOR3(world._21,world._22,world._23)+
+		relativePosition.z*D3DXVECTOR3(world._31,world._32,world._33);
 	gazePosition += 
 		relativeGaze.x*D3DXVECTOR3(world._11,world._12,world._13)+
 		relativeGaze.y*D3DXVECTOR3(world._21,world._22,world._23)+
@@ -74,8 +76,16 @@ void Camera::rotation(D3DXVECTOR3 axis,float degree)
 	D3DXQuaternionRotationAxis(&rotationQ, &axis, radian);
 	D3DXQuaternionConjugate(&conjugateQ, &rotationQ);
 
+	D3DXQUATERNION temporaryQ;
 	//共役*回転対象*回転クォータニオン
-	relativeQuaternion = conjugateQ * relativeQuaternion * rotationQ;
+	temporaryQ = conjugateQ * relativeQuaternion * rotationQ;
+
+	D3DXVECTOR3 relativePosition = (D3DXVECTOR3)temporaryQ;
+	if (relativePosition.y > LIMIT_TOP_Y)return;
+	if (relativePosition.y < LIMIT_BOTTOM_Y)return;
+
+	//共役*回転対象*回転クォータニオン
+	relativeQuaternion = temporaryQ;
 }
 
 

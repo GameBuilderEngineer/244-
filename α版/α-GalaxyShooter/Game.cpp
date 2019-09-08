@@ -329,6 +329,17 @@ void Game::update(float _frameTime) {
 
 	// マップの更新(ノード担当範囲に含むワスレモノを検知)
 	map.update(frameTime, wasuremono);
+
+	D3DXCOLOR* colorList = new D3DXCOLOR[3000];
+	float sinValue = (sinf(gameMaster->getGameTime() * 4)+1.0f)/2.0f;
+	float cosValue = cosf(gameMaster->getGameTime() * 4);
+	for (int i = 0; i < 3000; i++)
+	{
+		colorList[i] = D3DXCOLOR(sinValue,sinValue,sinValue,sinValue);
+	}
+	plane.setColorBuffer(direct3D9->device, 3000, colorList);
+	SAFE_DELETE_ARRAY(colorList);
+
 }
 
 //===================================================================================================================================
@@ -921,6 +932,7 @@ void Game::AI() {
 void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE_ARRAY(camera);
+	SAFE_DELETE(lambert);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		hpEffect[i].uninitialize();

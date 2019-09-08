@@ -13,15 +13,16 @@ texture planeTexture;
 sampler textureSampler = sampler_state
 {
 	texture = <planeTexture>;
-	MipFilter = LINEAR;
+	MipFilter = NONE;
 	MinFilter = LINEAR;
-	MagFilter = POINT;
+	MagFilter = LINEAR;
 };
 
 struct VS_OUT
 {
 	float4 position : POSITION;
 	float2 uv : TEXCOORD0;
+	float4 color : COLOR0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +31,8 @@ struct VS_OUT
 VS_OUT vsMain(
 	float2 position : POSITION, 
 	float2 localUV : TEXCOORD0,
-	float3 worldPosition : TEXCOORD1)
+	float3 worldPosition : TEXCOORD1,
+	float4 color : COLOR0)
 {
 	VS_OUT Out;
 
@@ -59,6 +61,8 @@ VS_OUT vsMain(
 
 	Out.uv = localUV;
 
+	Out.color = color;
+
 	return Out;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +70,7 @@ VS_OUT vsMain(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4 psMain(VS_OUT In) : COLOR0
 {
-	return tex2D(textureSampler, In.uv);
+	return tex2D(textureSampler, In.uv)*In.color;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // テクニック

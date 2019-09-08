@@ -847,7 +847,6 @@
     <ClInclude Include="InstancingEffect.h">
       <Filter>Effect\InstancingEffect</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
@@ -892,6 +891,9 @@
       <Filter>Billboard</Filter>
     </ClInclude>
     <ClInclude Include="playerK.h" />
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Billboard</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">

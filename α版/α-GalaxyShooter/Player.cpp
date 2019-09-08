@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/09/03
+// [更新日]2019/09/08
 //===================================================================================================================================
 #include "Player.h"
 #include "UIRevival.h"
@@ -514,9 +514,10 @@ void Player::updateFall(float frameTime)
 //===================================================================================================================================
 void Player::changeDown()
 {
+	elementMemoryPile = 0;
 	revivalPoint = 0;
 	decreaseRevivalTimer = DECREASE_REVIVAL_TIME;//復活ポイント減少時間のセット
-
+	canShockWave = true;
 	// ダウンエフェクト発生
 	downEffect.generateDownEffect(200, position, downVec());
 
@@ -762,32 +763,59 @@ void Player::updateMemoryItem(float frameTime)
 
 	//接地有効距離かどうか
 	bool whetherInstallationEffectiveDistance = false;
-	int k = UtilityFunction::wrap(elementMemoryPile - 1, 0, NUM_MEMORY_PILE);
-	if(k == 0)
+	int k = elementMemoryPile -1;
+	if (k < 0)
 	{
-		whetherInstallationEffectiveDistance = true;
-	}
-	else if(D3DXVec3Length(&(position-*memoryPile[k].getPosition()))
-		<= memoryLineNS::MAXIMUM_DISTANCE)//最大距離以下
-	{
-		whetherInstallationEffectiveDistance = true;
-	}
-	else if (D3DXVec3Length(&(position - *memoryPile[k].getPosition())) 
-		>= memoryLineNS::MINIMUM_DISTANCE)//最小距離以上
-	{
-		whetherInstallationEffectiveDistance = true;
+ 		k = 0;
 	}
 
-	if ( k != 0 &&//２本目以降の設置を行う状態
+	float length = D3DXVec3Length(&(position - *memoryPile[k].getPosition()));
+
+	if(elementMemoryPile == 0)
+	{
+		whetherInstallationEffectiveDistance = true;
+	}
+	else if(	length	<= memoryLineNS::MAXIMUM_DISTANCE	//最大距離以下
+			&&	length	>= memoryLineNS::MINIMUM_DISTANCE)	//最小距離以上
+	{
+		whetherInstallationEffectiveDistance = true;
+	}
+	
+	if (length < memoryLineNS::MINIMUM_DISTANCE)	//最小距離未満
+	{
+		memoryLine.changeColor(device, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	else if (length > memoryLineNS::MAXIMUM_DISTANCE-5.0f)	//最大距離超過
+	{
+		memoryLine.changeColor(device, D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f));
+	}
+	else {
+		memoryLine.changeColor(device, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+	
+	if (!whetherSky()&&
+		elementMemoryPile != 0 &&//２本目以降の設置を行う状態
 		D3DXVec3Length(&(position - *memoryPile[k].getPosition())) 
-		> memoryLineNS::MAXIMUM_DISTANCE//最大距離以下
+		> memoryLineNS::MAXIMUM_DISTANCE//最大距離超過
 		)
 	{
 		//メモリーパイル・メモリーラインが消失し、プレイヤーはダウン状態になる。
+		changeState(STATE::DOWN);
 	}
 
-	//1Pのメモリーパイルのセット
-	if (whetherInstallationEffectiveDistance &&
+	if (elementMemoryPile == NUM_MEMORY_PILE-1) {
+		//最後のメモリーパイルの手前の場合
+		memoryPile[elementMemoryPile].setPosition(position);
+		memoryPile[elementMemoryPile].setQuaternion(quaternion);
+		memoryPile[elementMemoryPile].activation();
+		memoryPile[elementMemoryPile].setRenderFlag(false);
+		memoryPile[elementMemoryPile].Object::update();
+	}
+
+	//メモリーパイルのセット
+	if (!whetherDown()&&
+		!whetherSky()&&
+		whetherInstallationEffectiveDistance &&
 		onGround && 
 		memoryPile[elementMemoryPile].ready() &&
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
@@ -819,7 +847,7 @@ void Player::updateMemoryItem(float frameTime)
 			recursion = new Recursion;
 			recursion->initialize(device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
 			//スターラインのリセット
-			starLine.resetCurrentRenderNum();
+			starLine.disconnect();
 			//メモリーパイルとメモリーラインの消失
 			for (int i = 0; i < NUM_MEMORY_PILE; i++)
 			{
@@ -868,6 +896,7 @@ void Player::updateMemoryItem(float frameTime)
 //===================================================================================================================================
 void Player::deleteMemoryItem()
 {
+	elementMemoryPile = 0;
 	//スターラインのリセット
 	starLine.resetCurrentRenderNum();
 	//メモリーパイルとメモリーラインの消失
@@ -978,8 +1007,7 @@ void Player::updateShockWave(float frameTime,int n)
 bool Player::collideShockWave(D3DXVECTOR3 point,float radius)
 {
 	if (!onShockWave[1])return false;
-	if(shockWave[1]->collision(point,radius))return false;
-	return true;
+	return (shockWave[1]->collision(point,radius));
 }
 
 //===================================================================================================================================

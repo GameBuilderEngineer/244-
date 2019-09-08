@@ -2,20 +2,29 @@
 //【InstancingBillboard.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/08/07
-// [更新日]2019/08/18
+// [更新日]2019/09/06
 //===================================================================================================================================
 #include "InstancingBillboard.h"
 
+//===================================================================================================================================
+//【コンストラクタ】
+//===================================================================================================================================
 InstancingBillboard::InstancingBillboard()
 {
 	renderNum = 0;
 	onRender = false;
 }
 
+//===================================================================================================================================
+//【デストラクタ】
+//===================================================================================================================================
 InstancingBillboard::~InstancingBillboard()
 {
 }
 
+//===================================================================================================================================
+//【初期化】
+//===================================================================================================================================
 HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device, LPD3DXEFFECT _effect, LPDIRECT3DTEXTURE9 _texture)
 {
 	InstancingBillboardVertex vertex[4] = {
@@ -49,6 +58,7 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device, LPD3DXEFFECT _
 		{ 0, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },	//頂点座標
 		{ 0, sizeof(D3DXVECTOR2), D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },//UV
 		{ 1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD, 1 },	//位置
+		{ 2, 0, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_COLOR, 0 },	//カラー
 		D3DDECL_END()
 	};
 	device->CreateVertexDeclaration(vertexElement, &declation);
@@ -72,6 +82,9 @@ HRESULT InstancingBillboard::initialize(LPDIRECT3DDEVICE9 device, LPD3DXEFFECT _
 	return S_OK;
 }
 
+//===================================================================================================================================
+//【描画】
+//===================================================================================================================================
 void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
 	if (!onRender)return;
@@ -107,13 +120,15 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
 	device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+	device->SetStreamSourceFreq(2, D3DSTREAMSOURCE_INSTANCEDATA | 1);
 
 	// 頂点宣言を通知
 	device->SetVertexDeclaration(declation);
 	
-	//デバイスデータストリームにメッシュの頂点バッファをバインド
-	device->SetStreamSource(0, vertexBuffer, 0, sizeof(InstancingBillboardVertex));
-	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));
+	//デバイスデータストリームにメッシュの各バッファをバインド
+	device->SetStreamSource(0, vertexBuffer, 0, sizeof(InstancingBillboardVertex));	//頂点バッファ
+	device->SetStreamSource(1, positionBuffer, 0, sizeof(D3DXVECTOR3));				//位置バッファ
+	device->SetStreamSource(2, colorBuffer, 0, sizeof(D3DXCOLOR));					//カラーバッファ
 
 	//インデックスバッファをセット
 	device->SetIndices(indexBuffer);
@@ -134,15 +149,19 @@ void InstancingBillboard::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DX
 	//後始末
 	device->SetStreamSourceFreq(0, 1);
 	device->SetStreamSourceFreq(1, 1);
+	device->SetStreamSourceFreq(2, 1);
 	// αブレンドを切る
 	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 }
 
+//===================================================================================================================================
+//【球状に位置情報をランダムに作成する】
+//===================================================================================================================================
 void InstancingBillboard::createPositionSpherical(LPDIRECT3DDEVICE9 device, int num ,float radius)
 {
 	renderNum = num;
-	//位置バッファの作成
+	//位置情報配列の作成
 	position = new D3DXVECTOR3[num];
 	for (int i = 0; i < num; i++)
 	{
@@ -154,9 +173,54 @@ void InstancingBillboard::createPositionSpherical(LPDIRECT3DDEVICE9 device, int 
 	//位置情報バッファの作成
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
+
+	//カラー情報配列の作成
+	D3DXCOLOR* col = new D3DXCOLOR[num];
+	for (int i = 0; i < num; i++)
+	{
+		col[i] = D3DXCOLOR( 
+			((float)(rand() % 100)) / 100, 
+			((float)(rand() % 100)) / 100, 
+			((float)(rand() % 100)) / 100, 
+			1.0f);
+	}
+	//カラー
+	setColorBuffer(device, renderNum, col);
+
+	SAFE_DELETE_ARRAY(col);
+
 	onRender = true;
 }
 
+//===================================================================================================================================
+//【カラーバッファをセットする】
+//・再セットも可能
+//===================================================================================================================================
+void InstancingBillboard::setColorBuffer(LPDIRECT3DDEVICE9 device, int num, D3DXCOLOR* colorList)
+{
+	if (num <= 0) {
+		return;
+	}
+	if(onRender)SAFE_RELEASE(colorBuffer);
+	if(onRender)SAFE_DELETE_ARRAY(color);
+	
+	renderNum = num;
+
+	//カラーバッファの作成
+	color = new D3DXCOLOR[num];
+	for (int i = 0; i < num; i++)
+	{
+		color[i] = colorList[i];
+	}
+
+	//カラーバッファの作成
+	device->CreateVertexBuffer(sizeof(D3DXCOLOR)*renderNum, 0, 0, D3DPOOL_MANAGED, &colorBuffer, 0);
+	copyVertexBuffer(sizeof(D3DXCOLOR)*renderNum, color, colorBuffer);
+}
+
+//===================================================================================================================================
+//【描画数の位置情報バッファをセットする】
+//===================================================================================================================================
 void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList)
 {
 	if (num <= 0) {
@@ -165,17 +229,33 @@ void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DX
 		return;
 	}
 	renderNum = num;
+
 	position = new D3DXVECTOR3[num];
 	for (int i = 0; i < num; i++)
 	{
 		position[i] = positionList[i];
 	}
 	if (onRender == true)SAFE_RELEASE(positionBuffer);
+	
 	//位置情報バッファの作成
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);
-	onRender = true;
 	SAFE_DELETE_ARRAY(position);
+
+	if (onRender == false)
+	{
+		//カラー情報配列の作成
+		D3DXCOLOR* col = new D3DXCOLOR[num];
+		for (int i = 0; i < num; i++)
+		{
+			col[i] = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		}
+		//カラー
+		setColorBuffer(device, renderNum, col);
+		SAFE_DELETE_ARRAY(col);
+	}
+
+	onRender = true;
 }
 
 void InstancingBillboard::offRender()

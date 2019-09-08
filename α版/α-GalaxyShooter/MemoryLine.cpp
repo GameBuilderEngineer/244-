@@ -2,7 +2,7 @@
 //【MemoryLine.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/08/20
+// [更新日]2019/09/08
 //===================================================================================================================================
 #include "MemoryLine.h"
 #include "UtilityFunction.h"
@@ -29,6 +29,7 @@ MemoryLine::MemoryLine()
 	renderNum = 0;
 	currentRenderNum = 0;
 	updateTimer = 0;
+	colorTimer = 0.0f;
 }
 
 //===================================================================================================================================
@@ -152,11 +153,10 @@ void MemoryLine::setStarLine(LPDIRECT3DDEVICE9 device,float frameTime)
 		if (currentRenderNum < renderNum)
 			currentRenderNum++;
 		updateTimer -= UPDATE_TIME;
-	}
-
-	if (currentRenderNum >= renderNum)
-	{
-		disconnect();
+		if (currentRenderNum >= renderNum)
+		{
+			currentRenderNum = 0;
+		}
 	}
 
 	if (currentRenderNum > 0)
@@ -185,6 +185,12 @@ void MemoryLine::setStarLine(LPDIRECT3DDEVICE9 device,float frameTime)
 	}
 
 	SAFE_DELETE_ARRAY(renderList);//全体のメモリーラインの点の位置情報リストを削除
+
+	colorTimer += frameTime*4;
+	float sinValue = sinf(colorTimer);
+	float cosValue = cosf(colorTimer);
+	D3DXCOLOR changeCol = D3DXCOLOR(sinValue,sinValue,sinValue,sinValue);
+	changeColor(device, changeCol);
 
 }
 //===================================================================================================================================
@@ -355,6 +361,21 @@ bool MemoryLine::collision(D3DXVECTOR3 measurementPosition,float radius)
 	//太さ+対象の半径より近い位置にいた場合衝突
 	else return true;
 }
+
+//===================================================================================================================================
+//(切替)色の切替
+//===================================================================================================================================
+void MemoryLine::changeColor(LPDIRECT3DDEVICE9 device, D3DXCOLOR color)
+{
+	D3DXCOLOR* colorList = new D3DXCOLOR[renderNum];
+	for (int i = 0; i < renderNum; i++)
+	{
+		colorList[i] = color;
+	}
+	billboard.setColorBuffer(device, renderNum, colorList);
+	SAFE_DELETE_ARRAY(colorList);
+}
+
 
 //===================================================================================================================================
 //【setter】
