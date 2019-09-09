@@ -31,7 +31,7 @@ void release(Animation* _animation)
 {
 	D3DXFrameDestroy(_animation->rootFrame, _animation->allocateHierarchy);
 
-	SAFE_DELETE(_animation->animationManager);
+	SAFE_DELETE_ARRAY(_animation->animationManager);
 	SAFE_RELEASE(_animation->animationController);
 	SAFE_DELETE(_animation->allocateHierarchy);
 	SAFE_DELETE(_animation);
@@ -290,7 +290,8 @@ void switchingSpeed(Animation* _animation)
 //============================================================================================================================================
 Animation* createObject(void)
 {
-	Animation* object = (Animation*)calloc(1, sizeof(Animation));	//	オブジェクトポインタ
+	Animation* object = new Animation;	//	オブジェクトポインタ
+	ZeroMemory(object, sizeof(Animation));
 
 	object->initialize = initialize;
 	object->release = release;
@@ -331,7 +332,7 @@ HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fil
 	_animation->animationSetMax = _animation->animationController->GetMaxNumAnimationSets();
 
 	// Xファイル内のアニメーションセットの数に基づいて、アニメーションセットメンバ変数に、配列を動的に割り当てる
-	if (FAILED(_animation->animationManager = (AnimationManager*)malloc(sizeof(AnimationManager) * _animation->animationSetMax)))
+	if (FAILED(_animation->animationManager = new AnimationManager[_animation->animationSetMax]))
 	{
 		// エラーメッセージの出力
 		MSG("Xファイルの読み込みに失敗しました");
