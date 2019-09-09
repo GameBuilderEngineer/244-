@@ -203,9 +203,23 @@ void Game::initialize(
 
 	//ゲームマスター
 	gameMaster->gameStart();//ゲーム開始時処理
+#ifdef _DEBUG
+	//極座標動作テスト用
+	polarTest.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON], &D3DXVECTOR3(0, 0, 0));
+	polarTest.setPosition(*player[PLAYER1]->getPosition());
+	polarTest.activation();
 
-	lambert = new Lambert(direct3D9->device);
-	lambert->load(*shaderLoader->getEffect(shaderNS::LAMBERT));
+	polarPosition.radius = 0.0f;
+	polarPosition.phi = 0.0f;
+	polarPosition.theta = 0.0f;
+
+	transPosition = D3DXVECTOR3(0, 0, 0);
+
+#endif // _DEBUG
+
+
+	//lambert = new Lambert(direct3D9->device);
+	//lambert->load(*shaderLoader->getEffect(shaderNS::LAMBERT));
 }
 
 //===================================================================================================================================
@@ -340,6 +354,24 @@ void Game::update(float _frameTime) {
 	plane.setColorBuffer(direct3D9->device, 3000, colorList);
 	SAFE_DELETE_ARRAY(colorList);
 
+
+#ifdef _DEBUG
+	//極座標動作テスト用
+
+	if (input->isKeyDown('F'))polarPosition.radius += 0.03f;
+	if (input->isKeyDown('G'))polarPosition.theta += 0.03f;
+	if (input->isKeyDown('H'))polarPosition.phi += 0.03f;
+
+	if (input->isKeyDown('C'))polarPosition.radius -= 0.03f;
+	if (input->isKeyDown('V'))polarPosition.theta -= 0.03f;
+	if (input->isKeyDown('B'))polarPosition.phi -= 0.03f;
+
+	transPosition = UtilityFunction::fromTransformationPolar3D(polarPosition.radius, polarPosition.theta, polarPosition.phi);
+
+	polarTest.setPosition(*player[PLAYER1]->getPosition()+transPosition);
+
+	polarTest.update();
+#endif // _DEBUG
 }
 
 //===================================================================================================================================
@@ -377,8 +409,6 @@ void Game::render(Direct3D9* direct3D9) {
 //===================================================================================================================================
 void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
-
-	
 	 //フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
@@ -445,6 +475,11 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		//プレイヤーの他のオブジェクトの描画
 		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+
+#ifdef _DEBUG
+	//極座標動作テスト用
+	polarTest.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+#endif // _DEBUG
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -538,6 +573,10 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		input->getMouseY(),
 		input->getMouseRawX(),
 		input->getMouseRawY());
+	text.print(10, 120, "position(%02.2f,%02.2f,%02.2f)", 
+		player[PLAYER1]->getPosition()->x,
+		player[PLAYER1]->getPosition()->y,
+		player[PLAYER1]->getPosition()->z);
 
 	text.print(WINDOW_WIDTH / 2, 10, 
 		"magnetPosition(%.02f,%.02f,%.02f)\n\
@@ -695,6 +734,15 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		uiPause.render(device);
 	}
 
+#ifdef _DEBUG
+	//極座標動作テスト用
+	text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 30, "polarPosition調整(radius:C[-]F[+],theta:V[-]G[+],phi:B[-]H[+])");
+	text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2+60, "polarPosition(radius:%02.2f,theta:%02.2f,phi:%02.2f)",
+		polarPosition.radius,	polarPosition.theta,	polarPosition.phi);
+	text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2+90, "transPosition(x:%02.2f,y:%02.2f,z:%02.2f)",
+		transPosition.x,transPosition.y,transPosition.z);
+#endif // _DEBUG
+
 	if (!gameMaster->whetherAlreadyStart())
 	{
 		//カウントダウン３…２…１…
@@ -729,53 +777,65 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 //===================================================================================================================================
 void Game::collisions() {
 	//1Pバレット<->プレイヤー2
-	for (int i = 0; i < playerNS::NUM_BULLET; i++)
+	if (player[PLAYER2]->getState() == playerNS::STATE::GROUND)
 	{
-		if (!player[PLAYER1]->bullet[i].getActive())continue;
-		if (player[PLAYER2]->bodyCollide.collide(
-			player[PLAYER1]->bullet[i].bodyCollide.getCenter(), 
-			player[PLAYER1]->bullet[i].bodyCollide.getRadius(),
-			*player[PLAYER2]->getMatrixWorld(), 
-			*player[PLAYER1]->bullet[i].getMatrixWorld()))
+		for (int i = 0; i < playerNS::NUM_BULLET; i++)
 		{
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
-			player[PLAYER2]->damgae(5);
-			hpEffect[PLAYER2].activate(20);
-			player[PLAYER1]->bullet[i].inActivation();
+			if (!player[PLAYER1]->bullet[i].getActive())continue;
+			if (player[PLAYER2]->bodyCollide.collide(
+				player[PLAYER1]->bullet[i].bodyCollide.getCenter(),
+				player[PLAYER1]->bullet[i].bodyCollide.getRadius(),
+				*player[PLAYER2]->getMatrixWorld(),
+				*player[PLAYER1]->bullet[i].getMatrixWorld()))
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
+				player[PLAYER2]->damgae(5);
+				hpEffect[PLAYER2].activate(20);
+				player[PLAYER1]->bullet[i].inActivation();
+			}
 		}
 	}
 
 	//2Pバレット<->プレイヤー1
-	for (int i = 0; i < playerNS::NUM_BULLET; i++)
+	if (player[PLAYER1]->getState() == playerNS::STATE::GROUND)
 	{
-		if (!player[PLAYER2]->bullet[i].getActive())continue;
-		if (player[PLAYER1]->bodyCollide.collide(
-			player[PLAYER2]->bullet[i].bodyCollide.getCenter(), 
-			player[PLAYER2]->bullet[i].bodyCollide.getRadius(),
-			*player[PLAYER1]->getMatrixWorld(), 
-			*player[PLAYER2]->bullet[i].getMatrixWorld()))
+		for (int i = 0; i < playerNS::NUM_BULLET; i++)
 		{
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
-			player[PLAYER1]->damgae(5);
-			hpEffect[PLAYER1].activate(20);
-			player[PLAYER2]->bullet[i].inActivation();
-			
+			if (!player[PLAYER2]->bullet[i].getActive())continue;
+			if (player[PLAYER1]->bodyCollide.collide(
+				player[PLAYER2]->bullet[i].bodyCollide.getCenter(),
+				player[PLAYER2]->bullet[i].bodyCollide.getRadius(),
+				*player[PLAYER1]->getMatrixWorld(),
+				*player[PLAYER2]->bullet[i].getMatrixWorld()))
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
+				player[PLAYER1]->damgae(5);
+				hpEffect[PLAYER1].activate(20);
+				player[PLAYER2]->bullet[i].inActivation();
+
+			}
 		}
 	}
 
 	// 1P衝撃波<->プレイヤー2
-	if (player[PLAYER1]->collideShockWave(*player[PLAYER2]->getPosition(), player[PLAYER2]->getRadius()))
+	if (player[PLAYER2]->getState() == playerNS::STATE::GROUND)
 	{
-		player[PLAYER2]->changeState(playerNS::STATE::DOWN);
+		if (player[PLAYER1]->collideShockWave(*player[PLAYER2]->getPosition(), player[PLAYER2]->getRadius()))
+		{
+			player[PLAYER2]->changeState(playerNS::STATE::DOWN);
+		}
 	}
 
 	// 2P衝撃波<->プレイヤー1
-	if (player[PLAYER2]->collideShockWave(
-		*player[PLAYER1]->getPosition(), player[PLAYER1]->getRadius()))
+	if (player[PLAYER1]->getState() == playerNS::STATE::GROUND)
 	{
-		player[PLAYER1]->changeState(playerNS::STATE::DOWN);
+		if (player[PLAYER2]->collideShockWave(
+			*player[PLAYER1]->getPosition(), player[PLAYER1]->getRadius()))
+		{
+			player[PLAYER1]->changeState(playerNS::STATE::DOWN);
+		}
 	}
 
 	// リカージョン1<->ワスレモノ
@@ -934,7 +994,7 @@ void Game::AI() {
 void Game::uninitialize() {
 	SAFE_DELETE(light);
 	SAFE_DELETE_ARRAY(camera);
-	SAFE_DELETE(lambert);
+	//SAFE_DELETE(lambert);
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
 		hpEffect[i].uninitialize();

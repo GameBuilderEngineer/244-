@@ -230,6 +230,43 @@ void MemoryLine::setLine(LPDIRECT3DDEVICE9 device)
 		pointList[i] = new D3DXVECTOR3[pointNum[i]];//描画する点の位置情報を新たに生成
 		for (int n = 0; n < pointNum[i]; n++)
 		{
+
+			//utility::Polar3D lineStart = UtilityFunction::fromRectangular3D(line[i].start);
+			//utility::Polar3D lineEnd = UtilityFunction::fromRectangular3D(line[i].end);
+			//
+			//D3DXMATRIX xRotation;
+			//D3DXMATRIX yRotation;
+			//D3DXMATRIX rotation;
+			//D3DXMatrixRotationX(&xRotation, lineStart.theta);
+			//D3DXMatrixRotationY(&yRotation, -lineStart.phi + D3DX_PI / 2);
+			//D3DXMatrixMultiply(&rotation, &xRotation, &yRotation);
+			//
+			//float rate = (float)(n + 1) / (float)pointNum[i];
+			//
+			//utility::Polar3D lerpPolar = lineStart;
+			//
+			//float deltaTheta = lineEnd.theta - lineStart.theta;
+			////if (deltaTheta < 0)deltaTheta *= -1;
+			//float deltaPhi = lineEnd.phi - lineStart.phi;
+			//
+			//
+			//
+			//if (deltaPhi > D3DX_PI)
+			//{
+			//		deltaPhi -= 2*D3DX_PI;
+			//}
+			//if (deltaPhi < -D3DX_PI)
+			//{
+			//		deltaPhi += 2*D3DX_PI;
+			//}
+			//
+			//lerpPolar.phi = deltaPhi;
+			//
+			//lerpPolar.theta	= UtilityFunction::lerp(0,deltaTheta, rate);
+			//
+			//pointList[i][n] = UtilityFunction::fromTransformationPolar3D(lerpPolar.radius, lerpPolar.theta, lerpPolar.phi);
+			//D3DXVec3TransformCoord(&pointList[i][n], &pointList[i][n], &rotation);
+
 			//ラインをもとに補間係数を用いて位置情報を作成する。
 			//補間係数=描画番号n/全体描画数
 			D3DXVec3Lerp(&pointList[i][n], &line[i].start, &line[i].end, (float)(n+1) / (float)pointNum[i]);

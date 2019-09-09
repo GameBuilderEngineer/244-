@@ -2,7 +2,7 @@
 //【MemoryLine.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/07/11
-// [更新日]2019/09/05
+// [更新日]2019/09/09
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -13,7 +13,7 @@
 namespace memoryLineNS
 {
 	const float MINIMUM_DISTANCE = 10.0f;
-	const float MAXIMUM_DISTANCE = 30.0f;
+	const float MAXIMUM_DISTANCE = 300.0f;
 	const float LOST_TIME = 3.0f;
 	const float THICKNESS = 3.0f; // ラインの太さ
 	const float UPDATE_TIME = 0.01f;

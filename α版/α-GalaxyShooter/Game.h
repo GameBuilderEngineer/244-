@@ -64,7 +64,7 @@ namespace gameNS
 	{
 		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
 #ifdef _DEBUG
-		D3DXQUATERNION(0.0f,20.0f,-40,0.0f)
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
 #else
 		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
 #endif // _DEBUG
@@ -107,6 +107,14 @@ private:
 	InstancingBillboard plane;
 	Object testObject;//仮
 	Object testCube;//仮
+#ifdef _DEBUG
+	//極座標動作テスト用
+	Object polarTest;//仮
+	utility::Polar3D polarPosition;
+	D3DXVECTOR3 transPosition;
+#endif // _DEBUG
+
+
 	//プレイヤー
 	Player *player[gameNS::NUM_PLAYER];
 	//プレイヤークラスへ統合

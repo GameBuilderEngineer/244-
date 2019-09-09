@@ -2,7 +2,7 @@
 //【UtiltyFunction.h】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/08/07
-// [更新日]2019/08/07
+// [更新日]2019/09/09
 //===================================================================================================================================
 #include "UtilityFunction.h"
 using namespace utility;
@@ -23,7 +23,7 @@ UtilityFunction::~UtilityFunction()
 //===================================================================================================================================
 //【極座標から直交座標の３次元座標を求める】
 //[引数]
-//float radius	：動径			[定義域] 0<= raduys <= ∞
+//float radius	：動径			[定義域] 0<= radius <= ∞
 //float theta	：極角(天頂角)  [定義域] 0<= theta  <= π
 //float phi		：方位角(偏角)  [定義域] 0<= phi    <  2π
 //[戻値]直交座標の3次元座標
@@ -31,8 +31,8 @@ UtilityFunction::~UtilityFunction()
 D3DXVECTOR3 UtilityFunction::fromTransformationPolar3D(float _radius,float _theta,float _phi)
 {
 	float radius = max(0, _radius);
-	float theta = wrap(_theta,0.0f,(float)(2.0f*D3DX_PI));
-	float phi = (theta>=D3DX_PI? -1 : 1) *  wrap(_phi,0.0f,(float)(2.0f*D3DX_PI));
+	float theta = _theta;//wrap(_theta,0.0f,(float)(2.0f*D3DX_PI));
+	float phi = (theta>D3DX_PI? -1 : 1) *  wrap(_phi,0.0f,(float)(2.0f*D3DX_PI));
 	D3DXVECTOR3 result;
 	result.x = 
 		radius * sinf(theta) * cosf(phi);
@@ -45,7 +45,7 @@ D3DXVECTOR3 UtilityFunction::fromTransformationPolar3D(float _radius,float _thet
 //===================================================================================================================================
 //【直交座標から極座標の３値を求める】
 //[引数]
-//float radius	：動径			[定義域] 0<= raduys <= ∞
+//float radius	：動径			[定義域] 0<= radius <= ∞
 //float theta	：極角(天頂角)  [定義域] 0<= theta  <= π
 //float phi		：方位角(偏角)  [定義域] 0<= phi    <  2π
 //[戻値]直交座標の3次元座標
@@ -60,10 +60,12 @@ Polar3D UtilityFunction::fromRectangular3D(D3DXVECTOR3 coordinate)
 	result.theta = (result.radius != 0) ? acosf(y/result.radius) : 0;
 	result.phi = (x != 0) ? atanf(z/x) : 0;
 
+
+
 	if (x > 0 && z > 0) {}						//++
 	else if(x<0&&z>0)result.phi += D3DX_PI;		//-+
-	else if(x<0&&z<0)result.phi += D3DX_PI;		//--
-	else if(x>0&&z<0)result.phi += 2*D3DX_PI;	//+-
+	else if(x<0&&z<=0)result.phi += D3DX_PI;	//--
+	else if(x>0&&z<=0)result.phi += 2*D3DX_PI;	//+-
 
 	return result;
 }

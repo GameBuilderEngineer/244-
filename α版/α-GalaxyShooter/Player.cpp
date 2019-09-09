@@ -163,18 +163,6 @@ void Player::update(float frameTime)
 		onJump = true;
 	}
 
-	//‰¼
-	if (input->wasKeyPressed('H'))
-	{
-		changeState(SKY);
-	}
-	//‰¼
-	if (input->wasKeyPressed(keyTable.provisional))
-	{
-		triggerShockWave();
-	}
-
-
 	switch (state)
 	{
 	case FALL:		updateFall(frameTime);			break;
