@@ -66,10 +66,10 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
 	{
 		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		camera[i].setTarget(player[i].getPosition());
-		camera[i].setTargetX(&player[i].getAxisX()->direction);
-		camera[i].setTargetY(&player[i].getAxisY()->direction);
-		camera[i].setTargetZ(&player[i].getAxisZ()->direction);
+		//camera[i].setTarget(player[i].getPosition());
+		//camera[i].setTargetX(&player[i].getAxisX()->direction);
+		//camera[i].setTargetY(&player[i].getAxisY()->direction);
+		//camera[i].setTargetZ(&player[i].getAxisZ()->direction);
 		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
 		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
 		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
@@ -82,9 +82,9 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	light->initialize(_direct3D9);
 
 	// プレイヤーの初期化
-	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::PLAYER_TYPE::PLAYER1, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
-	player[PLAYER_TYPE::PLAYER_1].setPosition(PLAYER_POSITION[playerNS::PLAYER_TYPE::PLAYER1]);
-	player[PLAYER_TYPE::PLAYER_1].animationPlayer.setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::TITLE);
+	//player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::PLAYER_TYPE::PLAYER1, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+	//player[PLAYER_TYPE::PLAYER_1].setPosition(PLAYER_POSITION[playerNS::PLAYER_TYPE::PLAYER1]);
+	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::TITLE);
 
 	// タイトルUIの初期化
 	uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
@@ -105,7 +105,7 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 void Title::uninitialize(void)
 {
 	// プレイヤー
-	player[PLAYER_TYPE::PLAYER_1].animationPlayer.release();
+	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.release();
 
 	// ライト
 	SAFE_DELETE(light);
@@ -125,10 +125,10 @@ void Title::uninitialize(void)
 void Title::update(float _frameTime)
 {
 	// カメラ
-	camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
+	//camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
 	camera[0].update();
 
-	player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
+	//player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
 
 	// タイトルUI
 	uiTitle.update(input, sound);
@@ -143,7 +143,7 @@ void Title::update(float _frameTime)
 	}
 
 	// エフェクトの更新
-	effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
+	//effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
 	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
 	if (input->isKeyDown('E'))
@@ -222,15 +222,15 @@ void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 	plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
-	player[0].toonRender
-	(
-		_direct3D9->device,
-		_currentCamera.view,
-		_currentCamera.projection,
-		_currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::TOON),
-		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	//player[0].toonRender
+	//(
+	//	_direct3D9->device,
+	//	_currentCamera.view,
+	//	_currentCamera.projection,
+	//	_currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::TOON),
+	//	*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+	//	*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
 }
 
 //============================================================================================================================================

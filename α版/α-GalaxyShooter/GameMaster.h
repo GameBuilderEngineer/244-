@@ -2,7 +2,7 @@
 //【GameMaster.h】
 // [作成者] HAL東京GP12A332 11 菅野 樹
 // [作成日] 2019/07/31
-// [更新日] 2019/08/26
+// [更新日] 2019/09/09
 //===================================================================================================================================
 #pragma once
 #include "Base.h"
@@ -10,7 +10,7 @@
 #include "Player.h"
 
 namespace gameMasterNS {
-	const float GAME_TIME = 60.0f * 4.0f;	//4分
+	const float GAME_TIME = 60.0f * 0.1f;	//4分
 	const float COUNT_DOWN_TIME = 3.0f;		//3秒
 
 	enum PLAYER_TYPE

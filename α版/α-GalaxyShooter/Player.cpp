@@ -212,7 +212,7 @@ void Player::update(float frameTime)
 	//===========
 	Object::update();
 
-	animationPlayer.update(input, state);
+	//animationPlayer.update(input, state);
 
 	//===========
 	//y’e‚ÌXVz

@@ -270,7 +270,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	//if (frameTime > 0.10)return;
+	if (frameTime > 0.10)return;
 
 	//【ゲームマスターの更新】
 	gameMaster->update(frameTime);
