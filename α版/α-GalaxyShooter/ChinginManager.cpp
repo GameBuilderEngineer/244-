@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------
 #include "ChinginManager.h"
 
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -24,6 +23,9 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 	
 	numOfUse = 0;
 	renderList = NULL;
+
+	// 賃金エフェクト初期化
+	chinginEffect.initialize(device, _textureLoader, effect);
 
 	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_REVIVAL_GAUGE));
 }
@@ -46,6 +48,9 @@ void ChinginManager::uninitialize(void)
 //=============================================================================
 void ChinginManager::update(Sound* _sound, float frameTime)
 {
+	// 賃金エフェクトの更新
+	chinginEffect.update(frameTime);
+
 	// 使用中のチンギンの挙動を更新する
 	for (int i = 0; i < chinginMax; i++)
 	{
@@ -63,6 +68,10 @@ void ChinginManager::update(Sound* _sound, float frameTime)
 			chingin[i]->getTarget()->bodyCollide.getCenter(), chingin[i]->getTarget()->bodyCollide.getRadius(),
 			*chingin[i]->getMatrixWorld(), *chingin[i]->getTarget()->getMatrixWorld()))
 		{
+
+			// 賃金エフェクト発生
+			chinginEffect.generateChinginEffect(1, *chingin[i]->getTarget()->getPosition(), chingin[i]->getTarget()->upVec());
+
 			// サウンドの再生
 			_sound->play(soundNS::TYPE::SE_CHINGIN, soundNS::METHOD::PLAY);
 
@@ -106,6 +115,10 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 	SAFE_DELETE_ARRAY(renderList)
 
 	instancingProcedure.render(device, view, projection, cameraPosition);
+
+	// 賃金エフェクトの描画
+	chinginEffect.render(device, view, projection, cameraPosition);
+
 }
 
 

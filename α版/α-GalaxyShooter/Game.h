@@ -35,6 +35,7 @@
 #include "UIScreenSplitLine.h"
 #include "UIRevival.h"
 #include "UICutMemoryLine.h"
+#include "LineEffect.h"
 #include "EffectManager.h"
 #include "Lambert.h"
 
@@ -100,6 +101,7 @@ private:
 	UICutMemoryLine uiCutMemoryLine[gameNS::NUM_PLAYER];
 	UIRevival uiRevival[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
+	LineEffect lineEffect;		//ラインエフェクト
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];

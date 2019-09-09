@@ -10,6 +10,7 @@
 #include "BoundingSphere.h"
 #include "Player.h"
 #include "Sound.h"
+#include "ChinginEffect.h"
 
 static const int INITIAL_NUM_CHINGIN = 300;	// ポインタ配列要素数の妥当そうな初期値
 
@@ -55,6 +56,7 @@ private:
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 	int chinginMax;							// チンギンポインタ配列の要素数
 	int numOfUse;							// 使用中(配列にポインタがセットされている)数
+	ChinginEffect chinginEffect;//賃金エフェクト
 
 	// マグネット関係は今は触らない（理解していない）
 	//int type;

@@ -99,6 +99,12 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		// 回復エフェクト
+		feelEffect[i].initialize(device, i, textureLoader);
+	}
+
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::LIGHT_001));
@@ -225,6 +231,14 @@ void Player::update(float frameTime)
 	//【アップエフェクトの更新】
 	//===========
 	updateUpEffect(frameTime);
+
+	//===========
+	//【回復エフェクトの更新】
+	//===========
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		feelEffect[i].update();
+	}
 }
 
 //===================================================================================================================================
@@ -263,9 +277,6 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	// アップエフェクトの描画
 	upEffect.render(device, view, projection, cameraPosition);
 
-	// ラインエフェクトの描画
-	lineEffect.render(device, view, projection, cameraPosition);
-
 	//バレットの描画
 	for (int i = 0; i < NUM_BULLET; i++)
 	{
@@ -292,6 +303,10 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 
 	}
 
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{
+		feelEffect[i].render(device);
+	}
 	//デバッグ時描画
 #ifdef _DEBUG
 	bodyCollide.render(device, matrixWorld);
@@ -602,6 +617,8 @@ void Player::changeRevival()
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
 	triggerShockWave();//衝撃波を発生させる
+
+	//feelEffect[type].activate(5);
 }
 //===================================================================================================================================
 //【復活時 更新処理】
@@ -853,11 +870,7 @@ void Player::updateMemoryItem(float frameTime)
 		 (!npc && input->getMouseWheelState()==inputNS::DOWN)||	//マウスホイール操作
 		 (GetAsyncKeyState(VK_RSHIFT) & 0x8000))				//キーボード操作（仮）
 			&& state == GROUND) 								//地上モード時
-	{
-		disconnectOpponentMemoryLine = true;
-		// ラインエフェクト発生
-		lineEffect.generateLineEffect(200, collideMemoryLinePosition, upVec());
-	}
+	{disconnectOpponentMemoryLine = true;}
 	else
 	{ disconnectOpponentMemoryLine = false;}
 
@@ -869,9 +882,6 @@ void Player::updateMemoryItem(float frameTime)
 	
 	//メモリーラインの更新
 	memoryLine.update(device, frameTime,memoryLineNS::PENTAGON);
-
-	// ラインエフェクトの更新
-	lineEffect.update(frameTime);
 
 	//スターラインの更新
 	starLine.update(device, frameTime,memoryLineNS::STAR);//スターラインの更新

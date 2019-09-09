@@ -277,6 +277,12 @@
     <Filter Include="Fader">
       <UniqueIdentifier>{8cd57046-37aa-4c3a-baac-7e395309381e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\ChinginEffect">
+      <UniqueIdentifier>{33ed9ab0-e3c0-4114-8f13-501ad60b1ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\FeelEffect">
+      <UniqueIdentifier>{2f6c9e2b-e708-48b7-98fc-6af91a0dd64a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -593,6 +599,12 @@
     <ClCompile Include="LineEffect.cpp">
       <Filter>Effect\LineEffect</Filter>
     </ClCompile>
+    <ClCompile Include="ChinginEffect.cpp">
+      <Filter>Effect\ChinginEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="FeelEffect.cpp">
+      <Filter>Effect\FeelEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -893,6 +905,12 @@
     <ClInclude Include="playerK.h" />
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="ChinginEffect.h">
+      <Filter>Effect\ChinginEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="FeelEffect.h">
+      <Filter>Effect\FeelEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

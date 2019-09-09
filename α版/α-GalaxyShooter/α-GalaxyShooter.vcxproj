@@ -144,6 +144,7 @@
     <ClCompile Include="BulletEffect.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterSelect.cpp" />
+    <ClCompile Include="ChinginEffect.cpp" />
     <ClCompile Include="ChinginManager.cpp" />
     <ClCompile Include="Colony.cpp" />
     <ClCompile Include="ConditionalNode.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
     <ClCompile Include="Fader.cpp" />
+    <ClCompile Include="FeelEffect.cpp" />
     <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
@@ -252,6 +254,7 @@
     <ClInclude Include="BulletEffect.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterSelect.h" />
+    <ClInclude Include="ChinginEffect.h" />
     <ClInclude Include="ChinginManager.h" />
     <ClInclude Include="Colony.h" />
     <ClInclude Include="ConditionalNode.h" />
@@ -267,6 +270,7 @@
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fader.h" />
+    <ClInclude Include="FeelEffect.h" />
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
