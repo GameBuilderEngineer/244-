@@ -16,7 +16,8 @@ class D3DXFrameDerived : public D3DXFRAME	// "D3DXFRAME"から派生した構造
 {
 public:
 	D3DXMATRIXA16 combinedTransformationMatrix;
-#ifdef _RELEASE
+
+#ifndef _DEBUG
 	void *operator new(size_t index) { return _aligned_malloc(index, 16); }
 #endif
 };

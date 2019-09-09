@@ -9,6 +9,9 @@
 
 using namespace playerNS;
 
+// 仮
+static float time = 0.0f;
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -32,7 +35,7 @@ Player::Player()
 	onGround = false;						//接地判定
 
 	skyHeight = 0.0f;
-	modelType = staticMeshNS::CHILD;
+	modelType = gameMasterNS::ADAM;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
@@ -50,10 +53,6 @@ Player::Player()
 	difference = DIFFERENCE_FIELD;			//フィールド補正差分
 	recursion = NULL;						//リカージョンNULL
 	recursionTimer = 0.0f;					//リカージョンの生存時間
-
-	animation = NULL;				//	アニメーション
-	animationID = { NULL,NULL };	//	アニメーションID
-
 }
 
 //===================================================================================================================================
@@ -61,20 +60,21 @@ Player::Player()
 //===================================================================================================================================
 Player::~Player()
 {
-
 }
 
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
 //プレイヤータイプごとに初期化内容を変更
-void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader) {
+void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader) {
 	device = _device;
 	type = playerType;
 	this->modelType = modelType;
 	this->textureLoader = textureLoader;
 	this->shaderLoader = shaderLoader;
 	this->sound = NULL;
+	this->staticMeshLoader = staticMeshLoader;
+
 	switch (type)
 	{
 	case PLAYER1:
@@ -87,7 +87,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		keyTable = NON_CONTOROL;
 		break;
 	}
-	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::CHILD], &(D3DXVECTOR3)START_POSITION[type]);
+	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -122,7 +122,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// アニメーション
-	initializeAnimation(_device);
+	animationPlayer.initialize(_device, modelType, playerType);
 
 	return;
 }
@@ -164,7 +164,8 @@ void Player::update(float frameTime)
 	//===========
 	//【ジャンプ】
 	//===========
-	if (input->wasKeyPressed(keyTable.jump) ||
+	if (animationPlayer.getFlagMoveBan() == false &&
+		input->wasKeyPressed(keyTable.jump) ||
 		input->getController()[type]->wasButton(BUTTON_JUMP))
 	{
 		onJump = true;
@@ -216,7 +217,7 @@ void Player::update(float frameTime)
 	//===========
 	Object::update();
 
-	updateAnimation();
+	animationPlayer.update(input, state);
 
 	//===========
 	//【弾の更新】
@@ -256,19 +257,18 @@ void Player::update(float frameTime)
 void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
-	Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	//他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
+	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
+	animationPlayer.render(device, matrixWorld, staticMeshLoader);
+	// 他のオブジェクトの描画
+	otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【通常描画】
 //======================
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	Object::render(device,view,projection, cameraPosition);
-
-	renderAnimation(device, &matrixWorld);
-
+	//Object::render(device,view,projection, cameraPosition);
+	animationPlayer.render(device, matrixWorld, staticMeshLoader);
 	//他のオブジェクトの描画
 	otherRender(device,view,projection,cameraPosition);
 }
@@ -342,7 +342,7 @@ void Player::recorvery(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
-	if (whetherDown())return;
+	if (whetherDown() || animationPlayer.getFlagMoveBan()) return;
 	//キーによる移動
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
@@ -361,6 +361,7 @@ void Player::moveOperation()
 	{
 		move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
 	}
+
 	//リセット
 	if (input->wasKeyPressed(keyTable.reset))
 	{
@@ -519,7 +520,11 @@ void Player::updateFall(float frameTime)
 	D3DXVec3Lerp(&fallPosition, &groundPosition, &skyPosition, rate);
 	setPosition(fallPosition);
 	//【地上】モードへ切替
-	if (!whetherFall())changeState(REVIVAL);
+	if (!whetherFall())
+	{
+		changeState(REVIVAL);
+		animationPlayer.setFlagLanding(true);
+	}
 }
 
 //===================================================================================================================================
@@ -580,6 +585,8 @@ void Player::changeSky()
 	hp = MAX_HP;
 	onGround = true;
 	canShockWave = true;
+	time = 0;
+	animationPlayer.setFlagRecursion(true);
 	deleteMemoryItem();
 }
 
@@ -602,6 +609,7 @@ void Player::updateSky(float frameTime)
 		setPosition(position + axisY.direction * (radius + attractorRadius + skyHeight - distanceToAttractor));
 		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 		setSpeed(reverseAxisY.slip(speed, axisY.direction));
+
 	}
 	else {
 		//空中
@@ -609,8 +617,20 @@ void Player::updateSky(float frameTime)
 		setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
 	}
 
+	// 仮
+	time += 1.0f;
+	if (time > 90.0f)
+	{
+		animationPlayer.setFlagRecursion(false);
+	}
+
 	//【落下】モードへ切替
-	if (!whetherSky())changeState(FALL);
+	if (!whetherSky())
+	{
+		changeState(FALL);
+		animationPlayer.setFlagRecursion(false);
+		animationPlayer.setFlagFalling(true);
+	}
 }
 
 //===================================================================================================================================
@@ -620,7 +640,8 @@ void Player::changeRevival()
 {
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
-
+	animationPlayer.setFlagRevival(true);
+	animationPlayer.setFlagMoveBan(true);
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
 	triggerShockWave();//衝撃波を発生させる
@@ -701,7 +722,7 @@ void Player::updateBullet(float frameTime)
 	bulletEffect.update(frameTime);
 
 	//バレットの発射
-	if (whetherDown())return;//ダウン時：発射不可
+	if (whetherDown() || animationPlayer.getFlagMoveBan() == true || animationPlayer.getFlagJump() == true) return;//ダウン時：発射不可
 	if ((input->getMouseLButton() || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
@@ -801,13 +822,16 @@ void Player::updateMemoryItem(float frameTime)
 	}
 
 	//1Pのメモリーパイルのセット
-	if (whetherInstallationEffectiveDistance &&
-		onGround && 
+	if (animationPlayer.getFlagSlash() == false &&
+		animationPlayer.getFlagInstallation() == false &&
+		whetherInstallationEffectiveDistance &&
+		onGround &&
 		memoryPile[elementMemoryPile].ready() &&
 		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+		animationPlayer.setFlagInstallation(true);
 
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
@@ -1031,252 +1055,3 @@ int Player::getElementMemoryPile() { return elementMemoryPile; }
 Recursion* Player::getRecursion() { return recursion; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }
 MemoryPile* Player::getMemoryPile() { return memoryPile; }
-
-//============================================================================================================================================
-// initialize
-// 初期化
-//============================================================================================================================================
-HRESULT Player::initializeAnimation(LPDIRECT3DDEVICE9 _device)
-{
-	const char* animationSetName[animationNS::TYPE::TYPE_MAX] =	//	アニメーションセット名
-	{
-		"Idle",
-		"FastRun"
-	};
-
-	// アニメーションを作成
-	animation = createObject();
-
-	// ディレクトリ設定
-	setVisualDirectory();
-
-	// Xファイルを読み込む
-	loadXFile(_device, animation, ("Character_Adam.x"));
-
-	//// アニメーションコールバックの設定
-	//setCallBackKeyFrame(animation, animationSetName[ANIMATION_3D_TYPE_JUMP]);
-
-	// アニメーションセットの初期化
-	for (int i = 0; i < animation->animationSetMax; i++)
-	{
-		animation->initialize(animation, animationSetName[i], i);
-	}
-
-	// アニメーションIDの設定
-	animation->animationIdCurrent = animationNS::TYPE::IDLE;
-	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
-	animation->flag.animationPlaying = true;
-	animation->update(animation, TIME_PER_FRAME);
-
-	// アニメーションの設定
-	animation->setShiftTime(animation, animation->animationIdCurrent, 1.0f);
-
-	// アニメーションシフトタイムの初期化
-	for (int i = 0; i < animation->animationSetMax; i++)
-	{
-		switch (i)
-		{
-		case animationNS::TYPE::IDLE:
-			animation->setShiftTime(animation, i, 0.5f);
-			break;
-		case animationNS::TYPE::FAST_RUN:
-			animation->setShiftTime(animation, i, 0.25f);
-			break;
-		default:
-			break;
-		}
-	}
-
-	return S_OK;
-}
-//============================================================================================================================================
-// release
-// 解放
-//============================================================================================================================================
-void Player::releaseAnimation(void)
-{
-	// アニメーションの解放
-	animation->release(animation);
-
-	return;
-}
-//============================================================================================================================================
-// update
-// 更新
-//============================================================================================================================================
-void Player::updateAnimation(void)
-{
-	updateAnimationCurrent();
-	updateAnimationNext();
-
-	// アニメーションの更新
-	if (!animation->flag.animationPlaying) { return; }
-
-	animation->update(animation, TIME_PER_FRAME);
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationCurrent
-// 更新 - アニメーション( 今 )
-//============================================================================================================================================
-void Player::updateAnimationCurrent(void)
-{
-	switch (animationID.current)
-	{
-	case animationNS::TYPE::IDLE:
-		updateAnimationCurrentIdle();
-		break;
-	case animationNS::TYPE::FAST_RUN:
-		updateAnimationCurrentFastRun();
-		break;
-	default:
-		break;
-	}
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationNext
-// 更新 - アニメーション( 次 )
-//============================================================================================================================================
-void Player::updateAnimationNext(void)
-{
-	switch (animationID.next)
-	{
-	case animationNS::TYPE::IDLE:
-		updateAnimationNextIdle();
-		break;
-	case animationNS::TYPE::FAST_RUN:
-		updateAnimationNextFastRun();
-		break;
-	default:
-		return;
-		break;
-	}
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationCurrentIdle
-// 更新 - アニメーション( 今：アイドル )
-//============================================================================================================================================
-void Player::updateAnimationCurrentIdle(void)
-{
-	if (animation->flag.moveStop)
-	{
-		animationID.next = animationNS::TYPE::IDLE;
-		return;
-	}
-
-	if (input->isKeyDown('w') ||
-		input->isKeyDown('s') ||
-		input->isKeyDown('a') ||
-		input->isKeyDown('d'))
-	{
-		animationID.next = animationNS::TYPE::FAST_RUN;
-		return;
-	}
-
-	//// ジャンプ
-	//else if ((Get_Keyboard_Trigger(DIK_SPACE)) || (Game_Pad_Button_Triggered(0, DUALSHOCK_4_BUTTON_CROSS)))
-	//{
-	//	Update_Player_Animation_Set_Current_Idol_to_Jump();
-	//	return;
-	//}
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationCurrentFastRun
-// 更新 - アニメーション( 今：走る )
-//============================================================================================================================================
-void Player::updateAnimationCurrentFastRun(void)
-{
-	if (animation->flag.moveStop)
-	{
-		animationID.next = animationNS::TYPE::IDLE;
-		return;
-	}
-
-	if (input->isKeyDown(keyTable.front) ||
-		input->isKeyDown(keyTable.back) ||
-		input->isKeyDown(keyTable.left) ||
-		input->isKeyDown(keyTable.right))
-	{
-		animationID.next = animationNS::TYPE::FAST_RUN;
-		return;
-	}
-
-	// アイドル
-	animationID.next = animationNS::TYPE::IDLE;
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationNextIdle
-// 更新 - アニメーション( 次：アイドル )
-//============================================================================================================================================
-void Player::updateAnimationNextIdle(void)
-{
-	if (animationID.current == animationNS::TYPE::IDLE)
-	{
-		animationID.current = animationNS::TYPE::IDLE;
-		animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
-
-		return;
-	}
-
-	if (!animation->flag.animationEnd) { return; }
-
-	animationID.current = animationNS::TYPE::IDLE;
-	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
-
-	return;
-}
-//============================================================================================================================================
-// updateAnimationNextFastRun
-// 更新 - アニメーション( 次：走る )
-//============================================================================================================================================
-void Player::updateAnimationNextFastRun(void)
-{
-	animationID.current = animationNS::TYPE::FAST_RUN;
-	animation->switching(animation, animationNS::TYPE::FAST_RUN, 1.0f);
-
-	return;
-}
-//============================================================================================================================================
-// render
-// 描画
-//============================================================================================================================================
-void Player::renderAnimation(LPDIRECT3DDEVICE9 _device, D3DXMATRIX* _matrixWorld)
-{
-	D3DMATERIAL9 materialDefault;	//	マテリアル
-
-	// ワールドマトリクスの設定
-	_device->SetTransform(D3DTS_WORLD, _matrixWorld);
-
-	// 現在のマテリアルを取得
-	_device->GetMaterial(&materialDefault);
-
-	// アニメーションの描画
-	animation->render(_device, animation, _matrixWorld);
-
-	// マテリアルを戻す
-	_device->SetMaterial(&materialDefault);
-
-	return;
-}
-//============================================================================================================================================
-// installation
-// 設置
-//============================================================================================================================================
-void Player::installationAnimation(void)
-{
-	animationID.current = animationNS::TYPE::IDLE;
-	animationID.next = animationNS::TYPE::IDLE;
-	animation->animationIdCurrent = animationNS::TYPE::IDLE;
-	animation->switching(animation, animationNS::TYPE::IDLE, 1.0f);
-
-	return;
-}

@@ -38,8 +38,6 @@
 #include "EffectManager.h"
 #include "Lambert.h"
 
-#include "PlayerAnimation.h"
-
 #define JUNK_MAX (100) //ƒKƒ‰ƒNƒ^‚Ì”
 
 namespace gameNS

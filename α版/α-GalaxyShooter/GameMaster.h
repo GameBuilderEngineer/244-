@@ -27,8 +27,15 @@ namespace gameMasterNS {
 		DRAW,
 	};
 
-	const int MODEL_ADAM = staticMeshNS::CHILD;
-	const int MODEL_EVE = staticMeshNS::CHILD;
+	enum MODEL_TYPE
+	{
+		ADAM,
+		EVE,
+		MODEL_TYPE_MAX
+	};
+
+	const int MODEL_ADAM = MODEL_TYPE::ADAM;
+	const int MODEL_EVE = MODEL_TYPE::EVE;
 
 	const int COUNT_DOWN = 3;
 	const float COUNT_INTERVAL = 1.0f;

@@ -14,11 +14,27 @@
 //============================================================================================================================================
 namespace animationNS
 {
+	const float TIME_PER_FRAME = (0.0167f);
+
 	enum TYPE
 	{
+		IDLE_GENERAL,
 		IDLE,
-		FAST_RUN,
-		TYPE_MAX,
+		SHOOTING,
+		RUN,
+		RUN_FAST,
+		JUMP,
+		INSTALLATION,
+		STANDING,
+		SLASH,
+		DOWN,
+		DOWN_POSE,
+		REVIVAL,
+		RECURSION,
+		FLOATING,
+		FALLING,
+		LANDING,
+		TYPE_MAX
 	};
 }
 //============================================================================================================================================
@@ -34,15 +50,13 @@ struct AnimationManager
 };
 struct AnimationFlag
 {
-	bool animationPlaying = NULL;	//	アニメーションの再生フラグ
-	bool animationEnd = NULL;		//	アニメーションの終了フラグ
-	bool moveStop = NULL;			//	移動停止フラグ
+	bool animationOn;		//	アニメーションの再生可否フラグ
+	bool animationPlayEnd;	//	アニメーションの再生終了フラグ
 };
 struct AnimationID
 {
-	int current = NULL;	//	今
-	int past = NULL;	//	前
-	int next = NULL;	//	次
+	UINT current;	//	今
+	UINT next;		//	次
 };
 struct Animation
 {
@@ -61,7 +75,7 @@ struct Animation
 	void(*release)(Animation* _animation);
 	void(*update)(Animation* _animation, float _time);
 	void(*render)(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
-	void(*switching)(Animation* _animation, UINT _animationIdentification, float _playSpeed);
+	void(*switching)(Animation* _animation, UINT _animationIdentification);
 	void(*setShiftTime)(Animation* _animation, UINT _animationIdentification, float _interval);
 };
 struct CallBackAnimation : public ID3DXAnimationCallbackHandler
@@ -82,7 +96,7 @@ void updateFrameMatrix(LPDIRECT3DDEVICE9* _device, LPD3DXFRAME _baseFrame, LPD3D
 void render(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
 void renderFrame(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXFRAME _frame);
 void renderMeshContainer(LPDIRECT3DDEVICE9 _device, LPD3DXMESHCONTAINER _baseMeshContainer, LPD3DXFRAME _baseFrame);
-void switching(Animation* _animation, UINT _animationIdentification, float _playSpeed);
+void switching(Animation* _animation, UINT _animationIdentification);
 void switchingSpeed(Animation* _animation);
 Animation* createObject(void);
 HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fileName);

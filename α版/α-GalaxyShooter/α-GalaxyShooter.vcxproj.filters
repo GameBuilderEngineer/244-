@@ -592,8 +592,8 @@
     <ClCompile Include="LineEffect.cpp">
       <Filter>Effect\LineEffect</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAnimation.cpp">
-      <Filter>Object\Player</Filter>
+    <ClCompile Include="AnimationPlayer.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -893,8 +893,8 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAnimation.h">
-      <Filter>Object\Player</Filter>
+    <ClInclude Include="AnimationPlayer.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

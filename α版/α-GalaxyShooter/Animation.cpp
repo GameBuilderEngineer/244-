@@ -44,6 +44,8 @@ void release(Animation* _animation)
 //============================================================================================================================================
 void update(Animation* _animation, float _time)
 {
+	if (!_animation->flag.animationOn) { return; }
+
 	CallBackAnimation callBackAnimation;	//	コールバックハンドル
 
 	// ハンドルにポインタを代入
@@ -229,12 +231,11 @@ void renderMeshContainer(LPDIRECT3DDEVICE9 _device, LPD3DXMESHCONTAINER _baseMes
 // switching
 // アニメーションの切り替え
 //============================================================================================================================================
-void switching(Animation* _animation, UINT _animationId, float _playSpeed)
+void switching(Animation* _animation, UINT _animationId)
 {
 	D3DXTRACK_DESC trackDescription;	//	トラックの能力
 
-	_animation->flag.animationEnd = false;
-	_animation->flag.moveStop = false;
+	_animation->flag.animationPlayEnd = false;
 	_animation->keyFrameCount = 0;
 
 	// 指定のアニメーションIDの存在を調査
@@ -269,7 +270,6 @@ void switching(Animation* _animation, UINT _animationId, float _playSpeed)
 	_animation->animationController->ResetTime();
 
 	// 現在のアニメーション番号を切り替え
-	_animation->animationID.past = _animation->animationID.current;
 	_animation->animationID.current = _animationId;
 
 	return;
@@ -326,7 +326,7 @@ HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fil
 
 	setBoneMatrix(_animation->rootFrame, _animation->rootFrame);
 
-	_animation->flag.animationEnd = false;
+	_animation->flag.animationPlayEnd = false;
 
 	_animation->animationSetMax = _animation->animationController->GetMaxNumAnimationSets();
 
@@ -509,13 +509,20 @@ HRESULT CallBackAnimation::HandleCallback(UINT Track, LPVOID pCallbackData)
 	storageTrack = NULL;
 	storageData = NULL;
 
-	if (animation->keyFrameCount == 0)
+	//if (animation->keyFrameCount == 0)
+	//{
+	//	animation->flag.moveStop = true;
+	//}
+	//else if (animation->keyFrameCount == 1)
+	//{
+	//	animation->flag.animationPlayEnd = true;
+
+	//	return D3D_OK;
+	//}
+
+	if (animation->keyFrameCount == 1)
 	{
-		animation->flag.moveStop = true;
-	}
-	else if (animation->keyFrameCount == 1)
-	{
-		animation->flag.animationEnd = true;
+		animation->flag.animationPlayEnd = true;
 
 		return D3D_OK;
 	}

@@ -50,7 +50,6 @@ HRESULT Director::initialize(){
 		return E_FAIL;
 	MFAIL(window->initialize(instance, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME), "ウィンドウ作成失敗");
 	wnd = window->wnd;
-
 #ifdef _DEBUG
 	//thread_a = new std::thread(threadA);
 

@@ -38,6 +38,10 @@ HRESULT Window::initialize(HINSTANCE instance, INT x, INT y, INT width, INT heig
 	wnd = CreateWindow(windowName, windowName, WS_OVERLAPPEDWINDOW, 0, 0, width, height, 0, 0, instance, 0);
 	if (!wnd)
 		return E_FAIL;
+
+	// ウィンドウを真ん中に設置
+	setWindowCenter(wnd);
+
 	//ウィンドウの表示
 	ShowWindow(wnd, SW_SHOW);
 	UpdateWindow(wnd);
@@ -135,3 +139,35 @@ RECT Window::getRect()
 	return rect;
 }
 
+BOOL Window::setWindowCenter(HWND _windowHandle)
+{
+	// 変数宣言
+	RECT windowRegion;			//	ウィンドウ領域
+	RECT desktopRegion;			//	デスクトップ領域
+	int windowPositionY = NULL;	//	ウィンドウ位置 Y
+	int windowPositionX = NULL;	//	ウィンドウ位置 X
+	int windowSizeX = NULL;		//	ウィンドウサイズ X
+	int windowSizeY = NULL;		//	ウィンドウサイズ Y
+
+	// 各サイズの取得
+	GetMonitorRect(&desktopRegion);					//	デスクトップのサイズを取得
+	GetWindowRect(_windowHandle, &windowRegion);	//	ウィンドウのサイズを取得
+
+	// 各座標の割り出し
+	windowSizeX = (windowRegion.right - windowRegion.left);													//	ウインドウの横幅の割り出し
+	windowSizeY = (windowRegion.bottom - windowRegion.top);													//	ウインドウの縦幅の割り出し
+	windowPositionX = (((desktopRegion.right - desktopRegion.left) - windowSizeX) / 2 + desktopRegion.left);//	横方向の中央座標軸の割り出し
+	windowPositionY = (((desktopRegion.bottom - desktopRegion.top) - windowSizeY) / 2 + desktopRegion.top);	//	縦方向の中央座標軸の割り出し
+
+	// ウィンドウを画面中央に移動
+	return SetWindowPos	//	SetWindowPos関数：子ウィンドウ、ポップアップウィンドウ、またはトップレベルウィンドウのサイズ、位置、および Z オーダーを変更する( これらのウィンドウは、その画面上での表示に従って順序が決められる、最前面にあるウィンドウは最も高いランクを与えられ、Zオーダーの先頭に置かれる )
+	(
+		_windowHandle,									//	ウィンドウハンドル
+		NULL,											//	配置順序のハンドル：先行するウィンドウのハンドルを指定
+		windowPositionX,								//	ウィンドウ左上隅の"X"座標を指定：横方向の位置 X
+		windowPositionY,								//	ウィンドウ左上隅の"Y"座標を指定：縦方向の位置 Y
+		windowSizeX,									//	ウィンドウの横幅を指定 X
+		windowSizeY,									//	ウィンドウの縦幅を指定 Y
+		(SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER)	//	ウィンドウ位置のオプション：ウィンドウのサイズや、位置の変更に関するフラグを指定
+	);
+}
