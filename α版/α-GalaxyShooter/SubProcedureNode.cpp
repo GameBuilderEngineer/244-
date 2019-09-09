@@ -29,12 +29,13 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 {
 	switch (tag)
 	{
-	case SET_DESTINATION_OPPONENT:	return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_RANDOM:	return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_NEXT_PILE: return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_TO_FALL:	return setMovingDestinationToFall(recognitionBB, memoryBB, bodyBB);
-	case SET_TARGET_OPPONENT:		return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
-	case SET_RECURSION_RECOGNITION: return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_OPPONENT:		return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_RANDOM:		return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_NEXT_PILE:		return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_TO_RECUASION:	return setMovingDestinationToRecuasion(recognitionBB, memoryBB, bodyBB);
+	case SET_TARGET_OPPONENT:			return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_RECURSION_RECOGNITION:		return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
+	case SET_RECUASION_STATE:			return setRecursionState(recognitionBB, memoryBB, bodyBB);
 	default:
 		MessageBox(NULL, TEXT("副処理リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
 		return NODE_STATUS::_NOT_FOUND;
@@ -57,9 +58,13 @@ NODE_STATUS SubProcedureNode::setMovingDestinationOpponent(RecognitionBB* recogn
 //=============================================================================
 NODE_STATUS SubProcedureNode::setMovingDestinationRandom(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
+
 	int number = rand() % Map::getMapNode().size();
 	D3DXVECTOR3* newDestination = Map::getMapNode()[number]->getPosition();
 	bodyBB->configMovingDestination(Map::getMapNode()[number]->getPosition());
+
+	recognitionBB->setWhetherDestinationDecided(true);
 	return NODE_STATUS::SUCCESS;
 }
 
@@ -71,19 +76,20 @@ NODE_STATUS SubProcedureNode::setMovingDestinationNextPile(RecognitionBB* recogn
 {
 	// リカージョン実行中でないならreturn
 	if (recognitionBB->getIsRecursionRunning() == false) { return NODE_STATUS::FAILED; }
-
 	bodyBB->configMovingDestination(
-		&recognitionBB->getRunningRecursion()->pilePosition[(*recognitionBB->getPileCount())++]);
+		&recognitionBB->getRunningRecursion()->pilePosition[recognitionBB->getElementMemoryPile()]);
 
 	return NODE_STATUS::SUCCESS;
 }
 
 
 //=============================================================================
-// 副処理：上空から落下するための目的を設定する
+// 副処理：リカージョンするための目的を設定する
 //=============================================================================
-NODE_STATUS SubProcedureNode::setMovingDestinationToFall(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+NODE_STATUS SubProcedureNode::setMovingDestinationToRecuasion(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
+	if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
+
 	std::list<MapNode*> memorizedMap = recognitionBB->getMemorizedMap();
 	std::list<MapNode*>::iterator itr;
 	std::list<MapNode*>::iterator dest;
@@ -101,13 +107,11 @@ NODE_STATUS SubProcedureNode::setMovingDestinationToFall(RecognitionBB* recognit
 	if (numMaxWasuremono != 0)
 	{
 		bodyBB->configMovingDestination((*dest)->getPosition());	// ワスレモノの多いノード
-		recognitionBB->setWhetherFallingDestinationDecided(true);	// 落下時にステートマシンでfalseになる
+		recognitionBB->setWhetherDestinationDecided(true);
 		return NODE_STATUS::SUCCESS;
 	}
 	else
 	{
-		bodyBB->configMovingDestination(opponent->getPosition());	// 相手
-		recognitionBB->setWhetherFallingDestinationDecided(true);	// 落下時にステートマシンでfalseになる
 		return NODE_STATUS::FAILED;
 	}
 }
@@ -118,8 +122,8 @@ NODE_STATUS SubProcedureNode::setMovingDestinationToFall(RecognitionBB* recognit
 //=============================================================================
 NODE_STATUS SubProcedureNode::setRecursionRecognition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	// リカージョンが実行中なら失敗
-	if (recognitionBB->getIsRecursionRunning()) { return NODE_STATUS::FAILED; }
+	// リカージョンが実行中ならRUNNING
+	if (recognitionBB->getIsRecursionRunning()) { return NODE_STATUS::RUNNING; }
 
 	float largestWeight = 0.0f;				// 重み最大値
 	float mostExpensiveAmout = 0.0f;		// 最大チンギン額 
@@ -173,8 +177,19 @@ NODE_STATUS SubProcedureNode::setRecursionRecognition(RecognitionBB* recognition
 		break;
 	}
 
-	recognitionBB->setIsRecursionRunning(true);	// リカージョン実行中にセット
-	return NODE_STATUS::SUCCESS;				// 成功
+	recognitionBB->setIsRecursionRunning(true);						// リカージョン実行中にセット
+	setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);	// 最初の目的地を入れる
+	return NODE_STATUS::SUCCESS;									// 成功
+}
+
+
+//=============================================================================
+// 副処理：リカージョンステートをセット（遷移）
+//=============================================================================
+NODE_STATUS SubProcedureNode::setRecursionState(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	recognitionBB->setIsStartRecursion(true);
+	return NODE_STATUS::SUCCESS;
 }
 
 

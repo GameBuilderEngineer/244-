@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "KnowledgeSourceBase.h"
+#include "input.h"
+
 
 namespace MotionGenerationNS
 {
@@ -18,14 +20,17 @@ class MotionGeneration:public KnowledgeSourceBase {
 private:
 	MemoryBB* memoryBB;
 	BodyBB* bodyBB;
+	Input* input;
+	playerNS::OperationKeyTable keyTable;
 
 public:
 	// Method
 	MotionGeneration(void);
 	~MotionGeneration(void);
-	void initialize(void) override;									// 初期化処理
-	void uninitialize(void) override;								// 終了処理
-	void update(AgentAI* agentAI) override;							// 更新処理
+	void initialize(void) {}
+	void initialize(Input* input, playerNS::OperationKeyTable _keyTable);	// 初期化処理
+	void uninitialize(void) override;										// 終了処理
+	void update(AgentAI* agentAI) override;									// 更新処理
 	void setBlackBoard(MemoryBB* adr1, BodyBB* adr2) { memoryBB = adr1; bodyBB = adr2; }
-	void move(AgentAI* agentAI, D3DXVECTOR3* targetCoordinates);	// 移動
+	void move(AgentAI* agentAI, D3DXVECTOR3* targetCoordinates);			// 移動
 };

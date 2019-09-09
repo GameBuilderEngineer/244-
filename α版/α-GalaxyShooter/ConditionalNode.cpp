@@ -37,13 +37,14 @@ bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memo
 {
 	switch (tag)
 	{
-	case IF_OPPONENT_NEAR:			return ifOpponentNear(recognitionBB, memoryBB, bodyBB);
-	case IF_BULLET_NEAR:			return ifBulletNear(recognitionBB, memoryBB, bodyBB);
-	case IF_FIVE_SECONDS_LATER:		return if5secondsLater(recognitionBB, memoryBB, bodyBB);
-	case IF_THREE_SECONDS_LATER:	return if3secondsLater(recognitionBB, memoryBB, bodyBB);
-	case IF_ONE_SECOND_LATER:		return if1secondLater(recognitionBB, memoryBB, bodyBB);
-	case IF_RECURSION_IS_RUNNING:	return ifRecursionIsRunning(recognitionBB, memoryBB, bodyBB);
-	case IF_FALLING_DEST_DECIDED:	return ifFallDestinationDecided(recognitionBB, memoryBB, bodyBB);
+	case IF_OPPONENT_NEAR:				return ifOpponentNear(recognitionBB, memoryBB, bodyBB);
+	case IF_BULLET_NEAR:				return ifBulletNear(recognitionBB, memoryBB, bodyBB);
+	case IF_SHOCK_WAVE_MAY_BE_HAPPEN:	return ifShockWaveMayBeHappen(recognitionBB, memoryBB, bodyBB);
+	case IF_FIVE_SECONDS_LATER:			return if5secondsLater(recognitionBB, memoryBB, bodyBB);
+	case IF_THREE_SECONDS_LATER:		return if3secondsLater(recognitionBB, memoryBB, bodyBB);
+	case IF_ONE_SECOND_LATER:			return if1secondLater(recognitionBB, memoryBB, bodyBB);
+	case IF_RECURSION_IS_RUNNING:		return ifRecursionIsRunning(recognitionBB, memoryBB, bodyBB);
+	case IF_DESTINATION_DECIDED:		return ifDestinationDecided(recognitionBB, memoryBB, bodyBB);
 
 	default:
 		MessageBox(NULL, TEXT("条件リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
@@ -62,7 +63,7 @@ bool ConditionalNode::ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* mem
 
 
 //=============================================================================
-// 条件：バレットがが近いなら
+// 条件：バレットが近いなら
 //=============================================================================
 bool ConditionalNode::ifBulletNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
@@ -74,6 +75,15 @@ bool ConditionalNode::ifBulletNear(RecognitionBB* recognitionBB, MemoryBB* memor
 	{
 		return false;
 	}
+}
+
+
+//=============================================================================
+// 条件：衝撃波が発生しそうなら
+//=============================================================================
+bool ConditionalNode::ifShockWaveMayBeHappen(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return recognitionBB->getMayHappenShockWave();
 }
 
 
@@ -132,9 +142,9 @@ bool ConditionalNode::ifRecursionIsRunning(RecognitionBB* recognitionBB, MemoryB
 
 
 //=============================================================================
-// 条件：落下座標決定済なら
+// 条件：移動先座標決定済なら
 //=============================================================================
-bool ConditionalNode::ifFallDestinationDecided(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+bool ConditionalNode::ifDestinationDecided(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	return recognitionBB->whetherFallingDestinationDecided();
+	return recognitionBB->getWhetherDestinationDecided();
 }

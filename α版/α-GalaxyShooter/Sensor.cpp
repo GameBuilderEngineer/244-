@@ -88,8 +88,8 @@ void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radi
 #endif
 		// 自分の反対側の半球にあるマップノードは処理せず高速化
 		D3DXVECTOR3 vec = *mapNode[i]->getPosition() - *agentAI->getPosition();
-		float len = D3DXVec3LengthSq(&vec);
-		if (len > radius2/*三平方の定理*/) { continue; }
+		float len2 = D3DXVec3LengthSq(&vec);
+		if (len2 > radius2 * radius2/*三平方の定理*/) { continue; }
 
 		//----------------------------------------
 		// カメラの水平視野角内に無いノードをパス
@@ -200,6 +200,8 @@ void Sensor::opponentSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze)
 		D3DXVECTOR3 temp = *opponent->getPosition() - *agentAI->getPosition();
 		recognitionBB->setDistanceBetweenPlayers(D3DXVec3Length(&temp));
 	}
+	// カメラに映っているかを記録
+	recognitionBB->setIsOpponentInCamera(isOpponentInCamera);
 }
 
 
@@ -214,8 +216,8 @@ void Sensor::bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float r
 
 		// 自分の反対側の半球にあるバレットは処理せず高速化
 		D3DXVECTOR3 vec = *opponent->bullet->getPosition() - *agentAI->getPosition();
-		float len = D3DXVec3LengthSq(&vec);
-		if (len > radius2/*三平方の定理*/) { continue; }
+		float len2 = D3DXVec3LengthSq(&vec);
+		if (len2 > radius2 * radius2/*三平方の定理*/) { continue; }
 
 		//------------------------------------------
 		// カメラの水平視野角内に無いバレットをパス

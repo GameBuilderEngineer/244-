@@ -36,7 +36,6 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 	case ACTION_PILE:		return actionPile(recognitionBB, memoryBB, bodyBB);
 	case ACTION_CUT:		return actionCut(recognitionBB, memoryBB, bodyBB);
 	case ACTION_REVIVAL:	return actionRevival(recognitionBB, memoryBB, bodyBB);
-	case ACTION_SKY_MOVE:	return actionSkyMove(recognitionBB, memoryBB, bodyBB);
 	case ACTION_FALL:		return actionFall(recognitionBB, memoryBB, bodyBB);
 
 	default:
@@ -57,6 +56,7 @@ NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memor
 	// 到着していたら停止で失敗
 	if (bodyBB->getIsArrived())
 	{
+		recognitionBB->setWhetherDestinationDecided(false);// 目的地を初期化
 		bodyBB->setMove(false);
 		return NODE_STATUS::FAILED;
 	}
@@ -104,10 +104,6 @@ NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memor
 //=============================================================================
 NODE_STATUS ActionNode::actionJump(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	// 初速を与えるのを1フレームに限定するためのチェックをしたのち
-	// 地上にいればジャンプをさせる
-
-
 	if (recognitionBB->getWhetherInAir())
 	{
 		return NODE_STATUS::FAILED;	// 空中ではジャンプ失敗
@@ -115,27 +111,8 @@ NODE_STATUS ActionNode::actionJump(RecognitionBB* recognitionBB, MemoryBB* memor
 	else
 	{
 		bodyBB->setJump(true);
-		bodyBB->setJumpedHistory(true);
 		return NODE_STATUS::SUCCESS;// ジャンプ成功
 	}
-
-	//if (bodyBB->whetherJumpedOnce())
-	//{// 過去フレームにジャンプをさせている場合
-	//	if (recognitionBB->getWhetherInAir())
-	//	{
-
-	//	}
-	//	else
-	//	{
-	//		bodyBB->setJumpedHistory(false);
-	//	}
-	//	bodyBB->setJump(false);
-	//	return NODE_STATUS::RUNNING;	// ジャンプ実行中
-	//}
-
-	//else
-	//{
-	//}
 }
 
 
@@ -144,7 +121,8 @@ NODE_STATUS ActionNode::actionJump(RecognitionBB* recognitionBB, MemoryBB* memor
 //=============================================================================
 NODE_STATUS ActionNode::actionShoot(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	if (recognitionBB->getPlayerState() == playerNS::DOWN)
+
+ 	if (recognitionBB->getPlayerState() == playerNS::DOWN)
 	{
 		return NODE_STATUS::FAILED;		// ダウン時ショット失敗
 	}
@@ -165,21 +143,15 @@ NODE_STATUS ActionNode::actionShoot(RecognitionBB* recognitionBB, MemoryBB* memo
 //=============================================================================
 NODE_STATUS ActionNode::actionPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	if (recognitionBB->getWhetherInAir() || bodyBB->getIsReadyForPile() == false)
+	if (recognitionBB->getWhetherInAir() || bodyBB->getIsReadyForPile() == false ||
+		recognitionBB->getPlayerState() == playerNS::SKY || recognitionBB->getPlayerState() == playerNS::DOWN)
 	{
+		//whetherInstallationEffectiveDistanceこの判定はしてない
 		return NODE_STATUS::FAILED;
 	}
 	else
 	{
 		bodyBB->setLocatingPile(true);
-
-		// パイルの5つめを打ち込みしたらリカージョン実行中フラグをオフにする
-		if (*recognitionBB->getPileCount() == 5)
-		{
-			recognitionBB->setIsRecursionRunning(false);
-			recognitionBB->setIsStartRecursion(false);
-			*recognitionBB->getPileCount() = 0;
-		}
 
 		return NODE_STATUS::SUCCESS;
 	}
@@ -222,7 +194,7 @@ NODE_STATUS ActionNode::actionCut(RecognitionBB* recognitionBB, MemoryBB* memory
 //=============================================================================
 NODE_STATUS ActionNode::actionRevival(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	static const float INCREASE_INTERVAL = 0.2f;//（秒）ボタン連打の間隔を表現
+	static const float INCREASE_INTERVAL = 0.19f;//（秒）ボタン連打の間隔を表現
 
 	if (bodyBB->getRevivalPointInterval() < INCREASE_INTERVAL)
 	{
@@ -235,15 +207,6 @@ NODE_STATUS ActionNode::actionRevival(RecognitionBB* recognitionBB, MemoryBB* me
 		bodyBB->setRevivalPointInterval(0.0f);
 		return NODE_STATUS::SUCCESS;	// ダウン復活アクション成功
 	}
-}
-
-
-//=============================================================================
-// アクション：上空モード移動
-//=============================================================================
-NODE_STATUS ActionNode::actionSkyMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
-{
-	return NODE_STATUS::SUCCESS;
 }
 
 

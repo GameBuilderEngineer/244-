@@ -30,9 +30,10 @@ MotionGeneration::~MotionGeneration(void)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void MotionGeneration::initialize(void)
+void MotionGeneration::initialize(Input* _input, playerNS::OperationKeyTable _keyTable)
 {
-
+	input = _input;
+	keyTable = _keyTable;
 }
 
 
@@ -59,36 +60,32 @@ void MotionGeneration::update(AgentAI* agentAI)
 	// ジャンプ
 	if (bodyBB->getJump())
 	{
-		agentAI->activateJump();
+		input->keyPress(keyTable.jump);
 	}
 
 	// バレットを打つ
 	if (bodyBB->getShootingBullet())
 	{
-		agentAI->shootBullet(bodyBB->getTargetCoordValue());
+		input->keyPress(playerNS::BUTTON_BULLET);
 	}
 
 	// メモリーパイルの設置
 	if (bodyBB->getLocatingPile())
 	{
-		agentAI->locateMemoryPile();
+		input->keyPress(playerNS::BUTTON_PILE);
 	}
 
 	// メモリーラインの切断
 	if (bodyBB->getCuttingLine())
 	{
-		agentAI->cutMemoryLine();
+		input->keyPress(playerNS::BUTTON_CUT);
 	}
 
 	// ダウン復活
 	if (bodyBB->getRevivalAction())
 	{
-		agentAI->increaseRevivalPoint();
+		input->keyPress(keyTable.revival);
 	}
-
-	// 上空モード移動
-
-	// 落下
 
 	// フラグのリセット
 	bodyBB->setMove(false);

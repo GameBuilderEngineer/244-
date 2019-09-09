@@ -35,6 +35,7 @@ State* OffenseState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB
 
 	if (recognitionBB->getIsStartRecursion())
 	{// リカージョン状態へ遷移
+		recognitionBB->setIsStartRecursion(false);
 		return RecursionState::getInstance();
 	}
 
@@ -63,15 +64,16 @@ State* DeffenseState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryB
 		return SkyState::getInstance();
 	}
 
-	if (recognitionBB->getIsStartRecursion())
+ 	if (recognitionBB->getIsStartRecursion())
 	{// リカージョン状態へ遷移
+		recognitionBB->setIsStartRecursion(false);
 		return RecursionState::getInstance();
 	}
 
-	//if (recognitionBB->getIsOpponentNear() || recognitionBB->getIsOpponentOffensive())
-	//{// オフェンス状態へ遷移
-	//	return OffenseState::getInstance();
-	//}
+	if (recognitionBB->getIsOpponentNear() || recognitionBB->getIsOpponentOffensive())
+	{// オフェンス状態へ遷移
+		return OffenseState::getInstance();
+	}
 
 	return this;
 }
@@ -84,37 +86,48 @@ State* RecursionState::transition(RecognitionBB* recognitionBB, MemoryBB* memory
 {
 	if (recognitionBB->getPlayerState() == playerNS::DOWN)
 	{// ダウン状態へ遷移
-		// ●プレイヤーの方でリカージョン中のダウンや上空モードについて対策ができたらコメントアウト
-		// メモリーパイルやメモリーラインのフラグを完全にリセットすればいけるはず
-		//recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setNextElementMemoryPile(0);
 		return DownState::getInstance();
 	}
 
 	if (recognitionBB->getPlayerState() == playerNS::SKY)
 	{// 上空状態へ遷移
-		// ●プレイヤーの方でリカージョン中のダウンや上空モードについて対策ができたらコメントアウト
-		// メモリーパイルやメモリーラインのフラグを完全にリセットすればいけるはず
-		//recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setNextElementMemoryPile(0);
 		return SkyState::getInstance();
 	}
 
 	if (recognitionBB->getIsRecursionRunning())
 	{
-		return this;	// リカージョン状態を継続する
+		if (recognitionBB->getElementMemoryPile() == 0 &&
+			recognitionBB->getNextElementMemoryPile() > 0 &&
+			recognitionBB->getIsRecursionRunning())
+		{//	遷移以外の要因でリカージョンが終了した場合
+			recognitionBB->setIsRecursionRunning(false);
+			recognitionBB->setNextElementMemoryPile(0);
+		}
+		else
+		{
+			recognitionBB->setNextElementMemoryPile(recognitionBB->getElementMemoryPile());
+			return this;	// リカージョン状態を継続する
+		}
 	}
 
 	if (recognitionBB->getIsOpponentNear() || recognitionBB->getIsOpponentOffensive())
 	{// オフェンス状態へ遷移
+		recognitionBB->setNextElementMemoryPile(0);
 		return OffenseState::getInstance();
 	}
 
 	if (recognitionBB->getIsOpponentNear() == false
 		&& recognitionBB->getIsOpponentOffensive() == false)
 	{// ディフェンス状態へ遷移
+		recognitionBB->setNextElementMemoryPile(0);
 		return DeffenseState::getInstance();
 	}
 
-	return this;// 警告防止（値を返さないこコントロールパス～）
+	return this;// 警告防止（値を返さないコントロールパス～）
 }
 
 
@@ -144,7 +157,7 @@ State* DownState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, B
 		return DeffenseState::getInstance();
 	}
 
-	//return this;// 警告防止（値を返さないこコントロールパス～）
+	return this;// 警告防止（値を返さないこコントロールパス～）
 }
 
 
@@ -155,7 +168,7 @@ State* SkyState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, Bo
 {
 	if (recognitionBB->getPlayerState() == playerNS::FALL)
 	{// 落下状態へ遷移
-		recognitionBB->setWhetherFallingDestinationDecided(false);
+		recognitionBB->setWhetherDestinationDecided(false);
 		return FallState::getInstance();
 	}
 

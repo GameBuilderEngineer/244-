@@ -81,10 +81,10 @@ public:
 	void update(float frameTime) override;
 	// 描画処理
 	void debugRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
-	// ジャンプ
-	void activateJump(void) { onJump = true; }
-	// バレットの発射
-	void shootBullet(D3DXVECTOR3 targetDirection);
+	//// ジャンプ
+	//void activateJump(void) { onJump = true; }
+	//// バレットの発射
+	//void shootBullet(D3DXVECTOR3 targetDirection);
 	// メモリーパイルの設置
 	void locateMemoryPile(void);
 	// メモリーライン切断

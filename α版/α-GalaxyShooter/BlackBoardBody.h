@@ -19,8 +19,6 @@ protected:
 	bool isArrived;							// true 到着した　false 到着していない
 	float speed;							// 移動スピード
 	bool aiJump;							// true ジャンプする　false ジャンプしない
-	bool onceJumped;						// true ジャンプ済み　false　未ジャンプ
-											// ※Player::jump()を行ったらtrue
 	bool aiShoot;							// true バレットを打つ　false バレットを打たない
 	D3DXVECTOR3 target;						// バレットのターゲット座標	
 	float shootingInterval;					// バレット発射インターバル
@@ -54,8 +52,6 @@ public:
 	// ジャンプ
 	bool getJump(void) { return aiJump; }							// ジャンプを取得
 	void setJump(bool setting) { aiJump = setting; }				// ジャンプを設定
-	bool whetherJumpedOnce(void) { return onceJumped; }				// ジャンプ履歴の取得
-	void setJumpedHistory(bool setting) { onceJumped = setting; }	// ジャンプ履歴の設定
 
 	// バレット
 	bool getShootingBullet(void) { return aiShoot; }				// バレットを打つか取得

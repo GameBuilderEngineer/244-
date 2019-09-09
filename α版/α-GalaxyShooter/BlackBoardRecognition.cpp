@@ -25,7 +25,7 @@ void RecognitionBB::initialize(void)
 	inAir = false;
 	distanceBetweenPlayers = 0.0f;
 	D3DXVECTOR3 lineCutCoord = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	isFallingDestinationDecided = false;
+	isDestinationDecided = false;
 
 	isOpponentNear = false;
 	isOpponentOffensive = false;
@@ -37,5 +37,4 @@ void RecognitionBB::initialize(void)
 	isStartRecursion = false;
 	ZeroMemory(&runningRecursion, sizeof(RecursionRecognition));
 	isRecursionRunnning = false;
-	pileCount = 0;
 }

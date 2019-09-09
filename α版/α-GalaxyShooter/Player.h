@@ -70,6 +70,7 @@ namespace playerNS{
 		'T',			//Provisional
 		VK_SPACE,		//Revival
 	};
+
 	const OperationKeyTable NON_CONTOROL = {
 		VK_ESCAPE,		//FRONT
 		VK_ESCAPE,		//BACK
@@ -87,6 +88,7 @@ namespace playerNS{
 	const BYTE BUTTON_BULLET = virtualControllerNS::R1;
 	const BYTE BUTTON_CUT = virtualControllerNS::X;
 	const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
+	const BYTE BUTTON_PILE = virtualControllerNS::L1;
 
 	enum STATE {
 		GROUND,
@@ -141,6 +143,7 @@ protected:
 	//ステータス
 	int type;											//プレイヤータイプ
 	int modelType;										//キャラクターモデルタイプ
+	bool npc;											//AIプレイヤー判定
 	int hp;												//体力
 	int revivalPoint;									//復活ポイント
 	int wage;											//チンギン

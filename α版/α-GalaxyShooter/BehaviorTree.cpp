@@ -13,11 +13,21 @@ void BehaviorTree::offense(void)
 	currentTree = OFFENSE_TREE;
 
 	addNode(PARENT_IS_NOT_EXIST, PARARELL);
-	//addNode(0, SET_DESTINATION_OPPONENT);
-	//addNode(0, SET_TARGET_OPPONENT);
-	//addNode(0, SEQUENCE);
-	//addNode(3, ACTION_MOVE);
-	//addNode(3, ACTION_SHOOT);
+
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SET_DESTINATION_OPPONENT);
+	addNode(0, SET_TARGET_OPPONENT);
+
+
+	addNode(1, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
+	addNode(1, ACTION_JUMP);
+
+	addNode(2, IF_BULLET_NEAR);
+	addNode(2, ACTION_JUMP);
+
+	addNode(0, ACTION_MOVE);
+	addNode(0, ACTION_SHOOT);
 }
 
 
@@ -30,21 +40,24 @@ void BehaviorTree::deffense(void)
 
 
 	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
 
-	addNode(0, IF_BULLET_NEAR);
-	addNode(0, ACTION_JUMP);
+	addNode(1, SET_DESTINATION_TO_RECUASION);
+	addNode(1, SET_DESTINATION_RANDOM);
+	addNode(2, IF_DESTINATION_DECIDED);
+	addNode(2, PRIORITY);
 
-	//addNode(0, SEQUENCE);
-	//addNode(1, IF_FIVE_SECONDS_LATER);
-	//addNode(1, SET_DESTINATION_RANDOM);
-	//addNode(1, SET_TARGET_OPPONENT);
-	//addNode(1, ACTION_SHOOT);
+	addNode(3, IF_BULLET_NEAR);
+	addNode(3, ACTION_JUMP);
 
-	//addNode(0, SEQUENCE);
-	//addNode(6, IF_THREE_SECONDS_LATER);
-	//addNode(6, ACTION_JUMP);
+	addNode(4, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
+	addNode(4, ACTION_JUMP);
 
-	//addNode(0, ACTION_MOVE);
+	addNode(8, ACTION_MOVE);
+	addNode(8, SET_RECUASION_STATE);
 }
 
 
@@ -55,16 +68,14 @@ void BehaviorTree::recursion(void)
 {
 	currentTree = RECURSION_TREE;
 
-	addNode(PARENT_IS_NOT_EXIST, PARARELL);
-	addNode(0, SEQUENCE);
+	addNode(PARENT_IS_NOT_EXIST, SEQUENCE);
+	addNode(0, SET_RECURSION_RECOGNITION);
 	addNode(0, IF_RECURSION_IS_RUNNING);
 	addNode(0, PRIORITY);
-	addNode(1, SET_RECURSION_RECOGNITION);
-	addNode(1, SET_DESTINATION_NEXT_PILE);
 	addNode(3, ACTION_MOVE);
 	addNode(3, SEQUENCE);
-	addNode(7, ACTION_PILE);
-	addNode(7, SET_DESTINATION_NEXT_PILE);
+	addNode(5, ACTION_PILE);
+	addNode(5, SET_DESTINATION_NEXT_PILE);
 }
 
 //=============================================================================
@@ -90,11 +101,11 @@ void BehaviorTree::sky(void)
 	addNode(0, SEQUENCE);
 	addNode(0, SEQUENCE);
 
-	addNode(1, IF_FALLING_DEST_DECIDED);
+	addNode(1, IF_DESTINATION_DECIDED);
 	addNode(1, ACTION_MOVE);
 
 	addNode(2, IF_ONE_SECOND_LATER);
-	addNode(2, SET_DESTINATION_TO_FALL);
+	addNode(2, SET_DESTINATION_TO_RECUASION);
 }
 
 

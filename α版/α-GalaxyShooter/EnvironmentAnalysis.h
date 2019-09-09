@@ -18,9 +18,10 @@ namespace EnvilonmentAnalysisNs
 	// バトル状況解析
 	const float	LENGTH_OPPONENT_IS_NEAR = 70.0f;		// 相手が近い判断するベクトルの長さ
 	const int	BULLET_TWO_VECTOR_ANGLE_DEGREE = 10;	// バレット⇔自分ベクトルとバレットスピードベクトルの角度差
-	const float LENGHT_BULLET_IS_NEAR = 50.0f;			// バレットが近いと判断するベクトルの長さ
+	const float LENGHT_BULLET_IS_NEAR = 40.0f;			// バレットが近いと判断するベクトルの長さ
 	const float LOSING_WAGE_DEFFERENSE = -600;			// チンギン額で差をつけられていると見なすチンギンの相手との差額
 
+	const int	BATTLE_ANALYSIS_FPS = 20;				// バトル状況解析更新FPS
 	const int	VIRTUAL_RECURSION_FPS = 20;				// 仮想リカージョン更新FPS
 
 	// 仮想リカージョン試行回数関係
@@ -31,12 +32,12 @@ namespace EnvilonmentAnalysisNs
 	const int	NUM_TEST_CASES_PER_NODE = NUM_TEST_SIZE * NUM_TEST_ZONE;// 一つのノードについて衝突検知の試行回数
 
 	// リカージョンエリア判定用バウンディングスフィア
-	const float	TEST_SIZE_RADIUS_BASE = 10.0f;			// 基本半径
-	const float	TEST_SIZE_RADIUS_ADD = 10.0f;			// 追加半径
-	const float  TEST_SIZE_RADIUS_FUZZY_ADJUST = 10.0f;	// サイズ集合が各1.0のときに含む実際のBS半径の最小最大との差
+	const float	TEST_SIZE_RADIUS_BASE = 13.0f;			// 基本半径
+	const float	TEST_SIZE_RADIUS_ADD = 5.0f;			// 追加半径
+	const float  TEST_SIZE_RADIUS_FUZZY_ADJUST = 1.0f;	// サイズ集合が各1.0のときに含む実際のBS半径の最小最大との差
 	const float  AXIS_TILT_ANGLE_FOR_SMALL_BS = 0.22f;	// サイズに応じた配置半径を作るためレイを傾ける角度
 	const float  AXIS_TILT_ANGLE_FOR_MIDDLE_BS = 0.3f;	// サイズに応じた配置半径を作るためレイを傾ける角度
-	const float  AXIS_TILT_ANGLE_FOR_BIG_BS = 0.42f;		// サイズに応じた配置半径を作るためレイを傾ける角度
+	const float  AXIS_TILT_ANGLE_FOR_BIG_BS = 0.42f;	// サイズに応じた配置半径を作るためレイを傾ける角度
 
 	// ※ファジー入力値算出にあたっての定数は直接selectRecursionArea()をいじる方が早いのでここには記載しない
 }
@@ -54,6 +55,9 @@ private:
 	std::vector<Wasuremono*>* wasuremono;	// ワスレモノ
 	Fuzzy fuzzy;							// ファジー理論処理
 	Ray ray;								// 汎用レイ
+
+	// バトル状況解析
+	int battleAnalysisFrameCount;			// 更新カウント
 
 	// 仮想リカージョン関係
 	int vRecursionFrameCount;				// 更新カウント

@@ -17,8 +17,9 @@ private:
 	NODE_STATUS setMovingDestinationOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setMovingDestinationRandom(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setMovingDestinationNextPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	NODE_STATUS setMovingDestinationToFall(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS setMovingDestinationToRecuasion(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setRecursionRecognition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	NODE_STATUS setRecursionState(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS setShootingTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 
 

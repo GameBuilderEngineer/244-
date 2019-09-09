@@ -86,6 +86,7 @@ void AgentAI::initialize(
 	ShaderLoader* shaderLoader)
 {
 	Player::initialize(playerType, modelType,device, staticMeshLoader, textureLoader, shaderLoader);
+	npc = true;
 
 	// アービター初期化
 	arbiter->initialize();
@@ -96,7 +97,7 @@ void AgentAI::initialize(
 	environmentAnalysis->initialize();
 	decisionMaking->initialize();
 	pathPlanning->initialize();
-	motionGeneration->initialize();
+	motionGeneration->initialize(input, keyTable);
 
 	// ブラックボード初期化
 	recognitionBB->initialize();
@@ -107,6 +108,7 @@ void AgentAI::initialize(
 	recognitionBB->setMemoryBB(memoryBB);
 	recognitionBB->setMyPosition(&position);
 	recognitionBB->setFrameTimePointer(&frameTime);
+	recognitionBB->setElementMemoryPilePointer(&elementMemoryPile);
 	recognitionBB->setSkyHeightPointer(&skyHeight);
 	bodyBB->configMovingDestination(opponent->getPosition()); // ●
 }
@@ -157,6 +159,8 @@ void AgentAI::update(float frameTime)
 		motionGeneration->update(this);
 	}
 
+	// AI記憶忘却
+
 	// AI用オートカメラ操作
 	autoCamera();
 
@@ -166,11 +170,14 @@ void AgentAI::update(float frameTime)
 	// プレイヤー自己情報→AIに送信 
 	updateAgentSelfData();
 
+#ifdef _DEBUG
 	//●
-	if (input->isKeyDown('Q'))
+ 	if (input->wasKeyPressed('Q'))
 	{
+		//input->clearKeyPress('Q');
 		recognitionBB->setIsStartRecursion(true);
 	}
+#endif
 }
 
 
@@ -191,22 +198,10 @@ void AgentAI::updatePlayerBefore(float frameTime)
 //=============================================================================
 void AgentAI::updatePlayerAfter(float frameTime)
 {
-#ifdef _DEBUG
-	// 調整用
-	if (input->getController()[type]->wasButton(virtualControllerNS::UP))
-		difference += 0.01f;
-	if (input->getController()[type]->wasButton(virtualControllerNS::DOWN))
-		difference -= 0.01f;
-#endif
-
 	//===========
 	//【回復】
 	//===========
 	recorvery(frameTime);
-
-#ifdef _DEBUG
-	// デバッグモードのときはコントローラの入力を一部受け付ける
-	// 特段理由はない　せっかくだから
 
 	//===========
 	//【移動処理】
@@ -222,16 +217,22 @@ void AgentAI::updatePlayerAfter(float frameTime)
 		onJump = true;
 	}
 
-	// バレット
-	if (input->isKeyDown('M')) {shootBullet(*opponent->getPosition() - position);}
-
-#endif
+	//仮
+	if (input->wasKeyPressed('H'))
+	{
+		changeState(SKY);
+	}
+	//仮
+	if (input->wasKeyPressed(keyTable.provisional))
+	{
+		triggerShockWave();
+	}
 
 	switch (state)
 	{
 	case FALL:		updateFall(frameTime);			break;
 	case SKY:		updateSky(frameTime);			break;
-	case GROUND:	updateGround(frameTime, onJump); break;
+	case GROUND:	updateGround(frameTime, onJump);break;
 	case DOWN:		updateDown(frameTime);			break;
 	case REVIVAL:	updateRevival(frameTime);		break;
 	}
@@ -264,13 +265,7 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//===========
 	//【弾の更新】
 	//===========
-	//インターバルの更新
-	intervalBullet = max(intervalBullet - frameTime, 0);
-	//バレットの更新
-	for (int i = 0; i < NUM_BULLET; i++)
-	{
-		bullet[i].update(frameTime);
-	}
+	updateBullet(frameTime);
 
 	//===========
 	//【カメラの操作】
@@ -278,41 +273,10 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	camera->setUpVector(axisY.direction);
 	camera->update();
 
-	//==========================
-	//【メモリーアイテムの更新】
-	//==========================
-	if (whetherDown())
-	{
-		deleteMemoryItem();//ダウン状態ならば全てのメモリアイテムを削除
-	}
-	if (onRecursion)recursionTimer -= frameTime;
-	if (recursionTimer < 0)
-	{
-		if (onRecursion)SAFE_DELETE(recursion);
-		onRecursion = false;
-	}
-
-	// メモリーパイルのセットはビヘイビアツリーから
-
-	// メモリーラインの切断もビヘイビアツリーから
-
-	// メモリーパイルの更新
-	for (int i = 0; i < NUM_MEMORY_PILE; i++)
-	{
-		memoryPile[i].update(frameTime);
-	}
-
-	// メモリーラインの更新
-	memoryLine.update(device, frameTime, memoryLineNS::PENTAGON);
-
-	//スターラインの更新
-	starLine.update(device, frameTime, memoryLineNS::STAR);//スターラインの更新
-
-	//リカージョンの更新
-	if (onRecursion)
-	{
-		recursion->update(frameTime);
-	}
+	//===========
+	//【メモリーパイル・メモリーライン・リカージョンの更新】
+	//===========
+	updateMemoryItem(frameTime);
 
 	//===========
 	//【衝撃波の更新】
@@ -321,6 +285,11 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	{
 		updateShockWave(frameTime, i);
 	}
+
+	//===========
+	//【アップエフェクトの更新】
+	//===========
+	updateUpEffect(frameTime);
 }
 
 
@@ -333,97 +302,6 @@ void AgentAI::updateAgentSelfData(void)
 	bodyBB->setShootingInterval(intervalBullet);						// バレット発射インターバル
 	bodyBB->setIsReadyForPile(memoryPile[elementMemoryPile].ready());	// パイル設置可能か
 	recognitionBB->setPlayerState(state);								// ステートを設定
-}
-
-
-//=============================================================================
-// バレットの発射
-//=============================================================================
-void AgentAI::shootBullet(D3DXVECTOR3 targetDirection)
-{
-	// この条件判定はビヘイビアツリーでも行っている
-	// if (whetherDown())return;//ダウン時：発射不可
-	// if (intervalBullet == 0)
-
-
-	//バレットの発射
-	if (whetherDown())return;//ダウン時：発射不可
-	if (intervalBullet == 0)
-	{
-		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_ATTACK, soundNS::METHOD::PLAY);
-
-		bullet[elementBullet].setPosition(position);
-		//Y軸方向への成分を削除する
-		D3DXVECTOR3 front = slip(camera->getDirectionZ(), axisY.direction);
-		D3DXVec3Normalize(&front, &front);//正規化
-		bullet[elementBullet].addSpeed(front*0.2);//速度を加算
-		bullet[elementBullet].setQuaternion(quaternion);
-		bullet[elementBullet].postureControl(axisZ.direction, front, 1.0f);
-		bullet[elementBullet].activation();
-		bullet[elementBullet].configurationGravity(attractorPosition, attractorRadius);
-		bullet[elementBullet].Object::update();
-		elementBullet++;
-		if (elementBullet >= NUM_BULLET)elementBullet = 0;
-		intervalBullet = INTERVAL_BULLET;
-	}
-}
-
-
-//=============================================================================
-// メモリーパイルの設置
-//=============================================================================
-void AgentAI::locateMemoryPile(void)
-{
-	// この辺の条件判定はビヘイビアツリーで行っている
-	// onGround &&
-	// memoryPile[elementMemoryPile].ready()
-
-	// サウンドの再生
-	sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
-
-	memoryPile[elementMemoryPile].setPosition(position);
-	memoryPile[elementMemoryPile].setQuaternion(quaternion);
-	memoryPile[elementMemoryPile].activation();
-	memoryPile[elementMemoryPile].Object::update();
-	elementMemoryPile++;
-
-	//メモリーパイルを全て設置することに成功
-	if (elementMemoryPile >= NUM_MEMORY_PILE)
-	{
-		memoryLine.update(device, frameTime, memoryLineNS::PENTAGON);//メモリーラインの更新
-		elementMemoryPile = 0;//セットする対象を0番のメモリパイルに切替
-		//リカージョンによるワスレモノから賃金への変換が終わるまでは、メモリーパイルをセットできない状態にする
-		onRecursion = true;
-		recursionTimer = RECURSION_TIME;
-		//設置されたメモリーパイル5点を用いてリカージョン用のポリゴンを生成する。
-		D3DXVECTOR3 vertex[NUM_MEMORY_PILE];
-		for (int i = 0; i < NUM_MEMORY_PILE; i++)
-		{
-			vertex[i] = *memoryPile[i].getPosition();
-		}
-		//リカージョンの生成
-		recursion = new Recursion;
-		recursion->initialize(device, vertex, *textureLoader->getTexture(textureLoaderNS::RECURSION), *shaderLoader->getEffect(shaderNS::RECURSION));
-		//スターラインのリセット
-		starLine.resetCurrentRenderNum();
-		//メモリーパイルとメモリーラインの消失
-		for (int i = 0; i < NUM_MEMORY_PILE; i++)
-		{
-			memoryPile[i].switchLost();//消失
-			memoryLine.disconnect();//切断
-		}
-	}
-
-}
-
-
-//=============================================================================
-// メモリーライン切断
-//=============================================================================
-void AgentAI::cutMemoryLine(void)
-{
-	disconnectOpponentMemoryLine = true;
 }
 
 
@@ -446,8 +324,10 @@ void AgentAI::increaseRevivalPoint(void)
 // オートカメラ操作
 //=============================================================================
 void AgentAI::autoCamera(void)
-{	
+{
+	//------------
 	// 上空＆落下
+	//------------
 	if (state == SKY || state == FALL)
 	{
 		if (canChangeCameraSkyMode)
@@ -459,15 +339,18 @@ void AgentAI::autoCamera(void)
 		return;
 	}
 
+	//------
 	// 地上
+	//------
 	if (canChangeCameraSkyMode == false)
 	{
 		camera->setRelative(cameraRotPreservation);
 		canChangeCameraSkyMode = true;
 	}
 
-	if (D3DXVec3Length(&(*opponent->getPosition() - position)) < 90.0f/*こんなもんか？*/)
-	{// 相手に近ければロックオン
+	if (D3DXVec3Length(&(*opponent->getPosition() - position)) < 70.0f/*こんなもんか？*/&&
+		recognitionBB->getIsOpponentInCamera())
+	{// 相手プレイヤーとの距離が近くかつカメラに相手プレイヤーが映っていればロック音
 		lockOnHorizontally(*opponent->getPosition(), frameTime);
 	}
 	else

@@ -105,6 +105,7 @@ public:
 	//KeyBoard
 	//-----------------------
 	void keyDown(WPARAM);									// キーダウン状態を保存する
+	void keyPress(WPARAM);									// キープレス状態を保存する
 	void keyUp(WPARAM);										// キーアップ状態を保存する
 	void keyIn(WPARAM);										// textIn string に入力したばかりの文字を保存する
 	bool isKeyDown(UCHAR vkey) const;						// 指定された仮想キーがダウンしている場合はtrue、そうでない場合はfalseを返します。
