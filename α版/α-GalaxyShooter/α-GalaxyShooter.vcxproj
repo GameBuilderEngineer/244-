@@ -196,6 +196,7 @@
     <ClCompile Include="ScreenEffectBase.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="ShadowManager.cpp" />
     <ClCompile Include="ShockWave.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Splash.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="ScreenEffectBase.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />
+    <ClInclude Include="ShadowManager.h" />
     <ClInclude Include="ShockWave.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Splash.h" />
@@ -340,11 +342,13 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="02 Visual File\ball.x" />
     <None Include="02 Visual File\bullet.x" />
     <None Include="02 Visual File\field001.x" />
     <None Include="02 Visual File\HierarchyMesh.x" />
     <None Include="02 Visual File\magnetN.x" />
     <None Include="02 Visual File\magnetS.x" />
+    <None Include="02 Visual File\phone.x" />
     <None Include="02 Visual File\planet.x" />
     <None Include="02 Visual File\RobotB.x" />
     <None Include="02 Visual File\robotB_still_back.x" />

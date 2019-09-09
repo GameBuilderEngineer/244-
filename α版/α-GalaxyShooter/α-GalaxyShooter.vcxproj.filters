@@ -593,6 +593,9 @@
     <ClCompile Include="LineEffect.cpp">
       <Filter>Effect\LineEffect</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowManager.cpp">
+      <Filter>Object\Wage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -894,6 +897,9 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowManager.h">
+      <Filter>Object\Wage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="02 Visual File\bullet.x">
@@ -930,6 +936,12 @@
       <Filter>02 Visual File</Filter>
     </None>
     <None Include="02 Visual File\Toon_6Color.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\ball.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\phone.x">
       <Filter>02 Visual File</Filter>
     </None>
   </ItemGroup>
