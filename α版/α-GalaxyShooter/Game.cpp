@@ -169,6 +169,7 @@ void Game::initialize(
 
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
+
 	//xFile読込meshのインスタンシング描画のテスト
 	D3DXVECTOR3 positionList[] =
 	{
@@ -332,9 +333,6 @@ void Game::update(float _frameTime) {
 	chinginManager.update(sound, frameTime);
 	D3DXVECTOR3 chinginTestPos = D3DXVECTOR3(200.0f, 200.0f, 200.0f);
 
-	if (input->isKeyDown('M')) {
-		chinginManager.generateChingin(10, temp);
-	};
 
 	// ラインエフェクトの更新
 	lineEffect.update(frameTime);
@@ -447,8 +445,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
-	// ラインエフェクトの描画
-	lineEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 
 #ifdef _DEBUG
@@ -502,6 +498,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	// ステンシル終了
 	target.renderStencilEnd(direct3D9->device);
+
+	// ラインエフェクトの描画
+	lineEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 }
 
@@ -865,6 +864,7 @@ void Game::collisions() {
 			}
 		}
 	}
+
 
 	//1Pのメモリーライン<->2Pプレイヤーの衝突検知
 	if (player[PLAYER1]->getMemoryLine()->collision(*player[PLAYER2]->getPosition(), player[PLAYER2]->bodyCollide.getRadius()))

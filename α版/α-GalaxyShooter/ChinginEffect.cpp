@@ -1,52 +1,53 @@
 //-----------------------------------------------------------------------------
-// ラインエフェクト処理 [LineEffect.cpp]
+// 賃金エフェクト処理 [ChinginEffect.cpp]
 // 製作者 飯塚春輝
 //-----------------------------------------------------------------------------
-#include "LineEffect.h"
+#include "ChinginEffect.h"
 //=============================================================================
 // 初期化処理
 //=============================================================================
-void LineEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect)
+void ChinginEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect)
 {
 	D3DXCreateSphere(device, 3.0f, 9, 9, &sphere, NULL);	// 当たり判定用にスフィアを作る
 
-	// ラインエフェクト初期化
-	for (int i = 0; i < LINE_EFFECT; i++)
+	// 賃金エフェクト初期化
+	for (int i = 0; i < CHINGIN_EFFECT; i++)
 	{
-		lineEffect[i].setPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		lineEffect[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		D3DXMatrixIdentity(lineEffect[i].getMatrixWorld());
-		lineEffect[i].getCollider()->initialize(device, lineEffect[i].getPosition(), sphere);
-		lineEffect[i].setUse(false);
-		lineEffect[i].time = 0;
+		chinginEffect[i].setPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		chinginEffect[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		D3DXMatrixIdentity(chinginEffect[i].getMatrixWorld());
+		chinginEffect[i].getCollider()->initialize(device, chinginEffect[i].getPosition(), sphere);
+		chinginEffect[i].setUse(false);
+		chinginEffect[i].time = 0;
 	}
 
 	numOfUse = 0;
 	renderList = NULL;
 	// インスタンシング初期化
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::LINE_EFFECT));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::CHINGIN_EFFECT));
 }
 //=============================================================================
 // 更新処理
 //=============================================================================
-void LineEffect::update(float frameTime)
+void ChinginEffect::update(float frameTime)
 {
+
 	// 使用中のエフェクトの挙動を更新する
-	for (int i = 0; i < LINE_EFFECT; i++)
+	for (int i = 0; i < CHINGIN_EFFECT; i++)
 	{
-		// 出ていなかったら更新しない
-		if (lineEffect[i].getUse() == false) { continue; }
+		// 出てなかったら更新しない
+		if (chinginEffect[i].getUse() == false) { continue; }
 
 		// 時間をフレームに合わせる
-		lineEffect[i].time += frameTime;
+		chinginEffect[i].time += frameTime;
 
-		// ラインエフェクト位置更新
-		lineEffect[i].setPosition(*lineEffect[i].getPosition() + *lineEffect[i].getSpeed());
+		// 賃金エフェクト位置更新
+		chinginEffect[i].setPosition(*chinginEffect[i].getPosition() + *chinginEffect[i].getSpeed());
 
 		// 時間になったら終了
-		if (lineEffect[i].time >= 0.2)
+		if (chinginEffect[i].time >= CHINGIN_EFFECT_TIME)
 		{
-			lineEffect[i].setUse(false);
+			chinginEffect[i].setUse(false);
 			numOfUse--;
 		}
 	}
@@ -54,34 +55,34 @@ void LineEffect::update(float frameTime)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void LineEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
+void ChinginEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	// 使用中のエフェクトをインスタンシング描画に流す
 	renderList = new D3DXVECTOR3[numOfUse];
 	for (int i = 0; i < numOfUse; i++)
 	{
-		if (lineEffect[i].getUse() == false) { continue; }
+		if (chinginEffect[i].getUse() == false) { continue; }
 
-		renderList[i] = *lineEffect[i].getPosition();
+		renderList[i] = *chinginEffect[i].getPosition();
 	}
 	instancingProcedure.setNumOfRender(device, numOfUse, renderList);
 	SAFE_DELETE_ARRAY(renderList)
 
-		// インスタンシング描画
+		// インスタンシングレンダー
 		instancingProcedure.render(device, view, projection, cameraPosition);
 }
 //==================================================================
 // エフェクトを発生させる
 //========================================================================================
-void LineEffect::generateLineEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec)
+void ChinginEffect::generateChinginEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec)
 {
 	// エフェクトカウント初期化
 	int cnt = 0;
 
-	for (int i = 0; i < LINE_EFFECT; i++)
+	for (int i = 0; i < CHINGIN_EFFECT; i++)
 	{
 		// エフェクトが使用されていたら入らない
-		if (lineEffect[i].getUse()) { continue; }
+		if (chinginEffect[i].getUse()) { continue; }
 
 		if (cnt < num)
 		{
@@ -95,17 +96,17 @@ void LineEffect::generateLineEffect(int num, D3DXVECTOR3 positionToGenerate, D3D
 			D3DXVec3Cross(&crossVec, &effectVec, &randVec);
 			D3DXVec3Normalize(&crossVec, &crossVec);//正規化
 			// 結果計算
-			resultVec = effectVec + crossVec * 0.8;
+			resultVec = effectVec + crossVec;
 			D3DXVec3Normalize(&resultVec, &resultVec);//正規化
 			// 生存時間初期化
-			lineEffect[i].time = 0.0;
+			chinginEffect[i].time = 0.0;
 			// エフェクト位置設定
-			lineEffect[i].setPosition(positionToGenerate);
+			chinginEffect[i].setPosition(positionToGenerate - (effectVec * 6));
 			// エフェクトスピード設定
-			lineEffect[i].setSpeed(resultVec*((float)(rand() % 10) / 10.0f));
-			D3DXMatrixIdentity(lineEffect[i].getMatrixWorld());
+			chinginEffect[i].setSpeed(resultVec*((float)(rand() % 6 + 1) / 10.0f));
+			D3DXMatrixIdentity(chinginEffect[i].getMatrixWorld());
 			// 使用へ
-			lineEffect[i].setUse(true);
+			chinginEffect[i].setUse(true);
 			// 使用中エフェクトカウント加算
 			numOfUse++;
 		}

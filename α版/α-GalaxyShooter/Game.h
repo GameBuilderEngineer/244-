@@ -101,7 +101,7 @@ private:
 	UICutMemoryLine uiCutMemoryLine[gameNS::NUM_PLAYER];
 	UIRevival uiRevival[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
-	LineEffect lineEffect;								//ラインエフェクト
+	LineEffect lineEffect;		//ラインエフェクト
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];

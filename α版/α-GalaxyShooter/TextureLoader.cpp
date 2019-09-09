@@ -68,12 +68,14 @@ TextureLoader::TextureLoader()
 	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };
 	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
 	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
+	textureName[EFFECT_FEEL] = { "feelEffect.png" };
 
 	textureName[POSE] = { "Pause.png" };
 	textureName[BULLET_EFFECT] = { "bakuha.png" };
 	textureName[DOWN_EFFECT] = { "Down.png" };
 	textureName[UP_EFFECT] = { "UP.png" };
 	textureName[LINE_EFFECT] = { "LineEffect.png" };
+	textureName[CHINGIN_EFFECT] = { "chingineffe.png" };
 
 	textureName[UI_REVIVAL_CONCENTRATION] = { "Game_Revival_Concentration.png" };
 	textureName[UI_REVIVAL_TONE] = { "Game_Revival_Tone.png" };
