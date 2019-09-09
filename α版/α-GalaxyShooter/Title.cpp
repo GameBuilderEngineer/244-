@@ -81,6 +81,11 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	light = new Light;
 	light->initialize(_direct3D9);
 
+	// プレイヤーの初期化
+	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::PLAYER_TYPE::PLAYER1, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+	player[PLAYER_TYPE::PLAYER_1].setPosition(PLAYER_POSITION[playerNS::PLAYER_TYPE::PLAYER1]);
+	player[PLAYER_TYPE::PLAYER_1].animationPlayer.setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::TITLE);
+
 	// タイトルUIの初期化
 	uiTitle.initialize(_direct3D9->device, _textureLoader, selectStateMemory);
 
@@ -91,10 +96,6 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	// エフェクト初期化
 	effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
-	// プレイヤーの初期化
-	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
-	player[PLAYER_TYPE::PLAYER_1].setPosition(D3DXVECTOR3(-20.0f, 100.0f, 25.0f));
-
 	return;
 }
 //============================================================================================================================================
@@ -103,6 +104,9 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 //============================================================================================================================================
 void Title::uninitialize(void)
 {
+	// プレイヤー
+	player[PLAYER_TYPE::PLAYER_1].animationPlayer.release();
+
 	// ライト
 	SAFE_DELETE(light);
 
@@ -123,6 +127,8 @@ void Title::update(float _frameTime)
 	// カメラ
 	camera[0].setUpVector(player[PLAYER_TYPE::PLAYER_1].getAxisY()->direction);
 	camera[0].update();
+
+	player[PLAYER_TYPE::PLAYER_1].animationPlayer.updateTitle();
 
 	// タイトルUI
 	uiTitle.update(input, sound);

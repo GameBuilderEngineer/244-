@@ -12,8 +12,8 @@ using namespace staticMeshNS;
 //===================================================================================================================================
 StaticMeshLoader::StaticMeshLoader()
 {
-	fileName[CHILD] = { "Character_Eve.x" };
-	fileName[BULLET] = { "bullet.x" };
+	//fileName[CHARACTER_ADAM] = { "Character_Adam.x" };
+	fileName[BULLET] = { "Bullet.x" };
 	fileName[CUBE] = { "cube.x" };
 	fileName[SAMPLE_HIERARCHY_MESH] = { "HierarchyMesh.x" };
 	fileName[MAGNET_S] = { "magnetS.x" };
@@ -28,7 +28,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X100] = { "x100starRegularPolyhedron.x" };
 	fileName[SAMPLE_STATIC_MESH] = { "StaticMesh.x" };
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
-	fileName[MEMORY_PILE] = { "memoryPile.x" };
+	fileName[MEMORY_PILE] = { "Memory_Pile.x" };
 }
 
 //===================================================================================================================================

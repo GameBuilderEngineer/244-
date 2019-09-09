@@ -8,6 +8,8 @@
 #include "Base.h"
 #include "Input.h"
 
+#define GetMonitorRect(rc) SystemParametersInfo(SPI_GETWORKAREA,0,rc,0)	//	モニター矩形
+
 class Window : public Base
 {
 public:
@@ -26,4 +28,5 @@ public:
 	D3DXVECTOR2 getCenter();
 	RECT getRect();
 	void update();
+	BOOL setWindowCenter(HWND _windowHandle);
 };

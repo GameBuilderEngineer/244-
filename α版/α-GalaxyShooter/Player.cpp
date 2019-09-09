@@ -9,6 +9,9 @@
 
 using namespace playerNS;
 
+// 仮
+static float time = 0.0f;
+
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -32,7 +35,7 @@ Player::Player()
 	onGround = false;						//接地判定
 
 	skyHeight = 0.0f;
-	modelType = staticMeshNS::CHILD;
+	modelType = gameMasterNS::ADAM;
 	reverseValueXAxis = CAMERA_SPEED;		//操作Ｘ軸
 	reverseValueYAxis = CAMERA_SPEED;		//操作Ｙ軸
 	onJump = false;							//ジャンプフラグ
@@ -57,14 +60,13 @@ Player::Player()
 //===================================================================================================================================
 Player::~Player()
 {
-
 }
 
 //===================================================================================================================================
 //【初期化】
 //===================================================================================================================================
 //プレイヤータイプごとに初期化内容を変更
-void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader) {
+void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader) {
 	device = _device;
 	type = playerType;
 	npc = false;
@@ -72,6 +74,8 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 	this->textureLoader = textureLoader;
 	this->shaderLoader = shaderLoader;
 	this->sound = NULL;
+	this->staticMeshLoader = staticMeshLoader;
+
 	switch (type)
 	{
 	case PLAYER1:
@@ -84,7 +88,7 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		keyTable = NON_CONTOROL;
 		break;
 	}
-	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::CHILD], &(D3DXVECTOR3)START_POSITION[type]);
+	Object::initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::SAMPLE_TOON_MESH], &(D3DXVECTOR3)START_POSITION[type]);
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
@@ -123,6 +127,9 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 
 	// ラインエフェクト初期化
 	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
+	// アニメーション
+	animationPlayer.initialize(_device, modelType, playerType);
 
 	return;
 }
@@ -164,7 +171,8 @@ void Player::update(float frameTime)
 	//===========
 	//【ジャンプ】
 	//===========
-	if (input->wasKeyPressed(keyTable.jump) ||
+	if (animationPlayer.getFlagMoveBan() == false &&
+		input->wasKeyPressed(keyTable.jump) ||
 		input->getController()[type]->wasButton(BUTTON_JUMP))
 	{
 		onJump = true;
@@ -203,6 +211,8 @@ void Player::update(float frameTime)
 	//【オブジェクト：更新】
 	//===========
 	Object::update();
+
+	animationPlayer.update(input, state);
 
 	//===========
 	//【弾の更新】
@@ -250,16 +260,18 @@ void Player::update(float frameTime)
 void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition,
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
-	Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	//他のオブジェクトの描画
-	//otherRender(device,view,projection,cameraPosition);
+	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
+	animationPlayer.render(device, matrixWorld, staticMeshLoader);
+	// 他のオブジェクトの描画
+	otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【通常描画】
 //======================
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	Object::render(device,view,projection, cameraPosition);
+	//Object::render(device,view,projection, cameraPosition);
+	animationPlayer.render(device, matrixWorld, staticMeshLoader);
 	//他のオブジェクトの描画
 	otherRender(device,view,projection,cameraPosition);
 }
@@ -334,7 +346,7 @@ void Player::recorvery(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
-	if (whetherDown())return;
+	if (whetherDown() || animationPlayer.getFlagMoveBan()) return;
 	//キーによる移動
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
@@ -353,6 +365,7 @@ void Player::moveOperation()
 	{
 		move(D3DXVECTOR2(1, 0), camera->getDirectionX(), camera->getDirectionZ());
 	}
+
 	//リセット
 	if (input->wasKeyPressed(keyTable.reset))
 	{
@@ -511,7 +524,11 @@ void Player::updateFall(float frameTime)
 	D3DXVec3Lerp(&fallPosition, &groundPosition, &skyPosition, rate);
 	setPosition(fallPosition);
 	//【地上】モードへ切替
-	if (!whetherFall())changeState(REVIVAL);
+	if (!whetherFall())
+	{
+		changeState(REVIVAL);
+		animationPlayer.setFlagLanding(true);
+	}
 }
 
 //===================================================================================================================================
@@ -573,6 +590,8 @@ void Player::changeSky()
 	hp = MAX_HP;
 	onGround = true;
 	canShockWave = true;
+	time = 0;
+	animationPlayer.setFlagRecursion(true);
 	deleteMemoryItem();
 }
 
@@ -595,6 +614,7 @@ void Player::updateSky(float frameTime)
 		setPosition(position + axisY.direction * (radius + attractorRadius + skyHeight - distanceToAttractor));
 		//移動ベクトルのスリップ（面方向へのベクトル成分の削除）
 		setSpeed(reverseAxisY.slip(speed, axisY.direction));
+
 	}
 	else {
 		//空中
@@ -602,8 +622,20 @@ void Player::updateSky(float frameTime)
 		setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
 	}
 
+	// 仮
+	time += 1.0f;
+	if (time > 90.0f)
+	{
+		animationPlayer.setFlagRecursion(false);
+	}
+
 	//【落下】モードへ切替
-	if (!whetherSky())changeState(FALL);
+	if (!whetherSky())
+	{
+		changeState(FALL);
+		animationPlayer.setFlagRecursion(false);
+		animationPlayer.setFlagFalling(true);
+	}
 }
 
 //===================================================================================================================================
@@ -613,7 +645,8 @@ void Player::changeRevival()
 {
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
-
+	animationPlayer.setFlagRevival(true);
+	animationPlayer.setFlagMoveBan(true);
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
 	triggerShockWave();//衝撃波を発生させる
@@ -696,7 +729,7 @@ void Player::updateBullet(float frameTime)
 	bulletEffect.update(frameTime);
 
 	//バレットの発射
-	if (whetherDown())return;//ダウン時：発射不可
+	if (whetherDown() || animationPlayer.getFlagMoveBan() == true || animationPlayer.getFlagJump() == true) return;//ダウン時：発射不可
 	if (((npc && input->wasKeyPressed(BUTTON_BULLET)) || (!npc && input->getMouseLButton()) || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
@@ -822,6 +855,8 @@ void Player::updateMemoryItem(float frameTime)
 	//メモリーパイルのセット
 	if (!whetherDown()&&
 		!whetherSky()&&
+		animationPlayer.getFlagSlash() == false &&
+		animationPlayer.getFlagInstallation() == false &&
 		whetherInstallationEffectiveDistance &&
 		onGround && 
 		memoryPile[elementMemoryPile].ready() &&
@@ -829,6 +864,7 @@ void Player::updateMemoryItem(float frameTime)
 	{
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
+		animationPlayer.setFlagInstallation(true);
 
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
@@ -1044,5 +1080,5 @@ bool Player::whetherCollidedOpponentMemoryLine() { return collidedOpponentMemory
 bool Player::messageDisconnectOpponentMemoryLine() { return disconnectOpponentMemoryLine; }
 int Player::getElementMemoryPile() { return elementMemoryPile; }
 Recursion* Player::getRecursion() { return recursion; }
-MemoryPile* Player::getMemoryPile() { return memoryPile; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }
+MemoryPile* Player::getMemoryPile() { return memoryPile; }

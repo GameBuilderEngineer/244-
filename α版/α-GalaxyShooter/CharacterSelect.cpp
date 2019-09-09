@@ -76,9 +76,6 @@ void CharacterSelect::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _s
 	// キャラクターセレクトUIの初期化
 	uiCharacterSelect.initialize(_direct3D9->device, _textureLoader);
 
-	//// 時間のリセット
-	//gameMaster->resetGameTime();
-
 	return;
 }
 //============================================================================================================================================

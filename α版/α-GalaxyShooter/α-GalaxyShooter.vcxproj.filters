@@ -582,7 +582,6 @@
     <ClCompile Include="EffectDew.cpp">
       <Filter>Effect\Dew</Filter>
     </ClCompile>
-    <ClCompile Include="playerK.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Fader.cpp">
       <Filter>Fader</Filter>
@@ -604,6 +603,9 @@
     </ClCompile>
     <ClCompile Include="FeelEffect.cpp">
       <Filter>Effect\FeelEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationPlayer.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -902,7 +904,6 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="playerK.h" />
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
@@ -911,6 +912,9 @@
     </ClInclude>
     <ClInclude Include="FeelEffect.h">
       <Filter>Effect\FeelEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationPlayer.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

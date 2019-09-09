@@ -14,11 +14,27 @@
 //============================================================================================================================================
 namespace animationNS
 {
+	const float TIME_PER_FRAME = (0.0167f);
+
 	enum TYPE
 	{
+		IDLE_GENERAL,
 		IDLE,
-		//WALK,
-		TYPE_MAX,
+		SHOOTING,
+		RUN,
+		RUN_FAST,
+		JUMP,
+		INSTALLATION,
+		STANDING,
+		SLASH,
+		DOWN,
+		DOWN_POSE,
+		REVIVAL,
+		RECURSION,
+		FLOATING,
+		FALLING,
+		LANDING,
+		TYPE_MAX
 	};
 }
 //============================================================================================================================================
@@ -34,9 +50,13 @@ struct AnimationManager
 };
 struct AnimationFlag
 {
-	bool animationPlaying = NULL;	//	アニメーションの再生フラグ
-	bool animationEnd;				//	アニメーションの終了フラグ
-	bool moveStop;					//	移動停止フラグ
+	bool animationOn;		//	アニメーションの再生可否フラグ
+	bool animationPlayEnd;	//	アニメーションの再生終了フラグ
+};
+struct AnimationID
+{
+	UINT current;	//	今
+	UINT next;		//	次
 };
 struct Animation
 {
@@ -45,16 +65,18 @@ struct Animation
 	AllocateHierarchy* allocateHierarchy;			//	Xファイルの情報
 	LPD3DXFRAME rootFrame;							//	ルートフレーム( フレーム階層構造の最上位フレーム )
 	AnimationFlag flag;								//	アニメーションフラグ
+	AnimationID animationID;						//	アニメーションID
 	UINT animationIdCurrent;						//	現在、再生しているアニメーションID
 	UINT animationIdPast;							//	過去、再生していたアニメーションID
 	int animationSetMax;							//	アニメーションセットの最大数
 	int keyFrameCount;								//	コールバック( Key_Frame )の処理数
-	HRESULT(*initializeAnimation)(Animation* _animation, LPCSTR _setName, int _setNo);
-	void(*releaseAnimation)(Animation* _animation);
-	void(*updateAnimation)(Animation* _animation, float _time);
-	void(*renderAnimation)(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
-	void(*switchingAnimation)(Animation* _animation, UINT _animationIdentification, float _playSpeed);
-	void(*setShiftTimeAnimation)(Animation* _animation, UINT _animationIdentification, float _interval);
+	float animationSpeed;							//	アニメーション再生速度
+	HRESULT(*initialize)(Animation* _animation, LPCSTR _setName, int _setNo);
+	void(*release)(Animation* _animation);
+	void(*update)(Animation* _animation, float _time);
+	void(*render)(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
+	void(*switching)(Animation* _animation, UINT _animationIdentification);
+	void(*setShiftTime)(Animation* _animation, UINT _animationIdentification, float _interval);
 };
 struct CallBackAnimation : public ID3DXAnimationCallbackHandler
 {
@@ -67,18 +89,19 @@ struct CallBackAnimation : public ID3DXAnimationCallbackHandler
 // Prototype Declaration
 // プロトタイプ宣言
 //============================================================================================================================================
-HRESULT initializeAnimation(Animation* _animation, LPCSTR _setName, int _setNo);
-void releaseAnimation(Animation* _animation);
-void updateAnimation(Animation* _animation, float _time);
+HRESULT initialize(Animation* _animation, LPCSTR _setName, int _setNo);
+void release(Animation* _animation);
+void update(Animation* _animation, float _time);
 void updateFrameMatrix(LPDIRECT3DDEVICE9* _device, LPD3DXFRAME _baseFrame, LPD3DXMATRIX _parentMatrix);
-void renderAnimation(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
+void render(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix);
 void renderFrame(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXFRAME _frame);
 void renderMeshContainer(LPDIRECT3DDEVICE9 _device, LPD3DXMESHCONTAINER _baseMeshContainer, LPD3DXFRAME _baseFrame);
-void switchingAnimation(Animation* _animation, UINT _animationIdentification, float _playSpeed);
-Animation* createObjectAnimation(void);
+void switching(Animation* _animation, UINT _animationIdentification);
+void switchingSpeed(Animation* _animation);
+Animation* createObject(void);
 HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fileName);
-D3DXFRAMEDerived* searchBoneFrame(Animation* _animation, const char* _boneName, D3DXFRAME* _frame);
-void setShiftTimeAnimation(Animation* _animation, UINT _animationIdentification, float _interval);
+D3DXFrameDerived* searchBoneFrame(Animation* _animation, const char* _boneName, D3DXFRAME* _frame);
+void setShiftTime(Animation* _animation, UINT _animationIdentification, float _interval);
 HRESULT setBoneMatrix(LPD3DXFRAME _baseFrame, LPD3DXFRAME _rootFrame);
 HRESULT setCallBackKeyFrame(Animation* _animation, LPCSTR _setName);
 D3DXMATRIX getBoneMatrix(Animation* _animation, const char* _boneName);

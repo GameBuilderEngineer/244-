@@ -19,9 +19,8 @@
 #include "DownEffect.h"
 #include "UpEffect.h"
 #include "LineEffect.h"
-#include "Animation.h"
 #include "FeelEffect.h"
-
+#include "AnimationPlayer.h"
 
 namespace playerNS{
 
@@ -208,7 +207,9 @@ protected:
 	//アクションフラグ
 	bool disconnectOpponentMemoryLine;					//相手のメモリーラインの切断アクションメッセージ
 
+	StaticMeshLoader* staticMeshLoader;
 public:
+	AnimationPlayer animationPlayer;					//	アニメーション
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
 
@@ -253,7 +254,7 @@ public:
 	void updateShockWave(float frameTime,int n);
 	void disconnectMemoryLine();
 	bool collideShockWave(D3DXVECTOR3 point, float radius);
-
+	
 	//setter
 	void setInput(Input* _input);
 	void setCamera(Camera* _camera);
@@ -281,6 +282,7 @@ public:
 	Recursion* getRecursion();
 	MemoryPile* getMemoryPile();
 	MemoryLine* getMemoryLine();
+
 	D3DXVECTOR3 bulletVec();
 	D3DXVECTOR3 downVec();
 	D3DXVECTOR3 upVec();

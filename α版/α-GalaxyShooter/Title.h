@@ -25,7 +25,7 @@ namespace titleNS
 	// プレイヤー座標
 	const D3DXVECTOR3 PLAYER_POSITION[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
 	{
-		D3DXVECTOR3(0,100,0),
+		D3DXVECTOR3(-10.0f, 90.0f, 25.0f),
 		D3DXVECTOR3(60,100,0)
 	};
 	// カメラ角度

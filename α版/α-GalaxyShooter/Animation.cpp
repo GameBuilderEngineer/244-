@@ -7,10 +7,15 @@
 //============================================================================================================================================
 #include "Animation.h"
 //============================================================================================================================================
-// initializeAnimation
+// Using Declaration
+// using宣言
+//============================================================================================================================================
+using namespace animationNS;
+//============================================================================================================================================
+// initialize
 // 初期化
 //============================================================================================================================================
-HRESULT initializeAnimation(Animation* _animation, LPCSTR _setName, int _setNo)
+HRESULT initialize(Animation* _animation, LPCSTR _setName, int _setNo)
 {
 	_animation->animationController->GetAnimationSetByName(_setName, &_animation->animationManager[_setNo].animationSet);
 
@@ -19,10 +24,10 @@ HRESULT initializeAnimation(Animation* _animation, LPCSTR _setName, int _setNo)
 	return S_OK;
 }
 //============================================================================================================================================
-// releaseAnimation
+// release
 // 解放
 //============================================================================================================================================
-void releaseAnimation(Animation* _animation)
+void release(Animation* _animation)
 {
 	D3DXFrameDestroy(_animation->rootFrame, _animation->allocateHierarchy);
 
@@ -34,25 +39,27 @@ void releaseAnimation(Animation* _animation)
 	return;
 }
 //============================================================================================================================================
-// updateAnimation
+// update
 // 更新
 //============================================================================================================================================
-void updateAnimation(Animation* _animation, float _time)
+void update(Animation* _animation, float _time)
 {
+	if (!_animation->flag.animationOn) { return; }
+
 	CallBackAnimation callBackAnimation;	//	コールバックハンドル
 
 	// ハンドルにポインタを代入
 	callBackAnimation.animation = _animation;
-	callBackAnimation.setName = _animation->animationManager[_animation->animationIdCurrent].animationSetName;
+	callBackAnimation.setName = _animation->animationManager[_animation->animationID.current].animationSetName;
 
 	// 合成中かの判定
-	_animation->animationManager[_animation->animationIdCurrent].weightTime += _time;
+	_animation->animationManager[_animation->animationID.current].weightTime += _time;
 
 	// 合成中
-	if ((_animation->animationManager[_animation->animationIdCurrent].weightTime) <= (_animation->animationManager[_animation->animationIdCurrent].shiftTime))
+	if ((_animation->animationManager[_animation->animationID.current].weightTime) <= (_animation->animationManager[_animation->animationID.current].shiftTime))
 	{
 		// ウェイトを算出
-		float weight = _animation->animationManager[_animation->animationIdCurrent].weightTime / _animation->animationManager[_animation->animationIdCurrent].shiftTime;
+		float weight = _animation->animationManager[_animation->animationID.current].weightTime / _animation->animationManager[_animation->animationID.current].shiftTime;
 
 		// ウェイトを登録
 		_animation->animationController->SetTrackWeight(0, weight);			// 現在のアニメーション
@@ -77,7 +84,7 @@ void updateAnimation(Animation* _animation, float _time)
 //============================================================================================================================================
 void updateFrameMatrix(LPDIRECT3DDEVICE9* _device, LPD3DXFRAME _baseFrame, LPD3DXMATRIX _parentMatrix)
 {
-	D3DXFRAMEDerived* frame = (D3DXFRAMEDerived*)_baseFrame;	//	フレームポインタ
+	D3DXFrameDerived* frame = (D3DXFrameDerived*)_baseFrame;	//	フレームポインタ
 
 	if ((_baseFrame == NULL) || (_parentMatrix == NULL)) { return; }
 
@@ -93,10 +100,10 @@ void updateFrameMatrix(LPDIRECT3DDEVICE9* _device, LPD3DXFRAME _baseFrame, LPD3D
 	return;
 }
 //============================================================================================================================================
-// renderAnimation
+// render
 // 描画
 //============================================================================================================================================
-void renderAnimation(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix)
+void render(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPD3DXMATRIX _worldMatrix)
 {
 	updateFrameMatrix(&_device, _animation->rootFrame, _worldMatrix);
 
@@ -145,8 +152,8 @@ void renderMeshContainer(LPDIRECT3DDEVICE9 _device, LPD3DXMESHCONTAINER _baseMes
 	D3DXMATRIXA16 matrix;																		//	ローカルマトリクス
 	UINT matrixIndex = NULL;																	//	マトリクスインデックス
 	UINT blendNumber = NULL;																	//	ブレンド数
-	D3DXMESHCONTAINERDerived* meshContainer = (D3DXMESHCONTAINERDerived*)_baseMeshContainer;	//	メッシュコンテナポインタ
-	D3DXFRAMEDerived* frame = (D3DXFRAMEDerived*)_baseFrame;									//	フレームポインタ
+	D3DXMeshContainerDerived* meshContainer = (D3DXMeshContainerDerived*)_baseMeshContainer;	//	メッシュコンテナポインタ
+	D3DXFrameDerived* frame = (D3DXFrameDerived*)_baseFrame;									//	フレームポインタ
 
 	// キャップの調査
 	_device->GetDeviceCaps(&caps);
@@ -221,28 +228,27 @@ void renderMeshContainer(LPDIRECT3DDEVICE9 _device, LPD3DXMESHCONTAINER _baseMes
 	return;
 }
 //============================================================================================================================================
-// switchingAnimation
+// switching
 // アニメーションの切り替え
 //============================================================================================================================================
-void switchingAnimation(Animation* _animation, UINT _animationId, float _playSpeed)
+void switching(Animation* _animation, UINT _animationId)
 {
 	D3DXTRACK_DESC trackDescription;	//	トラックの能力
 
-	_animation->flag.animationEnd = false;
-	_animation->flag.moveStop = false;
+	_animation->flag.animationPlayEnd = false;
 	_animation->keyFrameCount = 0;
 
 	// 指定のアニメーションIDの存在を調査
 	if (_animationId > (UINT)_animation->animationSetMax) { return; }
 
 	// 指定のアニメーションIDが、現在のアニメーションIDと同じであれば、更新不要のため終了
-	if (_animation->animationIdCurrent == _animationId) { return; }
+	if (_animation->animationID.current == _animationId) { return; }
 
 	// 現在のアニメーションセットの設定値を取得
 	_animation->animationController->GetTrackDesc(0, &trackDescription);
 
 	// 現在のアニメーションをトラック１に移行し、トラックの設定値も移行
-	_animation->animationController->SetTrackAnimationSet(1, _animation->animationManager[_animation->animationIdCurrent].animationSet);
+	_animation->animationController->SetTrackAnimationSet(1, _animation->animationManager[_animation->animationID.current].animationSet);
 	_animation->animationController->SetTrackDesc(1, &trackDescription);
 	_animation->animationController->SetTrackSpeed(1, 0.0f);
 
@@ -250,7 +256,7 @@ void switchingAnimation(Animation* _animation, UINT _animationId, float _playSpe
 	_animation->animationController->SetTrackAnimationSet(0, _animation->animationManager[_animationId].animationSet);
 
 	// トラック０のスピードの設定
-	_animation->animationController->SetTrackSpeed(0, _playSpeed);
+	switchingSpeed(_animation);
 
 	// トラック０の位置を、開始位置に設定
 	_animation->animationController->SetTrackPosition(0, 0.0f);
@@ -264,25 +270,34 @@ void switchingAnimation(Animation* _animation, UINT _animationId, float _playSpe
 	_animation->animationController->ResetTime();
 
 	// 現在のアニメーション番号を切り替え
-	_animation->animationIdPast = _animation->animationIdCurrent;
-	_animation->animationIdCurrent = _animationId;
+	_animation->animationID.current = _animationId;
 
 	return;
 }
 //============================================================================================================================================
-// createObjectAnimation
+// switchingSpeed
+// アニメーションの速度切り替え
+//============================================================================================================================================
+void switchingSpeed(Animation* _animation)
+{
+	_animation->animationController->SetTrackSpeed(0, _animation->animationSpeed);
+
+	return;
+}
+//============================================================================================================================================
+// createObject
 // アニメーションオブジェクトを作成
 //============================================================================================================================================
-Animation* createObjectAnimation(void)
+Animation* createObject(void)
 {
 	Animation* object = (Animation*)calloc(1, sizeof(Animation));	//	オブジェクトポインタ
 
-	object->initializeAnimation = initializeAnimation;
-	object->releaseAnimation = releaseAnimation;
-	object->updateAnimation = updateAnimation;
-	object->renderAnimation = renderAnimation;
-	object->switchingAnimation = switchingAnimation;
-	object->setShiftTimeAnimation = setShiftTimeAnimation;
+	object->initialize = initialize;
+	object->release = release;
+	object->update = update;
+	object->render = render;
+	object->switching = switching;
+	object->setShiftTime = setShiftTime;
 
 	return object;
 }
@@ -292,7 +307,7 @@ Animation* createObjectAnimation(void)
 //============================================================================================================================================
 HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fileName)
 {
-	_animation->allocateHierarchy = new AllocateHierarchy();
+	_animation->allocateHierarchy = new AllocateHierarchy(_device);
 
 	if (FAILED(D3DXLoadMeshHierarchyFromX
 	(
@@ -311,7 +326,7 @@ HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fil
 
 	setBoneMatrix(_animation->rootFrame, _animation->rootFrame);
 
-	_animation->flag.animationEnd = false;
+	_animation->flag.animationPlayEnd = false;
 
 	_animation->animationSetMax = _animation->animationController->GetMaxNumAnimationSets();
 
@@ -328,15 +343,15 @@ HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fil
 // searchBoneFrame
 // 特定のボーンフレームを調査
 //============================================================================================================================================
-D3DXFRAMEDerived* searchBoneFrame(Animation* _animation, const char* _boneName, D3DXFRAME* _frame)
+D3DXFrameDerived* searchBoneFrame(Animation* _animation, const char* _boneName, D3DXFRAME* _frame)
 {
-	D3DXFRAMEDerived* frame = NULL;	//	フレーム
+	D3DXFrameDerived* frame = NULL;	//	フレーム
 
 	if (_frame == NULL) { return NULL; }
 
 	if (_frame->Name != NULL && strcmp(_frame->Name, _boneName) == 0)
 	{
-		frame = (D3DXFRAMEDerived*)_frame;
+		frame = (D3DXFrameDerived*)_frame;
 
 		return frame;
 	}
@@ -358,10 +373,10 @@ D3DXFRAMEDerived* searchBoneFrame(Animation* _animation, const char* _boneName, 
 	return NULL;
 }
 //============================================================================================================================================
-// setShiftTimeAnimation
+// setShiftTime
 // 動作開始に必要な時間を設定
 //============================================================================================================================================
-void setShiftTimeAnimation(Animation* _animation, UINT _animationId, float _interval)
+void setShiftTime(Animation* _animation, UINT _animationId, float _interval)
 {
 	// 指定のアニメーションIDの存在を調査
 	if (_animationId > (UINT)_animation->animationSetMax) { return; }
@@ -379,8 +394,8 @@ HRESULT setBoneMatrix(LPD3DXFRAME _baseFrame, LPD3DXFRAME _rootFrame)
 {
 	if (_baseFrame->pMeshContainer != NULL)
 	{
-		D3DXFRAMEDerived* frame = NULL;																		//	フレーム
-		D3DXMESHCONTAINERDerived* meshContainer = (D3DXMESHCONTAINERDerived*)_baseFrame->pMeshContainer;	//	メッシュコンテナ
+		D3DXFrameDerived* frame = NULL;																		//	フレーム
+		D3DXMeshContainerDerived* meshContainer = (D3DXMeshContainerDerived*)_baseFrame->pMeshContainer;	//	メッシュコンテナ
 
 		// スキンメッシュが存在する場合は、ボーンマトリクスを設定
 		if (meshContainer->pSkinInfo != NULL)
@@ -391,7 +406,7 @@ HRESULT setBoneMatrix(LPD3DXFRAME _baseFrame, LPD3DXFRAME _rootFrame)
 
 			for (UINT i = 0; i < boneCount; i++)
 			{
-				frame = (D3DXFRAMEDerived*)D3DXFrameFind(_rootFrame, meshContainer->pSkinInfo->GetBoneName(i));
+				frame = (D3DXFrameDerived*)D3DXFrameFind(_rootFrame, meshContainer->pSkinInfo->GetBoneName(i));
 
 				if (frame == NULL) { return E_FAIL; }
 
@@ -468,7 +483,7 @@ HRESULT setCallBackKeyFrame(Animation* _animation, LPCSTR _setName)
 //============================================================================================================================================
 D3DXMATRIX getBoneMatrix(Animation* _animation, const char* _boneName)
 {
-	D3DXFRAMEDerived* frame = searchBoneFrame(_animation, _boneName, _animation->rootFrame);	//	フレーム
+	D3DXFrameDerived* frame = searchBoneFrame(_animation, _boneName, _animation->rootFrame);	//	フレーム
 
 	// ボーンを発見成功
 	if ((frame != NULL) && (frame->Name != NULL) && (strcmp(frame->Name, _boneName) == 0))
@@ -494,13 +509,20 @@ HRESULT CallBackAnimation::HandleCallback(UINT Track, LPVOID pCallbackData)
 	storageTrack = NULL;
 	storageData = NULL;
 
-	if (animation->keyFrameCount == 0)
+	//if (animation->keyFrameCount == 0)
+	//{
+	//	animation->flag.moveStop = true;
+	//}
+	//else if (animation->keyFrameCount == 1)
+	//{
+	//	animation->flag.animationPlayEnd = true;
+
+	//	return D3D_OK;
+	//}
+
+	if (animation->keyFrameCount == 1)
 	{
-		animation->flag.moveStop = true;
-	}
-	else if (animation->keyFrameCount == 1)
-	{
-		animation->flag.animationEnd = true;
+		animation->flag.animationPlayEnd = true;
 
 		return D3D_OK;
 	}
