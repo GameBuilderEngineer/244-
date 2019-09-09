@@ -67,6 +67,7 @@ Player::~Player()
 void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device, StaticMeshLoader* staticMeshLoader, TextureLoader* textureLoader, ShaderLoader* shaderLoader) {
 	device = _device;
 	type = playerType;
+	npc = false;
 	this->modelType = modelType;
 	this->textureLoader = textureLoader;
 	this->shaderLoader = shaderLoader;
@@ -679,7 +680,7 @@ void Player::updateBullet(float frameTime)
 
 	//バレットの発射
 	if (whetherDown())return;//ダウン時：発射不可
-	if ((input->getMouseLButton() || input->getController()[type]->isButton(BUTTON_BULLET))
+	if (((npc && input->wasKeyPressed(BUTTON_BULLET)) || (!npc && input->getMouseLButton()) || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
 		// バレットエフェクト
@@ -701,7 +702,6 @@ void Player::updateBullet(float frameTime)
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
-
 	}
 }
 
@@ -808,7 +808,7 @@ void Player::updateMemoryItem(float frameTime)
 		whetherInstallationEffectiveDistance &&
 		onGround && 
 		memoryPile[elementMemoryPile].ready() &&
-		(input->getMouseRButtonTrigger() || input->getController()[type]->wasButton(virtualControllerNS::L1)))
+		((npc && input->wasKeyPressed(BUTTON_PILE)) || (!npc && input->getMouseRButtonTrigger()) || input->getController()[type]->wasButton(virtualControllerNS::L1)))
 	{
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
@@ -848,8 +848,9 @@ void Player::updateMemoryItem(float frameTime)
 	}
 
 	//[メッセージ]敵のメモリーパイルを切断する
-	if ((input->getController()[type]->wasButton(BUTTON_CUT) || //コントローラ操作
-		 (input->getMouseWheelState()==inputNS::DOWN)||			//マウスホイール操作
+	if (((npc && input->wasKeyPressed(BUTTON_CUT)) ||			//キーボード操作（AI用）
+		input->getController()[type]->wasButton(BUTTON_CUT) ||	//コントローラ操作
+		 (!npc && input->getMouseWheelState()==inputNS::DOWN)||	//マウスホイール操作
 		 (GetAsyncKeyState(VK_RSHIFT) & 0x8000))				//キーボード操作（仮）
 			&& state == GROUND) 								//地上モード時
 	{

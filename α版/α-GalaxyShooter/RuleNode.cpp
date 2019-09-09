@@ -155,7 +155,6 @@ void RuleNode::priorityWork(NODE_STATUS& result, bool& isRepetition, int& execut
 		MessageBox(NULL, TEXT("(PRIORITY)qƒm[ƒh‚ª_NOT_FOUND‚ğ•Ô‚µ‚Ü‚µ‚½"), TEXT("Behavior Tree Error"), MB_OK);
 		break;
 	}
-
 }
 
 

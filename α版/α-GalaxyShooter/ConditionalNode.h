@@ -18,10 +18,13 @@ private:
 	bool conditionList(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	// èåè
 	bool ifOpponentNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);	// èåèÅFëäéËÇ™ãﬂÇ≠Ç…Ç¢ÇΩÇÁ
+	bool ifBulletNear(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	bool ifShockWaveMayBeHappen(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	bool if5secondsLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	bool if3secondsLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	bool if1secondLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	bool ifRecursionIsRunning(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-
+	bool ifDestinationDecided(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 
 
 public:

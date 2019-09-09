@@ -61,7 +61,14 @@ void Sensor::update(AgentAI* agentAI)
 	// フィールド半径の二乗
 	float radius2 = Map::getField()->getRadius() * Map::getField()->getRadius();
 
-	mapSensor(agentAI, vecCameraToGaze, radius2);
+	if (recognitionBB->getPlayerState() == playerNS::SKY || recognitionBB->getPlayerState() == playerNS::FALL)
+	{
+		mapSensorSky();
+	}
+	else
+	{
+		mapSensor(agentAI, vecCameraToGaze, radius2);
+	}
 	opponentSensor(agentAI, vecCameraToGaze);
 	bulletSensor(agentAI, vecCameraToGaze, radius2);
 }
@@ -81,8 +88,8 @@ void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radi
 #endif
 		// 自分の反対側の半球にあるマップノードは処理せず高速化
 		D3DXVECTOR3 vec = *mapNode[i]->getPosition() - *agentAI->getPosition();
-		float len = D3DXVec3LengthSq(&vec);
-		if (len > radius2/*三平方の定理*/) { continue; }
+		float len2 = D3DXVec3LengthSq(&vec);
+		if (len2 > radius2 * radius2/*三平方の定理*/) { continue; }
 
 		//----------------------------------------
 		// カメラの水平視野角内に無いノードをパス
@@ -126,10 +133,46 @@ void Sensor::mapSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float radi
 		std::list<MapNode*>::iterator it = std::find(recognitionBB->getMemorizedMap().begin(),
 			recognitionBB->getMemorizedMap().end(), mapNode[i]);
 
-		if (it == recognitionBB->getMemorizedMap().end())
+		if (it != recognitionBB->getMemorizedMap().end())
 		{
+			recognitionBB->getMemorizedMap().erase(it);
 		}
-		else
+		recognitionBB->getMemorizedMap().push_back(mapNode[i]);
+	}
+}
+
+
+//=============================================================================
+// マップセンサー（上空モード）
+//=============================================================================
+void Sensor::mapSensorSky(void)
+{
+	std::vector<MapNode*>& mapNode = Map::getMapNode();
+
+	// 平面の方程式を求める
+	D3DXVECTOR3 nor = camera->position - *Map::getField()->getPosition();
+	float d = -(nor.x * 0.0f + nor.y * 0.0f + nor.z * 0.0f);
+
+	// カメラがある側の平面に有れば認識
+	for (size_t i = 0; i < mapNode.size(); i++)
+	{
+#ifdef _DEBUG
+		mapNode[i]->isRed = false;
+#endif
+		float distance = (nor.x * mapNode[i]->getPosition()->x
+			+ nor.y * mapNode[i]->getPosition()->y
+			+ nor.z *mapNode[i]->getPosition()->z + d);
+
+		if (distance < 0) { continue; }
+
+#ifdef _DEBUG
+		mapNode[i]->isRed = true;
+#endif
+		// マップノードを認識
+		std::list<MapNode*>::iterator it = std::find(recognitionBB->getMemorizedMap().begin(),
+			recognitionBB->getMemorizedMap().end(), mapNode[i]);
+
+		if (it != recognitionBB->getMemorizedMap().end())
 		{
 			recognitionBB->getMemorizedMap().erase(it);
 		}
@@ -157,6 +200,8 @@ void Sensor::opponentSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze)
 		D3DXVECTOR3 temp = *opponent->getPosition() - *agentAI->getPosition();
 		recognitionBB->setDistanceBetweenPlayers(D3DXVec3Length(&temp));
 	}
+	// カメラに映っているかを記録
+	recognitionBB->setIsOpponentInCamera(isOpponentInCamera);
 }
 
 
@@ -171,8 +216,8 @@ void Sensor::bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float r
 
 		// 自分の反対側の半球にあるバレットは処理せず高速化
 		D3DXVECTOR3 vec = *opponent->bullet->getPosition() - *agentAI->getPosition();
-		float len = D3DXVec3LengthSq(&vec);
-		if (len > radius2/*三平方の定理*/) { continue; }
+		float len2 = D3DXVec3LengthSq(&vec);
+		if (len2 > radius2 * radius2/*三平方の定理*/) { continue; }
 
 		//------------------------------------------
 		// カメラの水平視野角内に無いバレットをパス
@@ -203,13 +248,11 @@ void Sensor::bulletSensor(AgentAI* agentAI, D3DXVECTOR3 vecCameraToGaze, float r
 		std::list<Bullet*>::iterator it = std::find(recognitionBB->getMemorizedBullet().begin(),
 			recognitionBB->getMemorizedBullet().end(), &opponent->bullet[i]);
 
-		if (it == recognitionBB->getMemorizedBullet().end())
-		{
-		}
-		else
+		if (it != recognitionBB->getMemorizedBullet().end())
 		{
 			recognitionBB->getMemorizedBullet().erase(it);
 		}
+	
 		recognitionBB->getMemorizedBullet().push_back(&opponent->bullet[i]);
 	}
 }

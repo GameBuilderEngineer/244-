@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Base.h"
+#include "Player.h"
 
 //*****************************************************************************
 // AI一般
@@ -13,7 +14,9 @@ namespace STDAI
 {
 #define opponent					(recognitionBB->getOpponentPlayer())
 
-	// 定数
+	const D3DXQUATERNION SKY_RELATIVE_QUATERNION =	// 上空モードカメラのクオータニオン
+		D3DXQUATERNION(-2.51793313, 44.6412468, -0.916452408, 3.55765224e-07);
+
 	static const int NUM_RECURSION_RECOGNITION = 3;	// リカージョン認識の数
 	enum RECURSION_PERSONALITY						// リカージョンの性格
 	{
@@ -34,9 +37,9 @@ namespace BehaviorTreeNS
 	// ノードタグ定義
 	enum NODE_TAG
 	{
-		//---------------------------------------------------------------------
+		//--------------
 		// ルールノード
-		//---------------------------------------------------------------------
+		//--------------
 		_RULE_NODE_,
 		PRIORITY,					// 優先順位リスト法
 		ON_OFF,						// オン・オフ法
@@ -44,18 +47,22 @@ namespace BehaviorTreeNS
 		SEQUENCE,					// シークエンス法
 		PARARELL,					// パラレル法
 
-		//---------------------------------------------------------------------
+		//------------
 		// 条件ノード
-		//---------------------------------------------------------------------
+		//------------
 		_CONDITIONAL_NODE_,
 		IF_OPPONENT_NEAR,
+		IF_BULLET_NEAR,
+		IF_SHOCK_WAVE_MAY_BE_HAPPEN,
 		IF_FIVE_SECONDS_LATER,
 		IF_THREE_SECONDS_LATER,
+		IF_ONE_SECOND_LATER,
 		IF_RECURSION_IS_RUNNING,	// リカージョン実行中なら
+		IF_DESTINATION_DECIDED,
 
-		//---------------------------------------------------------------------
+		//------------------
 		// アクションノード
-		//---------------------------------------------------------------------
+		//------------------
 		_ACTION_NODE_,
 		ACTION_MOVE,
 		ACTION_JUMP,
@@ -63,17 +70,18 @@ namespace BehaviorTreeNS
 		ACTION_PILE,
 		ACTION_CUT,
 		ACTION_REVIVAL,
-		ACTION_SKY_MOVE,
 		ACTION_FALL,
 
-		//---------------------------------------------------------------------
+		//--------------
 		// 副処理ノード
-		//---------------------------------------------------------------------
+		//--------------
 		_SUBPROCEDURE_NODE_,
 		SET_DESTINATION_OPPONENT,
 		SET_DESTINATION_RANDOM,
 		SET_DESTINATION_NEXT_PILE,
+		SET_DESTINATION_TO_RECUASION,
 		SET_RECURSION_RECOGNITION,
+		SET_RECUASION_STATE,
 		SET_TARGET_OPPONENT,
 
 		// タグの数
@@ -93,9 +101,12 @@ namespace BehaviorTreeNS
 	enum TREE
 	{
 		TREE_INDEX,					//  = 0
-		OFFENSE = 0,				// サンプルツリー1
-		DEFFENSE,					// サンプルツリー2
-		RECURSION,					// リカージョンツリー
+		OFFENSE_TREE = 0,			// オフェンス状態ツリー
+		DEFFENSE_TREE,				// ディフェンス状態ツリー
+		RECURSION_TREE,				// リカージョン状態ツリー
+		DOWN_TREE,					// ダウン状態ツリー
+		SKY_TREE,					// スカイ状態ツリー
+		FALL_TREE,					// 落下状態ツリー
 		NUM_TREE					// ビヘイビアツリーの数
 	};
 
@@ -109,22 +120,6 @@ namespace BehaviorTreeNS
 	};
 
 	const int PARENT_IS_NOT_EXIST = -1;		// 親ノードが存在しないことを示す（ルートのみ）
-}
-
-
-//*****************************************************************************
-// ステートマシン
-//*****************************************************************************
-namespace StateTransition
-{
-	enum
-	{
-		OFFENSE,
-		DEFFENSE,
-		STATE_MAX,
-		INVALID = -1
-	};
-
 }
 
 

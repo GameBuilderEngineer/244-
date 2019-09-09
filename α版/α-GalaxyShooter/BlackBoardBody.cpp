@@ -26,7 +26,6 @@ void BodyBB::initialize(void)
 	speed = MOVING_SPEED;
 
 	aiJump = false;
-	onceJumped = false;
 	
 	aiShoot = false;
 	target = D3DXVECTOR3(0.0f, 0.0f, 0.0f);

@@ -26,9 +26,13 @@ private:
 	int	currentTree;										// 現在の選択ツリー
 
 	// Method
-	void offense(void);										// サンプルツリー1
-	void deffense(void);									// サンプルツリー2
-	void recursion(void);									// リカージョン
+	void offense(void);										// オフェンスツリー
+	void deffense(void);									// ディフェンスツリー
+	void recursion(void);									// リカージョンツリー
+	void down(void);										// ダウンツリー
+	void sky(void);											// 上空モードツリー
+	void fall(void);										// 落下ツリー
+
 	//void switchTree(int treeType);						// ツリー切り替え
 	void addNode(int parentNumber, NODE_TAG tag);			// ノードの追加
 

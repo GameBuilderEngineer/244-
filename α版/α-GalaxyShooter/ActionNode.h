@@ -19,7 +19,6 @@ private:
 	NODE_STATUS actionPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS actionCut(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS actionRevival(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
-	NODE_STATUS actionSkyMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	NODE_STATUS actionFall(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 
 

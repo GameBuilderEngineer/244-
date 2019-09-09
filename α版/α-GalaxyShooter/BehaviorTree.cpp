@@ -6,63 +6,118 @@
 #include "BehaviorTree.h"
 
 //=============================================================================
-// サンプルツリー1　オフェンス
+// オフェンスツリー
 //=============================================================================
 void BehaviorTree::offense(void)
 {
-	currentTree = OFFENSE;
+	currentTree = OFFENSE_TREE;
 
 	addNode(PARENT_IS_NOT_EXIST, PARARELL);
-	//addNode(0, SET_DESTINATION_OPPONENT);
-	//addNode(0, SET_TARGET_OPPONENT);
-	//addNode(0, SEQUENCE);
-	//addNode(3, ACTION_MOVE);
-	//addNode(3, ACTION_SHOOT);
+
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SET_DESTINATION_OPPONENT);
+	addNode(0, SET_TARGET_OPPONENT);
+
+
+	addNode(1, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
+	addNode(1, ACTION_JUMP);
+
+	addNode(2, IF_BULLET_NEAR);
+	addNode(2, ACTION_JUMP);
+
+	addNode(0, ACTION_MOVE);
+	addNode(0, ACTION_SHOOT);
 }
 
 
 //=============================================================================
-// サンプルツリー1　ディフェンス
+// ディフェンスツリー
 //=============================================================================
 void BehaviorTree::deffense(void)
 {
-	currentTree = DEFFENSE;
+	currentTree = DEFFENSE_TREE;
 
-
-	addNode(PARENT_IS_NOT_EXIST, PARARELL);
-
-	//addNode(0, SEQUENCE);
-	//addNode(1, IF_FIVE_SECONDS_LATER);
-	//addNode(1, SET_DESTINATION_RANDOM);
-	//addNode(1, SET_TARGET_OPPONENT);
-	//addNode(1, ACTION_SHOOT);
-
-	//addNode(0, SEQUENCE);
-	//addNode(6, IF_THREE_SECONDS_LATER);
-	//addNode(6, ACTION_JUMP);
-
-	//addNode(0, ACTION_MOVE);
-}
-
-
-//=============================================================================
-// ツリー　リカージョン
-//=============================================================================
-void BehaviorTree::recursion(void)
-{
-	currentTree = RECURSION;
 
 	addNode(PARENT_IS_NOT_EXIST, PARARELL);
 	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+
+	addNode(1, SET_DESTINATION_TO_RECUASION);
+	addNode(1, SET_DESTINATION_RANDOM);
+	addNode(2, IF_DESTINATION_DECIDED);
+	addNode(2, PRIORITY);
+
+	addNode(3, IF_BULLET_NEAR);
+	addNode(3, ACTION_JUMP);
+
+	addNode(4, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
+	addNode(4, ACTION_JUMP);
+
+	addNode(8, ACTION_MOVE);
+	addNode(8, SET_RECUASION_STATE);
+}
+
+
+//=============================================================================
+// リカージョンツリー
+//=============================================================================
+void BehaviorTree::recursion(void)
+{
+	currentTree = RECURSION_TREE;
+
+	addNode(PARENT_IS_NOT_EXIST, SEQUENCE);
+	addNode(0, SET_RECURSION_RECOGNITION);
 	addNode(0, IF_RECURSION_IS_RUNNING);
 	addNode(0, PRIORITY);
-	addNode(1, SET_RECURSION_RECOGNITION);
-	addNode(1, SET_DESTINATION_NEXT_PILE);
 	addNode(3, ACTION_MOVE);
 	addNode(3, SEQUENCE);
-	addNode(7, ACTION_PILE);
-	addNode(7, SET_DESTINATION_NEXT_PILE);
+	addNode(5, ACTION_PILE);
+	addNode(5, SET_DESTINATION_NEXT_PILE);
 }
+
+//=============================================================================
+// ダウンツリー
+//=============================================================================
+void BehaviorTree::down(void)
+{
+	currentTree = DOWN_TREE;
+
+	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+	addNode(0, ACTION_REVIVAL);
+}
+
+
+//=============================================================================
+// 上空モードツリー
+//=============================================================================
+void BehaviorTree::sky(void)
+{
+	currentTree = SKY_TREE;
+
+	addNode(PARENT_IS_NOT_EXIST, PRIORITY);
+	addNode(0, SEQUENCE);
+	addNode(0, SEQUENCE);
+
+	addNode(1, IF_DESTINATION_DECIDED);
+	addNode(1, ACTION_MOVE);
+
+	addNode(2, IF_ONE_SECOND_LATER);
+	addNode(2, SET_DESTINATION_TO_RECUASION);
+}
+
+
+//=============================================================================
+// 落下中ツリー
+//=============================================================================
+void BehaviorTree::fall(void)
+{
+	currentTree = FALL_TREE;
+	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+}
+
 
 //=============================================================================
 // コンストラクタ
@@ -70,9 +125,13 @@ void BehaviorTree::recursion(void)
 BehaviorTree::BehaviorTree(void)
 {
 	currentTree = -1;// 未選択
+
 	offense();
 	deffense();
 	recursion();
+	down();
+	sky();
+	fall();
 }
 
 
