@@ -162,6 +162,7 @@ void Object::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	if (onRender == false)return;
 	device->SetTransform(D3DTS_WORLD, &matrixWorld);
 	device->SetRenderState(D3DRS_LIGHTING, onLighting);
+	device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
 	if (onTransparent)
 	{

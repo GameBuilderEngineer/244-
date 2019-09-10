@@ -30,7 +30,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
 	fileName[MEMORY_PILE] = { "memoryPile.x" };
 	fileName[WASUREMONO_BALL] = { "ball.x" };
-	fileName[WASUREMONO_PHONE] = { "phone.x" };
+	fileName[WASUREMONO_PHONE] = { "phone.X" };
 	fileName[WASUREMONO_BUNNY] = { "toybunny.x" };
 }
 
