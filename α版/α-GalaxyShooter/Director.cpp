@@ -168,6 +168,7 @@ void Director::run(HINSTANCE _instance){
 	}
 	ShowWindow(wnd, SW_SHOW);
 	UpdateWindow(wnd);
+
 	// メッセージループ
 	MSG msg = { 0 };
 	ZeroMemory(&msg, sizeof(msg));

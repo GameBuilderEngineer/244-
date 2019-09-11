@@ -35,6 +35,7 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 //=============================================================================
 void ChinginManager::uninitialize(void)
 {
+	SAFE_RELEASE(sphere)
 	for (int i = 0; i < chinginMax; i++)
 	{
 		if (chingin[i] != NULL) { SAFE_DELETE(chingin[i]) }

@@ -1042,6 +1042,9 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixRotati
 
 	D3DXMatrixMultiply(&matrixWorld, &rotation, &_matrixPosition);
 
+	// ライティングモードを設定
+	_device->SetRenderState(D3DRS_LIGHTING, true);
+
 	// ワールドマトリクスの設定
 	_device->SetTransform(D3DTS_WORLD, &matrixWorld);
 
@@ -1053,9 +1056,6 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixRotati
 
 	// マテリアルを戻す
 	_device->SetMaterial(&materialDefault);
-
-	// ライティングモードを設定
-	_device->SetRenderState(D3DRS_LIGHTING, false);
 
 	return;
 }

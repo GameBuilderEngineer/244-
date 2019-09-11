@@ -10,7 +10,7 @@
 #include "Player.h"
 
 namespace gameMasterNS {
-	const float GAME_TIME = 60.0f * 0.5f;	//4•ª
+	const float GAME_TIME = 60.0f * 4.0f;	//4•ª
 	const float COUNT_DOWN_TIME = 3.0f;		//3•b
 
 	enum PLAYER_TYPE

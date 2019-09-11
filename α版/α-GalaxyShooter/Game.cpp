@@ -477,7 +477,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	// ラインエフェクトの描画
+	lineEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
@@ -507,47 +509,46 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 #endif// USING_AI
 
 #endif
-	////ステンシル準備
-	//target.renderSetUp(direct3D9->device);
 
-	//// 一般ステンシル
-	//target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{//プレイヤーの描画
-	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//		*shaderLoader->getEffect(shaderNS::TOON),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	//}
+	//ステンシル準備
+	target.renderSetUp(direct3D9->device);
 
-	//// 一般ステンシル
-	//target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
-	//// フィールドの描画
-	//field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
 
-	////ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{//プレイヤーの描画
-	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//		*shaderLoader->getEffect(shaderNS::TOON),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	//}
+	// フィールドの描画
+	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//// ステンシル画像
-	//target.renderEffectImage(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+	//ステンシルマスク
+	target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
-	//target.render(direct3D9->device);
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
 
-	//// ステンシル終了
-	//target.renderStencilEnd(direct3D9->device);
+	// ステンシル画像
+	target.renderEffectImage(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
 
-	// ラインエフェクトの描画
-	lineEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	target.render(direct3D9->device);
+
+	// ステンシル終了
+	target.renderStencilEnd(direct3D9->device);
 
 }
 

@@ -59,6 +59,7 @@ private:
 	D3DXVECTOR3 moveSpeed(D3DXVECTOR3 _position, D3DXVECTOR3 _targetPosition);	// ˆÚ“®‘¬“x
 public:
 	void initialize(LPDIRECT3DDEVICE9 _device, TextureLoader* _textureLoader, LPD3DXEFFECT _effect);
+	~EffectDewManager();
 	void update(float _frameTime, Player* _player);
 	void render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _view, D3DXMATRIX _projection, D3DXVECTOR3 _cameraPosition);
 	void generateEffect(int _index, D3DXVECTOR3 _positionToGenerate);

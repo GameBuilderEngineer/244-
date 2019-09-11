@@ -109,6 +109,13 @@ void EnvironmentAnalysis::initialize(void)
 //=============================================================================
 void EnvironmentAnalysis::uninitialize(void)
 {
+
+#ifdef RENDER_PILE_POINT
+	SAFE_RELEASE(pilePoint)
+#endif
+#ifdef RENDER_LINE_CUT_POINT
+	SAFE_RELEASE(cutPoint)
+#endif
 }
 
 
@@ -796,8 +803,7 @@ void EnvironmentAnalysis::hitCheckAndAssign(AgentAI* agentAI,
 
 		BoundingSphere bs;
 		bs.initialize(device, 15.0f);
-		bs.render(device, recursionWorldMatrix);				// サイズ調整用のスフィア描画
-		bs.getMesh()->Release();
+		bs.render(device, recursionWorldMatrix);			// サイズ調整用のスフィア描画
 	}
 #endif
 }

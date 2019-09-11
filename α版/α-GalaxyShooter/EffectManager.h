@@ -46,13 +46,14 @@ public:
 //--------------------
 class EffectManager :public Base
 {
-private:
+protected:
 	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 
 public:
+	~EffectManager();
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
 	virtual void update(float frameTime);
 	virtual void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
