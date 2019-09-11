@@ -283,6 +283,15 @@
     <Filter Include="Object\Bullet">
       <UniqueIdentifier>{3dfdaea0-621c-4e51-96f2-c7a44fffac99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Game\CountDown">
+      <UniqueIdentifier>{cac551ca-73ab-496b-bc99-c0c03996ab1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Icon">
+      <UniqueIdentifier>{7f18db98-9158-4690-9c2d-57a5a9b47cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\Gun">
+      <UniqueIdentifier>{f21f27b8-010e-41b2-b976-8e6ca53a635e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -607,6 +616,15 @@
     <ClCompile Include="SceneEffect.cpp">
       <Filter>Effect\SceneEffect</Filter>
     </ClCompile>
+    <ClCompile Include="UICountDown.cpp">
+      <Filter>UI\Game\CountDown</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Object\Gun</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -864,7 +882,6 @@
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Fader.h">
       <Filter>Fader</Filter>
     </ClInclude>
@@ -898,13 +915,7 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h">
-      <Filter>Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="InstancingBillboard.h">
-      <Filter>Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="ChinginEffect.h">
+   <ClInclude Include="ChinginEffect.h">
       <Filter>Effect\ChinginEffect</Filter>
     </ClInclude>
     <ClInclude Include="FeelEffect.h">
@@ -915,6 +926,18 @@
     </ClInclude>
     <ClInclude Include="AnimationPlayer.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="UICountDown.h">
+      <Filter>UI\Game\CountDown</Filter>
+    </ClInclude>
+    <ClInclude Include="Icon.h">
+      <Filter>Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Object\Gun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1019,5 +1042,13 @@
     <Image Include="..\..\..\..\..\..\OneDrive\デスクトップ\effect2.png">
       <Filter>02 Visual File</Filter>
     </Image>
+    <Image Include="Icon.ico">
+      <Filter>Icon</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Icon.rc">
+      <Filter>Icon</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

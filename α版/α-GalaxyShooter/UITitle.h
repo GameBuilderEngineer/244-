@@ -14,20 +14,20 @@
 //============================================================================================================================================
 namespace uiTitleNS
 {
-	const int WIDTH_TITLE_LOGO = (1920 / 2);					//	ïù
-	const int HEIGHT_TITLE_LOGO = (250 / 2);					//	çÇÇ≥
-	const int WIDTH_TITLE_BAR = (1200 / 2);						//	ïù
-	const int HEIGHT_TITLE_BAR = (150 / 2);						//	çÇÇ≥
-	const int WIDTH_GAME_START = (1200 / 2);					//	ïù
-	const int HEIGHT_GAME_START = (150 / 2);					//	çÇÇ≥
-	const int WIDTH_TUTORIAL = (1200 / 2);						//	ïù
-	const int HEIGHT_TUTORIAL = (150 / 2);						//	çÇÇ≥
-	const int WIDTH_OPERATION = (1200 / 2);						//	ïù
-	const int HEIGHT_OPERATION = (150 / 2);						//	çÇÇ≥
-	const int WIDTH_CREDIT = (1200 / 2);						//	ïù
-	const int HEIGHT_CREDIT = (150 / 2);						//	çÇÇ≥
-	const int WIDTH_GAME_EXIT = (1200 / 2);						//	ïù
-	const int HEIGHT_GAME_EXIT = (150 / 2);						//	çÇÇ≥
+	const int WIDTH_TITLE_LOGO = (960);							//	ïù
+	const int HEIGHT_TITLE_LOGO = (125);						//	çÇÇ≥
+	const int WIDTH_TITLE_BAR = (600);							//	ïù
+	const int HEIGHT_TITLE_BAR = (75);							//	çÇÇ≥
+	const int WIDTH_GAME_START = (600);							//	ïù
+	const int HEIGHT_GAME_START = (75);							//	çÇÇ≥
+	const int WIDTH_TUTORIAL = (600);							//	ïù
+	const int HEIGHT_TUTORIAL = (75);							//	çÇÇ≥
+	const int WIDTH_OPERATION = (600);							//	ïù
+	const int HEIGHT_OPERATION = (75);							//	çÇÇ≥
+	const int WIDTH_CREDIT = (600);								//	ïù
+	const int HEIGHT_CREDIT = (75);								//	çÇÇ≥
+	const int WIDTH_GAME_EXIT = (600);							//	ïù
+	const int HEIGHT_GAME_EXIT = (75);							//	çÇÇ≥
 	const float POSITION_TITLE_LOGO_X = (WINDOW_WIDTH / 3.5f);	//	ç¿ïW x
 	const float POSITION_TITLE_LOGO_Y = (WINDOW_HEIGHT / 4);	//	ç¿ïW y
 	const float POSITION_TITLE_BAR_X = (WIDTH_TITLE_BAR / 2);	//	ç¿ïW x

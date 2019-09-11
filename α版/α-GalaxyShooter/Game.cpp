@@ -105,7 +105,17 @@ void Game::initialize(
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+
+		// テスト中
+		if (i == 0)
+		{
+			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::EVE, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		}
+		else if (i == 1)
+		{
+			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::ADAM, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		}
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
 		player[i]->setSound(sound);			//サウンドのセット
@@ -114,11 +124,11 @@ void Game::initialize(
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
-		//uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
 		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
+		uiCountDown[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -424,15 +434,11 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	 //フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
-
 
 	for (int i = 0; i < NUM_COLONY; i++)
 	{// コロニーの描画
 		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
-
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
 	////(仮)ガラクタの描画
 	//for (int i = 0; i < JUNK_MAX; i++)
@@ -762,26 +768,49 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (!gameMaster->whetherAlreadyStart())
 	{
-		//カウントダウン３…２…１…
-		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+		////カウントダウン３…２…１…
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			uiCountDown[i].render(device, gameMaster->getCount());
+		}
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
 	}
 	else {
 		//スタート
-		if(gameMaster->displayStart())
-			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "START!!");
-		
+		if (gameMaster->displayStart())
+		{
+			for (int i = 0; i < NUM_PLAYER; i++)
+			{
+				uiCountDown[i].render(device, uiCountDownNS::TYPE::GO);
+			}
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+		}
 	}
 
 	if(gameMaster->whetherCountFinish())
 	{
 		//カウントダウン３…２…１…
-		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			uiCountDown[i].render(device, gameMaster->getCount());
+		}
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
 	}
 	if (gameMaster->whetherAlreadyFinish())
 	{
 		//フィニッシュ
-		if(gameMaster->displayFinish())
-			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "FINISH!!");
+		if (gameMaster->displayFinish())
+		{
+			for (int i = 0; i < NUM_PLAYER; i++)
+			{
+				uiCountDown[i].render(device, uiCountDownNS::TYPE::FINISH);
+			}
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+		}
 	}
 
 	// αテストを無効に

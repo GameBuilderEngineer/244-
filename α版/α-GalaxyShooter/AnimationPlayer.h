@@ -125,6 +125,7 @@ private:
 	Animation* animation;							//	アニメーション
 	AnimationID animationID;						//	アニメーションID
 	int playerIndex;								//	プレイヤーインデックス
+	int modelType;									//  モデルタイプ
 public:
 	AnimationPlayer(void);
 	~AnimationPlayer(void);
@@ -177,6 +178,7 @@ public:
 	void setFlagLanding(bool _flag) { flag.landing = _flag; }
 	void setFlagRevival(bool _flag) { flag.revival = _flag; }
 	// Get
+	Animation* getAnimation(void) { return animation; }
 	bool getFlagMoveBan(void) { return flag.moveBan; }
 	bool getFlagJump(void) { return flag.jump; }
 	bool getFlagInstallation(void) { return flag.installation; }

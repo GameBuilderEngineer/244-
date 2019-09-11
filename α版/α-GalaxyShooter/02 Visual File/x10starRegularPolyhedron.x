@@ -632,7 +632,7 @@ Frame Root {
            96.078431;
            0.500000; 0.500000; 0.500000;;
            0.000000; 0.000000; 0.000000;;
-          TextureFilename {"Debug_UV_Grid.png";}
+          TextureFilename {"Star.jpg";}
         }
       } // End of r04_002 material list
     } // End of r04_002 mesh

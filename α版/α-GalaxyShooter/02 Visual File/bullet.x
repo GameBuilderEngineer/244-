@@ -851,7 +851,7 @@ Frame Root {
            96.078431;
            0.011262; 0.173253; 0.500000;;
            0.000000; 0.000000; 0.000000;;
-          TextureFilename {"Debug_UV_Grid.png";}
+          TextureFilename {"Bullet.jpg";}
         }
       } // End of Cylinder material list
     } // End of Cylinder mesh

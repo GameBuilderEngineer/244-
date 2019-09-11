@@ -291,9 +291,9 @@ void switchingSpeed(Animation* _animation)
 //============================================================================================================================================
 Animation* createObject(void)
 {
-	Animation* object = new Animation;
-	ZeroMemory(object, sizeof(Animation));
 	//Animation* object = (Animation*)calloc(1, sizeof(Animation));	//	オブジェクトポインタ
+	Animation* object = new Animation;	//	オブジェクトポインタ
+	ZeroMemory(object, sizeof(Animation));
 
 	object->initialize = initialize;
 	object->release = release;

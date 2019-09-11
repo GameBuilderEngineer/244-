@@ -16,7 +16,7 @@
 //============================================================================================================================================
 namespace characterSelectNS
 {
-	const float SELECT_TIME = (61.0f);
+	const float SELECT_TIME = (60.0f);
 	const float POSITION_TIME_X = ((uiCharacterSelectNS::POSITION_X_TIME) - 38.0f);
 	const float POSITION_TIME_Y = ((uiCharacterSelectNS::POSITION_Y_TIME) - 125.0f);
 }

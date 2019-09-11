@@ -72,6 +72,7 @@ HRESULT Direct3D9::initialize(HWND targetWnd)
 	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	// カリングを有効にする
 	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	//device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	//アンチエイリアシングをかける
 	device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, true);
 	// αブレンドを行う

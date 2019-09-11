@@ -17,12 +17,12 @@ namespace uiResultNS
 {
 	const int PLAYER_WIDTH = ((1000 / 2) - (1000 / 10));															//	ïù
 	const int PLAYER_HEIGHT = ((2160 / 2) - (2160 / 10));															//	çÇÇ≥
-	const int RESULT_WINDOW_WIDTH = (3840 / 2);																		//	ïù
-	const int RESULT_WINDOW_HEIGHT = (1340 / 2);																	//	çÇÇ≥
-	const int PLAYER_NUMBER_WIDTH = (936 / 2);																		//	ïù
-	const int PLAYER_NUMBER_HEIGHT = (254 / 2);																		//	çÇÇ≥
-	const int RESULT_WIDTH = (630 / 2);																				//	ïù
-	const int RESULT_HEIGHT = (240 / 2);																			//	çÇÇ≥
+	const int RESULT_WINDOW_WIDTH = (1920);																			//	ïù
+	const int RESULT_WINDOW_HEIGHT = (670);																			//	çÇÇ≥
+	const int PLAYER_NUMBER_WIDTH = (468);																			//	ïù
+	const int PLAYER_NUMBER_HEIGHT = (127);																			//	çÇÇ≥
+	const int RESULT_WIDTH = (315);																					//	ïù
+	const int RESULT_HEIGHT = (120);																				//	çÇÇ≥
 	const float POSITION_X_PLAYER_CHARACTER_1 = (WINDOW_WIDTH / 4);													//	ç¿ïW x
 	const float POSITION_X_PLAYER_CHARACTER_2 = (uiResultNS::POSITION_X_PLAYER_CHARACTER_1 + (WINDOW_WIDTH / 2));	//	ç¿ïW x
 	const float POSITION_Y_PLAYER_CHARACTER = (WINDOW_HEIGHT / 2);													//	ç¿ïW y

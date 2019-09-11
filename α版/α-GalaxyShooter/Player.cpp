@@ -92,6 +92,9 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	bodyCollide.initialize(device, &position, staticMesh->mesh);
 	radius = bodyCollide.getRadius();
 	
+	// 銃の初期化
+	gun.initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::GUN], &(D3DXVECTOR3)START_POSITION[type]);
+
 	//弾の初期化
 	for (int i = 0; i < NUM_BULLET; i++)
 	{
@@ -123,10 +126,10 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	upEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// ラインエフェクト初期化
-	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	//lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// アニメーション
-	animationPlayer.initialize(_device, modelType, playerType);
+	animationPlayer.initialize(_device, playerType, modelType);
 
 	//上空モード時表示レティクル
 	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
@@ -216,6 +219,13 @@ void Player::update(float frameTime)
 	//===========
 	Object::update();
 
+	//// ボーン座標の取得
+	//D3DXMATRIX matrixHand;
+	//D3DXMatrixIdentity(&matrixHand);
+	//matrixHand = setGunMatrix();
+	//gun.update(frameTime, D3DXVECTOR3(matrixHand._41, matrixHand._42, matrixHand._43));
+
+	// アニメーションの更新
 	animationPlayer.update(input, state);
 
 	//===========
@@ -290,6 +300,10 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	// アップエフェクトの描画
 	upEffect.render(device, view, projection, cameraPosition);
 
+
+	// 銃の描画
+	gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+
 	//バレットの描画
 	for (int i = 0; i < NUM_BULLET; i++)
 	{
@@ -356,7 +370,7 @@ void Player::recorvery(float frameTime)
 void Player::moveOperation()
 {
 	if (whetherDown()) return;
-	//if (animationPlayer.getFlagMoveBan()) return;
+	if (animationPlayer.getFlagMoveBan()) return;
 	//キーによる移動
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
@@ -777,7 +791,7 @@ void Player::updateBullet(float frameTime)
 		bullet[elementBullet].activation();
 		bullet[elementBullet].configurationGravity(attractorPosition,attractorRadius);
 		bullet[elementBullet].Object::update();
-		postureControl(axisZ.direction, front, 1.0f);
+		postureControl(axisZ.direction, front, 1.0f);//カメラ方向にキャラクターが向く
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
@@ -1111,3 +1125,89 @@ int Player::getElementMemoryPile() { return elementMemoryPile; }
 Recursion* Player::getRecursion() { return recursion; }
 MemoryLine*  Player::getMemoryLine() { return &memoryLine; }
 MemoryPile* Player::getMemoryPile() { return memoryPile; }
+
+//D3DXMATRIX Player::setGunMatrix(void)
+//{
+//	//// パターン１ ※ダメでした
+//	//D3DXMATRIX hipsSpine;
+//	//D3DXMATRIX spineSpine1;
+//	//D3DXMATRIX spine1Spine2;
+//	//D3DXMATRIX spine2RightShoulder;
+//	//D3DXMATRIX rightShoulderRightArm;
+//	//D3DXMATRIX rightArmRightForeArm;
+//	//D3DXMATRIX rightForeAmRightHand;
+//	//D3DXMatrixIdentity(&hipsSpine);
+//	//D3DXMatrixIdentity(&spineSpine1);
+//	//D3DXMatrixIdentity(&spine1Spine2);
+//	//D3DXMatrixIdentity(&spine2RightShoulder);
+//	//D3DXMatrixIdentity(&rightShoulderRightArm);
+//	//D3DXMatrixIdentity(&rightArmRightForeArm);
+//	//D3DXMatrixIdentity(&rightForeAmRightHand);
+//	//D3DXMatrixMultiply(&hipsSpine, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Hips"), &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine"));
+//	//D3DXMatrixMultiply(&spineSpine1, &hipsSpine, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine1"));
+//	//D3DXMatrixMultiply(&spine1Spine2, &spineSpine1, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine2"));
+//	//D3DXMatrixMultiply(&spine2RightShoulder, &spine1Spine2, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightShoulder"));
+//	//D3DXMatrixMultiply(&rightShoulderRightArm, &spine2RightShoulder, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightArm"));
+//	//D3DXMatrixMultiply(&rightArmRightForeArm, &rightShoulderRightArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightForeArm"));
+//	//D3DXMatrixMultiply(&rightForeAmRightHand, &rightArmRightForeArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+//	//return rightForeAmRightHand;
+//
+//	//// パターン２ ※ダメでした
+//	//D3DXMATRIX polySurface1Spine;
+//	//D3DXMATRIX spineSpine1;
+//	//D3DXMATRIX spine1Spine2;
+//	//D3DXMATRIX spine2Neck;
+//	//D3DXMATRIX neckRightArm;
+//	//D3DXMATRIX rightArmRightForeArm;
+//	//D3DXMATRIX rightForeAmRightHand;
+//	//D3DXMatrixIdentity(&polySurface1Spine);
+//	//D3DXMatrixIdentity(&spineSpine1);
+//	//D3DXMatrixIdentity(&spine1Spine2);
+//	//D3DXMatrixIdentity(&spine2Neck);
+//	//D3DXMatrixIdentity(&neckRightArm);
+//	//D3DXMatrixIdentity(&rightArmRightForeArm);
+//	//D3DXMatrixIdentity(&rightForeAmRightHand);
+//	//D3DXMatrixMultiply(&polySurface1Spine, &getBoneMatrix(animationPlayer.getAnimation(), "daren_polySurface1"), &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine"));
+//	//D3DXMatrixMultiply(&spineSpine1, &polySurface1Spine, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine1"));
+//	//D3DXMatrixMultiply(&spine1Spine2, &spineSpine1, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine2"));
+//	//D3DXMatrixMultiply(&spine2Neck, &spine1Spine2, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Neck"));
+//	//D3DXMatrixMultiply(&neckRightArm, &spine2Neck, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightArm"));
+//	//D3DXMatrixMultiply(&rightArmRightForeArm, &neckRightArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightForeArm"));
+//	//D3DXMatrixMultiply(&rightForeAmRightHand, &rightArmRightForeArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+//	//return rightForeAmRightHand;
+//
+//	//// パターン３
+//	//Animation* animation = animationPlayer.getAnimation();
+//
+//	//D3DXMATRIX rootFrameHips;
+//	//D3DXMATRIX hipsSpine;
+//	//D3DXMATRIX spineSpine1;
+//	//D3DXMATRIX spine1Spine2;
+//	//D3DXMATRIX spine2Neck;
+//	//D3DXMATRIX neckRightShoulder;
+//	//D3DXMATRIX rightShoulderRightArm;
+//	//D3DXMATRIX rightArmRightForeArm;
+//	//D3DXMATRIX rightForeAmRightHand;
+//
+//	//D3DXMatrixIdentity(&rootFrameHips);
+//	//D3DXMatrixIdentity(&hipsSpine);
+//	//D3DXMatrixIdentity(&spineSpine1);
+//	//D3DXMatrixIdentity(&spine1Spine2);
+//	//D3DXMatrixIdentity(&spine2Neck);
+//	//D3DXMatrixIdentity(&neckRightShoulder);
+//	//D3DXMatrixIdentity(&rightShoulderRightArm);
+//	//D3DXMatrixIdentity(&rightArmRightForeArm);
+//	//D3DXMatrixIdentity(&rightForeAmRightHand);
+//
+//	//D3DXMatrixMultiply(&rootFrameHips, &animation->rootFrame->TransformationMatrix, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Hips"));
+//	//D3DXMatrixMultiply(&hipsSpine, &rootFrameHips, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine"));
+//	//D3DXMatrixMultiply(&spineSpine1, &hipsSpine, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine1"));
+//	//D3DXMatrixMultiply(&spine1Spine2, &spineSpine1, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Spine2"));
+//	//D3DXMatrixMultiply(&spine2Neck, &spine1Spine2, &getBoneMatrix(animationPlayer.getAnimation(), "daren_Neck"));
+//	//D3DXMatrixMultiply(&neckRightShoulder, &spine2Neck, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightShoulder"));
+//	//D3DXMatrixMultiply(&rightShoulderRightArm, &neckRightShoulder, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightArm"));
+//	//D3DXMatrixMultiply(&rightArmRightForeArm, &rightShoulderRightArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightForeArm"));
+//	//D3DXMatrixMultiply(&rightForeAmRightHand, &rightArmRightForeArm, &getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+//
+//	//return rightForeAmRightHand;
+//}

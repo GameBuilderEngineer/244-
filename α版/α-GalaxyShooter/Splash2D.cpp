@@ -6,8 +6,8 @@
 //*****************************************************************************
 // 定数
 //*****************************************************************************
-const static int		WIDTH = ((1600 / 2) - 16);					// スプラッシュ2D横サイズ
-const static int		HEIGHT = ((1136 / 2) - 9);					// スプラッシュ2D縦サイズ
+const static int		WIDTH = (800 - 16);							// スプラッシュ2D横サイズ
+const static int		HEIGHT = (568 - 9);							// スプラッシュ2D縦サイズ
 static int				alphaColor = 0;								// アルファ値
 static int				time = 0;									// スプラッシュ2D消滅時間
 const static float		POSITION_X = ((WINDOW_WIDTH / 2) - 8.5f);	// スプラッシュ2DX座標

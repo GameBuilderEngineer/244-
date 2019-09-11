@@ -13,7 +13,7 @@
 #include "Credit.h"
 #include "Game.h"
 #include "Result.h"
-//#include "AnimationPlayer.h"
+//#include "AnimationPlayer.h"//メモリ負荷テスト
 //HINSTANCE* instancePointer = NULL;
 //void setInstance(HINSTANCE* hinstance) { instancePointer = hinstance; }
 //bool roop = true;
@@ -120,6 +120,7 @@ HRESULT Director::initialize(){
 	// サウンドの再生
 	sound->play(soundNS::TYPE::AGING, soundNS::METHOD::PLAY);
 
+	//メモリ負荷テスト
 	//AnimationPlayer* animation;
 	//int i = 1;
 	//	animation = new AnimationPlayer;
@@ -129,6 +130,7 @@ HRESULT Director::initialize(){
 
 	//scene
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+	//メモリ負荷テスト
 	//scene->uninitialize();
 	//SAFE_DELETE(scene);
 	//int i = 1;
@@ -156,7 +158,7 @@ HRESULT Director::initialize(){
 	return S_OK;
 }
 
-void Director::run(HINSTANCE _instance){
+void Director::run(HINSTANCE _instance) {
 	char directory[512];
 	GetCurrentDirectory(sizeof(directory), directory);
 	initializeDirectory(directory);
@@ -208,7 +210,7 @@ void Director::mainLoop(){
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
 }
 
-void Director::update(){
+void Director::update() {
 	input->update(window->windowActivate);
 	if (input->wasKeyPressed(VK_F1))
 	{

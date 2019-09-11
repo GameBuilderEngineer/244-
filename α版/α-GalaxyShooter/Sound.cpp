@@ -187,7 +187,7 @@ void Sound::updateFadeOut(int _soundIndex)
 LPDIRECTSOUNDBUFFER8 Sound::load(int _soundIndex)
 {
 	// 変数宣言：初期化 / サウンド読み込み
-	const char *Sound_File[] =	//	サウンドファイル
+	const char *Sound_File[TYPE::TYPE_MAX] =	//	サウンドファイル
 	{
 		"Aging.wav",
 		"BGM_Character_Select.wav",

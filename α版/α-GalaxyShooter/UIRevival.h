@@ -15,14 +15,14 @@
 namespace uiRevivalNS
 {
 	const int MAX_REVIVAL_POINT = (1000);											//	復活連打ポイントの最大値
-	const int WIDTH_BAR = (1920 / 2);												//	幅
-	const int HEIGHT_BAR = (320 / 2);												//	高さ
-	const int WIDTH_GAUGE = (1920 / 2);												//	幅
-	const int HEIGHT_GAUGE = (100 / 2);												//	高さ
-	const int WIDTH_CONCENTRATION = (1920 / 2);										//	幅
-	const int HEIGHT_CONCENTRATION = (2160 / 2);									//	高さ
-	const int WIDTH_TONE = (1920 / 2);												//	幅
-	const int HEIGHT_TONE = (2160 / 2);												//	高さ
+	const int WIDTH_BAR = (960);												//	幅
+	const int HEIGHT_BAR = (160);												//	高さ
+	const int WIDTH_GAUGE = (960);												//	幅
+	const int HEIGHT_GAUGE = (50);												//	高さ
+	const int WIDTH_CONCENTRATION = (960);										//	幅
+	const int HEIGHT_CONCENTRATION = (1080);									//	高さ
+	const int WIDTH_TONE = (960);												//	幅
+	const int HEIGHT_TONE = (1080);												//	高さ
 	const float POSITION_X_PLAYER_1 = (WINDOW_WIDTH / 4);							//	座標 x ( Player1 )
 	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2));	//	座標 x ( Player2 )
 	const float POSITION_Y = (WINDOW_HEIGHT / 2);									//	座標 y
