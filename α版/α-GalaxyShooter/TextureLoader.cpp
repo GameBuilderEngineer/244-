@@ -105,7 +105,7 @@ TextureLoader::TextureLoader()
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
 	textureName[LIGHT_001] = { "Light_001.png" };
-	textureName[TARGET] = { "white.png" };
+	textureName[TARGET] = { "stencil.png" };
 }
 
 TextureLoader::~TextureLoader()
