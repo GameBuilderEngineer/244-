@@ -157,7 +157,6 @@
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="DownEffect.cpp" />
-    <ClCompile Include="EffectDew.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
@@ -195,6 +194,7 @@
     <ClCompile Include="RecursionRecognition.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="RuleNode.cpp" />
+    <ClCompile Include="SceneEffect.cpp" />
     <ClCompile Include="ScreenEffectBase.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
@@ -267,7 +267,6 @@
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="DownEffect.h" />
-    <ClInclude Include="EffectDew.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fader.h" />
@@ -304,6 +303,7 @@
     <ClInclude Include="RecursionRecognition.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="RuleNode.h" />
+    <ClInclude Include="SceneEffect.h" />
     <ClInclude Include="ScreenEffectBase.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />

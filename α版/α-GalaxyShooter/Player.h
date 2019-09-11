@@ -151,7 +151,7 @@ protected:
 	playerNS::OperationKeyTable keyTable;				//操作Keyテーブル
 	DownEffect downEffect;								//ダウンエフェクト
 	UpEffect upEffect;									//アップエフェクト
-	FeelEffect feelEffect[playerNS::NUM_PLAYER];
+	FeelEffect feelEffect;
 
 	int state;											//状態変数
 	

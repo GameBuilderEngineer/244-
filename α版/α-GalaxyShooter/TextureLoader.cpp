@@ -13,7 +13,10 @@ TextureLoader::TextureLoader()
 	textureName[SPLASH] = { "Splash.png" };
 
 	// Tutorial
-	textureName[TUTORIAL] = { "Tutorial.png" };
+	textureName[TUTORIAL] = { "tutorial1.png" };
+	textureName[TUTORIAL2] = { "tutorial2.png" };
+	textureName[TUTORIAL3] = { "tutorial3.png" };
+	textureName[TUTORIAL4] = { "tutorial4.png" };
 
 	// Title
 	textureName[TITLE_LOGO] = { "Title_Logo.png" };
@@ -102,7 +105,7 @@ TextureLoader::TextureLoader()
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
 	textureName[LIGHT_001] = { "Light_001.png" };
-	textureName[TARGET] = { "Light_001.png" };
+	textureName[TARGET] = { "stencil.png" };
 }
 
 TextureLoader::~TextureLoader()

@@ -91,8 +91,12 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	plane.createPositionSpherical(_direct3D9->device, 3000, 250.0f);
 	plane.initialize(_direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
-	// エフェクト初期化
-	//effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	// プレイヤーの初期化
+	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+	player[PLAYER_TYPE::PLAYER_1].setPosition(D3DXVECTOR3(-20.0f, 100.0f, 25.0f));
+
+	// シーンエフェクト初期化
+	sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	return;
 }
@@ -140,15 +144,14 @@ void Title::update(float _frameTime)
 		updateInput();
 	}
 
-	// エフェクトの更新
-	//effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
-	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
+	// シーンエフェクトの更新
+	sceneEffect.update(_frameTime);
 
-	//if (input->isKeyDown('E'))
-	//{
-	//	effectDewManager.generateEffect(100, temp2);
-	//};
-
+	for (int i = 0; i < EFFECT_MAX; i++)
+	{
+		// シーンエフェクト発生
+		sceneEffect.generateSceneEffect(1, D3DXVECTOR3((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
+	}
 	return;
 }
 //============================================================================================================================================
@@ -202,11 +205,15 @@ void Title::render(Direct3D9* _direct3D9)
 	// 3D
 	render3D(_direct3D9, camera[0]);
 
+	// αブレンドをつかう
+	_direct3D9->device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	// 2D
 	render2D(_direct3D9->device);
-
-	// エフェクトの描画
-	//effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
 
 	return;
 }
@@ -216,8 +223,11 @@ void Title::render(Direct3D9* _direct3D9)
 //============================================================================================================================================
 void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 {
-	// プレーン( インスタンシング )
-	plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	// シーンエフェクトの描画
+	sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+
+	//// プレーン( インスタンシング )
+	//plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender

@@ -256,9 +256,6 @@
     <Filter Include="UI\ScreenSplitLine">
       <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect\Dew">
-      <UniqueIdentifier>{12c4f031-ca9f-444b-968c-23863067a784}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect\BulletEffect">
       <UniqueIdentifier>{b2456d65-1ed9-4837-a9d8-43c7048ff7f3}</UniqueIdentifier>
     </Filter>
@@ -279,6 +276,9 @@
     </Filter>
     <Filter Include="Effect\FeelEffect">
       <UniqueIdentifier>{2f6c9e2b-e708-48b7-98fc-6af91a0dd64a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\SceneEffect">
+      <UniqueIdentifier>{44e97192-75fa-4c20-87e3-59d66dcab4e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object\Bullet">
       <UniqueIdentifier>{3dfdaea0-621c-4e51-96f2-c7a44fffac99}</UniqueIdentifier>
@@ -579,9 +579,6 @@
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>Billboard</Filter>
     </ClCompile>
-    <ClCompile Include="EffectDew.cpp">
-      <Filter>Effect\Dew</Filter>
-    </ClCompile>
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Fader.cpp">
       <Filter>Fader</Filter>
@@ -606,6 +603,9 @@
     </ClCompile>
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneEffect.cpp">
+      <Filter>Effect\SceneEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -898,9 +898,6 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-    <ClInclude Include="EffectDew.h">
-      <Filter>Effect\Dew</Filter>
-    </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
@@ -912,6 +909,9 @@
     </ClInclude>
     <ClInclude Include="FeelEffect.h">
       <Filter>Effect\FeelEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEffect.h">
+      <Filter>Effect\SceneEffect</Filter>
     </ClInclude>
     <ClInclude Include="AnimationPlayer.h">
       <Filter>Animation</Filter>

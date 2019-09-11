@@ -16,6 +16,9 @@ namespace textureLoaderNS
 
 		// Tutorial
 		TUTORIAL,
+		TUTORIAL2,
+		TUTORIAL3,
+		TUTORIAL4,
 
 		// Title
 		TITLE_LOGO,

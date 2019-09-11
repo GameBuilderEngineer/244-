@@ -12,8 +12,8 @@ Tutorial::Tutorial()
 {
 	// 現在のシーン(チュートリアル)
 	sceneName = "Scene -Tutorial-";
-	// 次のシーン(リザルト)
-	nextScene = SceneList::RESULT;
+	// 次のシーン(タイトル)
+	nextScene = SceneList::TITLE;
 }
 //=============================================================================
 // デストラクタ
@@ -56,6 +56,7 @@ void Tutorial::initialize(
 	camera->setPosition(D3DXVECTOR3(0, 0, -1));
 	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
 
+
 	// チュートリアル2D初期化
 	tutorial2D.initialize(direct3D9->device, 0, _textureLoader);
 }
@@ -67,26 +68,53 @@ void Tutorial::update(float frameTime)
 	// カメラ更新
 	camera->update();
 
-	// チュートリアル2D更新
-	tutorial2D.update();
 
-	//Enterまたは〇ボタンでリザルトへ
-	// 前の遷移へ戻る
-	if (input->wasKeyPressed(VK_BACK) ||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+	//Enterまたは〇ボタンで次へ
+	if (input->wasKeyPressed(VK_RETURN) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
 	{
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
-		nextScene = SceneList::TITLE;
-		changeScene(nextScene);
+
+		// チュートリアルを次へ
+		tutorial2D.next++;
+
+		return;
+	}
+	//Backまたは×ボタンで前へ
+	else if (input->wasKeyPressed(VK_BACK)||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::B) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::B))
+		
+	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+
+		if (tutorial2D.next > 0)
+		{
+			// チュートリアルを前へ
+			tutorial2D.next--;
+		}
 		return;
 	}
 
-	if (input->wasKeyPressed(VK_RETURN)||
-		input->getController()[PLAYER1]->wasButton(virtualControllerNS::A) ||
-		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A)
-		)changeScene(nextScene);
+	//Deleteまたはスペシャルメインボタンでタイトルへ
+	if (input->wasKeyPressed(VK_DELETE) ||
+		input->getController()[PLAYER1]->wasButton(virtualControllerNS::SPECIAL_MAIN) ||
+		input->getController()[PLAYER2]->wasButton(virtualControllerNS::SPECIAL_MAIN))
+	{
+		changeScene(nextScene);
+	}
+
+	// チュートリアルが最後まで行ったらタイトルへ
+	if (tutorial2D.next >= NEXT_MAX)
+	{
+		changeScene(nextScene);
+	}
+
+	// チュートリアル2D更新
+	tutorial2D.update();
 
 }
 //=============================================================================

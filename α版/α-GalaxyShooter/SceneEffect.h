@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// 回復エフェクトヘッダー [FeelEffect.h]
+// シーンエフェクトヘッダー [SceneEffectEffect.h]
 // 製作者 飯塚春輝
 //-----------------------------------------------------------------------------
 #pragma once
@@ -9,16 +9,16 @@
 #include "BoundingSphere.h"
 #include "EffectManager.h"
 
-static const int FEEL_EFFECT = 200;	// 同時に表示するうえで妥当そうな数
+static const int SCENE_EFFECT = 2000;		// 同時に表示するうえで妥当そうな数
 
 //--------------------
-// 回復エフェクトクラス
+// シーンエフェクトクラス
 //--------------------
-class FeelEffect :public EffectManager
+class SceneEffect :public EffectManager
 {
 private:
 	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
-	EffectIns feelEffect[FEEL_EFFECT];			// エフェクト配列
+	EffectIns sceneEffect[SCENE_EFFECT];	// エフェクト配列
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
@@ -28,8 +28,7 @@ public:
 	virtual void update(float frameTime);
 	virtual void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 
-	// 回復エフェクトを発生させる
-	void generateFeelEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec);
-	bool feel;
+	// シーンエフェクトを発生させる
+	void generateSceneEffect(int num, D3DXVECTOR3 positionToGenerate);
 };
 

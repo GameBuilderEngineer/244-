@@ -10,7 +10,7 @@
 #include "EffectManager.h"
 
 static const int CHINGIN_EFFECT = 200;			// 同時に表示するうえで妥当そうな数
-static const float CHINGIN_EFFECT_TIME = 0.2;	// エフェクト生存時間
+static const float CHINGIN_EFFECT_TIME = 0.4;	// エフェクト生存時間
 
 //--------------------
 // 賃金エフェクトクラス
