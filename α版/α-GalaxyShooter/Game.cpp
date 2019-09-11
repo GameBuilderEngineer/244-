@@ -740,7 +740,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 				uiCountDown[i].render(device, uiCountDownNS::TYPE::FINISH);
 			}
 			// ƒTƒEƒ“ƒh‚ÌÄ¶
-			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+			sound->play(soundNS::TYPE::SE_GAME_TIME_UP, soundNS::METHOD::PLAY);
 		}
 	}
 
