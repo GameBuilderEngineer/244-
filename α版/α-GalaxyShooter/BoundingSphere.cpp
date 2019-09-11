@@ -14,6 +14,7 @@ BoundingSphere::BoundingSphere()
 
 BoundingSphere::~BoundingSphere()
 {
+	SAFE_RELEASE(mesh)
 }
 
 

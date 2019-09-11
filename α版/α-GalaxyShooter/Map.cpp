@@ -126,6 +126,9 @@ void Map::uninitialize(void)
 		delete mapNode[i];
 	}
 	mapNode.clear();
+
+	SAFE_RELEASE(sphere)
+	SAFE_RELEASE(mapCoodMark)
 }
 
 

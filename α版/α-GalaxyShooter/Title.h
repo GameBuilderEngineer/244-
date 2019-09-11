@@ -42,7 +42,7 @@ namespace titleNS
 class Title : public AbstractScene
 {
 private:
-	Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
+	//Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
 	UITitle uiTitle;										//	タイトルUI
 	InstancingBillboard plane;								//	インスタンシングビルボード
 	EffectDewManager effectDewManager;						//	露エフェクト

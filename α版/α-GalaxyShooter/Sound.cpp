@@ -37,7 +37,7 @@ Sound::Sound(void)
 //============================================================================================================================================
 Sound::~Sound(void)
 {
-	SAFE_DELETE(directSound);
+	SAFE_RELEASE(directSound);
 
 	return;
 }
