@@ -1,119 +1,117 @@
-//=============================================================================
+//-----------------------------------------------------------------------------
 // 回復エフェクト処理 [FeelEffect.cpp]
-// 制作者 飯塚春輝
-////===========================================================================
+// 製作者 飯塚春輝
+//-----------------------------------------------------------------------------
 #include "FeelEffect.h"
-//*****************************************************************************
-// 定数
-//*****************************************************************************
-static int				alphaColor = FEEL_EFFECT_ALPHA_MAX;								// 回復エフェクトアルファ値
-const static int		WIDTH = WINDOW_WIDTH / 2;										// 回復エフェクト横サイズ
-const static int		HEIGHT = WINDOW_HEIGHT;											// 回復エフェクト縦サイズ
-const static float		POSITION_X_PLAYER1 = 0.0f;										// 回復エフェクトX座標
-const static float		POSITION_X_PLAYER2 = POSITION_X_PLAYER1 + WINDOW_WIDTH / 2.0f;	// 回復エフェクト2X座標
-const static float		POSITION_Y = 0.0f;												// 回復エフェクトY座標
-//*****************************************************************************
-// グローバル変数
-//*****************************************************************************
-int FeelEffect::cntEffect = -1;
-LPDIRECT3DTEXTURE9 FeelEffect::textureFeelEffect = NULL;								// FEELエフェクトのテクスチャ
-//=============================================================================
-// コンストラクタ
-//=============================================================================
-FeelEffect::FeelEffect()
-{
-	cntEffect++;
-}
-//=============================================================================
-// デストラクタ
-//=============================================================================
-FeelEffect::~FeelEffect()
-{
-}
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT FeelEffect::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader)
+void FeelEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect)
 {
-	// 生存時間初期化
-	cntFrame = 0;
-	// プレイヤーナンバー
-	playerNumber = _playerNumber;
-	// エフェクト不使用
-	isActive = false;
-
-	// テクスチャを読み込む
-	setVisualDirectory();
-
-	textureFeelEffect = *textureLoader->getTexture(textureLoaderNS::EFFECT_FEEL);
+	D3DXCreateSphere(device, 3.0f, 9, 9, &sphere, NULL);	// 当たり判定用にスフィアを作る
 
 	// 回復エフェクト初期化
-	feelEffect.initialize(device,
-		textureFeelEffect,					// テクスチャ
-		spriteNS::TOP_LEFT,					// 原点
-		WIDTH,								// 横幅
-		HEIGHT,								// 高さ
-		D3DXVECTOR3(playerNumber ? POSITION_X_PLAYER2 : POSITION_X_PLAYER1, POSITION_Y, 0.0f),// 座標
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),		// 回転
-		FEEL_EFFECT_COLOR					// 色
-	);
+	for (int i = 0; i < FEEL_EFFECT; i++)
+	{
+		feelEffect[i].setPosition(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		feelEffect[i].setSpeed(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		D3DXMatrixIdentity(feelEffect[i].getMatrixWorld());
+		feelEffect[i].getCollider()->initialize(device, feelEffect[i].getPosition(), sphere);
+		feelEffect[i].setUse(false);
+		feelEffect[i].time = 0;
+	}
 
-	return S_OK;
-}
-//=============================================================================
-// 終了処理
-//=============================================================================
-void FeelEffect::uninitialize(void)
-{
+	numOfUse = 0;
+	renderList = NULL;
+	feel = false;
+	// インスタンシング初期化
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::EFFECT_FEEL));
 }
 //=============================================================================
 // 更新処理
 //=============================================================================
-void FeelEffect::update(void)
+void FeelEffect::update(float frameTime)
 {
-	if (!isActive) return;
+	// 使用中のエフェクトの挙動を更新する
+	for (int i = 0; i < FEEL_EFFECT; i++)
+	{
+		// 出ていなかったら更新しない
+		if (feelEffect[i].getUse() == false) { continue; }
 
-	// 回復エフェクト更新処理
-	cntFrame++;
-	if (cntFrame < settingFrame)
-	{
-		// 処理をつくる
-		feelEffectFade();
-	}
-	// 時間になったら終了
-	if (cntFrame == settingFrame)
-	{
-		isActive = false;
-		alphaColor = FEEL_EFFECT_ALPHA_MAX;
-		cntFrame = 0;
+		// 時間をフレームに合わせる
+		feelEffect[i].time += frameTime;
+
+		// エフェクト位置更新
+		feelEffect[i].setPosition(*feelEffect[i].getPosition() + *feelEffect[i].getSpeed());
+
+		// 時間になったら終了
+		if (feelEffect[i].time >= 0.2)
+		{
+			feelEffect[i].setUse(false);
+			numOfUse--;
+			feel = false;
+		}
 	}
 }
 //=============================================================================
 // 描画処理
 //=============================================================================
-void FeelEffect::render(LPDIRECT3DDEVICE9 device)
+void FeelEffect::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
-	// 使用していなかったら戻る
-	if (!isActive) return;
-
-	// 回復エフェクト描画
-	feelEffect.render(device);
-}
-//=============================================================================
-// フェードアウト処理
-//=============================================================================
-void FeelEffect::feelEffectFade(void)
-{
-	// アルファ減算
-	alphaColor -= FEEL_EFFECT_SUB_TIME;
-
-	// アルファが0になったら元に戻す
-	if (alphaColor <= 0)
+	// 使用中のエフェクトをインスタンシング描画に流す
+	renderList = new D3DXVECTOR3[numOfUse];
+	for (int i = 0; i < numOfUse; i++)
 	{
-		alphaColor = FEEL_EFFECT_ALPHA_MAX;
-		isActive = false;
-	}
+		if (feelEffect[i].getUse() == false) { continue; }
 
-	// エフェクト位置設定
-	feelEffect.setAlpha(alphaColor);
+		renderList[i] = *feelEffect[i].getPosition();
+	}
+	instancingProcedure.setNumOfRender(device, numOfUse, renderList);
+	SAFE_DELETE_ARRAY(renderList)
+
+		// インスタンシング描画
+		instancingProcedure.render(device, view, projection, cameraPosition);
+}
+//==================================================================
+// エフェクトを発生させる
+//========================================================================================
+void FeelEffect::generateFeelEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec)
+{
+	// エフェクトカウント初期化
+	int cnt = 0;
+
+	for (int i = 0; i < FEEL_EFFECT; i++)
+	{
+		// エフェクトが使用されていたら入らない
+		if (feelEffect[i].getUse()) { continue; }
+
+		if (cnt < num)
+		{
+			// ランダムのベクトル作成
+			D3DXVECTOR3 randVec((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50));
+			// 外積ベクトル作成
+			D3DXVECTOR3 crossVec(0.0, 0.0, 0.0);
+			// 結果ベクトル作成
+			D3DXVECTOR3 resultVec(0.0, 0.0, 0.0);
+			// 外積計算
+			D3DXVec3Cross(&crossVec, &effectVec, &randVec);
+			D3DXVec3Normalize(&crossVec, &crossVec);//正規化
+			// 結果計算
+			resultVec = effectVec + crossVec * 0.8;
+			D3DXVec3Normalize(&resultVec, &resultVec);//正規化
+			// 生存時間初期化
+			feelEffect[i].time = 0.0;
+			// エフェクト位置設定
+			feelEffect[i].setPosition(positionToGenerate - (effectVec * 8));
+			// エフェクトスピード設定
+			feelEffect[i].setSpeed(resultVec*((float)(rand() % 20) / 10.0f));
+			D3DXMatrixIdentity(feelEffect[i].getMatrixWorld());
+			// 使用へ
+			feelEffect[i].setUse(true);
+			// 使用中エフェクトカウント加算
+			numOfUse++;
+		}
+		// エフェクトカウント加算
+		cnt++;
+	}
 }

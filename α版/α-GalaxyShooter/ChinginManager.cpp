@@ -70,7 +70,7 @@ void ChinginManager::update(Sound* _sound, float frameTime)
 		{
 
 			// 賃金エフェクト発生
-			chinginEffect.generateChinginEffect(1, *chingin[i]->getTarget()->getPosition(), chingin[i]->getTarget()->upVec());
+			chinginEffect.generateChinginEffect(2, *chingin[i]->getTarget()->getPosition(), chingin[i]->getTarget()->upVec());
 
 			// サウンドの再生
 			_sound->play(soundNS::TYPE::SE_CHINGIN, soundNS::METHOD::PLAY);

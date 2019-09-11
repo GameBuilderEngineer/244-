@@ -259,9 +259,6 @@
     <Filter Include="UI\ScreenSplitLine">
       <UniqueIdentifier>{74e015f2-f332-4d6d-930e-bbc3e81934a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect\Dew">
-      <UniqueIdentifier>{12c4f031-ca9f-444b-968c-23863067a784}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Effect\BulletEffect">
       <UniqueIdentifier>{b2456d65-1ed9-4837-a9d8-43c7048ff7f3}</UniqueIdentifier>
     </Filter>
@@ -579,9 +576,6 @@
     <ClCompile Include="InstancingBillboard.cpp">
       <Filter>Billboard</Filter>
     </ClCompile>
-    <ClCompile Include="EffectDew.cpp">
-      <Filter>Effect\Dew</Filter>
-    </ClCompile>
     <ClCompile Include="playerK.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Fader.cpp">
@@ -896,9 +890,6 @@
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectDew.h">
-      <Filter>Effect\Dew</Filter>
     </ClInclude>
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>

@@ -15,10 +15,18 @@
 class Tutorial2D :public Sprite
 {
 private:
+
+	Sprite tuto2;
+	Sprite tuto3;
+	Sprite tuto4;
+
 	// Data
 	int playerNumber;								// プレイヤー番号
 	static int cntUI;								// インスタンスの数を数える
-	static LPDIRECT3DTEXTURE9 textureTutorial2D;	// テクスチャ
+	static LPDIRECT3DTEXTURE9 textureTutorial2D;	// テクスチャ1
+	static LPDIRECT3DTEXTURE9 textureTutorial2D2;	// テクスチャ2
+	static LPDIRECT3DTEXTURE9 textureTutorial2D3;	// テクスチャ3
+	static LPDIRECT3DTEXTURE9 textureTutorial2D4;	// テクスチャ4
 
 public:
 	Tutorial2D(void);
@@ -27,5 +35,7 @@ public:
 	void uninitialize(void);
 	void update(void);
 	void render(LPDIRECT3DDEVICE9 device);
+	int next;
+
 };
 

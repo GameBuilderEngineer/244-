@@ -88,9 +88,6 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	plane.createPositionSpherical(_direct3D9->device, 3000, 250.0f);
 	plane.initialize(_direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
-	// エフェクト初期化
-	effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-
 	// プレイヤーの初期化
 	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
 	player[PLAYER_TYPE::PLAYER_1].setPosition(D3DXVECTOR3(-20.0f, 100.0f, 25.0f));
@@ -135,15 +132,6 @@ void Title::update(float _frameTime)
 		sound->play(soundNS::TYPE::SE_DECISION, soundNS::METHOD::PLAY);
 		updateInput();
 	}
-
-	// エフェクトの更新
-	effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
-	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
-
-	if (input->isKeyDown('E'))
-	{
-		effectDewManager.generateEffect(100, temp2);
-	};
 
 	return;
 }
@@ -200,9 +188,6 @@ void Title::render(Direct3D9* _direct3D9)
 
 	// 2D
 	render2D(_direct3D9->device);
-
-	// エフェクトの描画
-	effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
 
 	return;
 }

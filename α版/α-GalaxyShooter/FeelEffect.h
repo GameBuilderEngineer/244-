@@ -1,34 +1,35 @@
-//=============================================================================
+//-----------------------------------------------------------------------------
 // 回復エフェクトヘッダー [FeelEffect.h]
-// 制作者 飯塚春輝
-//=============================================================================
+// 製作者 飯塚春輝
+//-----------------------------------------------------------------------------
 #pragma once
-#include "ScreenEffectBase.h"
-#include "Sprite.h"
+#include "Base.h"
+#include "InstancingEffect.h"
 #include "TextureLoader.h"
-//*****************************************************************************
-// マクロ定義
-//*****************************************************************************
-#define FEEL_EFFECT_COLOR		(D3DCOLOR_RGBA(255, 255, 255, alphaColor))		// エフェクトの色
-#define FEEL_EFFECT_ALPHA_MAX	(255)											// エフェクト最大アルファ値
-#define FEEL_EFFECT_SUB_TIME	(10)											// エフェクトの減算スピード
-//*****************************************************************************
-// クラス定義
-//*****************************************************************************
-class FeelEffect :public ScreenEffectBase
+#include "BoundingSphere.h"
+#include "EffectManager.h"
+
+static const int FEEL_EFFECT = 200;	// 同時に表示するうえで妥当そうな数
+
+//--------------------
+// 回復エフェクトクラス
+//--------------------
+class FeelEffect :public EffectManager
 {
 private:
-	int playerNumber;									// プレイヤー番号
-	static int cntEffect;								// エフェクト個数
-	static LPDIRECT3DTEXTURE9 textureFeelEffect;		// テクスチャ
-	Sprite feelEffect;
-public:
-	FeelEffect();
-	~FeelEffect();
+	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
+	EffectIns feelEffect[FEEL_EFFECT];			// エフェクト配列
+	int numOfUse;							// 使用中の数
+	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
+	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 
-	HRESULT initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, TextureLoader*textureLoader);
-	void uninitialize();
-	void update();
-	void render(LPDIRECT3DDEVICE9 device);
-	void feelEffectFade(); // エフェクト消滅処理
+public:
+	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
+	virtual void update(float frameTime);
+	virtual void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
+
+	// 回復エフェクトを発生させる
+	void generateFeelEffect(int num, D3DXVECTOR3 positionToGenerate, D3DXVECTOR3 effectVec);
+	bool feel;
 };
+

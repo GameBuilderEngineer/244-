@@ -15,6 +15,9 @@ const static float		POSITION_Y = ((WINDOW_HEIGHT / 2) - 10.0f);	// ƒ`ƒ…[ƒgƒŠƒAƒ
 //*****************************************************************************
 int Tutorial2D::cntUI = -1;
 LPDIRECT3DTEXTURE9 Tutorial2D::textureTutorial2D = NULL;			// ƒ`ƒ…[ƒgƒŠƒAƒ‹2DƒeƒNƒXƒ`ƒƒ
+LPDIRECT3DTEXTURE9 Tutorial2D::textureTutorial2D2 = NULL;			// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D2ƒeƒNƒXƒ`ƒƒ
+LPDIRECT3DTEXTURE9 Tutorial2D::textureTutorial2D3 = NULL;			// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D3ƒeƒNƒXƒ`ƒƒ
+LPDIRECT3DTEXTURE9 Tutorial2D::textureTutorial2D4 = NULL;			// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D4ƒeƒNƒXƒ`ƒƒ
 //=============================================================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //=============================================================================
@@ -40,10 +43,49 @@ HRESULT Tutorial2D::initialize(LPDIRECT3DDEVICE9 device, int _playerNumber, Text
 	setVisualDirectory();
 
 	textureTutorial2D = *textureLoader->getTexture(textureLoaderNS::TUTORIAL);
+	textureTutorial2D2 = *textureLoader->getTexture(textureLoaderNS::TUTORIAL2);
+	textureTutorial2D3 = *textureLoader->getTexture(textureLoaderNS::TUTORIAL3);
+	textureTutorial2D4 = *textureLoader->getTexture(textureLoaderNS::TUTORIAL4);
+
+	// ƒ`ƒ…[ƒgƒŠƒAƒ‹‚Ìƒy[ƒW
+	next = 0;
 
 	// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D‰Šú‰»
 	Sprite::initialize(device,
 		textureTutorial2D,							// ƒeƒNƒXƒ`ƒƒ
+		spriteNS::CENTER,							// Œ´“_
+		WIDTH,										// ‰¡•
+		HEIGHT,										// ‚‚³
+		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// À•W
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// ‰ñ“]
+		TUTORIAL2D_COLOR							// F
+	);
+
+	// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D2‰Šú‰»
+	tuto2.initialize(device,
+		textureTutorial2D2,							// ƒeƒNƒXƒ`ƒƒ
+		spriteNS::CENTER,							// Œ´“_
+		WIDTH,										// ‰¡•
+		HEIGHT,										// ‚‚³
+		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// À•W
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// ‰ñ“]
+		TUTORIAL2D_COLOR							// F
+	);
+
+	// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D3‰Šú‰»
+	tuto3.initialize(device,
+		textureTutorial2D3,							// ƒeƒNƒXƒ`ƒƒ
+		spriteNS::CENTER,							// Œ´“_
+		WIDTH,										// ‰¡•
+		HEIGHT,										// ‚‚³
+		D3DXVECTOR3(POSITION_X, POSITION_Y, 0.0f),	// À•W
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// ‰ñ“]
+		TUTORIAL2D_COLOR							// F
+	);
+
+	// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D4‰Šú‰»
+	tuto4.initialize(device,
+		textureTutorial2D4,							// ƒeƒNƒXƒ`ƒƒ
 		spriteNS::CENTER,							// Œ´“_
 		WIDTH,										// ‰¡•
 		HEIGHT,										// ‚‚³
@@ -65,12 +107,36 @@ void Tutorial2D::uninitialize(void)
 //=============================================================================
 void Tutorial2D::update(void)
 {
+
 }
 //=============================================================================
 // •`‰æˆ—
 //=============================================================================
 void Tutorial2D::render(LPDIRECT3DDEVICE9 device)
 {
-	// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D•`‰æ
-	Sprite::render(device);
+	switch (next)
+	{
+	case 0:
+		// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D•`‰æ
+		Sprite::render(device);
+
+		break;
+	case 1:
+		// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D2•`‰æ
+		tuto2.render(device);
+
+		break;
+	case 2:
+		// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D4•`‰æ
+		tuto4.render(device);
+
+		break;
+	case 3:
+		// ƒ`ƒ…[ƒgƒŠƒAƒ‹2D3•`‰æ
+		tuto3.render(device);
+
+		break;
+
+	}
+
 }

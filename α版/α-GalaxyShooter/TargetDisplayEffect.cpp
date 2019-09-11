@@ -80,6 +80,7 @@ void TargetDisplayEffect::update(void)
 //=============================================================================
 void TargetDisplayEffect::render(LPDIRECT3DDEVICE9 device)
 {
+	//device->SetRenderState(D3DRS_LIGHTING, false);
 	image.render(device);
 }
 //=============================================================================

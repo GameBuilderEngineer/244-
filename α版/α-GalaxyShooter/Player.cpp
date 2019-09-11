@@ -98,11 +98,8 @@ void Player::initialize(int playerType,int modelType, LPDIRECT3DDEVICE9 _device,
 		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		// 回復エフェクト
-		feelEffect[i].initialize(device, i, textureLoader);
-	}
+	// 回復エフェクト初期化
+	feelEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	//メモリーラインの初期化
 	memoryLine.initialize(device, memoryPile, NUM_MEMORY_PILE, this,
@@ -246,10 +243,7 @@ void Player::update(float frameTime)
 	//===========
 	//【回復エフェクトの更新】
 	//===========
-	for (int i = 0; i < NUM_PLAYER; i++)
-	{
-		feelEffect[i].update();
-	}
+	feelEffect.update(frameTime);
 }
 
 //===================================================================================================================================
@@ -314,9 +308,11 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 
 	}
 
-	for (int i = 0; i < NUM_PLAYER; i++)
+	feelEffect.render(device, view, projection, cameraPosition);
+
+	if (feelEffect.feel)
 	{
-		feelEffect[i].render(device);
+		feelEffect.generateFeelEffect(200, position, upVec());
 	}
 	//デバッグ時描画
 #ifdef _DEBUG
@@ -628,7 +624,7 @@ void Player::changeRevival()
 	changeState(GROUND);
 	triggerShockWave();//衝撃波を発生させる
 
-	//feelEffect[type].activate(5);
+	feelEffect.feel = true;
 }
 //===================================================================================================================================
 //【復活時 更新処理】

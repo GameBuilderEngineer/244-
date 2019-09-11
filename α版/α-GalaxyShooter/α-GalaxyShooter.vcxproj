@@ -156,7 +156,6 @@
     <ClCompile Include="DirectInputController.cpp" />
     <ClCompile Include="Director.cpp" />
     <ClCompile Include="DownEffect.cpp" />
-    <ClCompile Include="EffectDew.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="EnvironmentAnalysis.cpp" />
@@ -266,7 +265,6 @@
     <ClInclude Include="DirectInputController.h" />
     <ClInclude Include="Director.h" />
     <ClInclude Include="DownEffect.h" />
-    <ClInclude Include="EffectDew.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EnvironmentAnalysis.h" />
     <ClInclude Include="Fader.h" />
