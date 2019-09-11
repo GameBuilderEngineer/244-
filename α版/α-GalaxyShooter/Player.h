@@ -199,7 +199,6 @@ protected:
 	int elementMemoryPile;								//メモリーパイル要素数
 	bool onRecursion;									//リカージョン生成フラグ
 	float recursionTimer;								//リカージョン生存時間
-	LineEffect lineEffect;								//ラインエフェクト
 
 	//衝撃波
 	ShockWave* shockWave[playerNS::NUM_SHOCK_WAVE];		//衝撃波

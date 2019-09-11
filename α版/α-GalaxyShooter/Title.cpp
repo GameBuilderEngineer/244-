@@ -241,7 +241,6 @@ void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 	//	*shaderLoader->getEffect(shaderNS::TOON),
 	//	*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
 	//	*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-}
 
 	return;
 }

@@ -64,11 +64,6 @@ TextureLoader::TextureLoader()
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
 	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };
 	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
-	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
-	textureName[EFFECT_FEEL] = { "feelEffect.png" };
-	textureName[LINE_EFFECT] = { "LineEffect.png" };
-	textureName[CHINGIN_EFFECT] = { "chingineffe.png" };
-
 	textureName[UI_REVIVAL_CONCENTRATION] = { "Game_Revival_Concentration.png" };
 	textureName[UI_REVIVAL_TONE] = { "Game_Revival_Tone.png" };
 	textureName[PAUSE] = { "Pause.png" };
@@ -76,6 +71,15 @@ TextureLoader::TextureLoader()
 	textureName[SHOCKWAVE] = { "Game_Shockwave.jpg" };
 	textureName[BACKGROUND_STAR] = { "Game_BackGround_Star.jpg" };
 	textureName[BACKGROUND_DUST] = { "Game_BackGround_Dust.png" };
+
+	//effect
+	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
+	textureName[EFFECT_FEEL] = { "feelEffect.png" };
+	textureName[CHINGIN_EFFECT] = { "chingineffe.png" };
+	textureName[BULLET_EFFECT] = { "bakuha.png" };
+	textureName[DOWN_EFFECT] = { "Down.png" };
+	textureName[UP_EFFECT] = { "UP.png" };
+	textureName[LINE_EFFECT] = { "LineEffect.png" };
 
 	// Result
 	textureName[RESULT_WINDOW] = { "Result_Window.png" };
@@ -92,11 +96,8 @@ TextureLoader::TextureLoader()
 	textureName[TOON_SHADE] = { "Shade.bmp" };
 	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
 	textureName[LIGHT_001] = { "Light_001.png" };
-	textureName[BULLET_EFFECT] = { "bakuha.png" };
-	textureName[DOWN_EFFECT] = { "Down.png" };
-	textureName[UP_EFFECT] = { "UP.png" };
-
 	textureName[TARGET] = { "stencil.png" };
+
 }
 
 TextureLoader::~TextureLoader()

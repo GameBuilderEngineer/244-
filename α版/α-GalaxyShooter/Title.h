@@ -31,6 +31,16 @@ namespace titleNS
 		D3DXVECTOR3(-8.0f, 101.0f, 33.0f),
 		D3DXVECTOR3(-15.0f, 95.0f, 30.0f)
 	};
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[NUM_PLAYER] =
+	{
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
+#ifdef _DEBUG
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
+#else
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
+#endif // _DEBUG
+	};
+
 }
 //============================================================================================================================================
 // Class

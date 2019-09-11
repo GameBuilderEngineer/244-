@@ -125,9 +125,6 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	// アップエフェクト初期化
 	upEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
-	// ラインエフェクト初期化
-	//lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
-
 	// アニメーション
 	animationPlayer.initialize(_device, playerType, modelType);
 
