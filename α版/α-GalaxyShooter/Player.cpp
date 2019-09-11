@@ -263,7 +263,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
 	animationPlayer.render(device, matrixWorld, staticMeshLoader);
 	// 他のオブジェクトの描画
-	otherRender(device,view,projection,cameraPosition);
+	//otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【通常描画】
@@ -273,7 +273,7 @@ void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projec
 	//Object::render(device,view,projection, cameraPosition);
 	animationPlayer.render(device, matrixWorld, staticMeshLoader);
 	//他のオブジェクトの描画
-	otherRender(device,view,projection,cameraPosition);
+	//otherRender(device,view,projection,cameraPosition);
 }
 //======================
 //【本体以外の他のオブジェクト描画】

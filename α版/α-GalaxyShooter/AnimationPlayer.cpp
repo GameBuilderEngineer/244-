@@ -1034,6 +1034,9 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixWorld,
 {
 	D3DMATERIAL9 materialDefault;	//	マテリアル
 
+	// ライティングモードを設定
+	_device->SetRenderState(D3DRS_LIGHTING, true);
+
 	// ワールドマトリクスの設定
 	_device->SetTransform(D3DTS_WORLD, &_matrixWorld);
 
@@ -1045,9 +1048,6 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixWorld,
 
 	// マテリアルを戻す
 	_device->SetMaterial(&materialDefault);
-
-	// ライティングモードを設定
-	_device->SetRenderState(D3DRS_LIGHTING, false);
 
 	return;
 }
