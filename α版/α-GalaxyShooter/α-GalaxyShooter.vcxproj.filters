@@ -280,6 +280,9 @@
     <Filter Include="Effect\FeelEffect">
       <UniqueIdentifier>{2f6c9e2b-e708-48b7-98fc-6af91a0dd64a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Effect\SceneEffect">
+      <UniqueIdentifier>{44e97192-75fa-4c20-87e3-59d66dcab4e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -599,6 +602,9 @@
     <ClCompile Include="FeelEffect.cpp">
       <Filter>Effect\FeelEffect</Filter>
     </ClCompile>
+    <ClCompile Include="SceneEffect.cpp">
+      <Filter>Effect\SceneEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -900,6 +906,9 @@
     </ClInclude>
     <ClInclude Include="FeelEffect.h">
       <Filter>Effect\FeelEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEffect.h">
+      <Filter>Effect\SceneEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,8 @@
 #pragma once
 #include "AbstractScene.h"
 #include "UITitle.h"
+#include "SceneEffect.h"
+
 //============================================================================================================================================
 // NameSpace
 // 名前空間
@@ -20,6 +22,8 @@ namespace titleNS
 		PLAYER_2,
 		PLAYER_TYPE_MAX
 	};
+	
+	static const float EFFECT_MAX = 1500;	// エフェクト上限
 
 	// プレイヤー座標
 	const D3DXVECTOR3 PLAYER_POSITION[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
@@ -42,6 +46,7 @@ class Title : public AbstractScene
 {
 private:
 	Player player[titleNS::PLAYER_TYPE::PLAYER_TYPE_MAX];	//	プレイヤー
+	SceneEffect sceneEffect;								//	シーンエフェクト
 	UITitle uiTitle;										//	タイトルUI
 	InstancingBillboard plane;								//	インスタンシングビルボード
 public:

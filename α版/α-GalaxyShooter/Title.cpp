@@ -92,6 +92,9 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	player[PLAYER_TYPE::PLAYER_1].initialize(playerNS::TITLE_PLAYER, gameMaster->getPlayerInfomation()[PLAYER_TYPE::PLAYER_1].modelType, _direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
 	player[PLAYER_TYPE::PLAYER_1].setPosition(D3DXVECTOR3(-20.0f, 100.0f, 25.0f));
 
+	// シーンエフェクト初期化
+	sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+
 	return;
 }
 //============================================================================================================================================
@@ -133,6 +136,14 @@ void Title::update(float _frameTime)
 		updateInput();
 	}
 
+	// シーンエフェクトの更新
+	sceneEffect.update(_frameTime);
+
+	for (int i = 0; i < EFFECT_MAX; i++)
+	{
+		// シーンエフェクト発生
+		sceneEffect.generateSceneEffect(1, D3DXVECTOR3((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
+	}
 	return;
 }
 //============================================================================================================================================
@@ -186,6 +197,13 @@ void Title::render(Direct3D9* _direct3D9)
 	// 3D
 	render3D(_direct3D9, camera[0]);
 
+	// αブレンドをつかう
+	_direct3D9->device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
 	// 2D
 	render2D(_direct3D9->device);
 
@@ -197,8 +215,11 @@ void Title::render(Direct3D9* _direct3D9)
 //============================================================================================================================================
 void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 {
-	// プレーン( インスタンシング )
-	plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	// シーンエフェクトの描画
+	sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+
+	//// プレーン( インスタンシング )
+	//plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
 	player[0].toonRender

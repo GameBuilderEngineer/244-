@@ -194,6 +194,7 @@
     <ClCompile Include="RecursionRecognition.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="RuleNode.cpp" />
+    <ClCompile Include="SceneEffect.cpp" />
     <ClCompile Include="ScreenEffectBase.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Sensor.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="RecursionRecognition.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="RuleNode.h" />
+    <ClInclude Include="SceneEffect.h" />
     <ClInclude Include="ScreenEffectBase.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Sensor.h" />
