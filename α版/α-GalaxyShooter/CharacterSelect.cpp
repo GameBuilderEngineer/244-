@@ -94,8 +94,6 @@ void CharacterSelect::uninitialize(void)
 //============================================================================================================================================
 void CharacterSelect::update(float _frameTime)
 {
-	//gameMaster->update(_frameTime);
-
 	// ƒJƒƒ‰XV
 	camera->update();
 
@@ -189,7 +187,7 @@ void CharacterSelect::updateTime(float _frameTime)
 	selectTime -= _frameTime;
 
 	// ŠÔ§ŒÀ
-	if (selectTime <= 0.5f)
+	if (selectTime <= 0.0f)
 	{
 		// ‘JˆÚ
 		changeScene(nextScene);

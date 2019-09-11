@@ -42,7 +42,9 @@ AnimationPlayer::~AnimationPlayer(void)
 //============================================================================================================================================
 HRESULT AnimationPlayer::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, int _modelType)
 {
+	// 変数に代入
 	playerIndex = _playerIndex;
+	modelType = _modelType;
 
 	// キーテーブルの設定
 	switch (_playerIndex)
@@ -85,20 +87,18 @@ HRESULT AnimationPlayer::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex,
 	// ディレクトリ設定
 	setVisualDirectory();
 
-	//// Xファイルを読み込む
-	//switch (_modelType)
-	//{
-	//case MODEL_TYPE::ADAM:
-	//	loadXFile(_device, animation, ("Character_Adam.x"));
-	//	break;
-	//case MODEL_TYPE::EVE:
-	//	loadXFile(_device, animation, ("Character_Eve.x"));
-	//	break;
-	//default:
-	//	break;
-	//}
-
-	loadXFile(_device, animation, ("Character_Adam.x"));
+	// Xファイルを読み込む
+	switch (_modelType)
+	{
+	case MODEL_TYPE::ADAM:
+		loadXFile(_device, animation, ("Character_Adam.x"));
+		break;
+	case MODEL_TYPE::EVE:
+		loadXFile(_device, animation, ("Character_Eve.x"));
+		break;
+	default:
+		break;
+	}
 
 	// アニメーションコールバックの設定
 	setCallBackKeyFrame(animation, animationSetName[animationNS::TYPE::JUMP]);
@@ -1034,6 +1034,14 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixWorld,
 {
 	D3DMATERIAL9 materialDefault;	//	マテリアル
 
+	// モデルタイプでカリング設定の切り替え
+	switch (modelType)
+	{
+	case MODEL_TYPE::ADAM: _device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); break;
+	case MODEL_TYPE::EVE: _device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW); break;
+	default: break;
+	}
+
 	// ワールドマトリクスの設定
 	_device->SetTransform(D3DTS_WORLD, &_matrixWorld);
 
@@ -1048,6 +1056,7 @@ void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixWorld,
 
 	// ライティングモードを設定
 	_device->SetRenderState(D3DRS_LIGHTING, false);
+	_device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	return;
 }
@@ -1062,19 +1071,19 @@ void AnimationPlayer::setAnimationConfiguration(int _scene)
 	case SCENE_TYPE::TITLE:
 	case SCENE_TYPE::CHARACTER_SELECT:
 		animationID.current = animationNS::TYPE::IDLE_GENERAL;
-		animationID.next = animationNS::TYPE::IDLE_GENERAL;
+		//animationID.next = animationNS::TYPE::IDLE_GENERAL;
 		animation->switching(animation, animationNS::TYPE::IDLE_GENERAL);
 		animation->flag.animationOn = true;
 		animation->flag.animationPlayEnd = false;
-		animation->update(animation, animationNS::TIME_PER_FRAME);
+		//animation->update(animation, animationNS::TIME_PER_FRAME);
 		break;
 	case SCENE_TYPE::GAME:
 		animationID.current = animationNS::TYPE::IDLE;
-		animationID.next = animationNS::TYPE::IDLE;
+		//animationID.next = animationNS::TYPE::IDLE;
 		animation->switching(animation, animationNS::TYPE::IDLE);
 		animation->flag.animationOn = true;
 		animation->flag.animationPlayEnd = false;
-		animation->update(animation, animationNS::TIME_PER_FRAME);
+		//animation->update(animation, animationNS::TIME_PER_FRAME);
 		break;
 	default:
 		break;

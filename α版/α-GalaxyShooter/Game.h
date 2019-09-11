@@ -26,7 +26,6 @@
 #include "HpEffect.h"
 #include "TargetDisplayEffect.h"
 #include "UIPause.h"
-#include "UIRecursion.h"
 #include "UIPlayTime.h"
 #include "UIChingin.h"
 #include "Map.h"
@@ -37,6 +36,7 @@
 #include "UICutMemoryLine.h"
 #include "EffectManager.h"
 #include "Lambert.h"
+#include "UICountDown.h"
 
 #define JUNK_MAX (100) //ÉKÉâÉNÉ^ÇÃêî
 
@@ -94,12 +94,12 @@ private:
 	Text text;
 	Text text2;
 
-	//UIRecursion uiRecursion[gameNS::NUM_PLAYER];
 	UIPlayTime uiPlayTime[gameNS::NUM_PLAYER];
 	UIChingin uiChingin[gameNS::NUM_PLAYER];
 	UICutMemoryLine uiCutMemoryLine[gameNS::NUM_PLAYER];
 	UIRevival uiRevival[gameNS::NUM_PLAYER];
 	UIScreenSplitLine uiScreenSplitLine;
+	UICountDown uiCountDown[gameNS::NUM_PLAYER];
 
 	Colony colony[gameNS::NUM_COLONY];
 	Junk junk[JUNK_MAX];

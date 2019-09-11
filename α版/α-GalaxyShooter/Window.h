@@ -7,6 +7,7 @@
 #pragma once
 #include "Base.h"
 #include "Input.h"
+#include "Icon.h"
 
 #define GetMonitorRect(rc) SystemParametersInfo(SPI_GETWORKAREA,0,rc,0)	//	モニター矩形
 

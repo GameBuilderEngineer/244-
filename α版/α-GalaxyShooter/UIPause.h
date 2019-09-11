@@ -14,8 +14,8 @@
 //============================================================================================================================================
 namespace uiPauseNS
 {
-	const int WIDTH = (3840 / 2);					//	ポーズ横サイズ
-	const int HEIGHT = (2160 / 2);					//	ポーズ縦サイズ
+	const int WIDTH = (1938);						//	ポーズ横サイズ
+	const int HEIGHT = (198);						//	ポーズ縦サイズ
 	const float POSITION_X = (WINDOW_WIDTH / 2);	//	ポーズX座標
 	const float POSITION_Y = (WINDOW_HEIGHT / 2);	//	ポーズY座標
 }

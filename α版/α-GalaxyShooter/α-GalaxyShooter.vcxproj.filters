@@ -277,6 +277,12 @@
     <Filter Include="Fader">
       <UniqueIdentifier>{8cd57046-37aa-4c3a-baac-7e395309381e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Game\CountDown">
+      <UniqueIdentifier>{cac551ca-73ab-496b-bc99-c0c03996ab1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Icon">
+      <UniqueIdentifier>{7f18db98-9158-4690-9c2d-57a5a9b47cc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -576,7 +582,6 @@
     <ClCompile Include="EffectDew.cpp">
       <Filter>Effect\Dew</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Fader.cpp">
       <Filter>Fader</Filter>
     </ClCompile>
@@ -594,6 +599,12 @@
     </ClCompile>
     <ClCompile Include="AnimationPlayer.cpp">
       <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="UICountDown.cpp">
+      <Filter>UI\Game\CountDown</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -849,11 +860,9 @@
     <ClInclude Include="InstancingEffect.h">
       <Filter>Effect\InstancingEffect</Filter>
     </ClInclude>
-    <ClInclude Include="InstancingBillboard.h" />
     <ClInclude Include="RecursionRecognition.h">
       <Filter>AI\RecursionRecognition</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Fader.h">
       <Filter>Fader</Filter>
     </ClInclude>
@@ -895,6 +904,18 @@
     </ClInclude>
     <ClInclude Include="AnimationPlayer.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="UICountDown.h">
+      <Filter>UI\Game\CountDown</Filter>
+    </ClInclude>
+    <ClInclude Include="Icon.h">
+      <Filter>Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingBillboard.h">
+      <Filter>Billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -999,5 +1020,13 @@
     <Image Include="..\..\..\..\..\..\OneDrive\デスクトップ\effect2.png">
       <Filter>02 Visual File</Filter>
     </Image>
+    <Image Include="Icon.ico">
+      <Filter>Icon</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Icon.rc">
+      <Filter>Icon</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -14,8 +14,8 @@
 //============================================================================================================================================
 namespace uiCutMemoryLineNS
 {
-	const int WIDTH = (1306 / 2);													//	ïù
-	const int HEIGHT = (320 / 2);													//	çÇÇ≥
+	const int WIDTH = (653);														//	ïù
+	const int HEIGHT = (160);														//	çÇÇ≥
 	const float POSITION_X_PLAYER_1 = (WINDOW_WIDTH / 4);							//	ç¿ïW x ( Player1 )
 	const float POSITION_X_PLAYER_2 = (POSITION_X_PLAYER_1 + (WINDOW_WIDTH / 2));	//	ç¿ïW x ( Player2 )
 	const float POSITION_Y = (WINDOW_HEIGHT / 4);									//	ç¿ïW y

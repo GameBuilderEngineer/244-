@@ -122,7 +122,7 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	lineEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// アニメーション
-	animationPlayer.initialize(_device, modelType, playerType);
+	animationPlayer.initialize(_device, playerType, modelType);
 
 	return;
 }

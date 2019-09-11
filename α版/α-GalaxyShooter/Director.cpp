@@ -104,9 +104,6 @@ HRESULT Director::initialize(){
 	textManager = new TextManager();
 	textManager->initialize(d3d->device);
 
-	//ゲーム管理クラス
-	gameMaster = new GameMaster();
-
 	// サウンド読み込み
 	setSoundDirectory();
 	sound = new Sound;
@@ -114,6 +111,9 @@ HRESULT Director::initialize(){
 
 	// サウンドの再生
 	sound->play(soundNS::TYPE::AGING, soundNS::METHOD::PLAY);
+
+	//ゲーム管理クラス
+	gameMaster = new GameMaster();
 
 	//scene
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
@@ -129,7 +129,7 @@ HRESULT Director::initialize(){
 	return S_OK;
 }
 
-void Director::run(HINSTANCE _instance){
+void Director::run(HINSTANCE _instance) {
 	char directory[512];
 	GetCurrentDirectory(sizeof(directory), directory);
 	initializeDirectory(directory);
@@ -180,7 +180,7 @@ void Director::mainLoop(){
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
 }
 
-void Director::update(){
+void Director::update() {
 	input->update(window->windowActivate);
 	if (input->wasKeyPressed(VK_F1))
 	{

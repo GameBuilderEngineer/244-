@@ -213,6 +213,7 @@
     <ClCompile Include="Tutorial2D.cpp" />
     <ClCompile Include="UICharacterSelect.cpp" />
     <ClCompile Include="UIChingin.cpp" />
+    <ClCompile Include="UICountDown.cpp" />
     <ClCompile Include="UICutMemoryLine.cpp" />
     <ClCompile Include="UIPause.cpp" />
     <ClCompile Include="UIPlayTime.cpp" />
@@ -272,6 +273,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="HpEffect.h" />
+    <ClInclude Include="Icon.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstancingChingin.h" />
     <ClInclude Include="InstancingEffect.h" />
@@ -320,6 +322,7 @@
     <ClInclude Include="Tutorial2D.h" />
     <ClInclude Include="UICharacterSelect.h" />
     <ClInclude Include="UIChingin.h" />
+    <ClInclude Include="UICountDown.h" />
     <ClInclude Include="UICutMemoryLine.h" />
     <ClInclude Include="UIPause.h" />
     <ClInclude Include="UIPlayTime.h" />
@@ -367,6 +370,10 @@
     <Image Include="02 Visual File\sTex.png" />
     <Image Include="02 Visual File\UVグリッド.png" />
     <Image Include="02 Visual File\WeaponUI.jpg" />
+    <Image Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Icon.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

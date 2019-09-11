@@ -105,7 +105,17 @@ void Game::initialize(
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
-		player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+
+		// テスト中
+		if (i == 0)
+		{
+			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::EVE, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		}
+		else if (i == 1)
+		{
+			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::ADAM, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		}
 		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
 		player[i]->setSound(sound);			//サウンドのセット
@@ -114,11 +124,11 @@ void Game::initialize(
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
-		//uiRecursion[i].initialize(direct3D9->device, i, _textureLoader, _input);
 		uiPlayTime[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiChingin[i].initialize(direct3D9->device, i, _textureLoader, _textManager);
 		uiCutMemoryLine[i].initialize(direct3D9->device, i, _textureLoader);
 		uiRevival[i].initialize(direct3D9->device, i, _textureLoader);
+		uiCountDown[i].initialize(direct3D9->device, i, _textureLoader);
 	}
 
 	//磁石の初期化
@@ -250,7 +260,7 @@ void Game::update(float _frameTime) {
 	//【処理落ち】
 	//フレーム時間が約10FPS時の時の時間より長い場合は、処理落ち（更新しない）
 	//※フレーム時間に準拠している処理が正常に機能しないため
-	//if (frameTime > 0.10)return;
+	if (frameTime > 0.10)return;
 
 	//【ゲームマスターの更新】
 	gameMaster->update(frameTime);
@@ -373,7 +383,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	 //フィールドの描画
 	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, false);
 
 
 	for (int i = 0; i < NUM_COLONY; i++)
@@ -381,7 +391,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, true);
 
 	////(仮)ガラクタの描画
 	//for (int i = 0; i < JUNK_MAX; i++)
@@ -426,7 +436,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	// マップノードの描画
 	map.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{
@@ -436,7 +446,7 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 		player[i]->otherRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
 
-	//direct3D9->device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	direct3D9->device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 #ifdef _DEBUG
 	Ray debugRay;
@@ -451,44 +461,44 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 #endif// USING_AI
 
 #endif
-	////ステンシル準備
-	//target.renderSetUp(direct3D9->device);
+	//ステンシル準備
+	target.renderSetUp(direct3D9->device);
 
-	//// 一般ステンシル
-	//target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{//プレイヤーの描画
-	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//		*shaderLoader->getEffect(shaderNS::TOON),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	//}
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
 
-	//// 一般ステンシル
-	//target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+	// 一般ステンシル
+	target.renderGeneral(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
 
-	//// フィールドの描画
-	//field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	// フィールドの描画
+	field.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
-	////ステンシルマスク
-	//target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
+	//ステンシルマスク
+	target.renderStencilMask(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_ALWAYS);
 
-	//for (int i = 0; i < NUM_PLAYER; i++)
-	//{//プレイヤーの描画
-	//	player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-	//		*shaderLoader->getEffect(shaderNS::TOON),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
-	//		*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
-	//}
+	for (int i = 0; i < NUM_PLAYER; i++)
+	{//プレイヤーの描画
+		player[i]->toonRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+			*shaderLoader->getEffect(shaderNS::TOON),
+			*textureLoader->getTexture(textureLoaderNS::TOON_SHADE),
+			*textureLoader->getTexture(textureLoaderNS::TOON_OUT_LINE));
+	}
 
-	//// ステンシル画像
-	//target.renderEffectImage(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
+	// ステンシル画像
+	target.renderEffectImage(direct3D9->device, 2, D3DCMPFUNC::D3DCMP_EQUAL);
 
-	//target.render(direct3D9->device);
+	target.render(direct3D9->device);
 
-	//// ステンシル終了
-	//target.renderStencilEnd(direct3D9->device);
+	// ステンシル終了
+	target.renderStencilEnd(direct3D9->device);
 
 }
 
@@ -689,14 +699,22 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (!gameMaster->whetherAlreadyStart())
 	{
-		//カウントダウン３…２…１…
+		////カウントダウン３…２…１…
 		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			uiCountDown[i].render(device, gameMaster->getCount());
+		}
 	}
 	else {
 		//スタート
-		if(gameMaster->displayStart())
-			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "START!!");
-		
+		if (gameMaster->displayStart())
+		{
+			for (int i = 0; i < NUM_PLAYER; i++)
+			{
+				uiCountDown[i].render(device, 0);
+			}
+		}
 	}
 
 	if(gameMaster->whetherCountFinish())

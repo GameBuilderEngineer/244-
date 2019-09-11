@@ -70,12 +70,6 @@ HRESULT UIRevival::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 		initializeSprite(_device, _playerIndex, i);
 	}
 
-	// スプライト初期化
-	for (int i = 0; i < TYPE::TYPE_MAX; i++)
-	{
-		initializeSprite(_device, _playerIndex, i);
-	}
-
 	return S_OK;
 }
 //============================================================================================================================================

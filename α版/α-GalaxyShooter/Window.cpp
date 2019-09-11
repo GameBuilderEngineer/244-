@@ -28,11 +28,11 @@ HRESULT Window::initialize(HINSTANCE instance, INT x, INT y, INT width, INT heig
 	wndClass.style = CS_HREDRAW | CS_VREDRAW;
 	wndClass.lpfnWndProc = wndProc;
 	wndClass.hInstance = instance;
-	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wndClass.hIcon = LoadIcon(instance, (LPCTSTR)IDI_ICON0);
 	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndClass.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);
+	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wndClass.lpszClassName = windowName;
-	wndClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+	wndClass.hIconSm = LoadIcon(instance, (LPCTSTR)IDI_ICON0);
 	RegisterClassEx(&wndClass);
 	//ウィンドウの作成
 	wnd = CreateWindow(windowName, windowName, WS_OVERLAPPEDWINDOW, 0, 0, width, height, 0, 0, instance, 0);

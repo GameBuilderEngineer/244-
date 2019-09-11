@@ -9,7 +9,6 @@
 
 namespace staticMeshNS {
 	enum MESH_NUMBER {
-		//CHARACTER_ADAM,
 		BULLET,
 		CUBE,
 		SAMPLE_HIERARCHY_MESH,

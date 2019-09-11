@@ -125,6 +125,7 @@ private:
 	Animation* animation;							//	アニメーション
 	AnimationID animationID;						//	アニメーションID
 	int playerIndex;								//	プレイヤーインデックス
+	int modelType;									//  モデルタイプ
 public:
 	AnimationPlayer(void);
 	~AnimationPlayer(void);

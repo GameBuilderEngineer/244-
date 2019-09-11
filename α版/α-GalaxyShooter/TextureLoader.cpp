@@ -26,8 +26,8 @@ TextureLoader::TextureLoader()
 	textureName[TITLE_OPERATION_BLACK] = { "Title_Operation_Black.png" };
 	textureName[TITLE_CREDIT_WHITE] = { "Title_Credit_White.png" };
 	textureName[TITLE_CREDIT_BLACK] = { "Title_Credit_Black.png" };
-	textureName[TITLE_EXIT_WHITE] = { "Title_Exit_White.png" };
-	textureName[TITLE_EXIT_BLACK] = { "Title_Exit_Black.png" };
+	textureName[TITLE_FINISH_WHITE] = { "Title_Finish_White.png" };
+	textureName[TITLE_FINISH_BLACK] = { "Title_Finish_Black.png" };
 
 	// Operation
 	textureName[OPERATION_GAMEPAD] = { "Operation_GamePad.png" };
@@ -52,29 +52,14 @@ TextureLoader::TextureLoader()
 	textureName[UI_CHARACTER_SELECT_READY_WAITING] = { "CharacterSelect_Ready_Waiting.png" };
 
 	// Game
-	textureName[UI_RECURSION_BICYCLE] = { "Game_Recursion_Bicycle.png" };
-	textureName[UI_RECURSION_BLACK_PHONE] = { "Game_Recursion_BlackPhone.png" };
-	textureName[UI_RECURSION_CHEWING_GUM] = { "Game_Recursion_ChewingGum.png" };
-	textureName[UI_RECURSION_FAN] = { "Game_Recursion_Fan.png" };
-	textureName[UI_RECURSION_KENDAMA] = { "Game_Recursion_Kendama.png" };
-	textureName[UI_RECURSION_NAWATOBI] = { "Game_Recursion_Nawatobi.png" };
-	textureName[UI_RECURSION_NINGEN] = { "Game_Recursion_Ningen.png" };
-	textureName[UI_RECURSION_RABBIT_DOLL] = { "Game_Recursion_RabbitDoll.png" };
-	textureName[UI_RECURSION_SOCCER_BALL] = { "Game_Recursion_SoccerBall.png" };
-	textureName[UI_RECURSION_TELEVISION] = { "Game_Recursion_Television.png" };
-	textureName[UI_RECURSION_XMAS_TREE] = { "Game_Recursion_XmasTree.png" };
+	textureName[UI_COUNT_DOWN_GO] = { "Game_CountDown_GO!.png" };
+	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
+	textureName[UI_COUNT_DOWN_TWO] = { "Game_CountDown_Two.png" };
+	textureName[UI_COUNT_DOWN_THREE] = { "Game_CountDown_Three.png" };
 	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
 	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };
 	textureName[UI_REVIVAL_GAUGE] = { "Game_Revival_Gauge.png" };
-	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
-
-	textureName[POSE] = { "Pause.png" };
-	textureName[BULLET_EFFECT] = { "bakuha.png" };
-	textureName[DOWN_EFFECT] = { "Down.png" };
-	textureName[UP_EFFECT] = { "UP.png" };
-	textureName[BULLET_SMOKE_EFFECT] = { "UP.png" };
-
 	textureName[UI_REVIVAL_CONCENTRATION] = { "Game_Revival_Concentration.png" };
 	textureName[UI_REVIVAL_TONE] = { "Game_Revival_Tone.png" };
 	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };
@@ -101,6 +86,10 @@ TextureLoader::TextureLoader()
 	textureName[UI_SCREEN_SPLIT_LINE] = { "Screen_Split_Line.png" };
 	textureName[LIGHT_001] = { "Light_001.png" };
 	textureName[TARGET] = { "Light_001.png" };
+	textureName[BULLET_EFFECT] = { "bakuha.png" };
+	textureName[DOWN_EFFECT] = { "Down.png" };
+	textureName[UP_EFFECT] = { "UP.png" };
+	textureName[BULLET_SMOKE_EFFECT] = { "UP.png" };
 }
 
 TextureLoader::~TextureLoader()
