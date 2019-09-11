@@ -700,11 +700,12 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (!gameMaster->whetherAlreadyStart())
 	{
 		////カウントダウン３…２…１…
-		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
 		}
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
 	}
 	else {
 		//スタート
@@ -712,21 +713,35 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			for (int i = 0; i < NUM_PLAYER; i++)
 			{
-				uiCountDown[i].render(device, 0);
+				uiCountDown[i].render(device, uiCountDownNS::TYPE::GO);
 			}
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
 		}
 	}
 
 	if(gameMaster->whetherCountFinish())
 	{
 		//カウントダウン３…２…１…
-		text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "%d", gameMaster->getCount());
+		for (int i = 0; i < NUM_PLAYER; i++)
+		{
+			uiCountDown[i].render(device, gameMaster->getCount());
+		}
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
 	}
 	if (gameMaster->whetherAlreadyFinish())
 	{
 		//フィニッシュ
-		if(gameMaster->displayFinish())
-			text.print(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2, "FINISH!!");
+		if (gameMaster->displayFinish())
+		{
+			for (int i = 0; i < NUM_PLAYER; i++)
+			{
+				uiCountDown[i].render(device, uiCountDownNS::TYPE::FINISH);
+			}
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+		}
 	}
 
 	// αテストを無効に

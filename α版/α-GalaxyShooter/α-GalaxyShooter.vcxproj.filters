@@ -283,6 +283,9 @@
     <Filter Include="Icon">
       <UniqueIdentifier>{7f18db98-9158-4690-9c2d-57a5a9b47cc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Gun">
+      <UniqueIdentifier>{f21f27b8-010e-41b2-b976-8e6ca53a635e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractScene.cpp">
@@ -606,6 +609,9 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Object\Gun</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h">
@@ -916,6 +922,9 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Object\Gun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -164,6 +164,7 @@
     <ClCompile Include="Fuzzy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMaster.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="HpEffect.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="InstancingChingin.cpp" />
@@ -272,6 +273,7 @@
     <ClInclude Include="Fuzzy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMaster.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="HpEffect.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="Input.h" />

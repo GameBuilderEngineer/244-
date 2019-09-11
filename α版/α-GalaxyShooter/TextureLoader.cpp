@@ -52,7 +52,8 @@ TextureLoader::TextureLoader()
 	textureName[UI_CHARACTER_SELECT_READY_WAITING] = { "CharacterSelect_Ready_Waiting.png" };
 
 	// Game
-	textureName[UI_COUNT_DOWN_GO] = { "Game_CountDown_GO!.png" };
+	textureName[UI_COUNT_DOWN_FINISH] = { "Game_CountDown_Finish.png" };
+	textureName[UI_COUNT_DOWN_GO] = { "Game_CountDown_Go.png" };
 	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
 	textureName[UI_COUNT_DOWN_TWO] = { "Game_CountDown_Two.png" };
 	textureName[UI_COUNT_DOWN_THREE] = { "Game_CountDown_Three.png" };
@@ -66,7 +67,7 @@ TextureLoader::TextureLoader()
 	textureName[EFFECT_REVIVAL] = { "Game_Revival_Effect.png" };
 	textureName[PAUSE] = { "Pause.png" };
 	textureName[RECURSION] = { "Game_Recursion.png" };
-	textureName[SHOCKWAVE] = { "Game_Shockwave.png" };
+	textureName[SHOCKWAVE] = { "Game_Shockwave.jpg" };
 	textureName[BACKGROUND_STAR] = { "Game_BackGround_Star.jpg" };
 	textureName[BACKGROUND_DUST] = { "Game_BackGround_Dust.png" };
 

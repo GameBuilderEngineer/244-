@@ -22,6 +22,7 @@ namespace uiCountDownNS
 
 	enum TYPE
 	{
+		FINISH = (-1),
 		GO,
 		ONE,
 		TWO,

@@ -57,7 +57,7 @@ HRESULT UICountDown::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 	setVisualDirectory();
 
 	// テクスチャローダーの復活UIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
-	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_COUNT_DOWN_GO;
+	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_COUNT_DOWN_FINISH;
 
 	// テクスチャ読み込み
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
@@ -82,6 +82,24 @@ void UICountDown::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 {
 	switch (_index)
 	{
+	case TYPE::FINISH:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			(WIDTH_COUNT_DOWN * 2),											//	横幅
+			(WIDTH_COUNT_DOWN * 2),											//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y,													//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
 	case TYPE::GO:
 		sprite[_index].initialize
 		(

@@ -530,9 +530,5 @@ HRESULT CallBackAnimation::HandleCallback(UINT Track, LPVOID pCallbackData)
 
 	animation->keyFrameCount++;
 
-
-
-
-
 	return D3D_OK;
 }

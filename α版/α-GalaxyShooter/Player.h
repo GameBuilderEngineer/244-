@@ -20,6 +20,7 @@
 #include "UpEffect.h"
 #include "LineEffect.h"
 #include "AnimationPlayer.h"
+#include "Gun.h"
 
 namespace playerNS{
 
@@ -167,7 +168,9 @@ protected:
 	float reverseValueXAxis;							//操作X軸
 	float reverseValueYAxis;							//操作Y軸
 	bool onJump;										//ジャンプフラグ
+
 	//弾関係
+	Gun gun;											//	銃
 	int elementBullet;									//弾アクセス要素数
 	float intervalBullet;								//発弾間隔
 	BulletEffect bulletEffect;							//弾エフェクト
@@ -257,6 +260,7 @@ public:
 	void recoveryHp(int value);
 	void setCollidedMemoryLine(bool frag);
 	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
+	//D3DXMATRIX setGunMatrix(void);
 
 	//getter
 	int getHp();

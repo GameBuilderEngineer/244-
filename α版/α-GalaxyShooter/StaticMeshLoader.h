@@ -9,6 +9,7 @@
 
 namespace staticMeshNS {
 	enum MESH_NUMBER {
+		GUN,
 		BULLET,
 		CUBE,
 		SAMPLE_HIERARCHY_MESH,
