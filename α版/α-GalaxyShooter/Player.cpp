@@ -9,9 +9,6 @@
 
 using namespace playerNS;
 
-// 仮
-static float time = 0.0f;
-
 //===================================================================================================================================
 //【コンストラクタ】
 //===================================================================================================================================
@@ -561,6 +558,9 @@ void Player::updateFall(float frameTime)
 void Player::changeDown()
 {
 	elementMemoryPile = 0;
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_DOWN, soundNS::METHOD::PLAY);
+
 	revivalPoint = 0;
 	decreaseRevivalTimer = DECREASE_REVIVAL_TIME;//復活ポイント減少時間のセット
 	canShockWave = true;
@@ -614,7 +614,6 @@ void Player::changeSky()
 	hp = MAX_HP;
 	onGround = true;
 	canShockWave = true;
-	time = 0;
 	animationPlayer.setFlagRecursion(true);
 	deleteMemoryItem();
 
@@ -638,6 +637,8 @@ void Player::updateSky(float frameTime)
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
 	skyTimer -= frameTime;
 	skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
+	if (skyHeight >= SKY_HEIGHT) { animationPlayer.setFlagRecursion(false); }
+
 	if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
 	{
 		//めり込み補正
@@ -653,18 +654,10 @@ void Player::updateSky(float frameTime)
 		setGravity(gravityDirection, GRAVITY_FORCE);//重力処理
 	}
 
-	// 仮
-	time += 1.0f;
-	if (time > 90.0f)
-	{
-		animationPlayer.setFlagRecursion(false);
-	}
-
 	//【落下】モードへ切替
 	if (!whetherSky())
 	{
 		changeState(FALL);
-		animationPlayer.setFlagRecursion(false);
 		animationPlayer.setFlagFalling(true);
 	}
 
@@ -1052,6 +1045,7 @@ void Player::triggerShockWave()
 	}
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
+
 	canShockWave = false;	//使用不可能にする
 }
 
