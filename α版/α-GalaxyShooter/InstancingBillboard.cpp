@@ -13,6 +13,16 @@ InstancingBillboard::InstancingBillboard()
 {
 	renderNum = 0;
 	onRender = false;
+
+	vertexBuffer = NULL;
+	indexBuffer = NULL;
+	positionBuffer = NULL;
+	colorBuffer = NULL;
+	declation = NULL;
+	effect = NULL;
+	position = NULL;
+	color = NULL;
+	texture = NULL;
 }
 
 //===================================================================================================================================
@@ -20,6 +30,23 @@ InstancingBillboard::InstancingBillboard()
 //===================================================================================================================================
 InstancingBillboard::~InstancingBillboard()
 {
+	//SAFE_RELEASE
+	if (vertexBuffer != NULL)
+		SAFE_RELEASE(vertexBuffer);
+	if (indexBuffer != NULL)
+		SAFE_RELEASE(indexBuffer);
+	if (positionBuffer != NULL)
+		SAFE_RELEASE(positionBuffer);
+	if (colorBuffer != NULL)
+		SAFE_RELEASE(colorBuffer);
+	if (declation != NULL)
+		SAFE_RELEASE(declation);
+
+	//SAFE_DELETE
+	if (position != NULL)			
+		SAFE_DELETE_ARRAY(position);
+	if (color != NULL)
+		SAFE_DELETE_ARRAY(color);
 }
 
 //===================================================================================================================================
@@ -201,8 +228,10 @@ void InstancingBillboard::setColorBuffer(LPDIRECT3DDEVICE9 device, int num, D3DX
 	if (num <= 0) {
 		return;
 	}
-	if(onRender)SAFE_RELEASE(colorBuffer);
-	if(onRender)SAFE_DELETE_ARRAY(color);
+	if(colorBuffer!=NULL)
+		SAFE_RELEASE(colorBuffer);
+	if(color!=NULL)
+		SAFE_DELETE_ARRAY(color);
 	
 	renderNum = num;
 
@@ -224,7 +253,7 @@ void InstancingBillboard::setColorBuffer(LPDIRECT3DDEVICE9 device, int num, D3DX
 void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DXVECTOR3* positionList)
 {
 	if (num <= 0) {
-		if(onRender == true)SAFE_RELEASE(positionBuffer);
+		if(positionBuffer != NULL)SAFE_RELEASE(positionBuffer);
 		onRender = false;
 		return;
 	}
@@ -235,8 +264,8 @@ void InstancingBillboard::setNumOfRender(LPDIRECT3DDEVICE9 device, int num, D3DX
 	{
 		position[i] = positionList[i];
 	}
-	if (onRender == true)SAFE_RELEASE(positionBuffer);
-	
+
+	if (positionBuffer != NULL)SAFE_RELEASE(positionBuffer);
 	//位置情報バッファの作成
 	device->CreateVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, 0, 0, D3DPOOL_MANAGED, &positionBuffer, 0);
 	copyVertexBuffer(sizeof(D3DXVECTOR3)*renderNum, position, positionBuffer);

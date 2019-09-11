@@ -13,7 +13,7 @@
 #include "Credit.h"
 #include "Game.h"
 #include "Result.h"
-
+//#include "AnimationPlayer.h"
 //HINSTANCE* instancePointer = NULL;
 //void setInstance(HINSTANCE* hinstance) { instancePointer = hinstance; }
 //bool roop = true;
@@ -29,6 +29,10 @@ Director::Director(){
 Director::~Director(){
 	//roop = false;
 	SAFE_DELETE(window);
+#ifdef _DEBUG
+	SAFE_DELETE(debugWindow0);
+	SAFE_DELETE(debugWindow1);
+#endif // _DEBUG
 	SAFE_DELETE(camera);
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(input);
@@ -38,6 +42,7 @@ Director::~Director(){
 	SAFE_DELETE(staticMeshLoader);
 	SAFE_DELETE(shaderLoader);
 	SAFE_DELETE(textManager);
+	SAFE_DELETE(gameMaster);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
 	ShowCursor(TRUE);
@@ -115,8 +120,30 @@ HRESULT Director::initialize(){
 	// サウンドの再生
 	sound->play(soundNS::TYPE::AGING, soundNS::METHOD::PLAY);
 
+	//AnimationPlayer* animation;
+	//int i = 1;
+	//	animation = new AnimationPlayer;
+	//	animation->initialize(d3d->device, 0, 0);
+	//	animation->release();
+	//	SAFE_DELETE(animation);
+
 	//scene
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+	//scene->uninitialize();
+	//SAFE_DELETE(scene);
+	//int i = 1;
+	//while (i >= 0)
+	//{
+	//	scene = new Title();
+	//	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+	//	scene->uninitialize();
+	//	SAFE_DELETE(scene);
+	//	i--;
+	//}
+	//
+	//scene = new Splash();
+	//scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
+
 
 	// 高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
@@ -285,6 +312,7 @@ void Director::displayFPS() {
 void Director::changeNextScene(){
 	int nextScene = scene->checkNextScene();		//次のシーンIDを取得
 	scene->copyGameMaster(gameMaster);				//ゲーム管理情報をDirectorへ保存
+	scene->uninitialize();
 	SAFE_DELETE(scene);								// シーンの削除
 	switch (nextScene)								// 指定されたシーンへ遷移
 	{

@@ -2,7 +2,7 @@
 //【Player.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/09/08
+// [更新日]2019/09/11
 //===================================================================================================================================
 #include "Player.h"
 #include "UIRevival.h"
@@ -131,6 +131,13 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	// アニメーション
 	animationPlayer.initialize(_device, modelType, playerType);
 
+	//上空モード時表示レティクル
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		reticle[i] = new ShockWave();
+		reticle[i]->initialize(device, position, attractorRadius, *textureLoader->getTexture(textureLoaderNS::SHOCKWAVE), *shaderLoader->getEffect(shaderNS::SHOCK_WAVE));
+	}
+
 	return;
 }
 
@@ -212,7 +219,7 @@ void Player::update(float frameTime)
 	//===========
 	Object::update();
 
-	//animationPlayer.update(input, state);
+	animationPlayer.update(input, state);
 
 	//===========
 	//【弾の更新】
@@ -261,7 +268,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
 	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	animationPlayer.render(device, matrixWorld, staticMeshLoader);
+	animationPlayer.render(device, matrixRotation,matrixPosition, staticMeshLoader);
 	// 他のオブジェクトの描画
 	otherRender(device,view,projection,cameraPosition);
 }
@@ -271,7 +278,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//Object::render(device,view,projection, cameraPosition);
-	animationPlayer.render(device, matrixWorld, staticMeshLoader);
+	animationPlayer.render(device, matrixRotation,matrixPosition, staticMeshLoader);
 	//他のオブジェクトの描画
 	otherRender(device,view,projection,cameraPosition);
 }
@@ -306,9 +313,15 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	//スターラインの描画
 	starLine.render(device, view, projection, cameraPosition);
 	//衝撃波の描画
-	for(int i = 0;i<NUM_SHOCK_WAVE;i++)
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
 		if (onShockWave[i])
 			shockWave[i]->render(device, view, projection, cameraPosition);
+		//着地位置表示レティクルの描画
+		if(whetherSky())
+			reticle[i]->render(device, view, projection, cameraPosition);
+	}
+	
 	//メモリーラインの切断ガイドの表示
 	if (collidedOpponentMemoryLine)
 	{
@@ -346,7 +359,8 @@ void Player::recorvery(float frameTime)
 //===================================================================================================================================
 void Player::moveOperation()
 {
-	if (whetherDown() || animationPlayer.getFlagMoveBan()) return;
+	if (whetherDown()) return;
+	//if (animationPlayer.getFlagMoveBan()) return;
 	//キーによる移動
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
@@ -398,6 +412,9 @@ void Player::move(D3DXVECTOR2 operationDirection,D3DXVECTOR3 cameraAxisX,D3DXVEC
 	else {
 		addSpeed(moveDirection*SPEED/10);
 	}
+	if (((npc && input->wasKeyPressed(BUTTON_BULLET)) || (!npc && input->getMouseLButton()) || input->getController()[type]->isButton(BUTTON_BULLET))
+		&& intervalBullet == 0)
+		return;
 	postureControl(getAxisZ()->direction, moveDirection, 0.1f);
 }
 
@@ -593,6 +610,13 @@ void Player::changeSky()
 	time = 0;
 	animationPlayer.setFlagRecursion(true);
 	deleteMemoryItem();
+
+	//上空モード時表示レティクル
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		reticle[i]->setInitialPolar(position, attractorRadius);
+		reticle[i]->update(0.05*(float)i + 0.05);
+	}
 }
 
 //===================================================================================================================================
@@ -636,6 +660,14 @@ void Player::updateSky(float frameTime)
 		animationPlayer.setFlagRecursion(false);
 		animationPlayer.setFlagFalling(true);
 	}
+
+	//上空モード時表示レティクル
+	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
+	{
+		reticle[i]->setInitialPolar(position, attractorRadius);
+		reticle[i]->update(0.05*(float)i + 0.05);
+	}
+
 }
 
 //===================================================================================================================================
@@ -729,7 +761,7 @@ void Player::updateBullet(float frameTime)
 	bulletEffect.update(frameTime);
 
 	//バレットの発射
-	if (whetherDown() || animationPlayer.getFlagMoveBan() == true || animationPlayer.getFlagJump() == true) return;//ダウン時：発射不可
+	if (whetherSky()||whetherDown() || animationPlayer.getFlagMoveBan() == true || animationPlayer.getFlagJump() == true) return;//ダウン時：発射不可
 	if (((npc && input->wasKeyPressed(BUTTON_BULLET)) || (!npc && input->getMouseLButton()) || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
@@ -749,6 +781,7 @@ void Player::updateBullet(float frameTime)
 		bullet[elementBullet].activation();
 		bullet[elementBullet].configurationGravity(attractorPosition,attractorRadius);
 		bullet[elementBullet].Object::update();
+		postureControl(axisZ.direction, front, 1.0f);
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;
@@ -855,8 +888,8 @@ void Player::updateMemoryItem(float frameTime)
 	//メモリーパイルのセット
 	if (!whetherDown()&&
 		!whetherSky()&&
-		animationPlayer.getFlagSlash() == false &&
-		animationPlayer.getFlagInstallation() == false &&
+		//animationPlayer.getFlagSlash() == false &&
+		//animationPlayer.getFlagInstallation() == false &&
 		whetherInstallationEffectiveDistance &&
 		onGround && 
 		memoryPile[elementMemoryPile].ready() &&

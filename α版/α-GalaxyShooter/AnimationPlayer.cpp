@@ -1030,18 +1030,26 @@ void AnimationPlayer::updateAnimationIDNextIdleGeneral(void)
 // render
 // 描画
 //============================================================================================================================================
-void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixWorld, StaticMeshLoader* _staticMeshLoader)
+void AnimationPlayer::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixRotation,D3DXMATRIX _matrixPosition, StaticMeshLoader* _staticMeshLoader)
 {
 	D3DMATERIAL9 materialDefault;	//	マテリアル
 
+	D3DXMATRIX matrixWorld;
+
+	D3DXMATRIX rotation;
+	D3DXMatrixRotationY(&rotation, D3DXToRadian(180.0f));
+	D3DXMatrixMultiply(&rotation, &rotation,&_matrixRotation);
+
+	D3DXMatrixMultiply(&matrixWorld, &rotation, &_matrixPosition);
+
 	// ワールドマトリクスの設定
-	_device->SetTransform(D3DTS_WORLD, &_matrixWorld);
+	_device->SetTransform(D3DTS_WORLD, &matrixWorld);
 
 	// 現在のマテリアルを取得
 	_device->GetMaterial(&materialDefault);
 
 	// アニメーションの描画
-	animation->render(_device, animation, &_matrixWorld);
+	animation->render(_device, animation, &matrixWorld);
 
 	// マテリアルを戻す
 	_device->SetMaterial(&materialDefault);

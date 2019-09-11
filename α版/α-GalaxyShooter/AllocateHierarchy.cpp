@@ -92,8 +92,8 @@ HRESULT AllocateHierarchy::CreateFrame(LPCSTR _name, LPD3DXFRAME* _newFrame)
 	if (framePointer == NULL)
 	{
 		// フレームポインタの解放
-		framePointer = NULL;
-		SAFE_DELETE(framePointer);
+		//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
+		//SAFE_DELETE(framePointer);	
 
 		result = E_OUTOFMEMORY;
 
@@ -105,8 +105,8 @@ HRESULT AllocateHierarchy::CreateFrame(LPCSTR _name, LPD3DXFRAME* _newFrame)
 	if (FAILED(result))
 	{
 		// フレームポインタの解放
-		framePointer = NULL;
-		SAFE_DELETE(framePointer);
+		//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
+		//SAFE_DELETE(framePointer);
 
 		return result;
 	}
@@ -115,14 +115,15 @@ HRESULT AllocateHierarchy::CreateFrame(LPCSTR _name, LPD3DXFRAME* _newFrame)
 	D3DXMatrixIdentity(&framePointer->TransformationMatrix);
 	D3DXMatrixIdentity(&framePointer->combinedTransformationMatrix);
 
+	framePointer->pMeshContainer = NULL;
 	framePointer->pFrameSibling = NULL;
 	framePointer->pFrameFirstChild = NULL;
 
 	*_newFrame = framePointer;
 
 	// フレームポインタの解放
-	framePointer = NULL;
-	SAFE_DELETE(framePointer);
+	//framePointer = NULL;		//NULLを代入してからデリートしては意味がないのでは？@tatsuki
+	//SAFE_DELETE(framePointer);
 
 	return result;
 }
@@ -343,6 +344,18 @@ HRESULT AllocateHierarchy::CreateMeshContainer(LPCSTR _name, CONST D3DXMESHDATA*
 HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME _frame)
 {
 	SAFE_DELETE_ARRAY(_frame->Name);
+
+	if (_frame->pFrameFirstChild)
+	{
+		DestroyFrame(_frame->pFrameFirstChild);
+	}
+
+	if (_frame->pFrameSibling)
+	{
+		DestroyFrame(_frame->pFrameSibling);
+	}
+
+	SAFE_DELETE(_frame);
 
 	return S_OK;
 }

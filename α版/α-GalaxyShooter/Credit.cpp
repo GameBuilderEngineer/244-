@@ -20,7 +20,6 @@ Credit::Credit()
 //=============================================================================
 Credit::~Credit()
 {
-	SAFE_DELETE(camera);
 	// ƒTƒEƒ“ƒh‚Ì’âŽ~
 	sound->stop(soundNS::TYPE::BGM_CREDIT);
 }
@@ -129,4 +128,6 @@ void Credit::AI()
 //=============================================================================
 void Credit::uninitialize()
 {
+	credit2D.uninitialize();
+	SAFE_DELETE(camera);
 }

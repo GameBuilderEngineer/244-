@@ -184,6 +184,8 @@ protected:
 
 	//上空モード関係
 	float skyHeight;									//上空モード時高さ
+	ShockWave* reticle[playerNS::NUM_SHOCK_WAVE];		//着地位置レティクル
+
 
 	//メモリーアイテム関係
 	MemoryPile memoryPile[playerNS::NUM_MEMORY_PILE];	//メモリーパイル

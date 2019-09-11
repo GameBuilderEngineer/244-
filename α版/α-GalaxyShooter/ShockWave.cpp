@@ -272,6 +272,34 @@ bool ShockWave::collision(D3DXVECTOR3 measurementPosition, float radius)
 }
 
 //===================================================================================================================================
+//ysetterz
+//===================================================================================================================================
+void ShockWave::setInitialPolar(D3DXVECTOR3 position, float radius)
+{
+	existenceTimer = 0.0f;
+	//‰Šú‹ÉÀ•W‚ğ‰Šú’¼ŒğÀ•W‚©‚çZo
+	initialPolar = UtilityFunction::fromRectangular3D(position);
+	D3DXVECTOR3 p = UtilityFunction::fromTransformationPolar3D(initialPolar.radius, initialPolar.theta, initialPolar.phi);
+	initialPolar.radius = radius;
+	for (int i = 0; i < VERTEX_NUM; i++)
+	{
+		float rate = (float)i / (float)VERTEX_NUM;
+		height[i] = HEIGHT + HEIGHT / 2 * sinf((float)i);
+		//“®Œa‚Ìİ’è
+		topPolar[i].radius = radius + height[i];
+		bottomPolar[i].radius = radius;
+		//‹ÉŠp‚Ìİ’è
+		topPolar[i].theta =
+			bottomPolar[i].theta = 0.0f;
+		//•ÎŠp‚Ìİ’è
+		topPolar[i].phi =
+			bottomPolar[i].phi = UtilityFunction::lerp(0, 2.0f*D3DX_PI, rate);
+	}
+	updateVertexCoord();	//‹ÉÀ•W‚©‚ç’¸“_À•W‚ğZo
+	createVertexBuffer();	//’¸“_ƒoƒbƒtƒ@‚ğì¬
+}
+
+//===================================================================================================================================
 //ygetterz
 //===================================================================================================================================
 bool ShockWave::whetherActive(){return existenceTimer < EXISTENCE_TIME;}

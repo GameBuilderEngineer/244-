@@ -59,6 +59,9 @@ public:
 	float calculationDistance(D3DXVECTOR3 point);		//(‰‰Z)‚ ‚é“_‚Æƒ‰ƒCƒ“‚Æ‚Ì‹——£‚ğ–ß‚·
 	bool collision(D3DXVECTOR3 position, float radius);	//Õ“ËŒŸ’m
 
+	//setter
+	void setInitialPolar(D3DXVECTOR3 position,float radius);
+
 	//getter
 	bool whetherActive();
 };

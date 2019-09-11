@@ -37,7 +37,7 @@
 #define   _recalloc(p, c, s)    _recalloc_dbg(p, c, s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #define   _expand(p, s)         _expand_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #else
-#define APP_NAME (LPSTR)"Galaxy Shooter ver.ƒ¿"
+#define APP_NAME (LPSTR)"RE:CURSION"
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 #endif // _DEBUG

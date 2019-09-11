@@ -329,13 +329,13 @@ void UITitle::update(Input* _input, Sound* _sound)
 {
 	if (_input->wasKeyPressed(VK_DOWN) ||
 		_input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN) ||
-		_input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::DOWN))
+		_input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::DOWN))
 	{
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);
 		selectState++;
 	}
 	else if (_input->wasKeyPressed(VK_UP) ||
-		_input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::UP) ||
+		_input->getController()[inputNS::DINPUT_1P]->wasButton(virtualControllerNS::UP) ||
 		_input->getController()[inputNS::DINPUT_2P]->wasButton(virtualControllerNS::UP))
 	{
 		_sound->play(soundNS::TYPE::SE_SELECT, soundNS::METHOD::PLAY);

@@ -36,8 +36,6 @@ Title::~Title(void)
 	// サウンドの停止
 	sound->stop(soundNS::TYPE::BGM_TITLE);
 
-	uninitialize();
-
 	return;
 }
 //============================================================================================================================================
@@ -94,7 +92,7 @@ void Title::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _sound, Text
 	plane.initialize(_direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
 	// エフェクト初期化
-	effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	//effectDewManager.initialize(_direct3D9->device, _textureLoader, *_shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	return;
 }
@@ -146,10 +144,10 @@ void Title::update(float _frameTime)
 	//effectDewManager.update(_frameTime, &player[PLAYER_TYPE::PLAYER_1]);
 	D3DXVECTOR3 temp2 = D3DXVECTOR3(100.0f, 100.0f, 100.0f);
 
-	if (input->isKeyDown('E'))
-	{
-		effectDewManager.generateEffect(100, temp2);
-	};
+	//if (input->isKeyDown('E'))
+	//{
+	//	effectDewManager.generateEffect(100, temp2);
+	//};
 
 	return;
 }
@@ -208,7 +206,7 @@ void Title::render(Direct3D9* _direct3D9)
 	render2D(_direct3D9->device);
 
 	// エフェクトの描画
-	effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
+	//effectDewManager.render(_direct3D9->device, camera->view, camera->projection, camera->position);
 
 	return;
 }

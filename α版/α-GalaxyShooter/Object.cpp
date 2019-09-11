@@ -130,8 +130,8 @@ void Object::multipleRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 	// ƒŒƒ“ƒ_ƒŠƒ“ƒO
 	for (DWORD i = 0; i < staticMesh->attributeTableSize; i++)
 	{
-		device->SetMaterial(&staticMesh->materials[i]);
-		effect->SetValue("diffuse", &staticMesh->materials[i],16);
+		//device->SetMaterial(&staticMesh->materials[i]);
+		effect->SetValue("diffuse", &staticMesh->materials[i].Diffuse,16);
 		effect->SetTexture("textureDecal", staticMesh->textures[i]);
 
 		device->DrawIndexedPrimitive(

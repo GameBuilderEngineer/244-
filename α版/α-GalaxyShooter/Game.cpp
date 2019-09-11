@@ -738,7 +738,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
-			uiChingin[i].render(device, gameMaster->getGameTime(), chingin);
+			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage());
 		}
 	}
 

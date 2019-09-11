@@ -17,6 +17,7 @@ using namespace animationNS;
 //============================================================================================================================================
 HRESULT initialize(Animation* _animation, LPCSTR _setName, int _setNo)
 {
+
 	_animation->animationController->GetAnimationSetByName(_setName, &_animation->animationManager[_setNo].animationSet);
 
 	_animation->animationManager[_setNo].animationSetName = _animation->animationManager[_setNo].animationSet->GetName();
@@ -292,7 +293,7 @@ Animation* createObject(void)
 {
 	Animation* object = new Animation;
 	ZeroMemory(object, sizeof(Animation));
-	//(Animation*)calloc(1, sizeof(Animation));	//	オブジェクトポインタ
+	//Animation* object = (Animation*)calloc(1, sizeof(Animation));	//	オブジェクトポインタ
 
 	object->initialize = initialize;
 	object->release = release;
@@ -334,6 +335,7 @@ HRESULT loadXFile(LPDIRECT3DDEVICE9 _device, Animation* _animation, LPCTSTR _fil
 
 	// Xファイル内のアニメーションセットの数に基づいて、アニメーションセットメンバ変数に、配列を動的に割り当てる
 	if (FAILED(_animation->animationManager = new AnimationManager[_animation->animationSetMax]))
+	//if (FAILED(_animation->animationManager = (AnimationManager*)malloc(sizeof(AnimationManager)*_animation->animationSetMax)))
 	{
 		// エラーメッセージの出力
 		MSG("Xファイルの読み込みに失敗しました");
