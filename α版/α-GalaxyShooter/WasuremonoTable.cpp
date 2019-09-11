@@ -16,62 +16,62 @@ WasuremonoTable::WasuremonoTable(StaticMeshLoader* p): staticMeshLoader(p)
 	data[CHEWING_GUM].typeID = CHEWING_GUM;
 	data[CHEWING_GUM].name = "チューイングガム";
 	data[CHEWING_GUM].amount = 5;
-	data[CHEWING_GUM].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[CHEWING_GUM].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_FAN]);
 	data[CHEWING_GUM].appearanceProbability = PROBABILITY_UNIT * 5;
 
 	data[ELECTRIC_FAN].typeID = ELECTRIC_FAN;
 	data[ELECTRIC_FAN].name = "扇風機";
 	data[ELECTRIC_FAN].amount = 20;
-	data[ELECTRIC_FAN].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[ELECTRIC_FAN].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_FAN]);
 	data[ELECTRIC_FAN].appearanceProbability = PROBABILITY_UNIT * 4;
 
 	data[JUMP_ROPE].typeID = JUMP_ROPE;
 	data[JUMP_ROPE].name = "なわとび";
 	data[JUMP_ROPE].amount = 10;
-	data[JUMP_ROPE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[JUMP_ROPE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_FAN]);
 	data[JUMP_ROPE].appearanceProbability = PROBABILITY_UNIT * 5;
 
 	data[TELEVISION].typeID = TELEVISION;
 	data[TELEVISION].name = "テレビ";
 	data[TELEVISION].amount = 50;
-	data[TELEVISION].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[TELEVISION].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_FAN]);
 	data[TELEVISION].appearanceProbability = PROBABILITY_UNIT * 3;
 
 	data[KENDAMA].typeID = KENDAMA;
 	data[KENDAMA].name = "けん玉";
 	data[KENDAMA].amount = 25;
-	data[KENDAMA].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[KENDAMA].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_FAN]);
 	data[KENDAMA].appearanceProbability = PROBABILITY_UNIT * 4;
 
 	data[SOCCER_BALL].typeID = SOCCER_BALL;
 	data[SOCCER_BALL].name = "サッカーボール";
 	data[SOCCER_BALL].amount = 20;
-	data[SOCCER_BALL].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[SOCCER_BALL].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_BUNNY]);
 	data[SOCCER_BALL].appearanceProbability = PROBABILITY_UNIT * 4;
 
 	data[CHRISTMAS_TREE].typeID = CHRISTMAS_TREE;
 	data[CHRISTMAS_TREE].name = "クリスマスツリー";
 	data[CHRISTMAS_TREE].amount = 75;
-	data[CHRISTMAS_TREE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[CHRISTMAS_TREE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_BUNNY]);
 	data[CHRISTMAS_TREE].appearanceProbability = PROBABILITY_UNIT * 2;
 
 	data[BICYCLE].typeID = BICYCLE;
 	data[BICYCLE].name = "自転車";
 	data[BICYCLE].amount = 50;
-	data[BICYCLE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[BICYCLE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_BUNNY]);
 	data[BICYCLE].appearanceProbability = PROBABILITY_UNIT * 3;
 
 	data[DIAL_PHONE].typeID = DIAL_PHONE;
 	data[DIAL_PHONE].name = "黒電話";
 	data[DIAL_PHONE].amount = 75;
-	data[DIAL_PHONE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[DIAL_PHONE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_BUNNY]);
 	data[DIAL_PHONE].appearanceProbability = PROBABILITY_UNIT * 2;
 	//
 
 	data[STUFFED_BUNNY].typeID = STUFFED_BUNNY;
 	data[STUFFED_BUNNY].name = "ウサギのぬいぐるみ";
 	data[STUFFED_BUNNY].amount = 200;
-	data[STUFFED_BUNNY].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE]);
+	data[STUFFED_BUNNY].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_BUNNY]);
 	data[STUFFED_BUNNY].appearanceProbability = PROBABILITY_UNIT;
 
 	data[HUMAN].typeID = HUMAN;

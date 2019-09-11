@@ -32,6 +32,7 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[WASUREMONO_BALL] = { "ball.x" };
 	fileName[WASUREMONO_PHONE] = { "phone.X" };
 	fileName[WASUREMONO_BUNNY] = { "toybunny.x" };
+	fileName[WASUREMONO_FAN] = { "Fan.x" };
 }
 
 //===================================================================================================================================
