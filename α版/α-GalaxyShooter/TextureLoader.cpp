@@ -73,7 +73,7 @@ TextureLoader::TextureLoader()
 	textureName[BACKGROUND_DUST] = { "Game_BackGround_Dust.png" };
 
 	//effect
-	textureName[EFFECT_DAMAGE] = { "Game_Damage.png" };
+	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };
 	textureName[EFFECT_FEEL] = { "feelEffect.png" };
 	textureName[CHINGIN_EFFECT] = { "chingineffe.png" };
 	textureName[BULLET_EFFECT] = { "bakuha.png" };

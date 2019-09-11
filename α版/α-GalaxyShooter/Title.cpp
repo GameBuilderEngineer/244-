@@ -228,8 +228,8 @@ void Title::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 	// シーンエフェクトの描画
 	sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
-	//// プレーン( インスタンシング )
-	//plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+	// プレーン( インスタンシング )
+	plane.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
 
 	// タイトルプレイヤー描画
 	//player[0].toonRender
