@@ -773,8 +773,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
 		}
-		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		if (gameMaster->getCountFlag())
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		}
 	}
 	else {
 		//スタート
@@ -796,8 +799,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
 		}
-		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		if (gameMaster->getCountFlag())
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		}
 	}
 	if (gameMaster->whetherAlreadyFinish())
 	{

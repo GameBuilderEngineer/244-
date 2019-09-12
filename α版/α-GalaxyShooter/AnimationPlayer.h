@@ -62,6 +62,7 @@ namespace animationPlayerNS
 	struct Flag
 	{
 		bool moveBan;		//	移動禁止フラグ
+		bool gunRenderFlag;	//	銃の描画フラグ
 		bool jump;			//	ジャンプフラグ
 		bool installation;	//	メモリー・パイル設置フラグ
 		bool slash;			//	メモリー・ライン切断フラグ
@@ -171,6 +172,7 @@ public:
 	// Set
 	void setAnimationConfiguration(int _scene);
 	void setFlagMoveBan(bool _flag) { flag.moveBan = _flag; }
+	void setFlagGunRender(bool _flag) { flag.gunRenderFlag = _flag; }
 	void setFlagJump(bool _flag) { flag.jump = _flag; }
 	void setFlagInstallation(bool _flag) { flag.installation = _flag; }
 	void setFlagSlash(bool _flag) { flag.slash = _flag; }
@@ -181,6 +183,7 @@ public:
 	// Get
 	Animation* getAnimation(void) { return animation; }
 	bool getFlagMoveBan(void) { return flag.moveBan; }
+	bool getFlagGunRender(void) { return flag.gunRenderFlag; }
 	bool getFlagJump(void) { return flag.jump; }
 	bool getFlagInstallation(void) { return flag.installation; }
 	bool getFlagSlash(void) { return flag.slash; }
