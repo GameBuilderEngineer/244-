@@ -73,6 +73,7 @@ namespace textureLoaderNS
 		SHOCKWAVE,
 		BACKGROUND_STAR,
 		BACKGROUND_DUST,
+		CHINGIN_STAR,
 
 		//effect
 		EFFECT_DAMAGE,

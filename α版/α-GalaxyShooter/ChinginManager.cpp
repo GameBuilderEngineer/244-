@@ -27,7 +27,7 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 	// 賃金エフェクト初期化
 	chinginEffect.initialize(device, _textureLoader, effect);
 
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_REVIVAL_GAUGE));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::CHINGIN_STAR));
 }
 
 //=============================================================================
