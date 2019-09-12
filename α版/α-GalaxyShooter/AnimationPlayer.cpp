@@ -60,6 +60,12 @@ HRESULT AnimationPlayer::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex,
 		break;
 	}
 
+	// AIアニメーションフラグの初期化
+	for (int i = 0; i < AI_FLAG_MAX; i++)
+	{
+		aiAnimFlag[i] = false;
+	}
+
 	// アニメーションセット名
 	const char* animationSetName[animationNS::TYPE::TYPE_MAX] =
 	{
@@ -144,6 +150,11 @@ HRESULT AnimationPlayer::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex,
 //============================================================================================================================================
 void AnimationPlayer::release(void)
 {
+	if (playerIndex == animationPlayerNS::PLAYER_2)
+	{
+		int unko = 9;
+	}
+
 	// アニメーションの解放
 	animation->release(animation);
 	SAFE_DELETE(animation);
@@ -282,6 +293,11 @@ void AnimationPlayer::updateAnimationID(Input* _input, int _state)
 //============================================================================================================================================
 void AnimationPlayer::updateAnimationIDCurrentIdle(Input* _input, int _state)
 {
+	if (playerIndex == animationPlayerNS::PLAYER_2)
+	{
+		int unko = 9;
+	}
+
 	// 被リカージョン
 	if (flag.recursion)
 	{
@@ -301,20 +317,22 @@ void AnimationPlayer::updateAnimationIDCurrentIdle(Input* _input, int _state)
 		return;
 	}
 	// メモリー・パイル設置
-	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1))
+	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1) ||
+		aiAnimFlag[INSTALLATION])
 	{
 		animationID.next = animationNS::TYPE::INSTALLATION;
 		return;
 	}
 	// メモリー・ライン切断
-	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND))
+	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND) ||
+		aiAnimFlag[SLASH])
 	{
 		animationID.next = animationNS::TYPE::SLASH;
 		return;
 	}
 	// 走る・早く走る
 	if (_input->isKeyDown(keyTable.front) || _input->isKeyDown(keyTable.back) || _input->isKeyDown(keyTable.left) || _input->isKeyDown(keyTable.right) ||
-		_input->getController()[playerIndex]->checkConnect())
+		_input->getController()[playerIndex]->checkConnect() || aiAnimFlag[MOVE])
 	{
 		animationID.next = animationNS::TYPE::RUN_FAST;
 		if (_input->isKeyDown(keyTable.dash) || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::Y)) { return; }
@@ -323,7 +341,8 @@ void AnimationPlayer::updateAnimationIDCurrentIdle(Input* _input, int _state)
 		return;
 	}
 	// 射撃
-	if (_input->getMouseLButton() || _input->getController()[playerIndex]->isButton(virtualControllerNS::BUTTONS::R1))
+	if (_input->getMouseLButton() || _input->getController()[playerIndex]->isButton(virtualControllerNS::BUTTONS::R1) ||
+		aiAnimFlag[SHOOTING])
 	{
 		animationID.next = animationNS::TYPE::SHOOTING;
 		return;
@@ -358,21 +377,26 @@ void AnimationPlayer::updateAnimationIDCurrentShooting(Input* _input, int _state
 		return;
 	}
 	// メモリー・パイル設置
-	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1))
+	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1) ||
+		aiAnimFlag[INSTALLATION])
 	{
+		aiAnimFlag[INSTALLATION] = false;
 		animationID.next = animationNS::TYPE::INSTALLATION;
 		return;
 	}
 	// メモリー・ライン切断
-	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND))
+	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND) ||
+		aiAnimFlag[SLASH])
 	{
+		aiAnimFlag[SLASH] = false;
 		animationID.next = animationNS::TYPE::SLASH;
 		return;
 	}
 	// 走る・早く走る
 	if (_input->isKeyDown(keyTable.front) || _input->isKeyDown(keyTable.back) || _input->isKeyDown(keyTable.left) || _input->isKeyDown(keyTable.right) ||
-		_input->getController()[playerIndex]->checkConnect())
+		_input->getController()[playerIndex]->checkConnect() || aiAnimFlag[MOVE])
 	{
+		aiAnimFlag[MOVE] = false;
 		animationID.next = animationNS::TYPE::RUN_FAST;
 		if (_input->isKeyDown(keyTable.dash) || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::Y)) { return; }
 		animationID.next = animationNS::TYPE::RUN;
@@ -380,8 +404,10 @@ void AnimationPlayer::updateAnimationIDCurrentShooting(Input* _input, int _state
 		return;
 	}
 	// 射撃
-	if (_input->getMouseLButton() || _input->getController()[playerIndex]->isButton(virtualControllerNS::BUTTONS::R1))
+	if (_input->getMouseLButton() || _input->getController()[playerIndex]->isButton(virtualControllerNS::BUTTONS::R1) ||
+		aiAnimFlag[SHOOTING])
 	{
+		aiAnimFlag[SHOOTING] = false;
 		animationID.next = animationNS::TYPE::SHOOTING;
 		return;
 	}
@@ -415,20 +441,22 @@ void AnimationPlayer::updateAnimationIDCurrentRun(Input* _input, int _state)
 		return;
 	}
 	// メモリー・パイル設置
-	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1))
+	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1) ||
+		aiAnimFlag[INSTALLATION])
 	{
 		animationID.next = animationNS::TYPE::INSTALLATION;
 		return;
 	}
 	// メモリー・ライン切断
-	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND))
+	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND) ||
+		aiAnimFlag[SLASH])
 	{
 		animationID.next = animationNS::TYPE::SLASH;
 		return;
 	}
 	// 走る・早く走る
 	if (_input->isKeyDown(keyTable.front) || _input->isKeyDown(keyTable.back) || _input->isKeyDown(keyTable.left) || _input->isKeyDown(keyTable.right) ||
-		_input->getController()[playerIndex]->checkConnect())
+		_input->getController()[playerIndex]->checkConnect() || aiAnimFlag[MOVE])
 	{
 		animationID.next = animationNS::TYPE::RUN_FAST;
 		if (_input->isKeyDown(keyTable.dash) || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::Y)) { return; }
@@ -466,20 +494,22 @@ void AnimationPlayer::updateAnimationIDCurrentRunFast(Input* _input, int _state)
 		return;
 	}
 	// メモリー・パイル設置
-	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1))
+	if (_input->getMouseRButtonTrigger() || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::L1) ||
+		aiAnimFlag[INSTALLATION])
 	{
 		animationID.next = animationNS::TYPE::INSTALLATION;
 		return;
 	}
 	// メモリー・ライン切断
-	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND))
+	if (_input->getMouseWheelState() == inputNS::DOWN || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::X) || (GetAsyncKeyState(VK_RSHIFT) & 0x8000) && (_state == STATE_TYPE::GROUND) ||
+		aiAnimFlag[SLASH])
 	{
 		animationID.next = animationNS::TYPE::SLASH;
 		return;
 	}
 	// 走る・早く走る
 	if (_input->isKeyDown(keyTable.front) || _input->isKeyDown(keyTable.back) || _input->isKeyDown(keyTable.left) || _input->isKeyDown(keyTable.right) ||
-		_input->getController()[playerIndex]->checkConnect())
+		_input->getController()[playerIndex]->checkConnect() || aiAnimFlag[MOVE])
 	{
 		animationID.next = animationNS::TYPE::RUN_FAST;
 		if (_input->isKeyDown(keyTable.dash) || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::Y)) { return; }
@@ -519,7 +549,7 @@ void AnimationPlayer::updateAnimationIDCurrentJump(Input* _input, int _state)
 
 	// 走る・早く走る
 	if (_input->isKeyDown(keyTable.front) || _input->isKeyDown(keyTable.back) || _input->isKeyDown(keyTable.left) || _input->isKeyDown(keyTable.right) ||
-		_input->getController()[playerIndex]->checkConnect())
+		_input->getController()[playerIndex]->checkConnect() || aiAnimFlag[MOVE])
 	{
 		animationID.next = animationNS::TYPE::RUN_FAST;
 		if (_input->isKeyDown(keyTable.dash) || _input->getController()[playerIndex]->wasButton(virtualControllerNS::BUTTONS::Y)) { return; }
@@ -859,7 +889,8 @@ void AnimationPlayer::updateAnimationIDNextInstallation(void)
 
 	animationID.current = animationNS::TYPE::INSTALLATION;
 	animation->animationSpeed = 1.5f;
-	if (!getFlagMoveBan()) { setFlagMoveBan(true); }
+	//animation->animationSpeed = 2.0f;
+	//if (!getFlagMoveBan()) { setFlagMoveBan(true); }
 	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::INSTALLATION);
 
@@ -875,6 +906,7 @@ void AnimationPlayer::updateAnimationIDNextStanding(void)
 
 	animationID.current = animationNS::TYPE::STANDING;
 	animation->animationSpeed = 1.5f;
+	//animation->animationSpeed = 2.0f;
 	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::STANDING);
 

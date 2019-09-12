@@ -6,6 +6,7 @@
 #pragma once
 #include "KnowledgeSourceBase.h"
 #include "input.h"
+#include "AnimationPlayer.h"
 
 
 namespace MotionGenerationNS
@@ -22,11 +23,13 @@ private:
 	BodyBB* bodyBB;
 	Input* input;
 	playerNS::OperationKeyTable keyTable;
+	AnimationPlayer* animationPlayer;
 
 public:
 	// Method
 	MotionGeneration(void);
 	~MotionGeneration(void);
+	void setAnimationPlayerPointer(AnimationPlayer* setting) { animationPlayer = setting; }
 	void initialize(void) {}
 	void initialize(Input* input, playerNS::OperationKeyTable _keyTable);	// ‰Šú‰»ˆ—
 	void uninitialize(void) override;										// I—¹ˆ—

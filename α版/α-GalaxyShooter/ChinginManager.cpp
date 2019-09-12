@@ -129,11 +129,13 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 D3DXVECTOR3 ChinginManager::moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition)
 {
 	D3DXVECTOR3 speed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 moveDirection = targetPosition - position;
-	//float distance = D3DXVec3Length(&moveDirection);
-	//float magneticeForce = (target.amount*amount) / distance;
-	D3DXVec3Normalize(&moveDirection, &moveDirection);
-	speed += moveDirection * 2.0f;// ‚±‚Ì‚Ö‚ñ‚Í‚Ü‚¾“K“–
+
+	//D3DXVECTOR3 straightDirection;
+	//D3DXVECTOR3 
+	//
+
+	//D3DXVec3Normalize(&moveDirection, &moveDirection);
+	//speed += moveDirection * 2.0f;// ‚±‚Ì‚Ö‚ñ‚Í‚Ü‚¾“K“–
 
 	return speed;
 }
@@ -182,10 +184,3 @@ void ChinginManager::generateChingin(int num, D3DXVECTOR3 setPosition, Player* t
 		}
 	}
 }
-
-
-//void ChinginManager::reverseAmount()
-//{
-//	amount *= -1.0f;
-//}
-

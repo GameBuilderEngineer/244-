@@ -111,7 +111,8 @@ void AgentAI::initialize(
 	recognitionBB->setElementMemoryPilePointer(&elementMemoryPile);
 	recognitionBB->setPointerWhetherInstallationEffectiveDistance(&whetherInstallationEffectiveDistance);
 	recognitionBB->setSkyHeightPointer(&skyHeight);
-	bodyBB->configMovingDestination(opponent->getPosition()); // ●
+	motionGeneration->setAnimationPlayerPointer(animationPlayer);
+	bodyBB->configMovingDestination(opponent->getPosition());// ●
 }
 
 
@@ -266,6 +267,9 @@ void AgentAI::updatePlayerAfter(float frameTime)
 	//【オブジェクト：更新】
 	//===========
 	Object::update();
+
+	// アニメーションの更新
+	animationPlayer->update(input, state);
 
 	//===========
 	//【弾の更新】

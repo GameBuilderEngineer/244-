@@ -508,8 +508,6 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	wasuremonoManager.instancingRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
 		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));	// ƒCƒ“ƒXƒ^ƒ“ƒVƒ“ƒO•`‰æ‚ð‚â‚ë‚¤‚µ‚½‚ªãŽè‚­‚¢‚Á‚Ä‚¢‚È‚¢
 #endif
-
-
 	// ƒ`ƒ“ƒMƒ“‚Ì•`‰æ
 	chinginManager.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
