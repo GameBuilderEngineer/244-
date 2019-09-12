@@ -12,7 +12,7 @@ namespace shockWaveNS
 {
 	const int VERTEX_NUM = 24;
 	const int POLYGON_NUM = VERTEX_NUM*2;
-	const float EXISTENCE_TIME = 2.0f;
+	const float EXISTENCE_TIME = 3.0f;
 	const float HEIGHT = 5.0f;
 	const float WIDTH = 5.0f;
 }

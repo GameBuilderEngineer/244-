@@ -66,14 +66,19 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 1
-#define USING_AI
-	player[0] = new Player;
-	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
-#else
-	player[0] = new Player;
-	player[1] = new Player;
-#endif
+//#if 1
+//#define USING_AI
+//#else
+//#endif
+	if (input->getController()[1]->getControllerID() == virtualControllerNS::EMPTY)
+	{
+		player[0] = new Player;
+		player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
+	}
+	else {
+		player[0] = new Player;
+		player[1] = new Player;
+	}
 
 	//camera
 	for (int i = 0; i < NUM_PLAYER; i++)
@@ -883,7 +888,7 @@ void Game::collisions() {
 			{
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
-				player[PLAYER2]->damgae(5);
+				player[PLAYER2]->damgae(12);
 				hpEffect[PLAYER2].activate(20);
 				player[PLAYER1]->bullet[i].inActivation();
 			}
@@ -904,7 +909,7 @@ void Game::collisions() {
 			{
 				// サウンドの再生
 				sound->play(soundNS::TYPE::SE_HIT, soundNS::METHOD::PLAY);
-				player[PLAYER1]->damgae(5);
+				player[PLAYER1]->damgae(12);
 				hpEffect[PLAYER1].activate(20);
 				player[PLAYER2]->bullet[i].inActivation();
 
