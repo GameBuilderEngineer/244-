@@ -55,11 +55,11 @@ TextureLoader::TextureLoader()
 	textureName[UI_CHARACTER_SELECT_READY_WAITING] = { "CharacterSelect_Ready_Waiting.png" };
 
 	// Game
-	textureName[UI_COUNT_DOWN_FINISH] = { "Game_CountDown_Finish.png" };
-	textureName[UI_COUNT_DOWN_GO] = { "Game_CountDown_Go.png" };
 	textureName[UI_COUNT_DOWN_ONE] = { "Game_CountDown_One.png" };
 	textureName[UI_COUNT_DOWN_TWO] = { "Game_CountDown_Two.png" };
 	textureName[UI_COUNT_DOWN_THREE] = { "Game_CountDown_Three.png" };
+	textureName[UI_COUNT_DOWN_GO] = { "Game_CountDown_Go.png" };
+	textureName[UI_COUNT_DOWN_FINISH] = { "Game_CountDown_Finish.png" };
 	textureName[UI_PLAY_TIME_CHINGIN] = { "Game_PlayTime_Chingin_BackGround.png" };
 	textureName[UI_CUT_MEMORY_LINE] = { "Game_Cut_Memory_Line.png" };
 	textureName[UI_REVIVAL_BAR] = { "Game_Revival_Bar.png" };

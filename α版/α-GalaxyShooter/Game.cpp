@@ -180,7 +180,6 @@ void Game::initialize(
 	//ポーズの初期化
 	uiPause.initialize(direct3D9->device, _textureLoader);
 
-
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
 
@@ -762,7 +761,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
 	// ユーザインタフェース
-	if (onUI) {
 		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -785,7 +783,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
 			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage(),i);
 		}
-	}
 
 	// 画面分割線
 	uiScreenSplitLine.render(device);
@@ -806,7 +803,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (!gameMaster->whetherAlreadyStart())
 	{
-		////カウントダウン３…２…１…
+		//カウントダウン３…２…１…
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
@@ -825,12 +822,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			{
 				uiCountDown[i].render(device, uiCountDownNS::TYPE::GO);
 			}
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+			if (gameMaster->getStartFinishFlag())
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+				gameMaster->setStartFinishFlag(false);
+			}
 		}
 	}
 
-	if(gameMaster->whetherCountFinish())
+	if(gameMaster->whetherCountFinish()&&gameMaster->getCount()>0)
 	{
 		//カウントダウン３…２…１…
 		for (int i = 0; i < NUM_PLAYER; i++)
@@ -852,8 +853,12 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			{
 				uiCountDown[i].render(device, uiCountDownNS::TYPE::FINISH);
 			}
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_GAME_TIME_UP, soundNS::METHOD::PLAY);
+			if (gameMaster->getStartFinishFlag())
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_GAME_TIME_UP, soundNS::METHOD::PLAY);
+				gameMaster->setStartFinishFlag(false);
+			}
 		}
 	}
 
