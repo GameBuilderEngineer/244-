@@ -72,7 +72,7 @@ void ChinginManager::update(Sound* _sound, float frameTime)
 
 
 		chingin[i]->setSpeed(moveSpeed(*chingin[i]->getPosition(), *chingin[i]->getTarget()->getPosition()));
-		chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec*2);
+		chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec);
 		chingin[i]->setPosition(*chingin[i]->getPosition() + *chingin[i]->getSpeed());
 
 

@@ -889,8 +889,7 @@ void AnimationPlayer::updateAnimationIDNextInstallation(void)
 
 	animationID.current = animationNS::TYPE::INSTALLATION;
 	animation->animationSpeed = 1.5f;
-	//animation->animationSpeed = 2.0f;
-	//if (!getFlagMoveBan()) { setFlagMoveBan(true); }
+	if (!getFlagMoveBan()) { setFlagMoveBan(true); }
 	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::INSTALLATION);
 
@@ -906,7 +905,6 @@ void AnimationPlayer::updateAnimationIDNextStanding(void)
 
 	animationID.current = animationNS::TYPE::STANDING;
 	animation->animationSpeed = 1.5f;
-	//animation->animationSpeed = 2.0f;
 	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::STANDING);
 

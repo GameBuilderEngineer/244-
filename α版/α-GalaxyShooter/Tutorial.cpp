@@ -75,7 +75,7 @@ void Tutorial::update(float frameTime)
 		input->getController()[PLAYER2]->wasButton(virtualControllerNS::A))
 	{
 		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_CANCEL, soundNS::METHOD::PLAY);
+		sound->play(soundNS::TYPE::SE_PAPER, soundNS::METHOD::PLAY);
 
 		// チュートリアルを次へ
 		tutorial2D.next++;

@@ -655,7 +655,10 @@ void Player::updateSky(float frameTime)
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
 	skyTimer -= frameTime;
 	skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
-	if (skyHeight >= SKY_HEIGHT) { animationPlayer->setFlagRecursion(false); }
+	if (skyHeight >= SKY_HEIGHT) { 
+		animationPlayer->setFlagMoveBan(false);
+		animationPlayer->setFlagRecursion(false); 
+	}
 
 	if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
 	{
@@ -797,7 +800,7 @@ void Player::updateBullet(float frameTime)
 		bullet[elementBullet].activation();
 		bullet[elementBullet].configurationGravity(attractorPosition,attractorRadius);
 		bullet[elementBullet].Object::update();
-		postureControl(axisZ.direction, front, 1.0f);//カメラ方向にキャラクターが向く
+		//postureControl(axisZ.direction, front, 1.0f);//カメラ方向にキャラクターが向く
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;

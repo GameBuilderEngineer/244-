@@ -93,9 +93,9 @@ void Gun::render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _view, D3DXMATRIX _projec
 	//	}
 	//}
 
-	D3DXMatrixIdentity(&matrixWorld);
-	D3DXMatrixMultiply(&matrixWorld, &_matrixPlayer, &_matrixAnimation);
-
+	//D3DXMatrixIdentity(&matrixWorld);
+	//D3DXMatrixMultiply(&matrixWorld, &_matrixPlayer, &_matrixAnimation);
+	matrixWorld = _matrixPlayer;
 	Object::render(_device, _view, _projection, _cameraPositon);
 
 	return;
