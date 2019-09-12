@@ -33,6 +33,20 @@ void SceneEffect::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLo
 //=============================================================================
 void SceneEffect::update(float frameTime)
 {
+	generateTimer += frameTime;
+
+	if (generateTimer >= GENERATE_TIME&&onGameScene)
+	{
+		D3DXVECTOR3 generatePosition;
+		D3DXVECTOR3 initialSpeed;
+		D3DXVECTOR3 value;
+		value = D3DXVECTOR3((float)((rand() % 100) - 50), (float)((rand() % 100) - 50), (float)((rand() % 100) - 50));
+		D3DXVec3Normalize(&value, &value);
+		generatePosition = value*70.0f;
+		initialSpeed = value* ((float)(rand() % 10)/10.0f);
+		generateSceneEffect(GAME_SCENE_GENERATE_NUM,generatePosition,initialSpeed);
+		generateTimer = 0.0f;
+	}
 
 	// 使用中のエフェクトの挙動を更新する
 	for (int i = 0; i < SCENE_EFFECT; i++)
@@ -94,6 +108,38 @@ void SceneEffect::generateSceneEffect(int num, D3DXVECTOR3 positionToGenerate)
 			sceneEffect[i].setPosition(positionToGenerate);
 			// エフェクトスピード設定
 			sceneEffect[i].setSpeed(D3DXVECTOR3(0.0,(float)(rand()%1+0.1),0.0));
+			D3DXMatrixIdentity(sceneEffect[i].getMatrixWorld());
+			// 使用へ
+			sceneEffect[i].setUse(true);
+			// 使用中エフェクトカウント加算
+			numOfUse++;
+		}
+		// エフェクトカウント加算
+		cnt++;
+	}
+}
+
+//==================================================================
+// エフェクトを発生させる
+//========================================================================================
+void SceneEffect::generateSceneEffect(int num, D3DXVECTOR3 positionToGenerate,D3DXVECTOR3 initialSpeed)
+{
+	// エフェクトカウント初期化
+	int cnt = 0;
+
+	for (int i = 0; i < SCENE_EFFECT; i++)
+	{
+		// エフェクトが使用されていたら入らない
+		if (sceneEffect[i].getUse()) { continue; }
+
+		if (cnt < num)
+		{
+			// 生存時間初期化
+			sceneEffect[i].time = 0.0;
+			// エフェクト位置設定
+			sceneEffect[i].setPosition(positionToGenerate);
+			// エフェクトスピード設定
+			sceneEffect[i].setSpeed(initialSpeed);
 			D3DXMatrixIdentity(sceneEffect[i].getMatrixWorld());
 			// 使用へ
 			sceneEffect[i].setUse(true);

@@ -67,7 +67,7 @@ HRESULT UIChingin::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Textu
 		HEIGHT,															//	高さ
 		D3DXVECTOR3														//	座標
 		(
-			_playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,	//	座標 x
+			!_playerIndex ? POSITION_X_PLAYER_1 : POSITION_X_PLAYER_2,	//	座標 x
 			POSITION_Y,													//	座標 y
 			0.0f														//	座標 z
 		),
@@ -95,25 +95,35 @@ void UIChingin::release(void)
 // render
 // 描画
 //============================================================================================================================================
-void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin)
+void UIChingin::render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin,int playerID)
 {
 	// UI背景
 	sprite.render(_device);
-
-	// テキスト
-	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "SCORE");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "SCORE");
-
-	// ゲーム時間が半分（２分）を切ったら、チンギンを隠す（表示を「???」に変更）…現在はタイマーの完成待ちなので、とりあえず条件を「シーンタイマーが30秒を超えたら」に設定
-	// タイマーが完成次第、条件文を再設定すること
-	if (_time < 30.0f)
+	switch (playerID)
 	{
-		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
-		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "%d", _chingin);
-		return;
+	case playerNS::PLAYER1:
+		// テキスト
+		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 165.0f, POSITION_Y - 25.0f, "SCORE");
+		// ゲーム時間が半分（２分）を切ったら、チンギンを隠す（表示を「???」に変更）
+		if (_time > gameMasterNS::GAME_TIME / 2.0f)
+		{
+			textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "%05d", _chingin);
+		}
+		else {
+			textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "?????");
+		}
+		break;
+	case playerNS::PLAYER2:
+		// テキスト
+		textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 165.0f, POSITION_Y - 25.0f, "SCORE");
+		// ゲーム時間が半分（２分）を切ったら、チンギンを隠す（表示を「???」に変更）
+		if (_time > gameMasterNS::GAME_TIME / 2.0f)
+		{
+			textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "%05d", _chingin);
+		}
+		else {
+			textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "?????");
+		}
+		break;
 	}
-	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_1 - 30.0f, POSITION_Y - 25.0f, "?????");
-	textManager->text[textManagerNS::TYPE::NEW_RODIN_GAME_TIME]->print(POSITION_X_PLAYER_2 - 30.0f, POSITION_Y - 25.0f, "?????");
-
-	return;
 }

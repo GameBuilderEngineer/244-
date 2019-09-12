@@ -51,7 +51,6 @@ protected:
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
-
 public:
 	EffectManager();
 	~EffectManager();

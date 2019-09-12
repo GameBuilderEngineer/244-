@@ -22,11 +22,11 @@ namespace uiCountDownNS
 
 	enum TYPE
 	{
-		FINISH = (-1),
 		GO,
 		ONE,
 		TWO,
 		THREE,
+		FINISH,
 		TYPE_MAX
 	};
 	enum PLAYER_TYPE

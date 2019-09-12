@@ -174,9 +174,11 @@ void Game::initialize(
 	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
 	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
+	// シーンエフェクト初期化
+	sceneEffect.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	sceneEffect.setOnGameScene(true);
 	//ポーズの初期化
 	uiPause.initialize(direct3D9->device, _textureLoader);
-
 
 	// マップ初期化
 	map.initialize(direct3D9->device, &field);
@@ -385,6 +387,10 @@ void Game::update(float _frameTime) {
 	// ラインエフェクトの更新
 	lineEffect.update(frameTime);
 
+	//シーンエフェクトの更新
+	sceneEffect.update(frameTime);
+
+
 	// マップの更新
 	map.update(frameTime, wasuremono);
 
@@ -488,6 +494,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device, currentCamera.position);
+
+	// シーンエフェクトの描画
+	sceneEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
@@ -750,12 +759,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 	if (input->wasKeyPressed('U'))onUI = !onUI;
 
 	// ユーザインタフェース
-	if (onUI) {
-
-		// チンギン完成までの仮
-		static int chingin = 0;
-		if (chingin < 99999) { chingin++; }
-
 		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -776,9 +779,8 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
-			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage());
+			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage(),i);
 		}
-	}
 
 	// 画面分割線
 	uiScreenSplitLine.render(device);
@@ -799,7 +801,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	if (!gameMaster->whetherAlreadyStart())
 	{
-		////カウントダウン３…２…１…
+		//カウントダウン３…２…１…
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
@@ -818,12 +820,16 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			{
 				uiCountDown[i].render(device, uiCountDownNS::TYPE::GO);
 			}
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+			if (gameMaster->getStartFinishFlag())
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_GAME_START, soundNS::METHOD::PLAY);
+				gameMaster->setStartFinishFlag(false);
+			}
 		}
 	}
 
-	if(gameMaster->whetherCountFinish())
+	if(gameMaster->whetherCountFinish()&&gameMaster->getCount()>0)
 	{
 		//カウントダウン３…２…１…
 		for (int i = 0; i < NUM_PLAYER; i++)
@@ -845,8 +851,12 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 			{
 				uiCountDown[i].render(device, uiCountDownNS::TYPE::FINISH);
 			}
-			// サウンドの再生
-			sound->play(soundNS::TYPE::SE_GAME_TIME_UP, soundNS::METHOD::PLAY);
+			if (gameMaster->getStartFinishFlag())
+			{
+				// サウンドの再生
+				sound->play(soundNS::TYPE::SE_GAME_TIME_UP, soundNS::METHOD::PLAY);
+				gameMaster->setStartFinishFlag(false);
+			}
 		}
 	}
 
@@ -986,6 +996,8 @@ void Game::collisions() {
 			}
 		}
 	}
+
+
 
 	//ガラクタとプレイヤー
 	for (int i = 0; i < NUM_PLAYER; i++)

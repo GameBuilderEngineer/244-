@@ -35,6 +35,10 @@ void GameMaster::initialize()
 //===================================================================================================================================
 void GameMaster::update(float frameTime)
 {
+	if (startInterval > 0) {
+		startInterval -= frameTime;
+		return;
+	}
 	//ゲーム開始カウントダウン
 	gameStartCount(frameTime);
 	if (!alreadyStart)return;
@@ -45,6 +49,7 @@ void GameMaster::update(float frameTime)
 
 	//ゲーム終了カウントダウン
 	gameFinishCount(frameTime);
+	if(displayFinish())displayFinishTimer -= frameTime;
 
 }
 
@@ -75,6 +80,7 @@ void GameMaster::gameStartCount(float frameTime)
 
 	if (count == 0)
 	{
+		startFinishFlag = true;
 		alreadyStart = true;	//ゲーム開始
 		displayStartTimer = DISPLAY_START_TIME;
 		setCountDown();			//ゲーム終了カウントダウンのセット
@@ -99,6 +105,7 @@ void GameMaster::gameFinishCount(float frameTime)
 
 	if (count == 0)
 	{
+		startFinishFlag = true;
 		alreadyFinish = true;
 		displayFinishTimer = DISPLAY_FINISH_TIME;
 	}
@@ -124,6 +131,7 @@ void GameMaster::gameStart()
 	gameTimer			= GAME_TIME;
 	displayStartTimer	= 0.0f;
 	displayFinishTimer	= 0.0f;
+	startInterval		= START_INTERVAL;
 	setCountDown();
 }
 
@@ -136,7 +144,7 @@ void GameMaster::setPlayerCharacter(int playerNo,int playerType, int modelType) 
 	playerInformation[playerNo].playerType= playerType;
 	playerInformation[playerNo].modelType = modelType;
 }
-
+void GameMaster::setStartFinishFlag(bool _flag) { startFinishFlag = _flag; }
 //===================================================================================================================================
 //【getter】
 //===================================================================================================================================
@@ -147,11 +155,11 @@ int GameMaster::getResult() {
 	{
 		result = WIN_1P;
 	}
-	else
+	else if(playerInformation[playerNS::PLAYER1].wage < playerInformation[playerNS::PLAYER2].wage)
 	{
 		result = WIN_2P;
 	}
-	return DRAW;
+	return result;
 }
 //プレイヤー情報の取得
 playerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}
@@ -163,6 +171,7 @@ int GameMaster::getCount() { return count; }
 bool GameMaster::getCountFlag() { return countFlag; }
 bool GameMaster::whetherAlreadyStart() { return alreadyStart; }
 bool GameMaster::whetherAlreadyFinish() { return alreadyFinish; }
-bool GameMaster::whetherCountFinish() { return gameTimer < (float)COUNT_DOWN; }
+bool GameMaster::whetherCountFinish() { return gameTimer < (float)(COUNT_DOWN+1); }
 bool GameMaster::displayStart() { return displayStartTimer > 0.0f; }
 bool GameMaster::displayFinish() { return displayFinishTimer > 0.0f; }
+bool GameMaster::getStartFinishFlag() { return startFinishFlag; }

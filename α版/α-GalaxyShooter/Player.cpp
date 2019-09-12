@@ -1112,7 +1112,7 @@ void Player::setCollidedMemoryLine(bool frag) { collidedOpponentMemoryLine = fra
 void Player::setCollideMemoryLinePosition(D3DXVECTOR3 value){ 
 	collideMemoryLinePosition = value; }
 void Player::setAnimationModel(AnimationPlayer* _animation) { animationPlayer = _animation; }
-
+void Player::setWage(int value) { wage = value; }
 //===================================================================================================================================
 //ÅygetterÅz
 //===================================================================================================================================

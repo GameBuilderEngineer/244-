@@ -38,6 +38,7 @@
 #include "EffectManager.h"
 #include "Lambert.h"
 #include "UICountDown.h"
+#include "SceneEffect.h"
 
 #define JUNK_MAX (100) //ガラクタの数
 
@@ -123,6 +124,7 @@ private:
 	UIScreenSplitLine uiScreenSplitLine;
 	UICountDown uiCountDown[gameNS::NUM_PLAYER];
 	LineEffect lineEffect;		//ラインエフェクト
+	SceneEffect sceneEffect;	//	シーンエフェクト
 
 	Colony colony[gameNS::NUM_COLONY];
 	Colony star100[gameNS::NUM_STAR_X100];
