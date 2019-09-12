@@ -797,7 +797,7 @@ void Player::updateBullet(float frameTime)
 		bullet[elementBullet].activation();
 		bullet[elementBullet].configurationGravity(attractorPosition,attractorRadius);
 		bullet[elementBullet].Object::update();
-		postureControl(axisZ.direction, front, 1.0f);//カメラ方向にキャラクターが向く
+		//postureControl(axisZ.direction, front, 1.0f);//カメラ方向にキャラクターが向く
 		elementBullet++;
 		if (elementBullet >= NUM_BULLET)elementBullet = 0;
 		intervalBullet = INTERVAL_BULLET;

@@ -52,7 +52,7 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	static const float STOP_MOVE_LENGTH = 6.0f;
-	static const float STOP_MOVE_LENGTH_STRICT = 5.5f;
+	static const float STOP_MOVE_LENGTH_STRICT = 3.5f;
 	
 	//--------------------------
 	// “ž’…‚µ‚Ä‚¢‚½‚ç’âŽ~‚ÅŽ¸”s

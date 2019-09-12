@@ -32,7 +32,7 @@ namespace EnvilonmentAnalysisNs
 	const int	NUM_TEST_CASES_PER_NODE = NUM_TEST_SIZE * NUM_TEST_ZONE;// 一つのノードについて衝突検知の試行回数
 
 	// リカージョンエリア判定用バウンディングスフィア
-	const float	TEST_SIZE_RADIUS_BASE = 13.0f;			// 基本半径
+	const float	TEST_SIZE_RADIUS_BASE = 14.0f;			// 基本半径
 	const float	TEST_SIZE_RADIUS_ADD = 5.0f;			// 追加半径
 	const float  TEST_SIZE_RADIUS_FUZZY_ADJUST = 1.0f;	// サイズ集合が各1.0のときに含む実際のBS半径の最小最大との差
 	const float  AXIS_TILT_ANGLE_FOR_SMALL_BS = 0.22f;	// サイズに応じた配置半径を作るためレイを傾ける角度
