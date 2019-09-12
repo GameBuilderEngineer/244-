@@ -296,7 +296,10 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	upEffect.render(device, view, projection, cameraPosition);
 
 	// e‚Ì•`‰æ
-	gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer->getAnimation(), "daren_RightHand"));
+	if (animationPlayer->getFlagGunRender())
+	{
+		gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer->getAnimation(), "daren_RightHand"));
+	}
 
 	//ƒoƒŒƒbƒg‚Ì•`‰æ
 	for (int i = 0; i < NUM_BULLET; i++)

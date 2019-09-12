@@ -146,6 +146,7 @@ void AnimationPlayer::release(void)
 {
 	// アニメーションの解放
 	animation->release(animation);
+	SAFE_DELETE(animation);
 
 	return;
 }

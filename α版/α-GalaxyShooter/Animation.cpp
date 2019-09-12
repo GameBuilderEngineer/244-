@@ -33,10 +33,7 @@ void release(Animation* _animation)
 	SAFE_DELETE_ARRAY(_animation->animationManager);
 	SAFE_RELEASE(_animation->animationController);
 	SAFE_DELETE(_animation->allocateHierarchy);
-
-	D3DXFrameDestroy(_animation->rootFrame, _animation->allocateHierarchy);
-
-	SAFE_DELETE(_animation);
+	//SAFE_DELETE(_animation);
 
 	return;
 }
