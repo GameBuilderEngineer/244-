@@ -12,22 +12,51 @@ void BehaviorTree::offense(void)
 {
 	currentTree = OFFENSE_TREE;
 
-	addNode(PARENT_IS_NOT_EXIST, PARARELL);
+	addNode(PARENT_IS_NOT_EXIST, PRIORITY);
 
 	addNode(0, SEQUENCE);
-	addNode(0, SEQUENCE);
-	addNode(0, SET_DESTINATION_OPPONENT);
-	addNode(0, SET_TARGET_OPPONENT);
+	addNode(0, PARARELL);
 
+	addNode(1, IF_OPPONENT_DOES_RECURSION);
+	addNode(1, SET_DESTINATION_TO_CUT_LINE);
+	addNode(1, PARARELL);
 
-	addNode(1, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
-	addNode(1, ACTION_JUMP);
+	addNode(2, SEQUENCE);
+	addNode(2, SEQUENCE);
+	addNode(2, SEQUENCE);
+	addNode(2, SEQUENCE);
+	addNode(2, SET_TARGET_OPPONENT);
+	addNode(2, SEQUENCE);
+	addNode(2, SEQUENCE);
+	addNode(2, ACTION_MOVE);
 
-	addNode(2, IF_BULLET_NEAR);
-	addNode(2, ACTION_JUMP);
+	// 14～
+	addNode(5, ACTION_MOVE);
+	addNode(5, ACTION_CUT);
+	addNode(6, IF_FIVE_SECONDS_LATER);
+	addNode(6, RANDOM);
+	addNode(7, IF_OPPONENT_NEAR);
+	addNode(7, IF_OPPONENT_IS_DOWN);
+	addNode(7, SET_RECUASION_OPPONENT_STATE);
+	addNode(8, IF_BULLET_NEAR);
+	addNode(8, RANDOM);
+	addNode(9, IF_SHOCK_WAVE_MAY_BE_HAPPEN);
+	addNode(9, IF_ONE_SECOND_LATER);
+	addNode(9, ACTION_JUMP);
+	addNode(11, IF_FIVE_SECONDS_LATER);
+	addNode(11, SET_BULLET_SWITCH);
+	addNode(12, IF_BULLET_SWITCH_IS_ON);
+	addNode(12, ACTION_SHOOT);
 
-	addNode(0, ACTION_MOVE);
-	addNode(0, ACTION_SHOOT);
+	// 30～
+	addNode(17, SET_DESTINATION_OPPONENT);
+	addNode(17, SET_DESTINATION_RANDOM);
+	addNode(22, SEQUENCE);
+	addNode(22, ACTION_JUMP);
+
+	//34～
+	addNode(32, IF_ONE_SECOND_LATER);
+	addNode(32, SET_DESTINATION_RANDOM);
 }
 
 
@@ -40,7 +69,7 @@ void BehaviorTree::deffense(void)
 
 
 	addNode(PARENT_IS_NOT_EXIST, PARARELL);
-	addNode(0, SEQUENCE);
+	addNode(0, PRIORITY);
 	addNode(0, SEQUENCE);
 	addNode(0, SEQUENCE);
 	addNode(0, SEQUENCE);
@@ -77,6 +106,25 @@ void BehaviorTree::recursion(void)
 	addNode(5, ACTION_PILE);
 	addNode(5, SET_DESTINATION_NEXT_PILE);
 }
+
+
+//=============================================================================
+// リカージョンツリー（相手版）
+//=============================================================================
+void BehaviorTree::recursionOpponent(void)
+{
+	currentTree = RECURSION_TREE_OPPONENT_VER;
+
+	addNode(PARENT_IS_NOT_EXIST, SEQUENCE);
+	addNode(0, SET_RECURSION_RECOGNITION_FOR_OPPONENT);
+	addNode(0, IF_RECURSION_IS_RUNNING);
+	addNode(0, PRIORITY);
+	addNode(3, ACTION_MOVE);
+	addNode(3, SEQUENCE);
+	addNode(5, ACTION_PILE);
+	addNode(5, SET_DESTINATION_NEXT_PILE);
+}
+
 
 //=============================================================================
 // ダウンツリー
@@ -129,6 +177,7 @@ BehaviorTree::BehaviorTree(void)
 	offense();
 	deffense();
 	recursion();
+	recursionOpponent();
 	down();
 	sky();
 	fall();

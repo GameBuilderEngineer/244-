@@ -52,7 +52,7 @@ void WasuremonoManager::initialize(LPDIRECT3DDEVICE9 device,
 	}
 
 	// ワスレモノ初期座標の決定
-	std::vector<D3DXVECTOR3> position(INITIAL_PLACEMENT_NUMBER);
+  	std::vector<D3DXVECTOR3> position(INITIAL_PLACEMENT_NUMBER);
 	for (size_t i = 0; i < position.size(); i++)
 	{
 		position[i] = positionRand(1.05f/*半径比1.0だとめり込みの関係か著しく位置が偏る*/);
@@ -197,8 +197,8 @@ void WasuremonoManager::destroy(int i)
 int WasuremonoManager::decideType()
 {
 	int temp = rand() % 10000;
-	float keyValue = temp / 100.0f;	// キー値
-	int ans = -1;					// 返却値
+	float scale = temp / 100.0f;
+	int ans = -1;	// 返却値
 
 	// ワスレモノ出現確率をキー値と比較する範囲として扱う
 	// キー値が範囲内に入ったときのワスレモノに決定する
@@ -206,9 +206,10 @@ int WasuremonoManager::decideType()
 	for (int i = 0; i < NUM_WASUREMONO; i++)
 	{
 		sum += table->getProbability(i);
-		if (keyValue < sum)
+		if (scale < sum)
 		{
 			ans = i;
+			break;
 		}
 	}
 	return ans;

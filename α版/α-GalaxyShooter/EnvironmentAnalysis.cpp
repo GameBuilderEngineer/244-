@@ -29,7 +29,7 @@ static FILE* fp2 = NULL;
 // デバッグ描画が有効の場合
 #ifdef AI_RENDER_MODE
 
-#if 1
+#if 0
 #define RENDER_LINE_CUT_POINT	// メモリーライン切断座標を描画する
 static LPD3DXMESH cutPoint = NULL;
 static D3DMATERIAL9 cutPointMat;
@@ -40,7 +40,7 @@ static D3DMATERIAL9 cutPointMat;
 static BoundingSphere spherePoint;
 #endif
 
-#if 0
+#if 1
 #define RENDER_PILE_POINT		// パイル設置座標を描画する
 static LPD3DXMESH pilePoint = NULL;
 static D3DMATERIAL9 pointMat;
@@ -128,7 +128,7 @@ void EnvironmentAnalysis::update(AgentAI* agentAI)
 	return;
 #endif //AI_RENDER_MODE
 
-	if (++battleAnalysisFrameCount % BATTLE_ANALYSIS_FPS/**/)
+	if (++battleAnalysisFrameCount % BATTLE_ANALYSIS_FPS)
 	{
 		analyzeBattle(agentAI);			// バトル状況を解析
 		battleAnalysisFrameCount = 0;
@@ -138,7 +138,8 @@ void EnvironmentAnalysis::update(AgentAI* agentAI)
 
 	if (++vRecursionFrameCount % VIRTUAL_RECURSION_FPS == 0)
 	{
-		virtualRecursion(agentAI);		// 仮想リカージョン
+		virtualRecursion(agentAI);			// 仮想リカージョン
+		virtualRecursionForOpponent(agentAI);	// 仮想リカージョンfor相手
 		vRecursionFrameCount = 0;
 	}
 
@@ -154,7 +155,7 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 	//------
 	// 相手
 	//------
-	//距離
+	// 距離
 	// センサーで視界に入ったときの距離で判定
 	float opponentNearSet = 
 		fuzzy.reverseGrade(recognitionBB->getDistanceBetweenPlayers(), 0.0f, LENGTH_OPPONENT_IS_NEAR);
@@ -176,6 +177,7 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 			recognitionBB->setMayHappenShockWave(true);
 		}
 	}
+
 
 	//----------------
 	// バレットの解析
@@ -261,7 +263,7 @@ void EnvironmentAnalysis::analyzeBattle(AgentAI* agentAI)
 
 
 //=============================================================================
-// メモリーライン切断座標を算出
+// メモリーライン切断座標を算出 (不完全妥協版)
 //=============================================================================
 void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 {
@@ -410,21 +412,21 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 	//}
 
 
-		// エージェント⇔最短パイルのベクトルがパイル同士のベクトル２つに対して
-		// どの程度角度が開いているかにより座標を３つから選択する
-		if (radian0and1 > D3DX_PI * 0.5f && radian0and2 > D3DX_PI * 0.5f)
-		{// 両方のベクトルに対し鈍角
-			recognitionBB->setLineCutCoord(
-				*pile[0]->getPosition() + pile[0]->getReverseAxisY()->direction * DIFFERENSE_BETWEEN_GROUND);
-		}
-		else if (radian0and1 < D3DX_PI * 0.5f)
-		{
-			recognitionBB->setLineCutCoord(posLine0to1);
-		}
-		else if (radian0and2 < D3DX_PI * 0.5f)
-		{
-			recognitionBB->setLineCutCoord(posLine0to2);
-		}
+	// エージェント⇔最短パイルのベクトルがパイル同士のベクトル２つに対して
+	// どの程度角度が開いているかにより座標を３つから選択する
+	if (radian0and1 > D3DX_PI * 0.5f && radian0and2 > D3DX_PI * 0.5f)
+	{// 両方のベクトルに対し鈍角
+		recognitionBB->setLineCutCoord(
+			*pile[0]->getPosition() + pile[0]->getReverseAxisY()->direction * DIFFERENSE_BETWEEN_GROUND);
+	}
+	else if (radian0and1 < D3DX_PI * 0.5f)
+	{
+		recognitionBB->setLineCutCoord(posLine0to1);
+	}
+	else if (radian0and2 < D3DX_PI * 0.5f)
+	{
+		recognitionBB->setLineCutCoord(posLine0to2);
+	}
 
 
 #ifdef RENDER_LINE_CUT_POINT
@@ -435,9 +437,9 @@ void EnvironmentAnalysis::makeCoordForCut(AgentAI* agentAI)
 	//	pile[0]->getPosition()->y,
 	//	pile[0]->getPosition()->z);
 	D3DXMatrixTranslation(&pointWorldMatrix,
-		recognitionBB->getLineCutCoord().x,
-		recognitionBB->getLineCutCoord().y,
-		recognitionBB->getLineCutCoord().z);
+		recognitionBB->getLineCutCoordPointer()->x,
+		recognitionBB->getLineCutCoordPointer()->y,
+		recognitionBB->getLineCutCoordPointer()->z);
 	D3DMATERIAL9 matDef;
 	device->GetMaterial(&matDef);
 	device->LightEnable(0, false);
@@ -634,8 +636,8 @@ void EnvironmentAnalysis::selectRecursionArea(
 		float radiusSizeBig = fuzzy.grade(recursionRecognition[i].radius,
 			TEST_SIZE_RADIUS_BASE, TEST_SIZE_RADIUS_BASE + 2 * TEST_SIZE_RADIUS_ADD + TEST_SIZE_RADIUS_FUZZY_ADJUST);
 		// 範囲内チンギン額の少なさ⇔多さをファジー入力化
-		float littleAmount = fuzzy.reverseGrade(recursionRecognition[i].totalAmount, 5.0f, 150.0f);
-		float lotAmount = fuzzy.grade(recursionRecognition[i].totalAmount, 130.0f, 550.0f);
+		float littleAmount = fuzzy.reverseGrade(recursionRecognition[i].totalAmount, 5.0f, 100.0f);
+		float lotAmount = fuzzy.grade(recursionRecognition[i].totalAmount, 80.0f, 200.0f);
 
 		// ファジー論理演算等でメリットを算出する
 		float leastMerit, largestMerit, finalMerit;
@@ -776,7 +778,7 @@ void EnvironmentAnalysis::hitCheckAndAssign(AgentAI* agentAI,
 		// 自分の反対側の半球にあるワスレモノは飛ばしてちょっと高速化
 		D3DXVECTOR3 vec = *(*wasuremono)[i]->getPosition() - *agentAI->getPosition();
 		float len = D3DXVec3LengthSq(&vec);
-		if (len > radius2/*三平方の定理*/) { continue; }
+		if (len > radius2 * radius2/*三平方の定理*/) { continue; }
 
 		if (recursionSphere->collide((*wasuremono)[i]->bodyCollide.getCenter(),
 			(*wasuremono)[i]->bodyCollide.getRadius(), recursionWorldMatrix, *(*wasuremono)[i]->getMatrixWorld()))
@@ -806,6 +808,35 @@ void EnvironmentAnalysis::hitCheckAndAssign(AgentAI* agentAI,
 		bs.render(device, recursionWorldMatrix);			// サイズ調整用のスフィア描画
 	}
 #endif
+}
+
+
+//=============================================================================
+// 仮想リカージョンfor相手
+//=============================================================================
+void EnvironmentAnalysis::virtualRecursionForOpponent(AgentAI* agentAI)
+{
+	RecursionRecognition* recursionRecognition = new RecursionRecognition[1];
+
+	float tempLen = D3DXVec3Length(&(*opponent->getPosition() - *Map::getField()->getPosition()));
+	float height = tempLen - Map::getField()->getRadius();
+	D3DXVECTOR3 pos = *opponent->getPosition() + opponent->getReverseAxisY()->direction * height;
+
+	recursionRecognition[0].uniqueID = 0;
+	recursionRecognition[0].center = pos;
+	recursionRecognition[0].totalHit = 0;
+	recursionRecognition[0].totalAmount = 0;
+	recursionRecognition[0].radius = SIZE_RADIUS_OPPONENT_RECURSION;
+
+	int selectionRecognition[NUM_RECURSION_RECOGNITION] = { 0, -1, -1 };
+
+	// メモリーパイルを打ち込む座標を作る
+	makeCoordForPile(selectionRecognition, recursionRecognition, agentAI);
+
+	// 環境認識ブラックボードに保管
+	*recognitionBB->getRecursionRecognitionForOpponent() = *recursionRecognition;
+
+	SAFE_DELETE_ARRAY(recursionRecognition)
 }
 
 
@@ -855,6 +886,7 @@ void  EnvironmentAnalysis::debugRender(AgentAI* agentAI)
 	{
 		cnt = 0;
 		virtualRecursion(agentAI);// 仮想リカージョン
+		virtualRecursionForOpponent(agentAI);	// 仮想リカージョンfor相手
 
 	}
 

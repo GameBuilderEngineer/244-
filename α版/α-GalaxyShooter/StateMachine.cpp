@@ -10,10 +10,10 @@
 OffenseState* OffenseState::instance;
 DeffenseState* DeffenseState::instance;
 RecursionState* RecursionState::instance;
+RecursionOpponentState* RecursionOpponentState::instance;
 DownState* DownState::instance;
 SkyState* SkyState::instance;
 FallState* FallState::instance;
-
 
 /////////////////////////////////////////////////////////////////////////////// 
 /////////////////////////////////// 状態遷移 //////////////////////////////////
@@ -39,9 +39,19 @@ State* OffenseState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB
 		return RecursionState::getInstance();
 	}
 
+	if (recognitionBB->getIsStartRecursionForOpponent())
+	{// リカージョン（相手）状態へ遷移
+		recognitionBB->setIsStartRecursionForOpponent(false);
+ 		return RecursionOpponentState::getInstance();
+	}
+
+	static int cnt = 0;
+	cnt++;
 	if (recognitionBB->getIsOpponentNear() == false
-		&& recognitionBB->getIsOpponentOffensive() == false)
+		&& recognitionBB->getIsOpponentOffensive() == false
+		&& cnt > 60)
 	{// ディフェンス状態へ遷移
+		cnt = 0;
 		return DeffenseState::getInstance();
 	}
 
@@ -68,6 +78,12 @@ State* DeffenseState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryB
 	{// リカージョン状態へ遷移
 		recognitionBB->setIsStartRecursion(false);
 		return RecursionState::getInstance();
+	}
+
+	if (recognitionBB->getIsStartRecursionForOpponent())
+	{// リカージョン（相手）状態へ遷移
+		recognitionBB->setIsStartRecursionForOpponent(false);
+		return RecursionOpponentState::getInstance();
 	}
 
 	if (recognitionBB->getIsOpponentNear() || recognitionBB->getIsOpponentOffensive())
@@ -100,9 +116,63 @@ State* RecursionState::transition(RecognitionBB* recognitionBB, MemoryBB* memory
 
 	if (recognitionBB->getIsRecursionRunning())
 	{
+		// 応急処理
+		static int cnt = 0;
+		cnt++;
+		if ((recognitionBB->getElementMemoryPile() == 0 &&
+			recognitionBB->getNextElementMemoryPile() > 0) || cnt > 600)
+		{//	遷移以外の要因でリカージョンが終了した場合
+			recognitionBB->setIsRecursionRunning(false);
+			recognitionBB->setNextElementMemoryPile(0);
+			cnt = 0;
+		}
+		else
+		{
+			recognitionBB->setNextElementMemoryPile(recognitionBB->getElementMemoryPile());
+			return this;	// リカージョン状態を継続する
+		}
+	}
+
+	if (recognitionBB->getIsOpponentNear() || recognitionBB->getIsOpponentOffensive())
+	{// オフェンス状態へ遷移
+		recognitionBB->setNextElementMemoryPile(0);
+		return OffenseState::getInstance();
+	}
+
+	if (recognitionBB->getIsOpponentNear() == false
+		&& recognitionBB->getIsOpponentOffensive() == false)
+	{// ディフェンス状態へ遷移
+		recognitionBB->setNextElementMemoryPile(0);
+		return DeffenseState::getInstance();
+	}
+
+	return this;// 警告防止（値を返さないコントロールパス～）
+}
+
+
+//=============================================================================
+// リカージョン（相手）状態からの遷移
+//=============================================================================
+State* RecursionOpponentState::transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	if (recognitionBB->getPlayerState() == playerNS::DOWN)
+	{// ダウン状態へ遷移
+		recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setNextElementMemoryPile(0);
+		return DownState::getInstance();
+	}
+
+	if (recognitionBB->getPlayerState() == playerNS::SKY)
+	{// 上空状態へ遷移
+		recognitionBB->setIsRecursionRunning(false);
+		recognitionBB->setNextElementMemoryPile(0);
+		return SkyState::getInstance();
+	}
+
+	if (recognitionBB->getIsRecursionRunning())
+	{
 		if (recognitionBB->getElementMemoryPile() == 0 &&
-			recognitionBB->getNextElementMemoryPile() > 0 &&
-			recognitionBB->getIsRecursionRunning())
+			recognitionBB->getNextElementMemoryPile() > 0 )
 		{//	遷移以外の要因でリカージョンが終了した場合
 			recognitionBB->setIsRecursionRunning(false);
 			recognitionBB->setNextElementMemoryPile(0);
@@ -213,6 +283,7 @@ StateMachine::StateMachine(void)
 	OffenseState::create();
 	DeffenseState::create();
 	RecursionState::create();
+	RecursionOpponentState::create();
 	DownState::create();
 	SkyState::create();
 	FallState::create();
@@ -231,6 +302,7 @@ StateMachine::~StateMachine(void)
 	OffenseState::destroy();
 	DeffenseState::destroy();
 	RecursionState::destroy();
+	RecursionOpponentState::destroy();
 	DownState::destroy();
 	SkyState::destroy();
 	FallState::destroy();

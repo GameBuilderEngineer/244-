@@ -197,6 +197,7 @@ protected:
 	Recursion* recursion;								//リカージョン
 	LPDIRECT3DTEXTURE9 recrusionTexture;				//リカージョン用テクスチャ
 	int elementMemoryPile;								//メモリーパイル要素数
+	bool whetherInstallationEffectiveDistance;			// 接地有効距離かどうか
 	bool onRecursion;									//リカージョン生成フラグ
 	float recursionTimer;								//リカージョン生存時間
 

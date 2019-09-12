@@ -28,6 +28,10 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X100] = { "x100starRegularPolyhedron.x" };
 	fileName[SAMPLE_STATIC_MESH] = { "StaticMesh.x" };
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
+	fileName[WASUREMONO_BALL] = { "ball.x" };
+	fileName[WASUREMONO_PHONE] = { "phone.X" };
+	fileName[WASUREMONO_BUNNY] = { "toybunny.x" };
+	fileName[WASUREMONO_FAN] = { "Fan.x" };
 	fileName[MEMORY_PILE] = { "Memory_Pile.x" };
 }
 
