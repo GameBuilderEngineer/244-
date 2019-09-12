@@ -121,6 +121,7 @@ void Game::initialize(
 		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
 		player[i]->animationPlayer->setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
+		player[i]->animationPlayer->resetAnimation();
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);

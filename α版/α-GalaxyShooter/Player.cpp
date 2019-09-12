@@ -296,9 +296,9 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	upEffect.render(device, view, projection, cameraPosition);
 
 	// e‚Ì•`‰æ
-	if (animationPlayer.getFlagGunRender())
+	if (animationPlayer->getFlagGunRender())
 	{
-		gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+		gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer->getAnimation(), "daren_RightHand"));
 	}
 
 	//ƒoƒŒƒbƒg‚Ì•`‰æ
