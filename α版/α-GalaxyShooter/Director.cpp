@@ -96,6 +96,8 @@ HRESULT Director::initialize(){
 	//StaticMesh
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(d3d->device);
+
+
 	//HierarchyMesh
 	//setVisualDirectory();
 	//SKINMESH

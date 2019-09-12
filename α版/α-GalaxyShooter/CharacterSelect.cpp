@@ -64,17 +64,34 @@ void CharacterSelect::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _s
 	sound->play(soundNS::TYPE::BGM_CHARACTER_SELECT, soundNS::METHOD::LOOP);
 
 	// Camera
-	camera = new Camera;
-	camera->initialize(WINDOW_WIDTH / 2, WINDOW_HEIGHT);
-	camera->setGaze(D3DXVECTOR3(0, 0, 0));
-	camera->setPosition(D3DXVECTOR3(0, 0, -1));
-	camera->setUpVector(D3DXVECTOR3(0, 1, 0));
+	camera = new Camera[PLAYER_TYPE::PLAYER_TYPE_MAX];
+
+	for (int i = 0; i < PLAYER_TYPE::PLAYER_TYPE_MAX; i++)
+	{
+		camera[i].initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		//camera[i].setTarget(player[i].getPosition());
+		//camera[i].setTargetX(&player[i].getAxisX()->direction);
+		//camera[i].setTargetY(&player[i].getAxisY()->direction);
+		//camera[i].setTargetZ(&player[i].getAxisZ()->direction);
+		camera[i].setRelative(CAMERA_RELATIVE_QUATERNION[0]);
+		camera[i].setGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setRelativeGaze(D3DXVECTOR3(0, 0, 0));
+		camera[i].setUpVector(D3DXVECTOR3(0, 1, 0));
+		camera[i].setFieldOfView(D3DX_PI / 2.5);
+	}
+
+	// Light
+	light = new Light;
+	light->initialize(_direct3D9);
 
 	// 画面分割線の初期化
 	uiScreenSplitLine.initialize(_direct3D9->device, textureLoader);
 
 	// キャラクターセレクトUIの初期化
 	uiCharacterSelect.initialize(_direct3D9->device, _textureLoader);
+
+	// シーンエフェクト初期化
+	sceneEffect.initialize(_direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	return;
 }
@@ -85,6 +102,12 @@ void CharacterSelect::initialize(Direct3D9* _direct3D9, Input* _input, Sound* _s
 void CharacterSelect::uninitialize(void)
 {
 	uiCharacterSelect.release();
+
+	// カメラ
+	SAFE_DELETE_ARRAY(camera);
+
+	// ライト
+	SAFE_DELETE(light);
 
 	return;
 }
@@ -105,6 +128,15 @@ void CharacterSelect::update(float _frameTime)
 
 	// キャラクターセレクトUI更新
 	uiCharacterSelect.update(input, sound);
+
+	// シーンエフェクトの更新
+	sceneEffect.update(_frameTime);
+
+	for (int i = 0; i < EFFECT_MAX; i++)
+	{
+		// シーンエフェクト発生
+		sceneEffect.generateSceneEffect(1, D3DXVECTOR3((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50)));
+	}
 
 	return;
 }
@@ -202,12 +234,19 @@ void CharacterSelect::updateTime(float _frameTime)
 void CharacterSelect::render(Direct3D9* _direct3D9)
 {
 	// カメラ・ウィンドウ
-	_direct3D9->device->SetTransform(D3DTS_VIEW, &camera->view);
-	_direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera->projection);
+	_direct3D9->device->SetTransform(D3DTS_VIEW, &camera[PLAYER_TYPE::PLAYER_1].view);
+	_direct3D9->device->SetTransform(D3DTS_PROJECTION, &camera[PLAYER_TYPE::PLAYER_1].projection);
 	_direct3D9->changeViewportFullWindow();
 
 	// 3D
-	render3D(_direct3D9);
+	render3D(_direct3D9, camera[PLAYER_TYPE::PLAYER_1]);
+
+	// αブレンドをつかう
+	_direct3D9->device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	// αソースカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	// αデスティネーションカラーの指定
+	_direct3D9->device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// 2D
 	render2D(_direct3D9->device);
@@ -221,8 +260,11 @@ void CharacterSelect::render(Direct3D9* _direct3D9)
 // render3D
 // 描画 - 3D
 //============================================================================================================================================
-void CharacterSelect::render3D(Direct3D9* _direct3D9)
+void CharacterSelect::render3D(Direct3D9* _direct3D9, Camera _currentCamera)
 {
+	// シーンエフェクトの描画
+	sceneEffect.render(_direct3D9->device, _currentCamera.view, _currentCamera.projection, _currentCamera.position);
+
 	return;
 }
 //============================================================================================================================================
