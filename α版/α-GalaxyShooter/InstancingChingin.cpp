@@ -27,18 +27,27 @@ void InstancingChingin::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMA
 	// 回転を打ち消す。
 	D3DXMATRIX cancelRotation = view;
 	cancelRotation._41 = cancelRotation._42 = cancelRotation._43 = 0;
-	D3DXMatrixInverse(&cancelRotation, NULL,&cancelRotation);
-
+	D3DXMatrixInverse(&cancelRotation, NULL, &cancelRotation);
 	//αテスト
 	device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 	device->SetRenderState(D3DRS_ALPHAREF, 0x00);
-
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	// αソースカラーの指定
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	// αデスティネーションカラーの指定
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	
+	//// テクスチャステージステートの設定
+	//device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);	// アルファブレンディング処理
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);		// 最初のアルファ引数
+	//device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);		// ２番目のアルファ引数
+
+	// Zバッファ切る
+	device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	// ライティングを無効にする
+	device->SetRenderState(D3DRS_LIGHTING, FALSE);
 
 	//インスタンス宣言
 	device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | renderNum);
@@ -73,6 +82,10 @@ void InstancingChingin::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMA
 	device->SetStreamSourceFreq(1, 1);
 	// αブレンドを切る
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	// ライティングを有効にする
+	device->SetRenderState(D3DRS_LIGHTING, TRUE);
+	// Zバッファオン
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 

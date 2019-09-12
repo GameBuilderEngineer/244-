@@ -113,6 +113,14 @@ namespace animationPlayerNS
 		VK_ESCAPE,	//	Provisional
 		VK_ESCAPE,	//	Revival
 	};
+	enum AI_ANIMATION_FALG
+	{
+		INSTALLATION,
+		SLASH,
+		MOVE,
+		SHOOTING,
+		AI_FLAG_MAX
+	};
 }
 //============================================================================================================================================
 // Class
@@ -123,6 +131,7 @@ class AnimationPlayer
 private:
 	animationPlayerNS::OperationKeyTable keyTable;	//	操作Keyテーブル
 	animationPlayerNS::Flag flag;					//	フラグ
+	bool aiAnimFlag[animationPlayerNS::AI_FLAG_MAX];//  AI用のアニメーション使用追加フラグ
 	Animation* animation;							//	アニメーション
 	AnimationID animationID;						//	アニメーションID
 	int playerIndex;								//	プレイヤーインデックス
@@ -180,6 +189,7 @@ public:
 	void setFlagFalling(bool _flag) { flag.falling = _flag; }
 	void setFlagLanding(bool _flag) { flag.landing = _flag; }
 	void setFlagRevival(bool _flag) { flag.revival = _flag; }
+	void setAIAnimFlag(animationPlayerNS::AI_ANIMATION_FALG type, bool _flag) { aiAnimFlag[type] = _flag; }
 	// Get
 	Animation* getAnimation(void) { return animation; }
 	bool getFlagMoveBan(void) { return flag.moveBan; }

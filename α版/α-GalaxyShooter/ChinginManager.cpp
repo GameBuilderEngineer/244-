@@ -27,7 +27,7 @@ void ChinginManager::initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textur
 	// 賃金エフェクト初期化
 	chinginEffect.initialize(device, _textureLoader, effect);
 
-	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::UI_REVIVAL_GAUGE));
+	instancingProcedure.initialize(device, effect, *_textureLoader->getTexture(textureLoaderNS::CHINGIN_STAR));
 }
 
 //=============================================================================
@@ -132,11 +132,13 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 D3DXVECTOR3 ChinginManager::moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition)
 {
 	D3DXVECTOR3 speed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 moveDirection = targetPosition - position;
-	//float distance = D3DXVec3Length(&moveDirection);
-	//float magneticeForce = (target.amount*amount) / distance;
-	D3DXVec3Normalize(&moveDirection, &moveDirection);
-	speed += moveDirection * 2.0f;// このへんはまだ適当
+
+	//D3DXVECTOR3 straightDirection;
+	//D3DXVECTOR3 
+	//
+
+	//D3DXVec3Normalize(&moveDirection, &moveDirection);
+	//speed += moveDirection * 2.0f;// このへんはまだ適当
 
 	return speed;
 }
@@ -185,10 +187,3 @@ void ChinginManager::generateChingin(int num, D3DXVECTOR3 setPosition, Player* t
 		}
 	}
 }
-
-
-//void ChinginManager::reverseAmount()
-//{
-//	amount *= -1.0f;
-//}
-

@@ -55,6 +55,7 @@ void MotionGeneration::update(AgentAI* agentAI)
 	if (bodyBB->getMove())
 	{
 		move(agentAI, bodyBB->getMovingDestination());
+		animationPlayer->setAIAnimFlag(animationPlayerNS::AI_ANIMATION_FALG::MOVE, true);
 	}
 
 	// ジャンプ
@@ -67,18 +68,21 @@ void MotionGeneration::update(AgentAI* agentAI)
 	if (bodyBB->getShootingBullet())
 	{
 		input->keyPress(playerNS::BUTTON_BULLET);
+		animationPlayer->setAIAnimFlag(animationPlayerNS::AI_ANIMATION_FALG::SHOOTING, true);
 	}
 
 	// メモリーパイルの設置
 	if (bodyBB->getLocatingPile())
 	{
 		input->keyPress(playerNS::BUTTON_PILE);
+		animationPlayer->setAIAnimFlag(animationPlayerNS::AI_ANIMATION_FALG::INSTALLATION, true);
 	}
 
 	// メモリーラインの切断
 	if (bodyBB->getCuttingLine())
 	{
 		input->keyPress(playerNS::BUTTON_CUT);
+		animationPlayer->setAIAnimFlag(animationPlayerNS::AI_ANIMATION_FALG::SLASH, true);
 	}
 
 	// ダウン復活

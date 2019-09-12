@@ -71,6 +71,7 @@ TextureLoader::TextureLoader()
 	textureName[SHOCKWAVE] = { "Game_Shockwave.jpg" };
 	textureName[BACKGROUND_STAR] = { "Game_BackGround_Star.jpg" };
 	textureName[BACKGROUND_DUST] = { "Game_BackGround_Dust.png" };
+	textureName[CHINGIN_STAR] = { "chingin.png" };
 
 	//effect
 	textureName[EFFECT_DAMAGE] = { "Game_Damage_Effect.png" };
