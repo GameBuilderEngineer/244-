@@ -36,7 +36,7 @@ void AnimationLoader::initialize(LPDIRECT3DDEVICE9 device)
 	{
 		for (int j = 0; j < animationPlayerNS::MODEL_TYPE_MAX; j++)
 		{
-			animation[i][j].initialize(device, 0, i);
+			animation[i][j].initialize(device, i, j);
 		}
 	}
 }

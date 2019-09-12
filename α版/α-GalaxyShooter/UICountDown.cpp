@@ -57,7 +57,7 @@ HRESULT UICountDown::initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, Tex
 	setVisualDirectory();
 
 	// テクスチャローダーの復活UIインデックスのスタート位置（テクスチャローダーをオブジェクトごとに定数分割すればもう少し便利になるかも？）
-	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_COUNT_DOWN_FINISH;
+	int textureLoaderIndex = textureLoaderNS::TEXTURE_NUMBER::UI_COUNT_DOWN_GO;
 
 	// テクスチャ読み込み
 	for (int i = 0; i < TYPE::TYPE_MAX; i++)
@@ -82,31 +82,13 @@ void UICountDown::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 {
 	switch (_index)
 	{
-	case TYPE::FINISH:
-		sprite[_index].initialize
-		(
-			_device,
-			texture[_index],												//	テクスチャ
-			spriteNS::CENTER,												//	原点
-			(WIDTH_COUNT_DOWN * 2),											//	横幅
-			(WIDTH_COUNT_DOWN * 2),											//	高さ
-			D3DXVECTOR3														//	座標
-			(
-				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
-				POSITION_Y,													//	座標 y
-				0.0f														//	座標 z
-			),
-			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
-			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
-		);
-		break;
 	case TYPE::GO:
 		sprite[_index].initialize
 		(
 			_device,
 			texture[_index],												//	テクスチャ
 			spriteNS::CENTER,												//	原点
-			(WIDTH_COUNT_DOWN * 2),											//	横幅
+			(WIDTH_COUNT_DOWN * 2.5f),											//	横幅
 			(WIDTH_COUNT_DOWN * 2),											//	高さ
 			D3DXVECTOR3														//	座標
 			(
@@ -172,6 +154,24 @@ void UICountDown::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
 		);
 		break;
+	case TYPE::FINISH:
+		sprite[_index].initialize
+		(
+			_device,
+			texture[_index],												//	テクスチャ
+			spriteNS::CENTER,												//	原点
+			(WIDTH_COUNT_DOWN * 2),											//	横幅
+			(WIDTH_COUNT_DOWN * 2),											//	高さ
+			D3DXVECTOR3														//	座標
+			(
+				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
+				POSITION_Y,													//	座標 y
+				0.0f														//	座標 z
+			),
+			D3DXVECTOR3(0.0f, 0.0f, 0.0f),									//	回転
+			D3DCOLOR_RGBA(255, 255, 255, 255)								//	色
+		);
+		break;
 	default:
 		break;
 	}
@@ -201,10 +201,10 @@ void UICountDown::release(void)
 //============================================================================================================================================
 void UICountDown::update(bool _startFlag)
 {
-	updateFadeOut();
+	//updateFadeOut();
 
-	// フェードが終わったらタイトルへ
-	if (!_startFlag) { return; }
+	//// フェードが終わったらタイトルへ
+	//if (!_startFlag) { return; }
 
 	return;
 }
@@ -214,15 +214,15 @@ void UICountDown::update(bool _startFlag)
 //============================================================================================================================================
 void UICountDown::updateFadeOut(void)
 {
-	// アルファ減算
-	alpha--;
+	//// アルファ減算
+	//alpha--;
 
-	if (alpha <= 0)
-	{
-		alpha = 0;
-	}
+	//if (alpha <= 0)
+	//{
+	//	alpha = 0;
+	//}
 
-	sprite[0].setAlpha(alpha);
+	//sprite[0].setAlpha(alpha);
 
 	return;
 }

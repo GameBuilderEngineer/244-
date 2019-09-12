@@ -10,7 +10,8 @@
 #include "Player.h"
 
 namespace gameMasterNS {
-	const float GAME_TIME = 60.0f * 4.0f;	//4分
+	//const float GAME_TIME = 60.0f * 4.0f;	//4分
+	const float GAME_TIME = 20.0f;	//4分
 	const float COUNT_DOWN_TIME = 3.0f;		//3秒
 
 	enum PLAYER_TYPE
@@ -39,6 +40,7 @@ namespace gameMasterNS {
 
 	const int COUNT_DOWN = 3;
 	const float COUNT_INTERVAL = 1.0f;
+	const float START_INTERVAL = 0.5f;
 	const float DISPLAY_START_TIME = 1.0f;
 	const float DISPLAY_FINISH_TIME = 1.0f;
 }
@@ -60,6 +62,7 @@ class GameMaster :public Base
 private:
 	float gameTimer;										//ゲーム時間
 	float countDownTimer;									//カウントダウン時間
+	float startInterval;									//開始カウントダウンインターバル
 	float displayStartTimer;								//スタートアナウンス表示時間
 	float displayFinishTimer;								//フィニッシュアナウンス表示時間
 	bool alreadyStart;										//スタート済
@@ -68,6 +71,7 @@ private:
 	playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
 	int chingin[playerNS::NUM_PLAYER];						//	チンギン
 	bool countFlag;
+	bool startFinishFlag;
 public:
 	GameMaster();
 	~GameMaster();
@@ -86,7 +90,8 @@ public:
 	//setter
 	void setPlayerCharacter(int playerNo, int playerType, int modelType);	//キャラクター情報をセット
 	void setWage(int playerNo, int wage);									//チンギンを加算
-	
+	void setStartFinishFlag(bool _flag);
+
 	//getter
 	playerTable* getPlayerInfomation();
 	int getResult();
@@ -99,5 +104,6 @@ public:
 	bool whetherCountFinish();
 	bool displayStart();		//スタート表記表示時間
 	bool displayFinish();		//フィニッシュ表記表示時間
+	bool getStartFinishFlag();
 };
 

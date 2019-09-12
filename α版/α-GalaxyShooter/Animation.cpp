@@ -17,7 +17,6 @@ using namespace animationNS;
 //============================================================================================================================================
 HRESULT initialize(Animation* _animation, LPCSTR _setName, int _setNo)
 {
-
 	_animation->animationController->GetAnimationSetByName(_setName, &_animation->animationManager[_setNo].animationSet);
 
 	_animation->animationManager[_setNo].animationSetName = _animation->animationManager[_setNo].animationSet->GetName();
