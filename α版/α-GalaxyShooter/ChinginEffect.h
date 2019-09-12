@@ -18,10 +18,7 @@ static const float CHINGIN_EFFECT_TIME = 0.4;	// エフェクト生存時間
 class ChinginEffect :public EffectManager
 {
 private:
-	InstancingEffect instancingProcedure;		// ビルボードのインスタンシング描画処理クラス
 	EffectIns chinginEffect[CHINGIN_EFFECT];	// エフェクト配列
-	int numOfUse;								// 使用中の数
-	D3DXVECTOR3* renderList;					// インスタンシング描画するエフェクトの座標
 
 public:
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);

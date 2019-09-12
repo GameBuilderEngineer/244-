@@ -18,10 +18,7 @@ static const float DOWN_EFFECT_TIME = 2.0;	// エフェクト生存時間
 class DownEffect :public EffectManager
 {
 private:
-	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
 	EffectIns downEffect[DOWN_EFFECT];		// エフェクト配列
-	int numOfUse;							// 使用中の数
-	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 
 public:
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);

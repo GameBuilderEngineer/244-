@@ -174,6 +174,9 @@ void Game::initialize(
 	plane.createPositionSpherical(direct3D9->device, 3000, 250.0f);
 	plane.initialize(direct3D9->device, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD), *textureLoader->getTexture(textureLoaderNS::BACKGROUND_DUST));
 
+	// シーンエフェクト初期化
+	sceneEffect.initialize(direct3D9->device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
+	sceneEffect.setOnGameScene(true);
 	//ポーズの初期化
 	uiPause.initialize(direct3D9->device, _textureLoader);
 
@@ -385,6 +388,10 @@ void Game::update(float _frameTime) {
 	// ラインエフェクトの更新
 	lineEffect.update(frameTime);
 
+	//シーンエフェクトの更新
+	sceneEffect.update(frameTime);
+
+
 	// マップの更新
 	map.update(frameTime, wasuremono);
 
@@ -488,6 +495,9 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 
 	//(仮)//ポイントスプライトの描画
 	pointSprite.render(direct3D9->device, currentCamera.position);
+
+	// シーンエフェクトの描画
+	sceneEffect.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//(仮)//プレーンの描画(インスタンシング)
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
