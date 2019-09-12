@@ -100,7 +100,7 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	//メモリーパイルの初期化
 	for (int i = 0; i < NUM_MEMORY_PILE; i++)
 	{
-		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE], &D3DXVECTOR3(0, 0, 0));
+		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
 	// 回復エフェクト初期化
@@ -123,7 +123,8 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	upEffect.initialize(device, textureLoader, *shaderLoader->getEffect(shaderNS::INSTANCE_BILLBOARD));
 
 	// アニメーション
-	animationPlayer.initialize(_device, playerType, modelType);
+	//animationPlayer->initialize(_device, playerType, modelType);
+
 
 	//上空モード時表示レティクル
 	for (int i = 0; i < NUM_SHOCK_WAVE; i++)
@@ -172,7 +173,7 @@ void Player::update(float frameTime)
 	//===========
 	//【ジャンプ】
 	//===========
-	if (animationPlayer.getFlagMoveBan() == false &&
+	if (animationPlayer->getFlagMoveBan() == false &&
 		input->wasKeyPressed(keyTable.jump) ||
 		input->getController()[type]->wasButton(BUTTON_JUMP))
 	{
@@ -220,7 +221,7 @@ void Player::update(float frameTime)
 	//gun.update(frameTime, D3DXVECTOR3(matrixHand._41, matrixHand._42, matrixHand._43));
 
 	// アニメーションの更新
-	animationPlayer.update(input, state);
+	animationPlayer->update(input, state);
 
 	//===========
 	//【弾の更新】
@@ -266,7 +267,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 	LPD3DXEFFECT effect, LPDIRECT3DTEXTURE9 textureShade, LPDIRECT3DTEXTURE9 textureLine)
 {
 	//Object::toonRender(device,view,projection, cameraPosition,effect,textureShade,textureLine);
-	animationPlayer.render(device, matrixRotation,matrixPosition, staticMeshLoader);
+	animationPlayer->render(device, matrixRotation,matrixPosition, staticMeshLoader);
 	// 他のオブジェクトの描画
 	//otherRender(device,view,projection,cameraPosition);
 }
@@ -276,7 +277,7 @@ void Player::toonRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pr
 void Player::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition)
 {
 	//Object::render(device,view,projection, cameraPosition);
-	animationPlayer.render(device, matrixRotation,matrixPosition, staticMeshLoader);
+	animationPlayer->render(device, matrixRotation,matrixPosition, staticMeshLoader);
 	//他のオブジェクトの描画
 	//otherRender(device,view,projection,cameraPosition);
 }
@@ -296,7 +297,7 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 
 
 	// 銃の描画
-	gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
+	gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer->getAnimation(), "daren_RightHand"));
 
 	//バレットの描画
 	for (int i = 0; i < NUM_BULLET; i++)
@@ -364,7 +365,7 @@ void Player::recorvery(float frameTime)
 void Player::moveOperation()
 {
 	if (whetherDown()) return;
-	if (animationPlayer.getFlagMoveBan()) return;
+	if (animationPlayer->getFlagMoveBan()) return;
 	//キーによる移動
 	//前へ進む
 	if (input->isKeyDown(keyTable.front)) {
@@ -548,7 +549,7 @@ void Player::updateFall(float frameTime)
 	if (!whetherFall())
 	{
 		changeState(REVIVAL);
-		animationPlayer.setFlagLanding(true);
+		animationPlayer->setFlagLanding(true);
 	}
 }
 
@@ -614,7 +615,7 @@ void Player::changeSky()
 	hp = MAX_HP;
 	onGround = true;
 	canShockWave = true;
-	animationPlayer.setFlagRecursion(true);
+	animationPlayer->setFlagRecursion(true);
 	deleteMemoryItem();
 
 	//上空モード時表示レティクル
@@ -637,7 +638,7 @@ void Player::updateSky(float frameTime)
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//重力発生源との距離
 	skyTimer -= frameTime;
 	skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
-	if (skyHeight >= SKY_HEIGHT) { animationPlayer.setFlagRecursion(false); }
+	if (skyHeight >= SKY_HEIGHT) { animationPlayer->setFlagRecursion(false); }
 
 	if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
 	{
@@ -658,7 +659,7 @@ void Player::updateSky(float frameTime)
 	if (!whetherSky())
 	{
 		changeState(FALL);
-		animationPlayer.setFlagFalling(true);
+		animationPlayer->setFlagFalling(true);
 	}
 
 	//上空モード時表示レティクル
@@ -677,8 +678,8 @@ void Player::changeRevival()
 {
 	// サウンドの再生
 	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
-	animationPlayer.setFlagRevival(true);
-	animationPlayer.setFlagMoveBan(true);
+	animationPlayer->setFlagRevival(true);
+	animationPlayer->setFlagMoveBan(true);
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
 	changeState(GROUND);
 	triggerShockWave();//衝撃波を発生させる
@@ -761,7 +762,7 @@ void Player::updateBullet(float frameTime)
 	bulletEffect.update(frameTime);
 
 	//バレットの発射
-	if (whetherSky()||whetherDown() || animationPlayer.getFlagMoveBan() == true || animationPlayer.getFlagJump() == true) return;//ダウン時：発射不可
+	if (whetherSky()||whetherDown() || animationPlayer->getFlagMoveBan() == true || animationPlayer->getFlagJump() == true) return;//ダウン時：発射不可
 	if (((npc && input->wasKeyPressed(BUTTON_BULLET)) || (!npc && input->getMouseLButton()) || input->getController()[type]->isButton(BUTTON_BULLET))
 		&& intervalBullet == 0)
 	{
@@ -897,7 +898,7 @@ void Player::updateMemoryItem(float frameTime)
 	{
 		// サウンドの再生
 		sound->play(soundNS::TYPE::SE_INSTALLATION_MEMORY_PILE, soundNS::METHOD::PLAY);
-		animationPlayer.setFlagInstallation(true);
+		animationPlayer->setFlagInstallation(true);
 
 		memoryPile[elementMemoryPile].setPosition(position);
 		memoryPile[elementMemoryPile].setQuaternion(quaternion);
@@ -1095,6 +1096,7 @@ void Player::recoveryHp(int value) { hp = min(hp + value, MAX_HP); }
 void Player::setCollidedMemoryLine(bool frag) { collidedOpponentMemoryLine = frag; }
 void Player::setCollideMemoryLinePosition(D3DXVECTOR3 value){ 
 	collideMemoryLinePosition = value; }
+void Player::setAnimationModel(AnimationPlayer* _animation) { animationPlayer = _animation; }
 
 //===================================================================================================================================
 //【getter】

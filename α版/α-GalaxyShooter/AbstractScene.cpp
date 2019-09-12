@@ -42,3 +42,11 @@ void AbstractScene::setGameMaster(GameMaster* resorce)
 {
 	*gameMaster = *resorce;
 }
+
+//===================================================================================================================================
+//【アニメーションローダーのセット】
+//===================================================================================================================================
+void AbstractScene::setAnimationLoader(AnimationLoader* animationLoader)
+{
+	this->animationLoader = animationLoader;
+}

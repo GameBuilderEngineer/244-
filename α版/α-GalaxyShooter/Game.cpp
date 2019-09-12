@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/09/03
+// [更新日]2019/09/12
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -106,7 +106,7 @@ void Game::initialize(
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
-
+		player[i]->setAnimationModel(animationLoader->getAnimationModel(i, gameMaster->getPlayerInfomation()[i].modelType));
 		// テスト中
 		if (i == 0)
 		{
@@ -120,7 +120,7 @@ void Game::initialize(
 		player[i]->setCamera(&camera[i]);	//カメラのセット
 		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
-		player[i]->animationPlayer.setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
+		player[i]->animationPlayer->setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
@@ -1056,7 +1056,7 @@ void Game::uninitialize() {
 		uiChingin[i].release();
 		uiCutMemoryLine[i].release();
 		uiRevival[i].release();
-		player[i]->animationPlayer.release();
+		//player[i]->animationPlayer.release();
 	}
 	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();
