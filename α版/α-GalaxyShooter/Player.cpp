@@ -294,7 +294,6 @@ void Player::otherRender(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX p
 	// アップエフェクトの描画
 	upEffect.render(device, view, projection, cameraPosition);
 
-
 	// 銃の描画
 	gun.render(device, view, projection, cameraPosition, matrixWorld, getBoneMatrix(animationPlayer.getAnimation(), "daren_RightHand"));
 
@@ -475,6 +474,9 @@ void Player::changeState(int _state)
 //===================================================================================================================================
 void Player::changeGround()
 {
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
+
 	onGround = true;
 	triggerShockWave();//衝撃波を発生させる
 }
@@ -518,6 +520,9 @@ void Player::updateGround(float frameTime, bool _onJump)
 //===================================================================================================================================
 void Player::changeFall()
 {
+	// サウンドの再生
+	sound->play(soundNS::TYPE::SE_LANDING, soundNS::METHOD::PLAY);
+
 	fallTimer = FALL_TIME;//落下時間のセット
 	onGround = false;
 }
@@ -547,6 +552,8 @@ void Player::updateFall(float frameTime)
 	//【地上】モードへ切替
 	if (!whetherFall())
 	{
+		// サウンドの再生
+		sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
 		changeState(REVIVAL);
 		animationPlayer.setFlagLanding(true);
 	}
@@ -591,7 +598,14 @@ void Player::updateDown(float frameTime)
 		revivalPoint += INCREASE_REVIVAL_POINT;
 		// アップエフェクト発生
 		upEffect.generateUpEffect(200, position, upVec());
-		if (whetherRevival())changeState(REVIVAL);
+		if (whetherRevival())
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_SHOCK_WAVE, soundNS::METHOD::PLAY);
+			changeState(REVIVAL);
+		}
 	}
 
 	updateGround(frameTime, false);
@@ -675,8 +689,6 @@ void Player::updateSky(float frameTime)
 //===================================================================================================================================
 void Player::changeRevival()
 {
-	// サウンドの再生
-	sound->play(soundNS::TYPE::SE_REVIVAL, soundNS::METHOD::PLAY);
 	animationPlayer.setFlagRevival(true);
 	animationPlayer.setFlagMoveBan(true);
 	invincibleTimer = INVINCIBLE_TIME;//無敵時間のセット
