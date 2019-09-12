@@ -19,10 +19,7 @@ static const float BULLET_EFFECT_TIME = 0.04;	// エフェクト生存時間
 class BulletEffect :public EffectManager
 {
 private:
-	InstancingEffect instancingProcedure;	// ビルボードのインスタンシング描画処理クラス
 	EffectIns bulletEffect[BULLET_EFFECT];	// エフェクト配列
-	int numOfUse;							// 使用中の数
-	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
 
 public:
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
