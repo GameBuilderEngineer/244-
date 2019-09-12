@@ -21,6 +21,7 @@ namespace SceneList
 {
 	enum {
 		NONE_SCENE = -1,
+		RESULT,
 		SPLASH,
 		TITLE,
 		SELECT,
@@ -28,7 +29,6 @@ namespace SceneList
 		OPERATION,
 		CREDIT,
 		GAME,
-		RESULT,
 	};
 }
 

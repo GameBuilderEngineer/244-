@@ -21,7 +21,6 @@ private:
 	EffectIns sceneEffect[SCENE_EFFECT];	// エフェクト配列
 	int numOfUse;							// 使用中の数
 	D3DXVECTOR3* renderList;				// インスタンシング描画するエフェクトの座標
-	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 
 public:
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
