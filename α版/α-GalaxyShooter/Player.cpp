@@ -20,7 +20,7 @@ Player::Player()
 	onGravity = true;
 	radius = 5.0f;
 	activation();
-
+	wage = 0;
 	state = GROUND;
 
 	recoveryTimer = 0.0f;					//Ž©“®‰ñ•œŽžŠÔ

@@ -95,8 +95,19 @@ void Game::initialize(
 	light->initialize(direct3D9);
 
 	//コロニー
-	colony[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &D3DXVECTOR3(150, 0, 300));
-	colony[1].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &D3DXVECTOR3(-150, 0, 300));
+	for (int i = 0; i < NUM_COLONY; i++)
+	{
+		colony[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)COLONY_POSITION[i]);
+	}
+
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &(D3DXVECTOR3)STAR_X10_POSITION[i]);
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &(D3DXVECTOR3)STAR_X100_POSITION[i]);
+	}
 	//フィールド
 	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
@@ -182,41 +193,41 @@ void Game::initialize(
 	map.initialize(direct3D9->device, &field);
 
 	//xFile読込meshのインスタンシング描画のテスト
-	D3DXVECTOR3 positionList[] =
-	{
-		D3DXVECTOR3(100,50,50),
-		D3DXVECTOR3(-100,-100,-50),
-		D3DXVECTOR3(100,-50,10),
-		D3DXVECTOR3(100,50,10),
-		D3DXVECTOR3(100,0,100),
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(-100,100,100),
-		D3DXVECTOR3(-100,-100,100),
-		D3DXVECTOR3(-100,100,0),
-		D3DXVECTOR3(-100,100,-100),
-		D3DXVECTOR3(100,50,50),
-		D3DXVECTOR3(-100,-100,-50),
-		D3DXVECTOR3(100,-50,10),
-		D3DXVECTOR3(100,50,10),
-		D3DXVECTOR3(100,0,100),
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(-100,100,100),
-		D3DXVECTOR3(-100,-100,100),
-		D3DXVECTOR3(-100,100,0),
-		D3DXVECTOR3(-100,100,-100),
-	};
-	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
-	testObject.setNumOfRender(direct3D9->device, 20, positionList);
-	testObject.activation();
+	//D3DXVECTOR3 positionList[] =
+	//{
+	//	D3DXVECTOR3(100,50,50),
+	//	D3DXVECTOR3(-100,-100,-50),
+	//	D3DXVECTOR3(100,-50,10),
+	//	D3DXVECTOR3(100,50,10),
+	//	D3DXVECTOR3(100,0,100),
+	//	D3DXVECTOR3(0,100,0),
+	//	D3DXVECTOR3(-100,100,100),
+	//	D3DXVECTOR3(-100,-100,100),
+	//	D3DXVECTOR3(-100,100,0),
+	//	D3DXVECTOR3(-100,100,-100),
+	//	D3DXVECTOR3(100,50,50),
+	//	D3DXVECTOR3(-100,-100,-50),
+	//	D3DXVECTOR3(100,-50,10),
+	//	D3DXVECTOR3(100,50,10),
+	//	D3DXVECTOR3(100,0,100),
+	//	D3DXVECTOR3(0,100,0),
+	//	D3DXVECTOR3(-100,100,100),
+	//	D3DXVECTOR3(-100,-100,100),
+	//	D3DXVECTOR3(-100,100,0),
+	//	D3DXVECTOR3(-100,100,-100),
+	//};
+	//testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
+	//testObject.setNumOfRender(direct3D9->device, 20, positionList);
+	//testObject.activation();
 
-	D3DXVECTOR3 cubeList[NUM_CUBE];
-	for (int i = 0; i < NUM_CUBE; i++)
-	{
-		cubeList[i] = D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
-	}
-	testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
-	testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
-	testCube.activation();
+	//D3DXVECTOR3 cubeList[NUM_CUBE];
+	//for (int i = 0; i < NUM_CUBE; i++)
+	//{
+	//	cubeList[i] = D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
+	//}
+	//testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
+	//testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
+	//testCube.activation();
 
 	//ゲームマスター
 	gameMaster->gameStart();//ゲーム開始時処理
@@ -312,9 +323,21 @@ void Game::update(float _frameTime) {
 	}
 
 	// コロニーアップデート
+	for (int i = 0; i < NUM_COLONY; i++)
 	{
-		colony[0].update();
+		colony[i].update();
 	}
+
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].update();
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].update();
+	}
+
+
 
 	// ガラクタアップデート
 	for (int i = 0; i < JUNK_MAX; i++)
@@ -439,6 +462,15 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	{// コロニーの描画
 		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
 
 	////(仮)ガラクタの描画
 	//for (int i = 0; i < JUNK_MAX; i++)
@@ -460,10 +492,10 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//xFileStaticMeshテスト描画
-	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	//testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	//testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 
 	// ワスレモノの描画
 #if 1
