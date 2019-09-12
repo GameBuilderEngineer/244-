@@ -116,8 +116,8 @@ namespace playerNS{
 	const float FALL_TIME				= 0.5f;		//落下時間
 	const float INVINCIBLE_TIME			= 3.0f;		//無敵時間
 	const float SKY_TIME				= 10.0f;	//上空モード時間
-	const float INTERVAL_RECOVERY		= 1.0f;		//自動回復インターバル
-	const float INTERVAL_BULLET			= 0.2f;		//弾の発射インターバル
+	const float INTERVAL_RECOVERY		= 2.0f;		//自動回復インターバル
+	const float INTERVAL_BULLET			= 0.15f;	//弾の発射インターバル
 	const float CAMERA_SPEED			= 2.0f;		//カメラの速さ
 	const float SKY_HEIGHT				= 80.0f;	//上空モードの高さ
 	const float RECURSION_TIME			= 3.0f;		//リカージョンの生存時間

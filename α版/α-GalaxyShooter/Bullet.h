@@ -10,9 +10,9 @@
 
 namespace bulletNS
 {
-	const float EXISTENCE_TIME = 5.0f;		//ë∂ç›éûä‘
-	const float GRAVITY_FORCE = 80.0f;		//èdóÕ
-	const float SPEED = 80.0f;
+	const float EXISTENCE_TIME = 3.0f;		//ë∂ç›éûä‘
+	const float GRAVITY_FORCE = 60.0f;		//èdóÕ
+	const float SPEED = 70.0f;
 
 }
 

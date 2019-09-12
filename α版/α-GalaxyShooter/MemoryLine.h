@@ -13,7 +13,7 @@
 namespace memoryLineNS
 {
 	const float MINIMUM_DISTANCE = 10.0f;
-	const float MAXIMUM_DISTANCE = 300.0f;
+	const float MAXIMUM_DISTANCE = 70.0f;
 	const float LOST_TIME = 3.0f;
 	const float THICKNESS = 3.0f; // ƒ‰ƒCƒ“‚Ì‘¾‚³
 	const float UPDATE_TIME = 0.01f;

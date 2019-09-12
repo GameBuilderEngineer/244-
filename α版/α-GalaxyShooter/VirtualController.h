@@ -137,7 +137,7 @@ public:
 		if (DCon == NULL)return "NULL";
 		return DCon->name;
 	}
-	
+	int getControllerID() { return controller_ID; };
 	virtual void update() = 0;
 
 	//接続状態を確認

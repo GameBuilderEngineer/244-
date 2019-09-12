@@ -19,6 +19,7 @@ WasuremonoTable* Wasuremono::table;		// ワスレモノテーブルを指すポインタ
 Wasuremono::Wasuremono(void)
 {
 	onRecursion = false;
+	recursionTimer = 1.5f;
 }
 
 Wasuremono::Wasuremono(LPDIRECT3DDEVICE9 device, int typeID, D3DXVECTOR3 *_position)
@@ -82,7 +83,7 @@ void Wasuremono::update(float frameTime, LPD3DXMESH fieldMesh, D3DXMATRIX matrix
 		setGravity(gravityDirection, GRAVITY_FORCE*frameTime);//重力処理
 	}
 
-	recursionProcessing();
+	recursionProcessing(frameTime);
 
 	if (D3DXVec3Length(&acceleration) > 0.5f)
 	{//加速度が小さい場合、加算しない
@@ -135,9 +136,11 @@ void Wasuremono::configurationGravity(D3DXVECTOR3* _attractorPosition, float _at
 //===================================================================================================================================
 //【リカージョンへの吸引処理】
 //===================================================================================================================================
-void Wasuremono::recursionProcessing()
+void Wasuremono::recursionProcessing(float frameTime)
 {
 	if (!onRecursion)return;
+	recursionTimer -= frameTime;
+	if (recursionTimer)Object::inActivation();
 	D3DXVECTOR3 centerDirection;	//リカージョンの中心（重心）方向ベクトル
 
 	//リカージョンの中心（重心）位置方向ベクトルの作成
@@ -146,6 +149,7 @@ void Wasuremono::recursionProcessing()
 	//リカージョンの鉛直方向のベクトルを削除する（重心へ向かうことを防ぐ）
 	centerDirection = slip(centerDirection, recursionVertical);
 	acceleration += centerDirection*INHALE_FORCE+recursionVertical;
+
 }
 
 //===================================================================================================================================
