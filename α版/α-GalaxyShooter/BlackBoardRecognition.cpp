@@ -26,6 +26,7 @@ void RecognitionBB::initialize(void)
 	distanceBetweenPlayers = 0.0f;
 	D3DXVECTOR3 lineCutCoord = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	isDestinationDecided = false;
+	bulletSwitch = false;
 
 	isOpponentNear = false;
 	isOpponentOffensive = false;
@@ -33,8 +34,10 @@ void RecognitionBB::initialize(void)
 	isChinginLow = false;
 
 	ZeroMemory(recursionRecognition, sizeof(RecursionRecognition) * NUM_RECURSION_RECOGNITION);
+	ZeroMemory(&recursionRecognitionForOpponent, sizeof(RecursionRecognition));
 	recursionPolicy = RECURSION_PERSONALITY::LARGEST_WEIGHT;// ÅúÉäÉJÅ[ÉWÉáÉìÇÃï˚êjÇê›íË
 	isStartRecursion = false;
+	isStartRecursionForOpponent = false;
 	ZeroMemory(&runningRecursion, sizeof(RecursionRecognition));
 	isRecursionRunnning = false;
 }

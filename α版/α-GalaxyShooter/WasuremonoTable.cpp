@@ -51,7 +51,7 @@ WasuremonoTable::WasuremonoTable(StaticMeshLoader* p): staticMeshLoader(p)
 
 	data[CHRISTMAS_TREE].typeID = CHRISTMAS_TREE;
 	data[CHRISTMAS_TREE].name = "クリスマスツリー";
-	data[CHRISTMAS_TREE].amount = 75;
+	data[CHRISTMAS_TREE].amount = 60;
 	data[CHRISTMAS_TREE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::CUBE]);
 	data[CHRISTMAS_TREE].appearanceProbability = PROBABILITY_UNIT * 2;
 
@@ -63,19 +63,20 @@ WasuremonoTable::WasuremonoTable(StaticMeshLoader* p): staticMeshLoader(p)
 
 	data[DIAL_PHONE].typeID = DIAL_PHONE;
 	data[DIAL_PHONE].name = "黒電話";
-	data[DIAL_PHONE].amount = 75;
+	data[DIAL_PHONE].amount = 60;
 	data[DIAL_PHONE].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::CUBE]);
 	data[DIAL_PHONE].appearanceProbability = PROBABILITY_UNIT * 2;
+	//
 
 	data[STUFFED_BUNNY].typeID = STUFFED_BUNNY;
 	data[STUFFED_BUNNY].name = "ウサギのぬいぐるみ";
-	data[STUFFED_BUNNY].amount = 200;
+	data[STUFFED_BUNNY].amount = 80;
 	data[STUFFED_BUNNY].staticMesh = &(staticMeshLoader->staticMesh[staticMeshNS::CUBE]);
 	data[STUFFED_BUNNY].appearanceProbability = PROBABILITY_UNIT;
 
 	data[HUMAN].typeID = HUMAN;
 	data[HUMAN].name = "ニンゲン（対戦相手）";
-	data[HUMAN].amount = 1000;
+	data[HUMAN].amount = 100;
 	data[HUMAN].staticMesh = NULL;				// 未使用
 	data[HUMAN].appearanceProbability = -1.0f;	// 未使用
 
@@ -197,7 +198,7 @@ int WasuremonoTable::getAmount(std::string name)
 //=============================================================================
 StaticMesh* WasuremonoTable::getStaticMesh(int typeID)
 { 
-	if (typeID < NUM_WASUREMONO && typeID > -1)
+ 	if (typeID < NUM_WASUREMONO && typeID > -1)
 	{
 		return data[typeID].staticMesh;
 	}

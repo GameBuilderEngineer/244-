@@ -39,6 +39,9 @@ namespace EnvilonmentAnalysisNs
 	const float  AXIS_TILT_ANGLE_FOR_MIDDLE_BS = 0.3f;	// サイズに応じた配置半径を作るためレイを傾ける角度
 	const float  AXIS_TILT_ANGLE_FOR_BIG_BS = 0.42f;	// サイズに応じた配置半径を作るためレイを傾ける角度
 
+	// 相手をリカージョンする際の半径
+	const float  SIZE_RADIUS_OPPONENT_RECURSION = 11.5f;
+
 	// ※ファジー入力値算出にあたっての定数は直接selectRecursionArea()をいじる方が早いのでここには記載しない
 }
 
@@ -91,6 +94,8 @@ private:
 	// リカージョン認識への代入処理（スフィアとワスレモノの衝突判定）
 	void hitCheckAndAssign(AgentAI* agentAI, D3DXVECTOR3* checkPosition,
 		RecursionRecognition* recursionRecognition, int index, float circumscribedRadius);
+	// 仮想リカージョンfor相手
+	void virtualRecursionForOpponent(AgentAI* agentAI);
 	// 記憶事項を忘却
 	void forgetMemorizedMatter(void);
 

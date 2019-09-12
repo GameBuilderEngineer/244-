@@ -45,7 +45,9 @@ bool ConditionalNode::conditionList(RecognitionBB* recognitionBB, MemoryBB* memo
 	case IF_ONE_SECOND_LATER:			return if1secondLater(recognitionBB, memoryBB, bodyBB);
 	case IF_RECURSION_IS_RUNNING:		return ifRecursionIsRunning(recognitionBB, memoryBB, bodyBB);
 	case IF_DESTINATION_DECIDED:		return ifDestinationDecided(recognitionBB, memoryBB, bodyBB);
-
+	case IF_OPPONENT_DOES_RECURSION:	return ifOpponentDoesRecursion(recognitionBB, memoryBB, bodyBB);
+	case IF_OPPONENT_IS_DOWN:			return ifOpponentIsDown(recognitionBB, memoryBB, bodyBB);
+	case IF_BULLET_SWITCH_IS_ON:		return ifBulletSwitchIsOn(recognitionBB, memoryBB, bodyBB);
 	default:
 		MessageBox(NULL, TEXT("条件リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
 		return false;
@@ -148,3 +150,44 @@ bool ConditionalNode::ifDestinationDecided(RecognitionBB* recognitionBB, MemoryB
 {
 	return recognitionBB->getWhetherDestinationDecided();
 }
+
+
+//=============================================================================
+// 条件：相手がリカージョン中なら
+//=============================================================================
+bool ConditionalNode::ifOpponentDoesRecursion(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+ 	if (opponent->getElementMemoryPile() > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+//=============================================================================
+// 条件：相手がダウン中なら
+//=============================================================================
+bool ConditionalNode::ifOpponentIsDown(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	if (opponent->getState() == playerNS::DOWN)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//=============================================================================
+// 条件：相手がダウン中なら
+//=============================================================================
+bool ConditionalNode::ifBulletSwitchIsOn(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	return recognitionBB->getBulletSwitch();
+}
+
