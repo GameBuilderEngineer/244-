@@ -66,7 +66,7 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 0
+#if 1
 #define USING_AI
 	player[0] = new Player;
 	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
@@ -117,6 +117,7 @@ void Game::initialize(
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
+		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setAnimationModel(animationLoader->getAnimationModel(i, gameMaster->getPlayerInfomation()[i].modelType));
 		// テスト中
 		if (i == 0)
@@ -127,7 +128,6 @@ void Game::initialize(
 		{
 			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::ADAM, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
 		}
-		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
 		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成

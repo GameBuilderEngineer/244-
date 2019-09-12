@@ -28,11 +28,17 @@ StaticMeshLoader::StaticMeshLoader()
 	fileName[STAR_REGULAR_POLYHEDRON_X100] = { "x100starRegularPolyhedron.x" };
 	fileName[SAMPLE_STATIC_MESH] = { "StaticMesh.x" };
 	fileName[SAMPLE_TOON_MESH] = { "Toon_6Color.x" };
-	fileName[WASUREMONO_BALL] = { "ball.x" };
-	fileName[WASUREMONO_PHONE] = { "phone.X" };
-	fileName[WASUREMONO_BUNNY] = { "toybunny.x" };
-	fileName[WASUREMONO_FAN] = { "Fan.x" };
 	fileName[MEMORY_PILE] = { "Memory_Pile.x" };
+	fileName[WASUREMONO_BUNNY] = { "toybunny.x" };
+	fileName[WASUREMONO_PAPER] = { "paper.x" };
+	fileName[WASUREMONO_REDBULL] = { "redbull.x" };
+	fileName[WASUREMONO_SHOES] = { "shoes.x" };
+	fileName[WASUREMONO_TEAPOT] = { "teapot.x" };
+	fileName[WASUREMONO_LIGHT] = { "light.x" };
+	fileName[WASUREMONO_BALL] = { "soccerball.x" };
+	fileName[WASUREMONO_SCISSORS] = { "scissors.x" };
+	fileName[WASUREMONO_PLAYSTATION] = { "playstation.x" };
+	fileName[WASUREMONO_HAT] = { "hat.x" };
 }
 
 //===================================================================================================================================
