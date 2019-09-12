@@ -105,6 +105,16 @@ HRESULT Recursion::initialize(LPDIRECT3DDEVICE9 device, D3DXVECTOR3* _vertexArra
 //===================================================================================================================================
 void Recursion::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPositon)
 {
+	//重心位置＆衝突判定範囲描画
+	worldMatrix = {
+		1.0f,0.0f,0.0f,0.0f,
+		0.0f,1.0f,0.0f,0.0f,
+		0.0f,0.0f,1.0f,0.0f,
+		weightCenter.x,weightCenter.y,weightCenter.z,1.0f
+	};
+#ifndef _DEBUG
+	return;//Rlease時renderを意図的にoffにしました。
+#endif // _DEBUG
 	if (onRender == false)return;
 	// αブレンドを行う
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -145,13 +155,6 @@ void Recursion::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX pro
 	// カリングを有効にする
 	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-	//重心位置＆衝突判定範囲描画
-	worldMatrix = {
-		1.0f,0.0f,0.0f,0.0f,
-		0.0f,1.0f,0.0f,0.0f,
-		0.0f,0.0f,1.0f,0.0f,
-		weightCenter.x,weightCenter.y,weightCenter.z,1.0f
-	};
 #ifdef _DEBUG
 	boundingSphere.render(device, worldMatrix);
 #endif // _DEBUG

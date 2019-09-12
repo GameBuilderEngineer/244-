@@ -15,6 +15,7 @@
 #include "ShaderLoader.h"
 #include "TextManager.h"
 #include "GameMaster.h"
+#include "AnimationLoader.h"
 #include <string>
 
 namespace SceneList
@@ -44,6 +45,7 @@ protected:
 	TextureLoader* textureLoader;
 	StaticMeshLoader* staticMeshLoader;
 	ShaderLoader* shaderLoader;
+	AnimationLoader* animationLoader;
 	TextManager* textManager;
 	GameMaster* gameMaster;
 	float sceneTimer;
@@ -75,4 +77,5 @@ public:
 	std::string* getSceneName() { return &sceneName; }
 	void copyGameMaster(GameMaster* destination);
 	void setGameMaster(GameMaster* resorce);
+	void setAnimationLoader(AnimationLoader* animationLoader);
 };
