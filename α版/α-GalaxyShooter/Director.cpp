@@ -211,7 +211,7 @@ void Director::mainLoop(){
 	update();
 	render();
 	fixFPS60();
-	displayFPS();
+	//displayFPS();
 
 	//input->clearAll();
 	input->clear(inputNS::MOUSE | inputNS::KEYS_PRESSED);// 入力をクリア	// すべてのキーチェックが行われた後これを呼び出す
