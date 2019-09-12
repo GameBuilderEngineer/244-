@@ -109,6 +109,7 @@ void AgentAI::initialize(
 	recognitionBB->setMyPosition(&position);
 	recognitionBB->setFrameTimePointer(&frameTime);
 	recognitionBB->setElementMemoryPilePointer(&elementMemoryPile);
+	recognitionBB->setPointerWhetherInstallationEffectiveDistance(&whetherInstallationEffectiveDistance);
 	recognitionBB->setSkyHeightPointer(&skyHeight);
 	bodyBB->configMovingDestination(opponent->getPosition()); // œ
 }
@@ -176,6 +177,10 @@ void AgentAI::update(float frameTime)
 	{
 		//input->clearKeyPress('Q');
 		recognitionBB->setIsStartRecursion(true);
+	}
+	if (input->wasKeyPressed('O'))
+	{
+		recognitionBB->setIsStartRecursionForOpponent(true);
 	}
 #endif
 }

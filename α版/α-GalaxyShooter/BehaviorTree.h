@@ -29,6 +29,7 @@ private:
 	void offense(void);										// オフェンスツリー
 	void deffense(void);									// ディフェンスツリー
 	void recursion(void);									// リカージョンツリー
+	void recursionOpponent(void);							// リカージョンツリー（相手版）
 	void down(void);										// ダウンツリー
 	void sky(void);											// 上空モードツリー
 	void fall(void);										// 落下ツリー

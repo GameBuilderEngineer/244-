@@ -86,6 +86,24 @@ public:
 	State* transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 };
 
+//-----------------------
+// リカージョン（相手版）
+//-----------------------
+// リカージョン実行中状態
+class RecursionOpponentState : public State
+{
+private:
+	static RecursionOpponentState* instance;
+
+	RecursionOpponentState() { setNumber(BehaviorTreeNS::TREE::RECURSION_TREE_OPPONENT_VER); }
+public:
+	static void destroy(void) { SAFE_DELETE(instance) }
+	static State* getInstance(void) { return instance; }
+	static void create(void) { if (!instance)instance = new RecursionOpponentState; }
+	// ステート遷移
+	State* transition(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+};
+
 //--------
 // ダウン
 //--------

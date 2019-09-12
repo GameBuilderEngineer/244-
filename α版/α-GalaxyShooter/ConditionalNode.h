@@ -25,6 +25,9 @@ private:
 	bool if1secondLater(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	bool ifRecursionIsRunning(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 	bool ifDestinationDecided(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	bool ifOpponentDoesRecursion(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	bool ifOpponentIsDown(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
+	bool ifBulletSwitchIsOn(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB);
 
 
 public:

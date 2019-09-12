@@ -29,13 +29,17 @@ NODE_STATUS SubProcedureNode::subProcedureList(RecognitionBB* recognitionBB, Mem
 {
 	switch (tag)
 	{
-	case SET_DESTINATION_OPPONENT:		return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_RANDOM:		return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_NEXT_PILE:		return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
-	case SET_DESTINATION_TO_RECUASION:	return setMovingDestinationToRecuasion(recognitionBB, memoryBB, bodyBB);
-	case SET_TARGET_OPPONENT:			return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
-	case SET_RECURSION_RECOGNITION:		return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
-	case SET_RECUASION_STATE:			return setRecursionState(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_OPPONENT:				return setMovingDestinationOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_RANDOM:				return setMovingDestinationRandom(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_NEXT_PILE:				return setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_TO_RECUASION:			return setMovingDestinationToRecuasion(recognitionBB, memoryBB, bodyBB);
+	case SET_DESTINATION_TO_CUT_LINE:			return setMovingDestinationToCutLine(recognitionBB, memoryBB, bodyBB);
+	case SET_TARGET_OPPONENT:					return setShootingTargetOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_RECURSION_RECOGNITION:				return setRecursionRecognition(recognitionBB, memoryBB, bodyBB);
+	case SET_RECURSION_RECOGNITION_FOR_OPPONENT:return setRecursionRecognitionForOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_RECUASION_STATE:					return setRecursionState(recognitionBB, memoryBB, bodyBB);
+	case SET_RECUASION_OPPONENT_STATE:			return setRecursionStateForOpponent(recognitionBB, memoryBB, bodyBB);
+	case SET_BULLET_SWITCH:						return setBulletSwith(recognitionBB, memoryBB, bodyBB);
 	default:
 		MessageBox(NULL, TEXT("副処理リストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
 		return NODE_STATUS::_NOT_FOUND;
@@ -58,7 +62,7 @@ NODE_STATUS SubProcedureNode::setMovingDestinationOpponent(RecognitionBB* recogn
 //=============================================================================
 NODE_STATUS SubProcedureNode::setMovingDestinationRandom(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
+	//if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
 
 	int number = rand() % Map::getMapNode().size();
 	D3DXVECTOR3* newDestination = Map::getMapNode()[number]->getPosition();
@@ -84,11 +88,11 @@ NODE_STATUS SubProcedureNode::setMovingDestinationNextPile(RecognitionBB* recogn
 
 
 //=============================================================================
-// 副処理：リカージョンするための目的を設定する
+// 副処理：リカージョンするための目的地を設定する
 //=============================================================================
 NODE_STATUS SubProcedureNode::setMovingDestinationToRecuasion(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
-	if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
+	//if (recognitionBB->getWhetherDestinationDecided()) { return NODE_STATUS::RUNNING; }
 
 	std::list<MapNode*> memorizedMap = recognitionBB->getMemorizedMap();
 	std::list<MapNode*>::iterator itr;
@@ -114,6 +118,17 @@ NODE_STATUS SubProcedureNode::setMovingDestinationToRecuasion(RecognitionBB* rec
 	{
 		return NODE_STATUS::FAILED;
 	}
+}
+
+
+//=============================================================================
+// 副処理：メモリーラインを切る座標を目的地に設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setMovingDestinationToCutLine(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	bodyBB->setIsArrival(false);
+	bodyBB->configMovingDestination(recognitionBB->getLineCutCoordPointer());
+	return NODE_STATUS::SUCCESS;
 }
 
 
@@ -184,6 +199,21 @@ NODE_STATUS SubProcedureNode::setRecursionRecognition(RecognitionBB* recognition
 
 
 //=============================================================================
+// 副処理：実行するリカージョン認識（相手）を設定する
+//=============================================================================
+NODE_STATUS SubProcedureNode::setRecursionRecognitionForOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	// リカージョンが実行中ならRUNNING
+	if (recognitionBB->getIsRecursionRunning()) { return NODE_STATUS::RUNNING; }
+
+	*recognitionBB->getRunningRecursion() = *recognitionBB->getRecursionRecognitionForOpponent();
+	recognitionBB->setIsRecursionRunning(true);						// リカージョン実行中にセット
+	setMovingDestinationNextPile(recognitionBB, memoryBB, bodyBB);	// 最初の目的地を入れる
+	return NODE_STATUS::SUCCESS;									// 成功
+}
+
+
+//=============================================================================
 // 副処理：リカージョンステートをセット（遷移）
 //=============================================================================
 NODE_STATUS SubProcedureNode::setRecursionState(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
@@ -194,10 +224,30 @@ NODE_STATUS SubProcedureNode::setRecursionState(RecognitionBB* recognitionBB, Me
 
 
 //=============================================================================
+// 副処理：リカージョンステートをセット（遷移）
+//=============================================================================
+NODE_STATUS SubProcedureNode::setRecursionStateForOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+ 	recognitionBB->setIsStartRecursionForOpponent(true);
+	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
 // 副処理：ショットターゲットを相手に設定
 //=============================================================================
 NODE_STATUS SubProcedureNode::setShootingTargetOpponent(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	bodyBB->setTargetCoordValue(*opponent->getPosition());
+	return NODE_STATUS::SUCCESS;
+}
+
+
+//=============================================================================
+// 副処理：バレットの発射切り替え
+//=============================================================================
+NODE_STATUS SubProcedureNode::setBulletSwith(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
+{
+	recognitionBB->changeBulletSwitch();
 	return NODE_STATUS::SUCCESS;
 }

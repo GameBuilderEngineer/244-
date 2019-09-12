@@ -763,7 +763,7 @@ void Player::updateMemoryItem(float frameTime)
 	}
 
 	//Ú’n—LŒø‹——£‚©‚Ç‚¤‚©
-	bool whetherInstallationEffectiveDistance = false;
+	whetherInstallationEffectiveDistance = false;
 	int k = elementMemoryPile -1;
 	if (k < 0)
 	{
