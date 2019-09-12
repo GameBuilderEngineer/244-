@@ -64,11 +64,13 @@ void GameMaster::gameStartCount(float frameTime)
 {
 	if (alreadyStart)return;
 
+	countFlag = false;
 	countDownTimer += frameTime;
 	if (countDownTimer > COUNT_INTERVAL)
 	{
 		countDownTimer = 0.0f;
 		count--;
+		countFlag = true;
 	}
 
 	if (count == 0)
@@ -86,11 +88,13 @@ void GameMaster::gameFinishCount(float frameTime)
 {
 	if (!whetherCountFinish())return;
 
+	countFlag = false;
 	countDownTimer += frameTime;
 	if (countDownTimer > COUNT_INTERVAL)
 	{
 		countDownTimer = 0.0f;
 		count--;
+		countFlag = true;
 	}
 
 	if (count == 0)
@@ -114,6 +118,7 @@ void GameMaster::setCountDown()
 //===================================================================================================================================
 void GameMaster::gameStart()
 {
+	countFlag			= false;
 	alreadyStart		= false;
 	alreadyFinish		= false;
 	gameTimer			= GAME_TIME;
@@ -155,6 +160,7 @@ float GameMaster::getGameTime() {return gameTimer;}
 //ÉQÅ[ÉÄÇ™èIóπÇµÇΩÇ©Ç«Ç§Ç©
 bool GameMaster::whetherGameOver(){	return gameTimer < 0;}
 int GameMaster::getCount() { return count; }
+bool GameMaster::getCountFlag() { return countFlag; }
 bool GameMaster::whetherAlreadyStart() { return alreadyStart; }
 bool GameMaster::whetherAlreadyFinish() { return alreadyFinish; }
 bool GameMaster::whetherCountFinish() { return gameTimer < (float)COUNT_DOWN; }

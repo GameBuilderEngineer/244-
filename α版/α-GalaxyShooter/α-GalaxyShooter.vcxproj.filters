@@ -604,6 +604,9 @@
     <ClCompile Include="LineEffect.cpp">
       <Filter>Effect\LineEffect</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowManager.cpp">
+      <Filter>Object\Wage</Filter>
+    </ClCompile>
     <ClCompile Include="ChinginEffect.cpp">
       <Filter>Effect\ChinginEffect</Filter>
     </ClCompile>
@@ -624,6 +627,9 @@
     </ClCompile>
     <ClCompile Include="Gun.cpp">
       <Filter>Object\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationLoader.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -915,7 +921,7 @@
     <ClInclude Include="InstancingBillboard.h">
       <Filter>Billboard</Filter>
     </ClInclude>
-   <ClInclude Include="ChinginEffect.h">
+    <ClInclude Include="ChinginEffect.h">
       <Filter>Effect\ChinginEffect</Filter>
     </ClInclude>
     <ClInclude Include="FeelEffect.h">
@@ -938,6 +944,12 @@
     </ClInclude>
     <ClInclude Include="Gun.h">
       <Filter>Object\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowManager.h">
+      <Filter>Object\Wage</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationLoader.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -975,6 +987,12 @@
       <Filter>02 Visual File</Filter>
     </None>
     <None Include="02 Visual File\Toon_6Color.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\ball.x">
+      <Filter>02 Visual File</Filter>
+    </None>
+    <None Include="02 Visual File\phone.x">
       <Filter>02 Visual File</Filter>
     </None>
   </ItemGroup>

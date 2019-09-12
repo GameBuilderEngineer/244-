@@ -59,6 +59,9 @@ namespace BehaviorTreeNS
 		IF_ONE_SECOND_LATER,
 		IF_RECURSION_IS_RUNNING,	// リカージョン実行中なら
 		IF_DESTINATION_DECIDED,
+		IF_OPPONENT_DOES_RECURSION,
+		IF_OPPONENT_IS_DOWN,
+		IF_BULLET_SWITCH_IS_ON,
 
 		//------------------
 		// アクションノード
@@ -71,6 +74,7 @@ namespace BehaviorTreeNS
 		ACTION_CUT,
 		ACTION_REVIVAL,
 		ACTION_FALL,
+		ACTION_DAMMY,
 
 		//--------------
 		// 副処理ノード
@@ -80,9 +84,13 @@ namespace BehaviorTreeNS
 		SET_DESTINATION_RANDOM,
 		SET_DESTINATION_NEXT_PILE,
 		SET_DESTINATION_TO_RECUASION,
+		SET_DESTINATION_TO_CUT_LINE,
 		SET_RECURSION_RECOGNITION,
+		SET_RECURSION_RECOGNITION_FOR_OPPONENT,
 		SET_RECUASION_STATE,
+		SET_RECUASION_OPPONENT_STATE,
 		SET_TARGET_OPPONENT,
+		SET_BULLET_SWITCH,
 
 		// タグの数
 		NUM_NODE_TAG
@@ -104,6 +112,7 @@ namespace BehaviorTreeNS
 		OFFENSE_TREE = 0,			// オフェンス状態ツリー
 		DEFFENSE_TREE,				// ディフェンス状態ツリー
 		RECURSION_TREE,				// リカージョン状態ツリー
+		RECURSION_TREE_OPPONENT_VER,// リカージョン状態ツリー（相手版）
 		DOWN_TREE,					// ダウン状態ツリー
 		SKY_TREE,					// スカイ状態ツリー
 		FALL_TREE,					// 落下状態ツリー

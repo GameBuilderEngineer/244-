@@ -67,6 +67,7 @@ private:
 	int count;												//ゲームカウント
 	playerTable playerInformation[playerNS::NUM_PLAYER];	//プレイヤー情報
 	int chingin[playerNS::NUM_PLAYER];						//	チンギン
+	bool countFlag;
 public:
 	GameMaster();
 	~GameMaster();
@@ -91,6 +92,7 @@ public:
 	int getResult();
 	float getGameTime();
 	int getCount();
+	bool getCountFlag();
 	bool whetherGameOver();
 	bool whetherAlreadyStart();
 	bool whetherAlreadyFinish();

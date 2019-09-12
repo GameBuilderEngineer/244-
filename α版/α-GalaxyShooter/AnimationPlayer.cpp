@@ -146,6 +146,7 @@ void AnimationPlayer::release(void)
 {
 	// アニメーションの解放
 	animation->release(animation);
+	SAFE_DELETE(animation);
 
 	return;
 }
@@ -541,14 +542,14 @@ void AnimationPlayer::updateAnimationIDCurrentInstallation(Input* _input, int _s
 	if (flag.recursion)
 	{
 		animationID.next = animationNS::TYPE::RECURSION;
-		setFlagInstallation(false);
+		if (getFlagInstallation()) { setFlagInstallation(false); }
 		return;
 	}
 	// ダウン
 	if (_state == STATE_TYPE::DOWN)
 	{
 		animationID.next = animationNS::TYPE::DOWN;
-		setFlagInstallation(false);
+		if (getFlagInstallation()) { setFlagInstallation(false); }
 		return;
 	}
 
@@ -570,14 +571,14 @@ void AnimationPlayer::updateAnimationIDCurrentStanding(Input* _input, int _state
 	if (flag.recursion)
 	{
 		animationID.next = animationNS::TYPE::RECURSION;
-		setFlagInstallation(false);
+		if (getFlagInstallation()) { setFlagInstallation(false); }
 		return;
 	}
 	// ダウン
 	if (_state == STATE_TYPE::DOWN)
 	{
 		animationID.next = animationNS::TYPE::DOWN;
-		setFlagInstallation(false);
+		if (getFlagInstallation()) { setFlagInstallation(false); }
 		return;
 	}
 
@@ -586,7 +587,7 @@ void AnimationPlayer::updateAnimationIDCurrentStanding(Input* _input, int _state
 	if (!animation->flag.animationPlayEnd) { return; }
 
 	animationID.next = animationNS::TYPE::IDLE;
-	setFlagInstallation(false);
+	if (getFlagInstallation()) { setFlagInstallation(false); }
 
 	return;
 }
@@ -613,8 +614,8 @@ void AnimationPlayer::updateAnimationIDCurrentSlash(Input* _input, int _state)
 
 	if (!animation->flag.animationPlayEnd) { return; }
 
-	setFlagMoveBan(false);
-	setFlagSlash(false);
+	if (getFlagMoveBan()) { setFlagMoveBan(false); }
+	if (getFlagSlash()) { setFlagSlash(false); }
 	animationID.next = animationNS::TYPE::IDLE;
 
 	return;
@@ -779,9 +780,10 @@ void AnimationPlayer::updateAnimationIDNextIdle(void)
 
 	animationID.current = animationNS::TYPE::IDLE;
 	animation->animationSpeed = 1.0f;
-	setFlagRevival(false);
-	setFlagLanding(false);
-	setFlagMoveBan(false);
+	if (getFlagRevival()) { setFlagRevival(false); }
+	if (getFlagLanding()) { setFlagLanding(false); }
+	if (getFlagMoveBan()) { setFlagMoveBan(false); }
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::IDLE);
 
 	return;
@@ -796,6 +798,7 @@ void AnimationPlayer::updateAnimationIDNextShooting(void)
 
 	animationID.current = animationNS::TYPE::SHOOTING;
 	animation->animationSpeed = 1.0f;
+	if (!getFlagGunRender()) { setFlagGunRender(true); }
 	switching(animation, animationNS::TYPE::SHOOTING);
 
 	return;
@@ -810,6 +813,7 @@ void AnimationPlayer::updateAnimationIDNextRun(void)
 
 	animationID.current = animationNS::TYPE::RUN;
 	animation->animationSpeed = 1.0f;
+	if (!getFlagGunRender()) { setFlagGunRender(true); }
 	switching(animation, animationNS::TYPE::RUN);
 
 	return;
@@ -824,6 +828,7 @@ void AnimationPlayer::updateAnimationIDNextRunFast(void)
 
 	animationID.current = animationNS::TYPE::RUN_FAST;
 	animation->animationSpeed = 1.0f;
+	if (!getFlagGunRender()) { setFlagGunRender(true); }
 	switching(animation, animationNS::TYPE::RUN_FAST);
 
 	return;
@@ -838,7 +843,8 @@ void AnimationPlayer::updateAnimationIDNextJump(void)
 
 	animationID.current = animationNS::TYPE::JUMP;
 	animation->animationSpeed = 0.75f;
-	setFlagJump(true);
+	if (!getFlagJump()) { setFlagJump(true); }
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::JUMP);
 
 	return;
@@ -853,7 +859,8 @@ void AnimationPlayer::updateAnimationIDNextInstallation(void)
 
 	animationID.current = animationNS::TYPE::INSTALLATION;
 	animation->animationSpeed = 1.5f;
-	setFlagMoveBan(true);
+	if (!getFlagMoveBan()) { setFlagMoveBan(true); }
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::INSTALLATION);
 
 	return;
@@ -868,6 +875,7 @@ void AnimationPlayer::updateAnimationIDNextStanding(void)
 
 	animationID.current = animationNS::TYPE::STANDING;
 	animation->animationSpeed = 1.5f;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::STANDING);
 
 	return;
@@ -882,8 +890,9 @@ void AnimationPlayer::updateAnimationIDNextSlash(void)
 
 	animationID.current = animationNS::TYPE::SLASH;
 	animation->animationSpeed = 2.0f;
-	setFlagMoveBan(true);
-	setFlagSlash(true);
+	if (!getFlagMoveBan()) { setFlagMoveBan(true); }
+	if (getFlagGunRender()) { setFlagGunRender(false); }
+	if (!getFlagSlash()) { setFlagSlash(true); }
 	switching(animation, animationNS::TYPE::SLASH);
 
 	return;
@@ -898,7 +907,8 @@ void AnimationPlayer::updateAnimationIDNextDown(void)
 
 	animationID.current = animationNS::TYPE::DOWN;
 	animation->animationSpeed = 1.0f;
-	setFlagMoveBan(true);
+	if (!getFlagMoveBan()) { setFlagMoveBan(true); }
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::DOWN);
 
 	return;
@@ -914,6 +924,7 @@ void AnimationPlayer::updateAnimationIDNextDownPose(void)
 	animationID.current = animationNS::TYPE::DOWN_POSE;
 	animation->animationSpeed = 1.0f;
 	animation->flag.animationOn = false;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::DOWN_POSE);
 
 	return;
@@ -928,6 +939,7 @@ void AnimationPlayer::updateAnimationIDNextRevival(void)
 
 	animationID.current = animationNS::TYPE::REVIVAL;
 	animation->animationSpeed = 1.0f;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::REVIVAL);
 
 	return;
@@ -942,6 +954,7 @@ void AnimationPlayer::updateAnimationIDNextRecursion(void)
 
 	animationID.current = animationNS::TYPE::RECURSION;
 	animation->animationSpeed = 1.0f;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::RECURSION);
 
 	return;
@@ -956,6 +969,7 @@ void AnimationPlayer::updateAnimationIDNextFloating(void)
 
 	animationID.current = animationNS::TYPE::FLOATING;
 	animation->animationSpeed = 1.0f;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::FLOATING);
 
 	return;
@@ -970,6 +984,7 @@ void AnimationPlayer::updateAnimationIDNextFalling(void)
 
 	animationID.current = animationNS::TYPE::FALLING;
 	animation->animationSpeed = 1.0f;
+	if (getFlagGunRender()) { setFlagGunRender(false); }
 	switching(animation, animationNS::TYPE::FALLING);
 
 	return;
@@ -984,7 +999,8 @@ void AnimationPlayer::updateAnimationIDNextLanding(void)
 
 	animationID.current = animationNS::TYPE::LANDING;
 	animation->animationSpeed = 1.0f;
-	setFlagFalling(false);
+	if (getFlagGunRender()) { setFlagGunRender(false); }
+	if (getFlagFalling()) { setFlagFalling(false); }
 	switching(animation, animationNS::TYPE::LANDING);
 
 	return;
@@ -1103,6 +1119,24 @@ void AnimationPlayer::setAnimationConfiguration(int _scene)
 	default:
 		break;
 	}
+
+	return;
+}
+//============================================================================================================================================
+// resetAnimation
+// リセット
+//============================================================================================================================================
+void AnimationPlayer::resetAnimation(void)
+{
+	flag.moveBan = false;
+	flag.gunRenderFlag = false;
+	flag.jump = false;
+	flag.installation = false;
+	flag.slash = false;
+	flag.recursion = false;
+	flag.falling = false;
+	flag.landing = false;
+	flag.revival = false;
 
 	return;
 }

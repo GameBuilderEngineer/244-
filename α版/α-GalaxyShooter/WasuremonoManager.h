@@ -21,8 +21,8 @@ using namespace WasuremonoNS;
 //*****************************************************************************
 namespace WasuremonoNS
 {
-	const static int WASUREMONO_MAX = 100;				// ワスレモノ最大数	
-	const static int INITIAL_PLACEMENT_NUMBER = 80;		// ワスレモノ初期配備数
+	const static int WASUREMONO_MAX = 160;				// ワスレモノ最大数	
+	const static int INITIAL_PLACEMENT_NUMBER = 120;		// ワスレモノ初期配備数
 	const static float RESPAWN_SURBEY_INTERVAL = 1.5f;	// ワスレモノリスポーン間隔(秒)
 }
 

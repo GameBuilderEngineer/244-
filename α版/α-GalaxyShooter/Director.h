@@ -19,6 +19,7 @@
 #include "ShaderLoader.h"
 #include "TextManager.h"
 #include "GameMaster.h"
+#include "AnimationLoader.h"
 //#include <thread>
 
 enum
@@ -50,6 +51,7 @@ public:
 	ShaderLoader* shaderLoader;				//シェーダー読込クラス
 	TextManager* textManager;				//テキストデータ読込クラス
 	GameMaster* gameMaster;					//ゲーム運営クラス
+	AnimationLoader* animationLoader;		//アニメーション読込クラス
 	std::string* currentSceneName;			//現在のシーンの名前
 	int fpsMode;							//フレームレート状態変数
 	LARGE_INTEGER timeStart;				// パフォーマンスカウンターの開始値

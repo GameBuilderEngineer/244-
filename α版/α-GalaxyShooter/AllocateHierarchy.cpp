@@ -345,17 +345,17 @@ HRESULT AllocateHierarchy::DestroyFrame(LPD3DXFRAME _frame)
 {
 	SAFE_DELETE_ARRAY(_frame->Name);
 
-	if (_frame->pFrameFirstChild)
-	{
-		DestroyFrame(_frame->pFrameFirstChild);
-	}
+	//if (_frame->pFrameFirstChild)
+	//{
+	//	DestroyFrame(_frame->pFrameFirstChild);
+	//}
+	//
+	//if (_frame->pFrameSibling)
+	//{
+	//	DestroyFrame(_frame->pFrameSibling);
+	//}
 
-	if (_frame->pFrameSibling)
-	{
-		DestroyFrame(_frame->pFrameSibling);
-	}
-
-	SAFE_DELETE(_frame);
+	//SAFE_DELETE(_frame);
 
 	return S_OK;
 }

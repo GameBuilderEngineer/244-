@@ -197,6 +197,7 @@ protected:
 	Recursion* recursion;								//リカージョン
 	LPDIRECT3DTEXTURE9 recrusionTexture;				//リカージョン用テクスチャ
 	int elementMemoryPile;								//メモリーパイル要素数
+	bool whetherInstallationEffectiveDistance;			// 接地有効距離かどうか
 	bool onRecursion;									//リカージョン生成フラグ
 	float recursionTimer;								//リカージョン生存時間
 
@@ -213,7 +214,7 @@ protected:
 
 	StaticMeshLoader* staticMeshLoader;
 public:
-	AnimationPlayer animationPlayer;					//	アニメーション
+	AnimationPlayer* animationPlayer;					//	アニメーション
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
 
@@ -268,6 +269,7 @@ public:
 	void setCollidedMemoryLine(bool frag);
 	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
 	//D3DXMATRIX setGunMatrix(void);
+	void setAnimationModel(AnimationPlayer* _animation);
 
 	//getter
 	int getHp();

@@ -76,16 +76,37 @@ namespace gameNS
 		const BYTE BUTTON_BULLET = virtualControllerNS::R1;
 		const BYTE BUTTON_REVIVAL = virtualControllerNS::A;
 
-	enum {
-		COLONY1,
-		COLONY2,
-		NUM_COLONY,
+	const int NUM_COLONY = 4;
+	const int NUM_STAR_X100 = 3;
+	const int NUM_STAR_X10 = 5;
+	const D3DXVECTOR3 COLONY_POSITION[NUM_COLONY] =
+	{
+		D3DXVECTOR3(200,100,80),
+		D3DXVECTOR3(-80,-100,150),
+		D3DXVECTOR3(-400,300,-350),
+		D3DXVECTOR3(480,-200,-550)
 	};
+	const D3DXVECTOR3 STAR_X100_POSITION[NUM_STAR_X100] =
+	{
+		D3DXVECTOR3(70,400,60),
+		D3DXVECTOR3(-180,10,-250),
+		D3DXVECTOR3(-300,220,150)
+	};
+	const D3DXVECTOR3 STAR_X10_POSITION[NUM_STAR_X10] =
+	{
+		D3DXVECTOR3(70,200,60),
+		D3DXVECTOR3(-180,10,-250),
+		D3DXVECTOR3(-380,60,50),
+		D3DXVECTOR3(-10,120,50),
+		D3DXVECTOR3(-30,-20,-40)
+	};
+
 
 	const int NUM_1P_MEMORY_PILE = 5;
 	const int NUM_2P_MEMORY_PILE = 5;
 	const float INTERVAL_TIME_BULLET1 = 0.2f;
 	const float INTERVAL_TIME_BULLET2 = 0.2f;
+
 }
 
 class Game : public AbstractScene
@@ -106,11 +127,14 @@ private:
 	SceneEffect sceneEffect;	//	シーンエフェクト
 
 	Colony colony[gameNS::NUM_COLONY];
+	Colony star100[gameNS::NUM_STAR_X100];
+	Colony star10[gameNS::NUM_STAR_X10];
+
 	Junk junk[JUNK_MAX];
 	PointSprite pointSprite;
 	InstancingBillboard plane;
-	Object testObject;//仮
-	Object testCube;//仮
+	//Object testObject;//仮
+	//Object testCube;//仮
 #ifdef _DEBUG
 	//極座標動作テスト用
 	Object polarTest;//仮

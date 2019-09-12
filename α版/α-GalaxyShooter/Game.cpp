@@ -2,7 +2,7 @@
 //【Game.cpp】
 // [作成者]HAL東京GP12A332 11 菅野 樹
 // [作成日]2019/05/16
-// [更新日]2019/09/03
+// [更新日]2019/09/12
 //===================================================================================================================================
 #include "Game.h"
 #include "Direct3D9.h"
@@ -66,7 +66,7 @@ void Game::initialize(
 // キャラクターセレクトから連携されるまではここでplayer<-->AI切り替え
 //--------------------------------------------------------------------
 // 今はカメラの情報を貰っていろいろ試したいのでこんな位置になっている
-#if 0
+#if 1
 #define USING_AI
 	player[0] = new Player;
 	player[1] = new AgentAI(player[0], &camera[1], &wasuremono);
@@ -95,8 +95,19 @@ void Game::initialize(
 	light->initialize(direct3D9);
 
 	//コロニー
-	colony[0].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &D3DXVECTOR3(150, 0, 300));
-	colony[1].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &D3DXVECTOR3(-150, 0, 300));
+	for (int i = 0; i < NUM_COLONY; i++)
+	{
+		colony[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)COLONY_POSITION[i]);
+	}
+
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &(D3DXVECTOR3)STAR_X10_POSITION[i]);
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X100], &(D3DXVECTOR3)STAR_X100_POSITION[i]);
+	}
 	//フィールド
 	field.Planet::initilaize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::PLANET], &(D3DXVECTOR3)PLANET_POSITION);
 
@@ -106,7 +117,8 @@ void Game::initialize(
 	for (int i = 0; i < NUM_PLAYER; i++)
 	{//プレイヤーの初期化
 		//player[i]->initialize(i, gameMaster->getPlayerInfomation()[i].modelType, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
-
+		player[i]->setInput(input);			//入力クラスのセット
+		player[i]->setAnimationModel(animationLoader->getAnimationModel(i, gameMaster->getPlayerInfomation()[i].modelType));
 		// テスト中
 		if (i == 0)
 		{
@@ -116,11 +128,11 @@ void Game::initialize(
 		{
 			player[i]->initialize(i, gameMasterNS::MODEL_TYPE::ADAM, direct3D9->device, staticMeshLoader, textureLoader, shaderLoader);
 		}
-		player[i]->setInput(input);			//入力クラスのセット
 		player[i]->setCamera(&camera[i]);	//カメラのセット
 		player[i]->setSound(sound);			//サウンドのセット
 		player[i]->configurationGravity(field.getPosition(),field.getRadius());	//重力を作成
-		player[i]->animationPlayer.setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
+		player[i]->animationPlayer->setAnimationConfiguration(animationPlayerNS::SCENE_TYPE::GAME);
+		player[i]->animationPlayer->resetAnimation();
 
 		hpEffect[i].initialize(direct3D9->device, i, _textureLoader);
 		target.initialize(direct3D9->device, i, _textureLoader, _staticMeshLoader);
@@ -185,41 +197,41 @@ void Game::initialize(
 	map.initialize(direct3D9->device, &field);
 
 	//xFile読込meshのインスタンシング描画のテスト
-	D3DXVECTOR3 positionList[] =
-	{
-		D3DXVECTOR3(100,50,50),
-		D3DXVECTOR3(-100,-100,-50),
-		D3DXVECTOR3(100,-50,10),
-		D3DXVECTOR3(100,50,10),
-		D3DXVECTOR3(100,0,100),
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(-100,100,100),
-		D3DXVECTOR3(-100,-100,100),
-		D3DXVECTOR3(-100,100,0),
-		D3DXVECTOR3(-100,100,-100),
-		D3DXVECTOR3(100,50,50),
-		D3DXVECTOR3(-100,-100,-50),
-		D3DXVECTOR3(100,-50,10),
-		D3DXVECTOR3(100,50,10),
-		D3DXVECTOR3(100,0,100),
-		D3DXVECTOR3(0,100,0),
-		D3DXVECTOR3(-100,100,100),
-		D3DXVECTOR3(-100,-100,100),
-		D3DXVECTOR3(-100,100,0),
-		D3DXVECTOR3(-100,100,-100),
-	};
-	testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
-	testObject.setNumOfRender(direct3D9->device, 20, positionList);
-	testObject.activation();
+	//D3DXVECTOR3 positionList[] =
+	//{
+	//	D3DXVECTOR3(100,50,50),
+	//	D3DXVECTOR3(-100,-100,-50),
+	//	D3DXVECTOR3(100,-50,10),
+	//	D3DXVECTOR3(100,50,10),
+	//	D3DXVECTOR3(100,0,100),
+	//	D3DXVECTOR3(0,100,0),
+	//	D3DXVECTOR3(-100,100,100),
+	//	D3DXVECTOR3(-100,-100,100),
+	//	D3DXVECTOR3(-100,100,0),
+	//	D3DXVECTOR3(-100,100,-100),
+	//	D3DXVECTOR3(100,50,50),
+	//	D3DXVECTOR3(-100,-100,-50),
+	//	D3DXVECTOR3(100,-50,10),
+	//	D3DXVECTOR3(100,50,10),
+	//	D3DXVECTOR3(100,0,100),
+	//	D3DXVECTOR3(0,100,0),
+	//	D3DXVECTOR3(-100,100,100),
+	//	D3DXVECTOR3(-100,-100,100),
+	//	D3DXVECTOR3(-100,100,0),
+	//	D3DXVECTOR3(-100,100,-100),
+	//};
+	//testObject.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::STAR_REGULAR_POLYHEDRON_X10], &D3DXVECTOR3(0, 0, 0));
+	//testObject.setNumOfRender(direct3D9->device, 20, positionList);
+	//testObject.activation();
 
-	D3DXVECTOR3 cubeList[NUM_CUBE];
-	for (int i = 0; i < NUM_CUBE; i++)
-	{
-		cubeList[i] = D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
-	}
-	testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
-	testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
-	testCube.activation();
+	//D3DXVECTOR3 cubeList[NUM_CUBE];
+	//for (int i = 0; i < NUM_CUBE; i++)
+	//{
+	//	cubeList[i] = D3DXVECTOR3((float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500), (float)(rand() % 1000 - 500));
+	//}
+	//testCube.initialize(direct3D9->device, &staticMeshLoader->staticMesh[staticMeshNS::CUBE], &D3DXVECTOR3(0, 0, 0));
+	//testCube.setNumOfRender(direct3D9->device, NUM_CUBE, cubeList);
+	//testCube.activation();
 
 	//ゲームマスター
 	gameMaster->gameStart();//ゲーム開始時処理
@@ -315,9 +327,21 @@ void Game::update(float _frameTime) {
 	}
 
 	// コロニーアップデート
+	for (int i = 0; i < NUM_COLONY; i++)
 	{
-		colony[0].update();
+		colony[i].update();
 	}
+
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].update();
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].update();
+	}
+
+
 
 	// ガラクタアップデート
 	for (int i = 0; i < JUNK_MAX; i++)
@@ -446,6 +470,15 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	{// コロニーの描画
 		colony[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 	}
+	for (int i = 0; i < NUM_STAR_X10; i++)
+	{
+		star10[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+	for (int i = 0; i < NUM_STAR_X100; i++)
+	{
+		star100[i].render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
+	}
+
 
 	////(仮)ガラクタの描画
 	//for (int i = 0; i < JUNK_MAX; i++)
@@ -470,10 +503,10 @@ void Game::render3D(Direct3D9* direct3D9, Camera currentCamera) {
 	plane.render(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position);
 
 	//xFileStaticMeshテスト描画
-	testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
-	testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
-		*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	//testObject.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
+	//testCube.multipleRender(direct3D9->device, currentCamera.view, currentCamera.projection, currentCamera.position,
+	//	*shaderLoader->getEffect(shaderNS::INSTANCE_STATIC_MESH));
 
 	// ワスレモノの描画
 #if 1
@@ -783,8 +816,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
 		}
-		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		if (gameMaster->getCountFlag())
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		}
 	}
 	else {
 		//スタート
@@ -806,8 +842,11 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		{
 			uiCountDown[i].render(device, gameMaster->getCount());
 		}
-		// サウンドの再生
-		sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		if (gameMaster->getCountFlag())
+		{
+			// サウンドの再生
+			sound->play(soundNS::TYPE::SE_COUNT, soundNS::METHOD::PLAY);
+		}
 	}
 	if (gameMaster->whetherAlreadyFinish())
 	{
@@ -1066,7 +1105,7 @@ void Game::uninitialize() {
 		uiChingin[i].release();
 		uiCutMemoryLine[i].release();
 		uiRevival[i].release();
-		player[i]->animationPlayer.release();
+		//player[i]->animationPlayer.release();
 	}
 	uiScreenSplitLine.release();
 	wasuremonoManager.uninitialize();

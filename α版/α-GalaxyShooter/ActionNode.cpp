@@ -37,6 +37,7 @@ NODE_STATUS ActionNode::actionList(RecognitionBB* recognitionBB, MemoryBB* memor
 	case ACTION_CUT:		return actionCut(recognitionBB, memoryBB, bodyBB);
 	case ACTION_REVIVAL:	return actionRevival(recognitionBB, memoryBB, bodyBB);
 	case ACTION_FALL:		return actionFall(recognitionBB, memoryBB, bodyBB);
+	case ACTION_DAMMY:		return NODE_STATUS::SUCCESS;
 
 	default:
 		MessageBox(NULL, TEXT("アクションリストにないノードです"), TEXT("Behavior Tree Error"), MB_OK);
@@ -52,18 +53,22 @@ NODE_STATUS ActionNode::actionMove(RecognitionBB* recognitionBB, MemoryBB* memor
 {
 	static const float STOP_MOVE_LENGTH = 6.0f;
 	static const float STOP_MOVE_LENGTH_STRICT = 5.5f;
-
+	
+	//--------------------------
 	// 到着していたら停止で失敗
+	//--------------------------
 	if (bodyBB->getIsArrived())
 	{
-		recognitionBB->setWhetherDestinationDecided(false);// 目的地を初期化
+		recognitionBB->setWhetherDestinationDecided(false);	// 目的地未決定
 		bodyBB->setMove(false);
 		return NODE_STATUS::FAILED;
 	}
 
-	// 到着していない場合実行中↓
+	//--------------------------
+	// 到着していない場合実行中
+	//--------------------------
 
-	// 到着座標との距離を測る
+	// 到着座標との距離を測る↓
 	D3DXVECTOR3 vecToDestination;
 	if (recognitionBB->getPlayerState() == playerNS::SKY)
 	{// 上空モード
@@ -144,9 +149,10 @@ NODE_STATUS ActionNode::actionShoot(RecognitionBB* recognitionBB, MemoryBB* memo
 NODE_STATUS ActionNode::actionPile(RecognitionBB* recognitionBB, MemoryBB* memoryBB, BodyBB* bodyBB)
 {
 	if (recognitionBB->getWhetherInAir() || bodyBB->getIsReadyForPile() == false ||
-		recognitionBB->getPlayerState() == playerNS::SKY || recognitionBB->getPlayerState() == playerNS::DOWN)
+		recognitionBB->getPlayerState() == playerNS::SKY||
+		recognitionBB->getPlayerState() == playerNS::DOWN ||
+		recognitionBB->getWhetherInstallationEffectiveDistance() == false)
 	{
-		//whetherInstallationEffectiveDistanceこの判定はしてない
 		return NODE_STATUS::FAILED;
 	}
 	else

@@ -25,12 +25,14 @@ private:
 	D3DXVECTOR3 *myPosition;					// 自分の座標
 	float *frameTime;							// フレーム時間へのポインタ
 	float *skyHeight;							// 上空モードの高さへのポインタ
+	bool *whetherInstallationEffectiveDistance;	// 設置有効距離かどうかへのポインタ
 	bool inAir;									// true 空中にいる  false 地上にいる
 
 	bool isOpponentInCamera;					// 相手がカメラに映っているか
 	float distanceBetweenPlayers;				// プレイヤー間の距離
 	D3DXVECTOR3 lineCutCoord;					// メモリーライン切断座標
 	bool isDestinationDecided;					// 目的地が決まったか
+	bool bulletSwitch;							
 
 	// プレイヤーステート
 	int playerState;							// プレイヤークラスの状態
@@ -48,7 +50,8 @@ private:
 	// Data - リカージョン認識関係
 	//-----------------------------
 	// リカージョン認識（環境認識モジュールで調べたリカージョン場所候補）
-	RecursionRecognition recursionRecognition[NUM_RECURSION_RECOGNITION];
+	RecursionRecognition recursionRecognition[NUM_RECURSION_RECOGNITION];	// ワスレモノ
+	RecursionRecognition recursionRecognitionForOpponent;					// 相手
 
 	// リカージョン認識の活性状態（上記リカージョン認識が実際に使用できるか否かをフラグ管理）
 	bool isActiveRecursionRecognition[NUM_RECURSION_RECOGNITION];
@@ -64,6 +67,7 @@ private:
 	int recursionPolicy;
 
 	bool isStartRecursion;						// リカージョンを開始するか？
+	bool isStartRecursionForOpponent;			// リカージョン（相手）を開始するか？
 	bool isRecursionRunnning;					// リカージョンが実行中であるかどうか
 	int *elementMemoryPile;						// メモリーパイルの要素番号
 	int nextElementMemoryPile;					// 次に打つメモリーパイルの要素番号 
@@ -80,6 +84,10 @@ public:
 	float getSkyHeight(void) { return *skyHeight; }					// 上空モードの高さを取得
 	void setSkyHeightPointer(float* adr) { skyHeight = adr; }		// 上空モードの高さへポインタ設定
 
+	// 設置有効距離かどうかへのポインタ関係
+	void setPointerWhetherInstallationEffectiveDistance(bool* setting) { whetherInstallationEffectiveDistance = setting; }
+	bool getWhetherInstallationEffectiveDistance(void) { return *whetherInstallationEffectiveDistance; }
+
 	// 自分の情報
 	D3DXVECTOR3* getMyPosition(void) { return myPosition; }			// 自分の座標を取得
 	void setMyPosition(D3DXVECTOR3* _position) { myPosition = _position; }// 自分の座標を設定
@@ -91,21 +99,24 @@ public:
 	bool getIsOpponentInCamera(void) { return isOpponentInCamera; }	// 相手がカメラに移っているか取得
 	void setIsOpponentInCamera(bool setting) { isOpponentInCamera = setting; }// 相手がカメラに移っているか設定
 
-	D3DXVECTOR3 getLineCutCoord(void) { return lineCutCoord; }				// メモリーライン切断座標を取得
+	D3DXVECTOR3* getLineCutCoordPointer(void) { return &lineCutCoord; }		// メモリーライン切断座標を取得
 	void setLineCutCoord(D3DXVECTOR3 setting) { lineCutCoord = setting; }	// メモリーライン切断座標を設定
 
 	bool getWhetherDestinationDecided(void) { return isDestinationDecided; }// 目的地が決まったか取得
 	void setWhetherDestinationDecided(bool setting) { isDestinationDecided = setting; }// 目的地が決まったか設定
 
+	bool getBulletSwitch(void) { return bulletSwitch; }
+	void changeBulletSwitch(void) { bulletSwitch = bulletSwitch ? false : true; }
+
 	// リカージョン
-	RecursionRecognition* getRecursionRecognition(void) { return recursionRecognition; }// リカージョン認識を取得
+	RecursionRecognition* getRecursionRecognition(void) { return recursionRecognition; }// リカージョン認識（ワスレモノ）を取得
+	RecursionRecognition* getRecursionRecognitionForOpponent(void) { return &recursionRecognitionForOpponent; }// リカージョン認識（相手）を取得
 	bool getIsActiveRecursionRecognition(int i) { return isActiveRecursionRecognition[i]; }// リカージョン認識の活性状態を取得
 	void setIsActiveRecursionRecognition(int i, bool setting) { isActiveRecursionRecognition[i] = setting; }// リカージョン認識の活性状態を設定
 	bool getIsStartRecursion(void) { return isStartRecursion; }				// リカージョンを開始するか取得
-	void setIsStartRecursion(bool setting)
-	{ 
-		isStartRecursion = setting;
-	}	// リカージョンを開始するか設定
+	void setIsStartRecursion(bool setting){ isStartRecursion = setting;}	// リカージョンを開始するか設定
+	bool getIsStartRecursionForOpponent(void) { return isStartRecursionForOpponent; }			// リカージョン（相手）を開始するか取得
+	void setIsStartRecursionForOpponent(bool setting) { isStartRecursionForOpponent = setting; }// リカージョン（相手）を開始するか設定
 	bool getIsRecursionRunning(void) { return isRecursionRunnning; }
 	void setIsRecursionRunning(bool setting) { isRecursionRunnning = setting; }
 	int getRecursionPolicy(void) { return recursionPolicy; }
