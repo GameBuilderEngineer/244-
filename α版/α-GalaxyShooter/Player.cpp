@@ -655,7 +655,10 @@ void Player::updateSky(float frameTime)
 	float distanceToAttractor = between2VectorLength(position, *attractorPosition);	//d—Í”­¶Œ¹‚Æ‚Ì‹——£
 	skyTimer -= frameTime;
 	skyHeight = min(skyHeight + 80.0f * frameTime, SKY_HEIGHT);
-	if (skyHeight >= SKY_HEIGHT) { animationPlayer->setFlagRecursion(false); }
+	if (skyHeight >= SKY_HEIGHT) { 
+		animationPlayer->setFlagMoveBan(false);
+		animationPlayer->setFlagRecursion(false); 
+	}
 
 	if (radius + attractorRadius + skyHeight >= distanceToAttractor - difference)
 	{
