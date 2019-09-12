@@ -88,8 +88,8 @@ void UICountDown::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 			_device,
 			texture[_index],												//	テクスチャ
 			spriteNS::CENTER,												//	原点
-			(WIDTH_COUNT_DOWN * 2.5f),											//	横幅
-			(WIDTH_COUNT_DOWN * 2),											//	高さ
+			(WIDTH_COUNT_DOWN * 2.5f),										//	横幅
+			(WIDTH_COUNT_DOWN * 2.5f),										//	高さ
 			D3DXVECTOR3														//	座標
 			(
 				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
@@ -160,8 +160,8 @@ void UICountDown::initializeSprite(LPDIRECT3DDEVICE9 _device, int _playerIndex, 
 			_device,
 			texture[_index],												//	テクスチャ
 			spriteNS::CENTER,												//	原点
-			(WIDTH_COUNT_DOWN * 2),											//	横幅
-			(WIDTH_COUNT_DOWN * 2),											//	高さ
+			(WIDTH_COUNT_DOWN * 2.5f),										//	横幅
+			(WIDTH_COUNT_DOWN * 2.5f),										//	高さ
 			D3DXVECTOR3														//	座標
 			(
 				_playerIndex ? POSITION_X_PLAYER_2 : POSITION_X_PLAYER_1,	//	座標 x
