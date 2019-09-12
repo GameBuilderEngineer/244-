@@ -41,6 +41,7 @@ public:
 	void setPosition(D3DXVECTOR3 _position) { position = _position; }
 	void setSpeed(D3DXVECTOR3 _speed) { speed = _speed; }
 	void setTarget(Player* _target) { target = _target; }
+
 };
 
 
@@ -72,5 +73,7 @@ public:
 	void update(Sound* _sound, float frameTime);
 	void render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRIX projection, D3DXVECTOR3 cameraPosition);
 	void generateChingin(int num, D3DXVECTOR3 setPosition, Player* target);	// É`ÉìÉMÉìÇî≠ê∂Ç≥ÇπÇÈ
+	bool chinginVec;
+
 };
 
