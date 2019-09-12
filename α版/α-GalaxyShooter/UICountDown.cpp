@@ -232,7 +232,7 @@ void UICountDown::updateFadeOut(void)
 //============================================================================================================================================
 void UICountDown::render(LPDIRECT3DDEVICE9 _device, int _renderIndex)
 {
-	sprite[_renderIndex].render(_device);
+	//sprite[_renderIndex].render(_device);
 
 	return;
 }

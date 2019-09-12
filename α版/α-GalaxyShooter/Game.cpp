@@ -753,11 +753,6 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 
 	// ユーザインタフェース
 	if (onUI) {
-
-		// チンギン完成までの仮
-		static int chingin = 0;
-		if (chingin < 99999) { chingin++; }
-
 		// 優先度：低
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
@@ -778,7 +773,7 @@ void Game::renderUI(LPDIRECT3DDEVICE9 device) {
 		for (int i = 0; i < NUM_PLAYER; i++)
 		{
 			uiPlayTime[i].render(device, gameMaster->getGameTime());
-			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage());
+			uiChingin[i].render(device, gameMaster->getGameTime(), player[i]->getWage(),i);
 		}
 	}
 
@@ -988,6 +983,8 @@ void Game::collisions() {
 			}
 		}
 	}
+
+
 
 	//ガラクタとプレイヤー
 	for (int i = 0; i < NUM_PLAYER; i++)

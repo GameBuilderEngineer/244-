@@ -147,11 +147,11 @@ int GameMaster::getResult() {
 	{
 		result = WIN_1P;
 	}
-	else
+	else if(playerInformation[playerNS::PLAYER1].wage < playerInformation[playerNS::PLAYER2].wage)
 	{
 		result = WIN_2P;
 	}
-	return DRAW;
+	return result;
 }
 //ƒvƒŒƒCƒ„[î•ñ‚ÌŽæ“¾
 playerTable* GameMaster::getPlayerInfomation(){	return playerInformation;}

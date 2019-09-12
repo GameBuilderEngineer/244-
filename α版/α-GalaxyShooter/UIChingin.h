@@ -36,5 +36,5 @@ public:
 	~UIChingin(void);
 	HRESULT initialize(LPDIRECT3DDEVICE9 _device, int _playerIndex, TextureLoader* _textureLoader, TextManager* _textManager);
 	void release(void);
-	void render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin);
+	void render(LPDIRECT3DDEVICE9 _device, float _time, int _chingin, int playerID);
 };

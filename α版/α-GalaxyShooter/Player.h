@@ -270,6 +270,7 @@ public:
 	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
 	//D3DXMATRIX setGunMatrix(void);
 	void setAnimationModel(AnimationPlayer* _animation);
+	void setWage(int value);
 
 	//getter
 	int getHp();
