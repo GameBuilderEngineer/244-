@@ -57,22 +57,22 @@ void ChinginManager::update(Sound* _sound, float frameTime)
 	{
 		if (chingin[i] == NULL) { continue; }
 
-		// ランダムのベクトル作成
-		D3DXVECTOR3 randVec((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50));
-		// 外積ベクトル作成
-		D3DXVECTOR3 crossVec(0.0, 0.0, 0.0);
-		// 結果ベクトル作成
-		D3DXVECTOR3 resultVec(0.0, 0.0, 0.0);
-		// 外積計算
-		D3DXVec3Cross(&crossVec, &chingin[i]->getTarget()->upVec(), &randVec);
-		D3DXVec3Normalize(&crossVec, &crossVec);//正規化
-		// 結果計算
-		resultVec = chingin[i]->getTarget()->upVec() + crossVec * 0.6;
-		D3DXVec3Normalize(&resultVec, &resultVec);//正規化
+		//// ランダムのベクトル作成
+		//D3DXVECTOR3 randVec((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50));
+		//// 外積ベクトル作成
+		//D3DXVECTOR3 crossVec(0.0, 0.0, 0.0);
+		//// 結果ベクトル作成
+		//D3DXVECTOR3 resultVec(0.0, 0.0, 0.0);
+		//// 外積計算
+		//D3DXVec3Cross(&crossVec, &chingin[i]->getTarget()->upVec(), &randVec);
+		//D3DXVec3Normalize(&crossVec, &crossVec);//正規化
+		//// 結果計算
+		//resultVec = chingin[i]->getTarget()->upVec() + crossVec * 0.6;
+		//D3DXVec3Normalize(&resultVec, &resultVec);//正規化
 
 
 		chingin[i]->setSpeed(moveSpeed(*chingin[i]->getPosition(), *chingin[i]->getTarget()->getPosition()));
-		chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec);
+		//chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec);
 		chingin[i]->setPosition(*chingin[i]->getPosition() + *chingin[i]->getSpeed());
 
 
@@ -149,14 +149,9 @@ void ChinginManager::render(LPDIRECT3DDEVICE9 device, D3DXMATRIX view, D3DXMATRI
 D3DXVECTOR3 ChinginManager::moveSpeed(D3DXVECTOR3 position, D3DXVECTOR3 targetPosition)
 {
 	D3DXVECTOR3 speed = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-	//D3DXVECTOR3 straightDirection;
-	//D3DXVECTOR3 
-	//
-
-	//D3DXVec3Normalize(&moveDirection, &moveDirection);
-	//speed += moveDirection * 2.0f;// このへんはまだ適当
-
+	D3DXVECTOR3 moveDirection = targetPosition - position;
+	D3DXVec3Normalize(&moveDirection, &moveDirection);
+	speed += moveDirection * 2.0f;
 	return speed;
 }
 
