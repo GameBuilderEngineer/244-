@@ -1106,3 +1106,20 @@ void AnimationPlayer::setAnimationConfiguration(int _scene)
 
 	return;
 }
+//============================================================================================================================================
+// resetAnimation
+// ƒŠƒZƒbƒg
+//============================================================================================================================================
+void AnimationPlayer::resetAnimation(void)
+{
+	flag.moveBan = false;
+	flag.jump = false;
+	flag.installation = false;
+	flag.slash = false;
+	flag.recursion = false;
+	flag.falling = false;
+	flag.landing = false;
+	flag.revival = false;
+
+	return;
+}

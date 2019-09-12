@@ -167,6 +167,7 @@ public:
 	void updateAnimationIDCurrentIdleGeneral(void);
 	void updateAnimationIDNextIdleGeneral(void);
 	void render(LPDIRECT3DDEVICE9 _device, D3DXMATRIX _matrixRotaition, D3DXMATRIX _matrixPosition, StaticMeshLoader* _staticMeshLoader);
+	void resetAnimation(void);
 	// Set
 	void setAnimationConfiguration(int _scene);
 	void setFlagMoveBan(bool _flag) { flag.moveBan = _flag; }
