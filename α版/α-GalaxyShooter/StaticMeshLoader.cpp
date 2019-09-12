@@ -119,5 +119,21 @@ HRESULT StaticMeshLoader::load(LPDIRECT3DDEVICE9 device)
 //===================================================================================================================================
 void StaticMeshLoader::release(void)
 {
+	for (int i = 0; i < MESH_NUM; i++)
+	{
+		for (DWORD num = 0; num < staticMesh[i].numMaterial; num++)
+		{
+			SAFE_RELEASE(staticMesh[i].textures[num])
+		}
+		SAFE_RELEASE(staticMesh[i].vertexBuffer);
+		SAFE_RELEASE(staticMesh[i].indexBuffer);
+		SAFE_RELEASE(staticMesh[i].mesh);
+		SAFE_RELEASE(staticMesh[i].declaration);
+		SAFE_RELEASE(staticMesh[i].bufferMaterial);
 
+		SAFE_DELETE_ARRAY(staticMesh[i].textures);
+		SAFE_DELETE_ARRAY(staticMesh[i].materials);
+		SAFE_DELETE_ARRAY(staticMesh[i].bufferMaterial);
+
+	}
 }

@@ -214,7 +214,7 @@ protected:
 
 	StaticMeshLoader* staticMeshLoader;
 public:
-	AnimationPlayer animationPlayer;					//	アニメーション
+	AnimationPlayer* animationPlayer;					//	アニメーション
 	BoundingSphere bodyCollide;							//球コリジョン
 	Bullet bullet[playerNS::NUM_BULLET];				//弾
 
@@ -269,6 +269,7 @@ public:
 	void setCollidedMemoryLine(bool frag);
 	void setCollideMemoryLinePosition(D3DXVECTOR3 value);
 	//D3DXMATRIX setGunMatrix(void);
+	void setAnimationModel(AnimationPlayer* _animation);
 
 	//getter
 	int getHp();

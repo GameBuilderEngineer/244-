@@ -53,6 +53,7 @@ protected:
 	LPD3DXMESH sphere;						// バウンディングスフィア用球形メッシュ
 
 public:
+	EffectManager();
 	~EffectManager();
 	virtual void initialize(LPDIRECT3DDEVICE9 device, TextureLoader* _textureLoader, LPD3DXEFFECT effect);
 	virtual void update(float frameTime);

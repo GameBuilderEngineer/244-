@@ -5,6 +5,11 @@
 #include "EffectManager.h"
 
 
+EffectManager::EffectManager()
+{
+	sphere = NULL;
+}
+
 EffectManager::~EffectManager()
 {
 

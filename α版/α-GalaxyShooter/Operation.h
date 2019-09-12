@@ -6,6 +6,7 @@
 #include "AbstractScene.h"
 #include "KeyOpe.h"
 #include "PadOpe.h"
+#include "SceneEffect.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -15,12 +16,24 @@
 //=============================================================================
 namespace operationNS
 {
-	// プレイヤー人数
-	enum {
-		PLAYER1,
-		PLAYER2,
-		NUM_PLAYER,
+	static const float EFFECT_MAX = 1500;	// エフェクト上限
+
+	enum PLAYER_TYPE
+	{
+		PLAYER_1,
+		PLAYER_2,
+		PLAYER_TYPE_MAX
 	};
+	const D3DXQUATERNION CAMERA_RELATIVE_QUATERNION[operationNS::PLAYER_TYPE::PLAYER_TYPE_MAX] =
+	{
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f),
+#ifdef _DEBUG
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
+#else
+		D3DXQUATERNION(0.0f,20.0f,-40.0f,0.0f)
+#endif // _DEBUG
+	};
+
 }
 //*****************************************************************************
 // クラス定義
@@ -32,6 +45,7 @@ private:
 	KeyOpe keyOpe;
 	// パッド説明
 	PadOpe padOpe;
+	SceneEffect sceneEffect;//	シーンエフェクト
 
 public:
 	Operation();
@@ -50,7 +64,7 @@ public:
 	virtual void AI() override;
 	virtual void uninitialize() override;
 
-	void render3D(Direct3D9* direct3D9);
+	void render3D(Direct3D9* direct3D9, Camera _currentCamera);
 	void renderUI(LPDIRECT3DDEVICE9 device);
 	int opeTransition;	// オペレーション画像入れ替え
 };

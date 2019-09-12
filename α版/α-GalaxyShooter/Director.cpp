@@ -43,6 +43,7 @@ Director::~Director(){
 	SAFE_DELETE(shaderLoader);
 	SAFE_DELETE(textManager);
 	SAFE_DELETE(gameMaster);
+	SAFE_DELETE(animationLoader);
 	//thread_a->join();
 	//SAFE_DELETE(thread_a);
 	ShowCursor(TRUE);
@@ -95,6 +96,8 @@ HRESULT Director::initialize(){
 	//StaticMesh
 	staticMeshLoader = new StaticMeshLoader;
 	staticMeshLoader->load(d3d->device);
+
+
 	//HierarchyMesh
 	//setVisualDirectory();
 	//SKINMESH
@@ -111,6 +114,10 @@ HRESULT Director::initialize(){
 
 	//ゲーム管理クラス
 	gameMaster = new GameMaster();
+
+	//アニメーション読込クラス
+	animationLoader = new AnimationLoader();
+	animationLoader->initialize(d3d->device);
 
 	// サウンド読み込み
 	setSoundDirectory();
@@ -330,6 +337,7 @@ void Director::changeNextScene(){
 	case SceneList::NONE_SCENE:				break;
 	}
 	scene->setGameMaster(gameMaster);//ゲーム管理情報をシーンへセット
+	scene->setAnimationLoader(animationLoader);
 	scene->initialize(d3d,input,sound,textureLoader,staticMeshLoader,shaderLoader,textManager);
 	currentSceneName = scene->getSceneName();
 }
