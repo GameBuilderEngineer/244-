@@ -58,21 +58,21 @@ void ChinginManager::update(Sound* _sound, float frameTime)
 		if (chingin[i] == NULL) { continue; }
 
 		// ランダムのベクトル作成
-		D3DXVECTOR3 randVec((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50));
+		//D3DXVECTOR3 randVec((float)(rand() % 100 - 50), (float)(rand() % 100 - 50), (float)(rand() % 100 - 50));
 		// 外積ベクトル作成
-		D3DXVECTOR3 crossVec(0.0, 0.0, 0.0);
+		//D3DXVECTOR3 crossVec(0.0, 0.0, 0.0);
 		// 結果ベクトル作成
-		D3DXVECTOR3 resultVec(0.0, 0.0, 0.0);
+		//D3DXVECTOR3 resultVec(0.0, 0.0, 0.0);
 		// 外積計算
-		D3DXVec3Cross(&crossVec, &chingin[i]->getTarget()->upVec(), &randVec);
-		D3DXVec3Normalize(&crossVec, &crossVec);//正規化
+		//D3DXVec3Cross(&crossVec, &chingin[i]->getTarget()->upVec(), &randVec);
+		//D3DXVec3Normalize(&crossVec, &crossVec);//正規化
 		// 結果計算
-		resultVec = chingin[i]->getTarget()->upVec() + crossVec * 0.6;
-		D3DXVec3Normalize(&resultVec, &resultVec);//正規化
+		//resultVec = chingin[i]->getTarget()->upVec() + crossVec * 0.6;
+		//D3DXVec3Normalize(&resultVec, &resultVec);//正規化
 
 
 		chingin[i]->setSpeed(moveSpeed(*chingin[i]->getPosition(), *chingin[i]->getTarget()->getPosition()));
-		chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec);
+		//chingin[i]->setPosition(*chingin[i]->getPosition() + resultVec);
 		chingin[i]->setPosition(*chingin[i]->getPosition() + *chingin[i]->getSpeed());
 
 
