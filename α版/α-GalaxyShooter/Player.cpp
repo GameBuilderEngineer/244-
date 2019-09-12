@@ -100,7 +100,7 @@ void Player::initialize(int playerType, int modelType, LPDIRECT3DDEVICE9 _device
 	//メモリーパイルの初期化
 	for (int i = 0; i < NUM_MEMORY_PILE; i++)
 	{
-		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::WASUREMONO_PHONE], &D3DXVECTOR3(0, 0, 0));
+		memoryPile[i].initialize(device, &staticMeshLoader->staticMesh[staticMeshNS::MEMORY_PILE], &D3DXVECTOR3(0, 0, 0));
 	}
 
 	// 回復エフェクト初期化

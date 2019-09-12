@@ -27,5 +27,10 @@ void Light::initialize(Direct3D9* direct3D9) {
 	light.Range = 20.0f;
 	direct3D9->device->SetLight(0, &light);
 	direct3D9->device->LightEnable(0, true);
+
+
+	// グローバルアンビエントライト
+	direct3D9->device->SetRenderState(D3DRS_AMBIENT, 0xff0f0f0f); // 0xARGB
+
 }
 
